@@ -7,7 +7,7 @@ namespace Ncqrs.Eventing.Mapping
 {
     public class EventHandlerFactory
     {
-        public IEnumerable<KeyValuePair<Type, IEventHandler>> CreateHandlers(MappedEventSource eventSource)
+        public IEnumerable<KeyValuePair<Type, Action<IEvent>>> CreateHandlers(MappedEventSource eventSource)
         {
             if (eventSource == null) throw new ArgumentNullException("eventSource");
 
@@ -38,10 +38,10 @@ namespace Ncqrs.Eventing.Mapping
                     var eventType = methodCopy.GetParameters().First().ParameterType;
 
                     // TODO: Add validation for given event 'e' instance (e.q. is the type correct?).
-                    var handler = new ActionBasedEventHandler((e) => methodCopy.Invoke(eventSource, new object[] { e }));
+                    Action<IEvent> handler = (e) => methodCopy.Invoke(eventSource, new object[] { e });
 
                     // TODO: Validate that eventType is a "end"-type of IEvent.
-                    yield return new KeyValuePair<Type, IEventHandler>(eventType, handler);
+                    yield return new KeyValuePair<Type, Action<IEvent>>(eventType, handler);
                 }
             }
         }

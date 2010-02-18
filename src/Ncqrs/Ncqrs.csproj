@@ -68,20 +68,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Domain\AggregateRoot.cs" />
-    <Compile Include="Eventing\EventSource.cs" />
-    <Compile Include="Eventing\HistoricalEvent.cs" />
-    <Compile Include="Eventing\IEvent.cs" />
-    <Compile Include="Eventing\IEventHandler.cs" />
-    <Compile Include="Eventing\Mapping\ActionBasedEventHandler.cs" />
-    <Compile Include="Eventing\Mapping\EventAlreadyHandledException.cs" />
-    <Compile Include="Eventing\Mapping\EventHandlerAttribute.cs" />
-    <Compile Include="Eventing\Mapping\EventHandlerFactory.cs" />
-    <Compile Include="Eventing\Mapping\MappedEventSource.cs" />
-    <Compile Include="Eventing\Mapping\NoEventHandlerFoundException.cs" />
-    <Compile Include="Eventing\Storage\ConcurrencyException.cs" />
-    <Compile Include="Eventing\Storage\IEventStore.cs" />
-    <Compile Include="Eventing\Storage\SQL\SimpleSqlEventStore.cs" />
+    <Compile Include="Commands\ICommand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -101,6 +88,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

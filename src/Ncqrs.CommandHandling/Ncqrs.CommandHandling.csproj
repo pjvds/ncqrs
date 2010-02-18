@@ -3,17 +3,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>
-    </ProductVersion>
+    <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{CADDFF97-0616-4E0F-9ECD-AEBB1FAA083D}</ProjectGuid>
+    <ProjectGuid>{46FD95B7-ADBE-465D-989D-D316CA7887D4}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Ncqrs.Tests</RootNamespace>
-    <AssemblyName>Ncqrs.Tests</AssemblyName>
+    <RootNamespace>Ncqrs.CommandHandling</RootNamespace>
+    <AssemblyName>Ncqrs.CommandHandling</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -33,28 +31,44 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-    <Reference Include="Moq">
-      <HintPath>..\Externals\Moq\Moq.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Eventing\HistoricalEventTests.cs" />
-    <Compile Include="Eventing\MappingTests\ActionBasedEventHandlerTest.cs" />
-    <Compile Include="Eventing\MappingTests\EventHandlerFactoryTest.cs" />
+    <Compile Include="AutoMapping\ActionFactory.cs" />
+    <Compile Include="AutoMapping\Actions\DirectMethodAction.cs" />
+    <Compile Include="AutoMapping\Actions\DirectMethodCommandInfo.cs" />
+    <Compile Include="AutoMapping\Actions\IAutoMappedAction.cs" />
+    <Compile Include="AutoMapping\Actions\ObjectCreationAction.cs" />
+    <Compile Include="AutoMapping\Actions\ObjectCreationCommandInfo.cs" />
+    <Compile Include="AutoMapping\AutoMapperConfiguration.cs" />
+    <Compile Include="AutoMapping\AutoMappingCommandHandler.cs" />
+    <Compile Include="AutoMapping\AutoMappingException.cs" />
+    <Compile Include="AutoMapping\CommandMappingException.cs" />
+    <Compile Include="AutoMapping\MappingForCommandNotFoundException.cs" />
+    <Compile Include="CommandHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Ncqrs.Commands\Ncqrs.Commands.csproj">
+      <Project>{667C1A88-8173-454D-B44F-CE9B27CC0548}</Project>
+      <Name>Ncqrs.Commands</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ncqrs.Domain\Ncqrs.Domain.csproj">
+      <Project>{FC2478FB-2B60-491F-A1D8-B9C6D869B2F8}</Project>
+      <Name>Ncqrs.Domain</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Ncqrs.Eventing\Ncqrs.Eventing.csproj">
       <Project>{56D48F9D-29F4-4E77-86B1-D988EAC1DF42}</Project>
       <Name>Ncqrs.Eventing</Name>
     </ProjectReference>
   </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

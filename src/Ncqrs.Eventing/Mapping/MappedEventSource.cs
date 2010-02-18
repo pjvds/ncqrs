@@ -5,7 +5,7 @@ namespace Ncqrs.Eventing.Mapping
 {
     public abstract class MappedEventSource : EventSource
     {
-        private readonly Dictionary<Type, IEventHandler> _handlers = new Dictionary<Type, IEventHandler>(0);
+        private readonly Dictionary<Type, Action<IEvent>> _handlers = new Dictionary<Type, Action<IEvent>>(0);
 
         protected MappedEventSource() : base()
         {
@@ -21,7 +21,15 @@ namespace Ncqrs.Eventing.Mapping
             }
         }
 
-        protected void RegisterHandler(Type eventType, IEventHandler handler)
+        protected void RegisterHandler<T>(Action<T> handler) where T : IEvent
+        {
+            if (handler == null) throw new ArgumentNullException("handler");
+            var eventType = typeof(T);
+
+            RegisterHandler(eventType, (evnt) => handler((T)evnt));
+        }
+        
+        protected void RegisterHandler(Type eventType, Action<IEvent> handler)
         {
             if(eventType == null) throw new ArgumentNullException("eventType");
             if(handler == null) throw new ArgumentNullException("handler");
@@ -34,13 +42,13 @@ namespace Ncqrs.Eventing.Mapping
         {
             if(evnt == null) throw new ArgumentNullException("event");
 
-            IEventHandler handler = GetHandlerForEvent(evnt);
-            handler.Invoke(evnt);
+            var handler = GetHandlerForEvent(evnt);
+            handler(evnt);
         }
 
-        private IEventHandler GetHandlerForEvent(IEvent evnt)
+        private Action<IEvent> GetHandlerForEvent(IEvent evnt)
         {
-            IEventHandler handler;
+            Action<IEvent> handler;
             Type eventType = evnt.GetType();
 
             if (!_handlers.TryGetValue(eventType, out handler))

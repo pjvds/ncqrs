@@ -9,6 +9,7 @@ namespace Ncqs.EventingTests.MappingTests
     [TestClass]
     public class EventHandlerFactoryTest
     {
+        #region Mocks
         private class EventFooMock : IEvent
         {
         }
@@ -52,7 +53,9 @@ namespace Ncqs.EventingTests.MappingTests
 
             }
         }
+        #endregion
 
+        #region Tests
         [TestMethod]
         public void FactoryShouldFindMappedMethods()
         {
@@ -65,11 +68,11 @@ namespace Ncqs.EventingTests.MappingTests
 
             var firstResult = result.First();
             Assert.AreEqual(firstResult.Key, typeof(EventFooMock));
-            Assert.IsInstanceOfType(firstResult.Value, typeof(ActionBasedEventHandler));
+            // TODO: Can we check the Action?: Assert.IsInstanceOfType(firstResult.Value, typeof(ActionBasedEventHandler));
 
             var secondResult = result.Skip(1).First();
             Assert.AreEqual(secondResult.Key, typeof(EventBarMock));
-            Assert.IsInstanceOfType(secondResult.Value, typeof(ActionBasedEventHandler));
+            // TODO: Can we check the Action?: Assert.IsInstanceOfType(secondResult.Value, typeof(ActionBasedEventHandler));
         }
 
         [TestMethod]
@@ -127,5 +130,6 @@ namespace Ncqs.EventingTests.MappingTests
 
             factory.CreateHandlers(source);
         }
+        #endregion
     }
 }
