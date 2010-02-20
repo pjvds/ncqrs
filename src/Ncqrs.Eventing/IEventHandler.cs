@@ -2,8 +2,8 @@
 
 namespace Ncqrs.Eventing
 {
-    //public interface IEventHandler
-    //{
-    //    void Invoke(IEvent evnt);
-    //}
+    public interface IEventHandler<TEvent> where TEvent : IEvent
+    {
+        void Handle(TEvent evnt);
+    }
 }

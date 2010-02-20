@@ -20,12 +20,25 @@ namespace Ncqrs.Commands.AutoMapping
         /// <summary>
         /// Initializes a new instance of the <see cref="MapsToAggregateRootConstructorAttribute"/> class.
         /// </summary>
-        /// <param name="typeName">Name of the type.</param>
+        /// <param name="typeName">The full qualified name of the type of the aggregate root.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <i>typeName</i> is null or emtpy.</exception>
         public MapsToAggregateRootConstructorAttribute(String typeName)
         {
             if(String.IsNullOrEmpty(typeName)) throw new ArgumentNullException(typeName);
 
             TypeName = typeName;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MapsToAggregateRootConstructorAttribute"/> class.
+        /// </summary>
+        /// <param name="type">The type of the aggregate root.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <i>type</i> is null.</exception>
+        public MapsToAggregateRootConstructorAttribute(Type type)
+        {
+            if (type == null) throw new ArgumentNullException("type");
+
+            TypeName = type.FullName;
         }
     }
 }

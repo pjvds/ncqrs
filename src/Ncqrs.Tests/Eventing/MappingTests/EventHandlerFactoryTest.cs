@@ -23,6 +23,11 @@ namespace Ncqs.EventingTests.MappingTests
             public Boolean EventHandlerFooExecuted = false;
             public Boolean EventHandlerBarExecuted = false;
 
+            public MappedEventSourceMock() : base(new BasicGuidGenerator())
+            {
+
+            }
+
             [EventHandler]
             public void EventMockEventHandler(EventFooMock evnt)
             {
@@ -38,6 +43,11 @@ namespace Ncqs.EventingTests.MappingTests
 
         private class IlligalStaticMethodMappedEventSourceMock : MappedEventSource
         {
+            public IlligalStaticMethodMappedEventSourceMock()
+                : base(new BasicGuidGenerator())
+            {
+            }
+
             [EventHandler]
             public static void IlligalEventHandler(EventFooMock evnt)
             {
@@ -47,6 +57,11 @@ namespace Ncqs.EventingTests.MappingTests
 
         private class IlligalEventHandlerWithMultipleArgumentsEventSourceMock : MappedEventSource
         {
+            public IlligalEventHandlerWithMultipleArgumentsEventSourceMock()
+                : base(new BasicGuidGenerator())
+            {
+            }
+
             [EventHandler]
             public static void IlligalEventHandler(EventFooMock evnt)
             {

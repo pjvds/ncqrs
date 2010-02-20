@@ -22,11 +22,22 @@ namespace Ncqrs.Domain
             }
         }
 
+        public IDomainRepository DomainRepository
+        {
+            get
+            {
+                return _repository;
+            }
+        }
+
         public UnitOfWork(IDomainRepository domainRepository)
         {
             if (Current != null)
                 throw new InvalidOperationException("An other UnitOfWork instance already exists in this context.");
 
+            if (domainRepository == null) throw new ArgumentNullException("domainRepository");
+
+            _repository = domainRepository;
             _dirtyInstances = new Queue<AggregateRoot>();
             _threadInstance = this;
         }

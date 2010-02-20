@@ -7,6 +7,19 @@ namespace Ncqrs.Eventing
     public abstract class EventSource
     {
         /// <summary>
+        /// Gets a value indicating whether this instance is initializing from history.
+        /// </summary>
+        /// <remarks>This will be set to true at the beginning of the <see cref="InitializeFromHistory"/> method and set to false at the end.</remarks>
+        /// <value>
+        /// 	<c>true</c> if this instance is initializing from history; otherwise, <c>false</c>.
+        /// </value>
+        protected Boolean InitializingFromHistory
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
         /// Holds the events that are not yet accepted.
         /// </summary>
         private readonly Stack<IEvent> _unacceptedEvents = new Stack<IEvent>(0);
@@ -30,9 +43,11 @@ namespace Ncqrs.Eventing
             private set;
         }
 
-        protected EventSource()
+        protected EventSource(IUniqueIdentifierGenerator idGenerator)
         {
-            Id = Guid.NewGuid(); // todo: Replace for Guid generator.
+            if (idGenerator == null) throw new ArgumentNullException("idGenerator");
+
+            Id = idGenerator.GenerateNewId(this);
             Version = 0;
         }
 
@@ -46,9 +61,18 @@ namespace Ncqrs.Eventing
             if (history.Count() == 0) throw new ArgumentException("The provided history does not contain any historical event.", "history");
             if (Version != 0 || _unacceptedEvents.Count > 0) throw new InvalidOperationException("Cannot load from history when a event source is already loaded.");
 
-            foreach (var historicalEvent in history)
+            try
             {
-                ApplyEvent(historicalEvent);
+                InitializingFromHistory = true;
+
+                foreach (var historicalEvent in history)
+                {
+                    ApplyEvent(historicalEvent);
+                }
+            }
+            finally
+            {
+                InitializingFromHistory = false;
             }
         }
 
@@ -76,6 +100,13 @@ namespace Ncqrs.Eventing
         public void AcceptEvents()
         {
             _unacceptedEvents.Clear();
+        }
+
+        protected void OverrideId(Guid id)
+        {
+            if (!InitializingFromHistory) throw new InvalidOperationException("Instance is not initializing from history.");
+
+            Id = id;
         }
     }
 }

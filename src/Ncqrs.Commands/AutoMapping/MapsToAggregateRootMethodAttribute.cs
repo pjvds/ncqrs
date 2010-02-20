@@ -41,8 +41,20 @@ namespace Ncqrs.Commands.AutoMapping
         /// <param name="methodName">Name of the method.</param>
         public MapsToAggregateRootMethodAttribute(string typeName, string methodName)
         {
+            if (String.IsNullOrEmpty(typeName)) throw new ArgumentNullException("typeName");
+            if (String.IsNullOrEmpty(methodName)) throw new ArgumentNullException("methodName");
+
             TypeName = typeName;
             MethodName = methodName;
+        }
+
+        public MapsToAggregateRootMethodAttribute(Type typeName, String methodName)
+        {
+            if (typeName == null) throw new ArgumentNullException("typeName");
+            if (String.IsNullOrEmpty(methodName)) throw new ArgumentNullException("methodName");
+
+            TypeName = typeName.FullName;
+            MethodName = MethodName;
         }
     }
 }

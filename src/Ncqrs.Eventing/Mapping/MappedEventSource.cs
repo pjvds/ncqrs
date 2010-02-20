@@ -7,7 +7,7 @@ namespace Ncqrs.Eventing.Mapping
     {
         private readonly Dictionary<Type, Action<IEvent>> _handlers = new Dictionary<Type, Action<IEvent>>(0);
 
-        protected MappedEventSource() : base()
+        protected MappedEventSource(IUniqueIdentifierGenerator idGenerator) : base(idGenerator)
         {
             InitializeHandlers();
         }
