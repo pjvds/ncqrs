@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using Ncqrs.Commands;
 
-namespace Ncqrs.CommandProcessing
+namespace Ncqrs.CommandHandling
 {
     public interface ICommandHandler
     {
-        public void Process
+        void Handle(ICommand command);
     }
 }

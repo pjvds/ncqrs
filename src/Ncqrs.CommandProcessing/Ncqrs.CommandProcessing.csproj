@@ -41,8 +41,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ActionBasedCommandHandler.cs" />
-    <Compile Include="ICommandHandler.cs" />
     <Compile Include="ICommandHandlerRegister.cs" />
     <Compile Include="ICommandService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

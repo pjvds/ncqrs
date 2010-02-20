@@ -33,6 +33,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -52,7 +53,12 @@
     <Compile Include="AutoMapping\CommandMappingException.cs" />
     <Compile Include="AutoMapping\MappingForCommandNotFoundException.cs" />
     <Compile Include="CommandHandler.cs" />
+    <Compile Include="ICommandHandler.cs" />
+    <Compile Include="ICommandHandlerRegister.cs" />
+    <Compile Include="ICommandService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SimpleCommandHandlerRegister.cs" />
+    <Compile Include="TransactionalInProcessCommandService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Ncqrs.Commands\Ncqrs.Commands.csproj">

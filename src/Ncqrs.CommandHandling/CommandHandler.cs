@@ -8,7 +8,7 @@ using Ncqrs.Domain.Storage;
 
 namespace Ncqrs.CommandHandling
 {
-    public abstract class CommandHandler<T> where T : ICommand
+    public abstract class CommandHandler<T> : ICommandHandler where T : ICommand
     {
         protected IDomainRepository Repository
         {
@@ -27,5 +27,10 @@ namespace Ncqrs.CommandHandling
         }
 
         public abstract void Handle(T message);
+
+        void ICommandHandler.Handle(ICommand command)
+        {
+            this.Handle((T)command);
+        }
     }
 }

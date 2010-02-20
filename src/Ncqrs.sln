@@ -13,8 +13,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Eventing.Bus", "Ncqrs
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Eventing", "Ncqrs.Eventing\Ncqrs.Eventing.csproj", "{56D48F9D-29F4-4E77-86B1-D988EAC1DF42}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.CommandProcessing", "Ncqrs.CommandProcessing\Ncqrs.CommandProcessing.csproj", "{4687F5B9-000C-485E-B09F-34FB361E72D6}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,10 +43,6 @@ Global
 		{56D48F9D-29F4-4E77-86B1-D988EAC1DF42}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{56D48F9D-29F4-4E77-86B1-D988EAC1DF42}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{56D48F9D-29F4-4E77-86B1-D988EAC1DF42}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4687F5B9-000C-485E-B09F-34FB361E72D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4687F5B9-000C-485E-B09F-34FB361E72D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4687F5B9-000C-485E-B09F-34FB361E72D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4687F5B9-000C-485E-B09F-34FB361E72D6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
