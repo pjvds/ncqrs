@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Ncqrs.Commands;
 using System.Transactions;
+using System.Diagnostics.Contracts;
 
 namespace Ncqrs.CommandHandling
 {
@@ -14,13 +15,15 @@ namespace Ncqrs.CommandHandling
 
         public TransactionalInProcessCommandService(ICommandHandlerRegister commandHandlerLocator)
         {
-            if (commandHandlerLocator == null) throw new ArgumentNullException("commandHandlerLocator");
+            Contract.Requires<ArgumentNullException>(commandHandlerLocator != null);
 
             _locator = commandHandlerLocator;
         }
 
         public void Process(ICommand command)
         {
+            Contract.Requires<ArgumentNullException>(command != null);
+
             using (var transaction = new TransactionScope())
             {
                 if (command == null) throw new ArgumentNullException("command");
@@ -34,6 +37,8 @@ namespace Ncqrs.CommandHandling
 
         public void Process(IEnumerable<ICommand> commands)
         {
+            Contract.Requires(commands != null);
+
             using (var transaction = new TransactionScope())
             {
                 foreach (var command in commands)

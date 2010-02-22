@@ -57,7 +57,7 @@
     <Compile Include="ICommandHandlerRegister.cs" />
     <Compile Include="ICommandService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SimpleCommandHandlerRegister.cs" />
+    <Compile Include="CommandHandlerRegister.cs" />
     <Compile Include="TransactionalInProcessCommandService.cs" />
   </ItemGroup>
   <ItemGroup>
