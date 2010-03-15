@@ -3,18 +3,33 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Ncqrs.Domain.Storage;
+using System.Diagnostics.Contracts;
 
 namespace Ncqrs.Domain
 {
-    public class UnitOfWork : IDisposable
+    public sealed class UnitOfWork : IDisposable
     {
+        /// <summary>
+        /// The <see cref="UnitOfWork"/> that is associated with the current thread.
+        /// </summary>
         [ThreadStatic]
         private static UnitOfWork _threadInstance;
 
+        /// <summary>
+        /// A queue that holds a reference to all instances that have themself registered as a dirty instance during the lifespan of this unit of work instance.
+        /// </summary>
         private readonly Queue<AggregateRoot> _dirtyInstances;
+
+        /// <summary>
+        /// A reference to the repository that is asociated with this instance.
+        /// </summary>
         private readonly IDomainRepository _repository;
 
-        internal static UnitOfWork Current
+        /// <summary>
+        /// Gets the <see cref="UnitOfWork"/> associated with the current thread context.
+        /// </summary>
+        /// <value>The current.</value>
+        public static UnitOfWork Current
         {
             get
             {
@@ -22,6 +37,22 @@ namespace Ncqrs.Domain
             }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is disposed.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if this instance is disposed; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsDisposed
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Gets the domain repository.
+        /// </summary>
+        /// <value>The domain repository.</value>
         public IDomainRepository DomainRepository
         {
             get
@@ -30,18 +61,62 @@ namespace Ncqrs.Domain
             }
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UnitOfWork"/> class.
+        /// </summary>
+        /// <param name="domainRepository">The domain repository to use in this unit of work.</param>
         public UnitOfWork(IDomainRepository domainRepository)
         {
-            if (Current != null)
-                throw new InvalidOperationException("An other UnitOfWork instance already exists in this context.");
+            Contract.Requires<InvalidOperationException>(Current == null, "An other UnitOfWork instance already exists in this context.");
+            Contract.Requires<ArgumentNullException>(domainRepository != null);
 
-            if (domainRepository == null) throw new ArgumentNullException("domainRepository");
+            Contract.Ensures(_repository == domainRepository, "The _repository member should be initialized with the one given by the domainRepository parameter.");
+            Contract.Ensures(_threadInstance == this, "The _threadInstance member should be initialized with this instance.");
 
             _repository = domainRepository;
             _dirtyInstances = new Queue<AggregateRoot>();
             _threadInstance = this;
         }
 
+        /// <summary>
+        /// Releases unmanaged resources and performs other cleanup operations before the
+        /// <see cref="UnitOfWork"/> is reclaimed by garbage collection.
+        /// </summary>
+        ~UnitOfWork()
+        {
+             Dispose(false);
+        }
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
+        {
+             Dispose(true);
+             GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// Releases unmanaged and - optionally - managed resources
+        /// </summary>
+        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+        private void Dispose(bool disposing)
+        {
+             if (!IsDisposed)
+            {
+                  if (disposing)
+                 {
+                     _threadInstance = null;
+                 }
+
+                IsDisposed = true;
+             }
+        }
+
+        /// <summary>
+        /// Registers the dirty.
+        /// </summary>
+        /// <param name="dirtyInstance">The dirty instance.</param>
         internal void RegisterDirty(AggregateRoot dirtyInstance)
         {
             if (!_dirtyInstances.Contains(dirtyInstance))
@@ -50,8 +125,13 @@ namespace Ncqrs.Domain
             }
         }
 
+        /// <summary>
+        /// Accepts the unit of work and persist the changes.
+        /// </summary>
         public void Accept()
         {
+            Contract.Requires<ObjectDisposedException>(!IsDisposed);
+
             while (_dirtyInstances.Count > 0)
             {
                 var dirtyInstance = _dirtyInstances.Dequeue();
@@ -59,9 +139,10 @@ namespace Ncqrs.Domain
             }
         }
 
-        public void Dispose()
+        public static void Required()
         {
-            _threadInstance = null;
+            Contract.Requires<InvalidOperationException>(Current != null);
+            Contract.Requires<ObjectDisposedException>(!Current.IsDisposed);
         }
     }
 }

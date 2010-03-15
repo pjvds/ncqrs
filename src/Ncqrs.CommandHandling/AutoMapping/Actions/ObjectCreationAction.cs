@@ -5,6 +5,7 @@ using Ncqrs.Commands;
 using Ncqrs.Domain;
 using Ncqrs.Domain.Storage;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 
 namespace Ncqrs.CommandHandling.AutoMapping.Actions
 {
@@ -16,8 +17,8 @@ namespace Ncqrs.CommandHandling.AutoMapping.Actions
 
         public ObjectCreationAction(IDomainRepository repository, ICommand command)
         {
-            if (repository == null) throw new ArgumentNullException("repository");
-            if (command == null) throw new ArgumentNullException("command");
+            Contract.Requires<ArgumentNullException>(repository != null);
+            Contract.Requires<ArgumentNullException>(command != null);
 
             _repository = repository;
             _command = command;

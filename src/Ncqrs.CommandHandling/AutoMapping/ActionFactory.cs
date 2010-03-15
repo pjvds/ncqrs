@@ -18,9 +18,11 @@ namespace Ncqrs.CommandHandling.AutoMapping
             _repository = repository;
         }
 
-        public IAutoMappedAction CreateActionForCommand(ICommand command)
+        public IAutoMappedAction CreateActionForCommand(ICommand command) // TODO: Is a command always mapped to only one action?
         {
-            if(command == null) throw new ArgumentNullException("command");
+            Contract.Requires<ArgumentNullException>(command != null);
+
+            ValidateCommand(command);
 
             if (IsCommandMappedToObjectCreation(command))
             {
@@ -34,6 +36,11 @@ namespace Ncqrs.CommandHandling.AutoMapping
 
             var message = String.Format("No mapping attributes found on {0} command.", command.GetType().Name);
             throw new MappingForCommandNotFoundException(message, command);
+        }
+
+        private void ValidateCommand(ICommand command)
+        {
+            if (command == null) throw new ArgumentNullException("command");
         }
 
         private static Boolean IsCommandMappedToADirectMethod(ICommand command)

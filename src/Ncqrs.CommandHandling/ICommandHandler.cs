@@ -6,8 +6,16 @@ using Ncqrs.Commands;
 
 namespace Ncqrs.CommandHandling
 {
+    /// <summary>
+    /// Represents a command handler.
+    /// </summary>
     public interface ICommandHandler
     {
-        void Handle(ICommand command);
+        /// <summary>
+        /// Handles a command.
+        /// </summary>
+        /// <param name="message">The command to handle. This should not be null.</param>
+        /// <exception cref="ArgumentNullException">Occurs when <i>command</i> is null.</exception>
+        void Execute(ICommand command);
     }
 }

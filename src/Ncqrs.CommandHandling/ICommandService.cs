@@ -8,8 +8,8 @@ namespace Ncqrs.CommandHandling
 {
     public interface ICommandService
     {
-        void Process(ICommand command);
+        void Execute(ICommand command);
 
-        void Process(IEnumerable<ICommand> commands);
+        void Execute(IEnumerable<ICommand> commands);
     }
 }

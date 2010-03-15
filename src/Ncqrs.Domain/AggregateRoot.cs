@@ -8,18 +8,20 @@ namespace Ncqrs.Domain
 {
     public abstract class AggregateRoot : MappedEventSource
     {
-        protected IDomainRepository DomainRepository // TODO: Are we sure we want to expose the repository this way?
-        {
-            get
-            {
-                return UnitOfWork.Current.DomainRepository;
-            }
-        }
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AggregateRoot"/> class.
+        /// </summary>
+        /// <remarks>
+        /// This instance will be initialized with the <see cref="BasicGuidGenerator"/>.
+        /// </remarks>
         protected AggregateRoot() : this(new BasicGuidGenerator())
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AggregateRoot"/> class.
+        /// </summary>
+        /// <param name="idGenerator">The id generator that will be used to generate a new id for this instance.</param>
         protected AggregateRoot(IUniqueIdentifierGenerator idGenerator) : base(idGenerator)
         {
         }

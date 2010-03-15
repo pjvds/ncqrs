@@ -20,7 +20,7 @@ namespace Ncqrs.CommandHandling
             _locator = commandHandlerLocator;
         }
 
-        public void Process(ICommand command)
+        public void Execute(ICommand command)
         {
             Contract.Requires<ArgumentNullException>(command != null);
 
@@ -29,13 +29,13 @@ namespace Ncqrs.CommandHandling
                 if (command == null) throw new ArgumentNullException("command");
 
                 ICommandHandler handler = _locator.GetHandler(command);
-                handler.Handle(command);
+                handler.Execute(command);
 
                 transaction.Complete();
             }
         }
 
-        public void Process(IEnumerable<ICommand> commands)
+        public void Execute(IEnumerable<ICommand> commands)
         {
             Contract.Requires(commands != null);
 
@@ -43,7 +43,7 @@ namespace Ncqrs.CommandHandling
             {
                 foreach (var command in commands)
                 {
-                    Process(command);
+                    Execute(command);
                 }
 
                 transaction.Complete();

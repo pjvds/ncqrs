@@ -5,6 +5,7 @@ using Ncqrs.Commands;
 using Ncqrs.Domain.Storage;
 using Ncqrs.Domain;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 
 namespace Ncqrs.CommandHandling.AutoMapping.Actions
 {
@@ -16,8 +17,11 @@ namespace Ncqrs.CommandHandling.AutoMapping.Actions
 
         public DirectMethodAction(IDomainRepository repository, ICommand command)
         {
-            if (repository == null) throw new ArgumentNullException("repository");
-            if (command == null) throw new ArgumentNullException("command");
+            Contract.Requires<ArgumentNullException>(repository != null, "The parameter repository should not be null.");
+            Contract.Requires<ArgumentNullException>(command != null, "The parameter command should not be null.");
+
+            Contract.Ensures(_repository == repository, "The field _repository should be initialized by the parameter value of repository.");
+            Contract.Ensures(_command == command, "The field _command should be initialized by the parameter value of command.");
 
             _repository = repository;
             _command = command;

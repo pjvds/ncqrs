@@ -1,4 +1,5 @@
 ﻿using System;
+
 namespace Ncqrs.Domain.Storage
 {
     public interface IDomainRepository
