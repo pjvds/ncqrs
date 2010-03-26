@@ -30,6 +30,7 @@ namespace Ncqrs.CommandHandling
         protected CommandHandler(IDomainRepository domainRepository)
         {
             Contract.Requires(domainRepository != null);
+            Contract.Ensures(Repository == domainRepository);
 
             Repository = domainRepository;
         }

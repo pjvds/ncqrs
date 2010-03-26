@@ -1,7 +1,7 @@
 ﻿using System;
 using Ncqrs.CommandHandling.AutoMapping.Actions;
 using Ncqrs.Commands;
-using Ncqrs.Commands.AutoMapping;
+using Ncqrs.Commands.Attributes;
 using System.Diagnostics.Contracts;
 using Ncqrs.Domain.Storage;
 

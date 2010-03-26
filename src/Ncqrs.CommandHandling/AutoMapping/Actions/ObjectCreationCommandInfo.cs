@@ -1,6 +1,6 @@
 ﻿using System;
 using Ncqrs.Commands;
-using Ncqrs.Commands.AutoMapping;
+using Ncqrs.Commands.Attributes;
 using System.Reflection;
 
 namespace Ncqrs.CommandHandling.AutoMapping.Actions

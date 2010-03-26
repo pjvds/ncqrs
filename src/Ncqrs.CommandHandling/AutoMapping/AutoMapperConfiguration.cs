@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Ncqrs.Commands;
-using Ncqrs.Commands.AutoMapping;
+using Ncqrs.Commands.Attributes;
 
 namespace Ncqrs.CommandHandling.AutoMapping
 {
