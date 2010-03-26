@@ -7,6 +7,7 @@ namespace Ncqrs.Eventing.Mapping
 {
     public class EventHandlerFactory
     {
+        /// <exception cref="InvalidEventHandlerMappingException">Occors if an event handler isn't mapped correctly.</exception>
         public IEnumerable<KeyValuePair<Type, Action<IEvent>>> CreateHandlers(MappedEventSource eventSource)
         {
             if (eventSource == null) throw new ArgumentNullException("eventSource");
@@ -18,18 +19,18 @@ namespace Ncqrs.Eventing.Mapping
                 {
                     if (method.IsStatic) // Handlers are never static. Since they need to update the internal state of an eventsource.
                     {
-                        // TODO: Throw exception.
-                        throw new InvalidOperationException();
+                        var message = String.Format("The method {0}.{1} could not be mapped as an event handler, since it is static.", method.DeclaringType.Name, method.Name);
+                        throw new InvalidEventHandlerMappingException(message);
                     }
                     if (NumberOfParameters(method) != 1) // The method should only have one parameter.
                     {
-                        // TODO: Throw exception.
-                        throw new InvalidOperationException();
+                        var message = String.Format("The method {0}.{1} could not be mapped as an event handler, since it does not have one parameter.", method.DeclaringType.Name, method.Name);
+                        throw new InvalidEventHandlerMappingException(message);
                     }
                     if (!typeof(IEvent).IsAssignableFrom(FirstParameterType(method))) // The parameter should be an IEvent.
                     {
-                        // TODO: Throw exception.
-                        throw new InvalidOperationException();
+                        var message = String.Format("The method {0}.{1} could not be mapped as an event handler, since it the first parameter is not an event type.", method.DeclaringType.Name, method.Name);
+                        throw new InvalidEventHandlerMappingException(message);
                     }
 
                     // A method copy is needed because the method variable
