@@ -1,11 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Diagnostics.Contracts;
 
 namespace Ncqrs.Eventing
 {
     public abstract class EventSource
     {
+        /// <summary>
+        /// Gets the globally unique identifier.
+        /// </summary>
+        public Guid Id
+        {
+            get;
+            private set;
+        }
+
         /// <summary>
         /// Gets a value indicating whether this instance is initializing from history.
         /// </summary>
@@ -25,15 +35,6 @@ namespace Ncqrs.Eventing
         private readonly Stack<IEvent> _unacceptedEvents = new Stack<IEvent>(0);
 
         /// <summary>
-        /// Gets the globally unique identifier.
-        /// </summary>
-        public Guid Id
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
         /// Gets the current version.
         /// </summary>
         /// <value>An <see cref="int"/> representing the current version of the <see cref="EventSource"/>.</value>
@@ -49,6 +50,13 @@ namespace Ncqrs.Eventing
 
             Id = idGenerator.GenerateNewId(this);
             Version = 0;
+        }
+
+        protected EventSource(IEnumerable<HistoricalEvent> history)
+        {
+            Contract.Requires<ArgumentNullException>(history == null);
+
+            InitializeFromHistory(history);
         }
 
         /// <summary>
