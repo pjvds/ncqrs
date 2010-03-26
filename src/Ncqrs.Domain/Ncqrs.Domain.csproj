@@ -67,7 +67,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Storage\IDomainRepository.cs" />
     <Compile Include="UnitOfWork.cs" />
-    <Compile Include="ValueObject.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Ncqrs.Eventing.Bus\Ncqrs.Eventing.Bus.csproj">

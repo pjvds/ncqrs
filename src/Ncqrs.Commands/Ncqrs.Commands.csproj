@@ -40,10 +40,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AutoMapping\AggregateRootIdAttribute.cs" />
-    <Compile Include="AutoMapping\ExcludeInMappingAttribute.cs" />
-    <Compile Include="AutoMapping\MapsToAggregateRootConstructorAttribute.cs" />
-    <Compile Include="AutoMapping\MapsToAggregateRootMethodAttribute.cs" />
+    <Compile Include="Meta\AggregateRootIdAttribute.cs" />
+    <Compile Include="Meta\ExcludeInMappingAttribute.cs" />
+    <Compile Include="Meta\MapsToAggregateRootConstructorAttribute.cs" />
+    <Compile Include="Meta\MapsToAggregateRootMethodAttribute.cs" />
     <Compile Include="ICommand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

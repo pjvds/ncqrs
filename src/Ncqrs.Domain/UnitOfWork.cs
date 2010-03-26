@@ -139,6 +139,9 @@ namespace Ncqrs.Domain
             }
         }
 
+        /// <summary>
+        /// Make sure that a valid <see cref="UnitOfWork"/> is available.
+        /// </summary>
         public static void Required()
         {
             Contract.Requires<InvalidOperationException>(Current != null);
