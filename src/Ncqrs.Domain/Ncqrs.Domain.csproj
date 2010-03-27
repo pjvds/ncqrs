@@ -63,8 +63,10 @@
   <ItemGroup>
     <Compile Include="AggregateRoot.cs" />
     <Compile Include="IUnitOfWork.cs" />
+    <Compile Include="Storage\DefaultAggregateRootLoader.cs" />
     <Compile Include="Storage\DomainRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Storage\IAggregateRootLoader.cs" />
     <Compile Include="Storage\IDomainRepository.cs" />
     <Compile Include="UnitOfWork.cs" />
   </ItemGroup>

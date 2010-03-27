@@ -12,6 +12,11 @@ namespace Ncqrs.Eventing.Mapping
             InitializeHandlers();
         }
 
+        protected MappedEventSource(IEnumerable<HistoricalEvent> history) : base(history)
+        {
+            InitializeHandlers();
+        }
+
         private void InitializeHandlers()
         {
             var handlerFactory = new EventHandlerFactory();
@@ -33,7 +38,7 @@ namespace Ncqrs.Eventing.Mapping
         {
             if(eventType == null) throw new ArgumentNullException("eventType");
             if(handler == null) throw new ArgumentNullException("handler");
-            if (_handlers.ContainsKey(eventType)) throw new EventAlreadyHandledException("");// TODO: More details.
+            if (_handlers.ContainsKey(eventType)) throw new EventHandlerAlreadyRegisterException("");// TODO: More details.
 
             _handlers.Add(eventType, handler);
         }

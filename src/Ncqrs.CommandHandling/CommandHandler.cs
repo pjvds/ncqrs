@@ -42,8 +42,15 @@ namespace Ncqrs.CommandHandling
         /// <exception cref="ArgumentNullException">Occurs when <i>command</i> is null.</exception>
         public abstract void Handle(T command);
 
+        /// <summary>
+        /// Handles a command.
+        /// </summary>
+        /// <param name="command"></param>
+        /// <exception cref="ArgumentNullException">Occurs when <i>command</i> is null.</exception>
         void ICommandHandler.Execute(ICommand command)
         {
+            Contract.Requires<ArgumentNullException>(command != null);
+
             this.Handle((T)command);
         }
     }

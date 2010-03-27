@@ -15,7 +15,6 @@ namespace Ncqrs.Eventing.Mapping
         public EventHandlerAlreadyRegisterException(string message)
             : base(message)
         {
-            Argu
         }
 
         /// <summary>

@@ -6,6 +6,7 @@ using Ncqrs.Domain.Storage;
 using Ncqrs.Eventing.Storage;
 using Ncqrs.Eventing.Bus;
 using Ncqrs.Eventing;
+using System.Diagnostics.Contracts;
 
 namespace Ncqrs.Domain
 {
@@ -13,11 +14,21 @@ namespace Ncqrs.Domain
     {
         private readonly IEventBus _eventBus;
         private readonly IEventStore _store;
+        private readonly IAggregateRootLoader _loader;
 
-        public DomainRepository(IEventStore store, IEventBus eventBus)
+        public DomainRepository(IEventStore store, IEventBus eventBus) : this(store, eventBus, new DefaultAggregateRootLoader())
         {
+        }
+
+        public DomainRepository(IEventStore store, IEventBus eventBus, IAggregateRootLoader loader)
+        {
+            Contract.Requires<ArgumentNullException>(store != null);
+            Contract.Requires<ArgumentNullException>(eventBus != null);
+            Contract.Requires<ArgumentNullException>(loader != null);
+
             _store = store;
             _eventBus = eventBus;
+            _loader = loader;
         }
 
         public AggregateRoot GetById(Type aggregateRootType, Guid id)
@@ -27,7 +38,7 @@ namespace Ncqrs.Domain
 
             try
             {
-                aggregate = (AggregateRoot)Activator.CreateInstance(aggregateRootType, events);
+                aggregate = _loader.LoadAggregateRootFromEvents(aggregateRootType, events);
             }
             catch (MissingMethodException)
             {
@@ -43,7 +54,7 @@ namespace Ncqrs.Domain
             return (T)GetById(typeof(T), id);
         }
 
-        internal void Save(AggregateRoot aggregateRoot)
+        public void Save(AggregateRoot aggregateRoot)
         {
             // Save the events to the event store.
             IEnumerable<IEvent> events = _store.Save(aggregateRoot);
@@ -53,21 +64,6 @@ namespace Ncqrs.Domain
 
             // Accept the changes.
             aggregateRoot.AcceptEvents();
-        }
-
-        AggregateRoot IDomainRepository.GetById(Type aggregateRootType, Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        T IDomainRepository.GetById<T>(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        void IDomainRepository.Save(AggregateRoot t)
-        {
-            Save(t);
         }
     }
 }
