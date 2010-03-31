@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{0610E5DC-D7B5-4923-BB9B-52E1CD58E09C}</ProjectGuid>
+    <ProjectGuid>{EC9B1FF0-57B9-49AA-9D8B-6E30B8C6155C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Ncqrs.Eventing.Bus</RootNamespace>
-    <AssemblyName>Ncqrs.Eventing.Bus</AssemblyName>
+    <RootNamespace>Ncqrs.CommandBus</RootNamespace>
+    <AssemblyName>Ncqrs.CommandBus</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -33,7 +33,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Transactions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -41,15 +40,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IEventBus.cs" />
-    <Compile Include="IEventHandler.cs" />
-    <Compile Include="InProcessEventBus.cs" />
+    <Compile Include="Class1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Ncqrs.Eventing\Ncqrs.Eventing.csproj">
-      <Project>{56D48F9D-29F4-4E77-86B1-D988EAC1DF42}</Project>
-      <Name>Ncqrs.Eventing</Name>
+    <ProjectReference Include="..\Ncqrs.Commands\Ncqrs.Commands.csproj">
+      <Project>{667C1A88-8173-454D-B44F-CE9B27CC0548}</Project>
+      <Name>Ncqrs.Commands</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

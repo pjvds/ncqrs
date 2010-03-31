@@ -6,6 +6,9 @@ using Ncqrs.Eventing;
 
 namespace Ncqrs.Domain.Storage
 {
+    /// <summary>
+    /// The default aggregate root loader than can load an aggregate root instance from a historic event stream.
+    /// </summary>
     public class DefaultAggregateRootLoader : IAggregateRootLoader
     {
         public AggregateRoot LoadAggregateRootFromEvents(Type aggregateRootType, IEnumerable<HistoricalEvent> events)

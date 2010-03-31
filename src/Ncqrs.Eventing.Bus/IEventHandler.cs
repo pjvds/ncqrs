@@ -5,7 +5,8 @@ using System.Text;
 
 namespace Ncqrs.Eventing.Bus
 {
-    public class IEventHandler<T>
+    public interface IEventHandler
     {
+        void Handle(IEvent eventMessage);
     }
 }

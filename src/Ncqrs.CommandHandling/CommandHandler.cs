@@ -5,6 +5,7 @@ using System.Text;
 using System.Diagnostics.Contracts;
 using Ncqrs.Commands;
 using Ncqrs.Domain.Storage;
+using Ncqrs.Domain;
 
 namespace Ncqrs.CommandHandling
 {

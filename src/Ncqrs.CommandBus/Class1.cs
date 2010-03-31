@@ -2,36 +2,31 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Ncqrs.Commands;
 
-namespace Ncqrs.Eventing.Bus
+namespace Ncqrs.CommandBus
 {
     /// <summary>
-    /// A bus that can publish events to handlers.
+    /// A bus that can publish command to handlers.
     /// </summary>
-    public interface IEventBus
+    public interface ICommandBus
     {
         /// <summary>
-        /// Publishes the event to the handlers.
+        /// Publishes the command to the handlers.
         /// </summary>
-        /// <param name="eventMessage">The message to publish.</param>
+        /// <param name="message">The message to publish.</param>
         /// <exception cref="ArgumentNullException">Thrown when <i>message</i> was null.</exception>
         /// <exception cref="NoHandlerRegisteredForMessageException">Thrown when no handler was found for the specified message.</exception>
-        void Publish(IEvent eventMessage);
+        void Publish(ICommand command);
 
         /// <summary>
         /// Publishes the messages to the handlers.
         /// </summary>
-        /// <param name="eventMessage">The messages to publish.</param>
+        /// <param name="messages">The messages to publish.</param>
         /// <exception cref="ArgumentNullException">Thrown when <i>messages</i> was null.</exception>
         /// <exception cref="ArgumentNullException">Thrown when a instance in <i>messages</i> was null.</exception>
         /// <exception cref="NoHandlerRegisteredForMessageException">Thrown when no handler was found for one of the specified messages.</exception>
-        void Publish(IEnumerable<IEvent> eventMessages);
-
-        /// <summary>
-        /// Register a handler for a specific message type.
-        /// </summary>
-        /// <typeparam name="TMessage">The type of the message to handle.</typeparam>
-        /// <param name="handler">The handler that handles the specified message.</param>
-        void RegisterHandler<TEvent>(IEventHandler handler) where TEvent : IEvent;
+        void Publish(IEnumerable<ICommand> commands);
     }
+
 }
