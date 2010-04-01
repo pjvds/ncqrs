@@ -33,5 +33,7 @@ namespace Ncqrs.Eventing.Bus
         /// <typeparam name="TMessage">The type of the message to handle.</typeparam>
         /// <param name="handler">The handler that handles the specified message.</param>
         void RegisterHandler<TEvent>(IEventHandler handler) where TEvent : IEvent;
+
+        void RegisterHandler(Type eventType, IEventHandler handler);
     }
 }

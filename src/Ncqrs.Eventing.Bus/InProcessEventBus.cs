@@ -35,7 +35,7 @@ namespace Ncqrs.Eventing.Bus
 
                     foreach (var handler in handlers)
                     {
-                        Log.DebugFormat("Calling handler {0} for event {1].", handler.GetType().FullName, eventMessageType.FullName);
+                        Log.DebugFormat("Calling handler {0} for event {1}.", handler.GetType().FullName, eventMessageType.FullName);
 
                         handler.Handle(eventMessage);
 

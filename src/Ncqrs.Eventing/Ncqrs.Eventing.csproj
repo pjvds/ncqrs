@@ -72,7 +72,6 @@
     <Compile Include="HistoricalEventAppliedEventArgs.cs" />
     <Compile Include="HistoricalEventAppliedEventHandler.cs" />
     <Compile Include="IEvent.cs" />
-    <Compile Include="IEventHandler.cs" />
     <Compile Include="IUniqueIdentifierGenerator.cs" />
     <Compile Include="Mapping\EventAlreadyHandledException.cs" />
     <Compile Include="Mapping\EventHandlerAttribute.cs" />
