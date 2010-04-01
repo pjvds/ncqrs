@@ -5,34 +5,43 @@ using System.Text;
 using Ncqrs.Commands;
 using System.Transactions;
 using System.Diagnostics.Contracts;
+using System.Reflection;
+using log4net;
 
 namespace Ncqrs.CommandHandling
 {
     public class TransactionalInProcessCommandService : ICommandService
     {
-        private readonly Dictionary<Type, ICommandHandler> _handlerRegister = new Dictionary<Type, ICommandHandler>();
-        private readonly ICommandHandlerRegister _locator;
-
-        public TransactionalInProcessCommandService(ICommandHandlerRegister commandHandlerLocator)
-        {
-            Contract.Requires<ArgumentNullException>(commandHandlerLocator != null);
-
-            _locator = commandHandlerLocator;
-        }
+        private readonly Dictionary<Type, ICommandHandler> _handlers = new Dictionary<Type, ICommandHandler>();
+        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public void Execute(ICommand command)
         {
             Contract.Requires<ArgumentNullException>(command != null);
+            Type commandType = command.GetType();
+
+            Log.InfoFormat("Received {0} command and will now start processing it.", commandType.FullName);
 
             using (var transaction = new TransactionScope())
             {
-                if (command == null) throw new ArgumentNullException("command");
+                ICommandHandler handler = null;
 
-                ICommandHandler handler = _locator.GetHandler(command);
+                if (!_handlers.TryGetValue(commandType, out handler))
+                {
+                    // TODO: Add details.
+                    throw new CommandHandlerNotFoundException();
+                }
+
+                Log.DebugFormat("Found commandhandler {0} to handle the {1} command. Will start executing it now.", handler.GetType().FullName, commandType.FullName);
+
                 handler.Execute(command);
+
+                Log.DebugFormat("Handler execution complete.");
 
                 transaction.Complete();
             }
+
+            Log.InfoFormat("Finished processing {0}.", commandType.FullName);
         }
 
         public void Execute(IEnumerable<ICommand> commands)
@@ -48,6 +57,19 @@ namespace Ncqrs.CommandHandling
 
                 transaction.Complete();
             }
+        }
+
+        public void RegisterHandler<TCommand>(ICommandHandler handler) where TCommand : ICommand
+        {
+            RegisterHandler(typeof(TCommand), handler);
+        }
+
+        public void RegisterHandler(Type commandType, ICommandHandler handler)
+        {
+            Contract.Requires<ArgumentNullException>(commandType != null);
+            Contract.Requires<ArgumentNullException>(handler != null);
+
+            _handlers.Add(commandType, handler);
         }
     }
 }

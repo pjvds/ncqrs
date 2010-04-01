@@ -11,5 +11,9 @@ namespace Ncqrs.CommandHandling
         void Execute(ICommand command);
 
         void Execute(IEnumerable<ICommand> commands);
+
+        void RegisterHandler<TCommand>(ICommandHandler handler) where TCommand : ICommand;
+
+        void RegisterHandler(Type commandType, ICommandHandler handler);
     }
 }

@@ -7,6 +7,10 @@ namespace Ncqrs.Eventing
 {
     public abstract class EventSource
     {
+        public event EventAppliedEventHandler EventApplied;
+        public event HistoricalEventAppliedEventHandler HistoricalEventApplied;
+        public event EventsAcceptedEventHandler EventsAccepted;
+
         /// <summary>
         /// Gets the globally unique identifier.
         /// </summary>
@@ -75,7 +79,8 @@ namespace Ncqrs.Eventing
 
                 foreach (var historicalEvent in history)
                 {
-                    ApplyEvent(historicalEvent);
+                    ApplyHistoricalEvent(historicalEvent);
+                    Version++;
                 }
             }
             finally
@@ -86,10 +91,12 @@ namespace Ncqrs.Eventing
 
         protected abstract void HandleEvent(IEvent evnt);
 
-        protected void ApplyEvent(HistoricalEvent evnt)
+        protected void ApplyHistoricalEvent(HistoricalEvent evnt)
         {
             if (evnt == null) throw new ArgumentNullException("event");
             HandleEvent(evnt.Event);
+
+            OnHistoricalEventApplied(evnt);
         }
 
         protected void ApplyEvent(IEvent evnt)
@@ -98,6 +105,8 @@ namespace Ncqrs.Eventing
             HandleEvent(evnt);
 
             _unacceptedEvents.Push(evnt);
+
+            OnEventApplied(evnt);
         }
 
         public IEnumerable<IEvent> GetUncommitedEvents()
@@ -107,14 +116,43 @@ namespace Ncqrs.Eventing
 
         public void AcceptEvents()
         {
+            // Grab events that will be accepted.
+            IEnumerable<IEvent> acceptedEvents = GetUncommitedEvents();
+
+            // Clear the unaccepted event list.
             _unacceptedEvents.Clear();
+
+            // Notify the world that the events are accepted.
+            OnEventsAccepted(acceptedEvents);
         }
 
         protected void OverrideId(Guid id)
         {
-            if (!InitializingFromHistory) throw new InvalidOperationException("Instance is not initializing from history.");
-
             Id = id;
+        }
+
+        protected virtual void OnEventApplied(IEvent evnt)
+        {
+            if(EventApplied != null)
+            {
+                EventApplied(this, new EventAppliedEventArgs(evnt));
+            }
+        }
+
+        protected virtual void OnHistoricalEventApplied(HistoricalEvent historicalEvent)
+        {
+            if (HistoricalEventApplied != null)
+            {
+                HistoricalEventApplied(this, new HistoricalEventAppliedEventArgs(historicalEvent));
+            }
+        }
+
+        protected virtual void OnEventsAccepted(IEnumerable<IEvent> acceptedEvents)
+        {
+            if (EventsAccepted != null)
+            {
+                EventsAccepted(this, new EventsAcceptedEventArgs(acceptedEvents));
+            }
         }
     }
 }

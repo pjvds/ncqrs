@@ -22,7 +22,7 @@ namespace Ncqrs.Eventing.Storage.SQL
             @"INSERT INTO [EventSources](Id, Type, Version) VALUES (@Id, @Type, @Version)";
 
         private const String SelectAllEventsQuery =
-            @"SELECT [TimeStamp], [Data] FROM [Events] WHERE [EventSourceId] = evntSourceId ORDER BY [TimeStamp]";
+            @"SELECT [TimeStamp], [Data] FROM [Events] WHERE [EventSourceId] = @EventSourceId ORDER BY [TimeStamp]";
 
         private const String SelectAllIdsForTypeQuery = @"SELECT [Id] FROM [EventSources] WHERE [Type] = @Type";
 
@@ -233,6 +233,7 @@ namespace Ncqrs.Eventing.Storage.SQL
 
         public static IEnumerable<String> GetTableCreationQueries()
         {
+            // TODO: Update.
             yield return @"CREATE TABLE [dbo].[Events]([EventProviderId] [uniqueidentifier] NOT NULL, [TimeStamp] [datetime] NOT NULL, [Data] [varbinary](max) NOT NULL, [Name] [varchar](max) NOT NULL) ON [PRIMARY]";
             yield return @"CREATE TABLE [dbo].[EventProviders]([Id] [uniqueidentifier] NOT NULL, [Type] [nvarchar](255) NOT NULL, [Version] [int] NOT NULL) ON [PRIMARY]";
         }

@@ -117,7 +117,7 @@ namespace Ncqrs.Domain
         /// Registers the dirty.
         /// </summary>
         /// <param name="dirtyInstance">The dirty instance.</param>
-        internal void RegisterDirty(AggregateRoot dirtyInstance)
+        internal void RegisterDirtyInstance(AggregateRoot dirtyInstance)
         {
             if (!_dirtyInstances.Contains(dirtyInstance))
             {

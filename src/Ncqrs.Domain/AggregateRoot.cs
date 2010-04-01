@@ -30,5 +30,14 @@ namespace Ncqrs.Domain
         {
             InitializeFromHistory(history);
         }
+
+        protected override void OnEventApplied(IEvent evnt)
+        {
+            // Register this instance as a dirty one.
+            UnitOfWork.Current.RegisterDirtyInstance(this);
+
+            // Call base.
+            base.OnEventApplied(evnt);
+        }
     }
 }
