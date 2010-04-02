@@ -6,6 +6,9 @@ using Ncqrs.Domain.Storage;
 
 namespace Ncqrs.Domain
 {
+    /// <summary>
+    /// The abstract concept of an aggregate root.
+    /// </summary>
     public abstract class AggregateRoot : MappedEventSource
     {
         /// <summary>
@@ -26,9 +29,8 @@ namespace Ncqrs.Domain
         {
         }
 
-        protected AggregateRoot(IEnumerable<HistoricalEvent> history) : this(new BasicGuidGenerator()) // TODO: Is id generator needed?
+        protected AggregateRoot(IEnumerable<HistoricalEvent> history) : base(history)
         {
-            InitializeFromHistory(history);
         }
 
         protected override void OnEventApplied(IEvent evnt)
