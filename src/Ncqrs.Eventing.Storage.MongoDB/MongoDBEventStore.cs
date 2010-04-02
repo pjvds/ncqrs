@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using MongoDB.Driver;
-using MongoDB.Linq;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Reflection;
@@ -16,7 +15,7 @@ namespace Ncqrs.Eventing.Storage.MongoDB
 {
     /// <summary>
     /// An event store that uses MongoDB as storage mechanism. MongoDB is an document based database. 
-    /// See <see cref="http://mongodb.org"/> for more information about MongoDB.
+    /// See <seealso cref="http://mongodb.org"/> for more information about MongoDB.
     /// </summary>
     /// <remarks>
     /// Be aware of the fact that MongoDB doesn't support transactions at the moment!

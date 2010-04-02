@@ -59,12 +59,6 @@
     <Reference Include="MongoDB.Driver">
       <HintPath>..\Externals\MongoDB\MongoDB.Driver.dll</HintPath>
     </Reference>
-    <Reference Include="MongoDB.GridFS">
-      <HintPath>..\Externals\MongoDB\MongoDB.GridFS.dll</HintPath>
-    </Reference>
-    <Reference Include="MongoDB.Linq">
-      <HintPath>..\Externals\MongoDB\MongoDB.Linq.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json.Net20">
       <HintPath>..\Externals\Json.NET\Newtonsoft.Json.Net20.dll</HintPath>
     </Reference>
