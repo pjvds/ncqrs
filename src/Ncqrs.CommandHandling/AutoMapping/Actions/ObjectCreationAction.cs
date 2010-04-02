@@ -9,7 +9,7 @@ using System.Diagnostics.Contracts;
 
 namespace Ncqrs.CommandHandling.AutoMapping.Actions
 {
-    public class ObjectCreationAction : IAutoMappedAction
+    public class ObjectCreationAction : IAutoMappedCommandAction
     {
         private readonly ICommand _command;
         private readonly IDomainRepository _repository;

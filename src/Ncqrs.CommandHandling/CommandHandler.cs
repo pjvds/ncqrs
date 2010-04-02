@@ -15,44 +15,47 @@ namespace Ncqrs.CommandHandling
     /// <typeparam name="T">The type of the command to handle.</typeparam>
     public abstract class CommandHandler<T> : ICommandHandler where T : ICommand
     {
+        private readonly IDomainRepository _repository;
+
         /// <summary>
         /// Gets the repository.
         /// </summary>
         /// <value>The repository.</value>
         protected IDomainRepository Repository
         {
-            get;
-            private set;
+            get
+            {
+                Contract.Ensures(Contract.Result<IDomainRepository>() != null, "The result should never be null.");
+                
+                return _repository;
+            }
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandHandler&lt;T&gt;"/> class.
         /// </summary>
+        /// <exception cref="ArgumentNullException">Occurs when <i>domainRepository</i> is <c>null</c>.</exception>
         protected CommandHandler(IDomainRepository domainRepository)
         {
-            Contract.Requires(domainRepository != null);
-            Contract.Ensures(Repository == domainRepository);
+            Contract.Requires<ArgumentNullException>(domainRepository != null, "The domainRepository cannot be null.");
+            Contract.Ensures(Repository == domainRepository, "Repository should be initialized with the given parameter domainRepository.");
 
-            Repository = domainRepository;
+            _repository = domainRepository;
         }
 
         /// <summary>
-        /// Handles a command.
+        /// Executes the command.
         /// </summary>
-        /// <param name="message">The command to handle. This should not be null.</param>
+        /// <param name="message">The command to execute. This should not be null.</param>
         /// <exception cref="ArgumentNullException">Occurs when <i>command</i> is null.</exception>
-        public abstract void Handle(T command);
+        public abstract void Execute(T command);
 
-        /// <summary>
-        /// Handles a command.
-        /// </summary>
-        /// <param name="command"></param>
-        /// <exception cref="ArgumentNullException">Occurs when <i>command</i> is null.</exception>
         void ICommandHandler.Execute(ICommand command)
         {
-            Contract.Requires<ArgumentNullException>(command != null);
+            Contract.Requires<ArgumentNullException>(command != null, "The command cannot be null.");
+            Contract.Requires<ArgumentException>(command is T, "The command should be of type " + typeof(T).FullName);
 
-            this.Handle((T)command);
+            this.Execute((T)command);
         }
     }
 }

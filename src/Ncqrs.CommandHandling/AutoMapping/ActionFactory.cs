@@ -18,7 +18,7 @@ namespace Ncqrs.CommandHandling.AutoMapping
             _repository = repository;
         }
 
-        public IAutoMappedAction CreateActionForCommand(ICommand command) // TODO: Is a command always mapped to only one action?
+        public IAutoMappedCommandAction CreateActionForCommand(ICommand command) // TODO: Is a command always mapped to only one action?
         {
             Contract.Requires<ArgumentNullException>(command != null);
 

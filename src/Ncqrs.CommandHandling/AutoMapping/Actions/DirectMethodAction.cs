@@ -9,7 +9,7 @@ using System.Diagnostics.Contracts;
 
 namespace Ncqrs.CommandHandling.AutoMapping.Actions
 {
-    public class DirectMethodAction : IAutoMappedAction
+    public class DirectMethodAction : IAutoMappedCommandAction
     {
         private readonly ICommand _command;
         private readonly DirectMethodCommandInfo _info;
