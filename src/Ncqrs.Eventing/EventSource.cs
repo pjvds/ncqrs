@@ -67,7 +67,7 @@ namespace Ncqrs.Eventing
         /// Initializes from history.
         /// </summary>
         /// <param name="history">The history.</param>
-        protected void InitializeFromHistory(IEnumerable<HistoricalEvent> history)
+        private void InitializeFromHistory(IEnumerable<HistoricalEvent> history)
         {
             if (history == null) throw new ArgumentNullException("history");
             if (history.Count() == 0) throw new ArgumentException("The provided history does not contain any historical event.", "history");
