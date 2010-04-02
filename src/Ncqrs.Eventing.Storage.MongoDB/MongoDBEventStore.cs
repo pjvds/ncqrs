@@ -79,7 +79,7 @@ namespace Ncqrs.Eventing.Storage.MongoDB
                 var collection = db.GetCollection(_collectionName);
 
                 var specDocument = new Document();
-                specDocument["EventSourceId"] = id.ToString();
+                specDocument["EventSourceId"] = id;
 
                 var foundDocuments = collection.Find(specDocument).Documents;
 
@@ -133,7 +133,7 @@ namespace Ncqrs.Eventing.Storage.MongoDB
             foreach (var evnt in eventSource.GetUncommitedEvents())
             {
                 var document = new Document();
-                document["EventSourceId"] = eventSource.Id.ToString();
+                document["EventSourceId"] = eventSource.Id;
                 document["TimeStamp"] = DateTime.UtcNow;
                 document["AssemblyQualifiedEventTypeName"] = evnt.GetType().AssemblyQualifiedName;
 
