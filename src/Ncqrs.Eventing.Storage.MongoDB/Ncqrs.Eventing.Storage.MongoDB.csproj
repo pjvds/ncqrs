@@ -60,7 +60,7 @@
       <HintPath>..\Externals\MongoDB\MongoDB.Driver.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json.Net20">
-      <HintPath>..\Externals\Json.NET\Newtonsoft.Json.Net20.dll</HintPath>
+      <HintPath>..\Externals\Json\Newtonsoft.Json.Net20.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
