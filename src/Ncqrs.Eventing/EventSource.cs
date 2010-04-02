@@ -56,6 +56,12 @@ namespace Ncqrs.Eventing
             Version = 0;
         }
 
+        [ContractInvariantMethod]
+        private void ContractInvariants()
+        {
+            Contract.Invariant(_unacceptedEvents != null, "The member _unacceptedEvents should never be null.");
+        }
+
         protected EventSource(IEnumerable<HistoricalEvent> history)
         {
             Contract.Requires<ArgumentNullException>(history != null);
@@ -111,6 +117,8 @@ namespace Ncqrs.Eventing
 
         public IEnumerable<IEvent> GetUncommitedEvents()
         {
+            Contract.Ensures(Contract.Result<IEnumerable<IEvent>>() != null, "The result of this method should never be null.");
+
             return _unacceptedEvents;
         }
 
@@ -133,6 +141,8 @@ namespace Ncqrs.Eventing
 
         protected virtual void OnEventApplied(IEvent evnt)
         {
+            Contract.Requires<ArgumentNullException>(evnt != null, "evnt cannot be null.");
+
             if(EventApplied != null)
             {
                 EventApplied(this, new EventAppliedEventArgs(evnt));
@@ -141,6 +151,8 @@ namespace Ncqrs.Eventing
 
         protected virtual void OnHistoricalEventApplied(HistoricalEvent historicalEvent)
         {
+            Contract.Requires<ArgumentNullException>(historicalEvent != null, "historicalEvent cannot be null.");
+
             if (HistoricalEventApplied != null)
             {
                 HistoricalEventApplied(this, new HistoricalEventAppliedEventArgs(historicalEvent));

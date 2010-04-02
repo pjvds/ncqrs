@@ -18,6 +18,8 @@ namespace Ncqrs.Domain
 
         public DomainRepository(IEventStore store, IEventBus eventBus) : this(store, eventBus, new DefaultAggregateRootLoader())
         {
+            Contract.Requires<ArgumentNullException>(store != null, "store cannot be null.");
+            Contract.Requires<ArgumentNullException>(eventBus != null, "store cannot be null.");
         }
 
         public DomainRepository(IEventStore store, IEventBus eventBus, IAggregateRootLoader loader)

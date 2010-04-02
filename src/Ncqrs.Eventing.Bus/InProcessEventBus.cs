@@ -16,7 +16,6 @@ namespace Ncqrs.Eventing.Bus
 
         public void Publish(IEvent eventMessage)
         {
-            Contract.Requires<ArgumentNullException>(eventMessage != null);
             var eventMessageType = eventMessage.GetType();
 
             Log.InfoFormat("Started publishing event {0}.", eventMessageType.FullName);
@@ -62,9 +61,6 @@ namespace Ncqrs.Eventing.Bus
 
         public void RegisterHandler(Type eventType, IEventHandler handler)
         {
-            Contract.Requires<ArgumentNullException>(eventType != null);
-            Contract.Requires<ArgumentNullException>(handler != null);
-
             List<IEventHandler> handlers = null;
             if (!_handlerRegister.TryGetValue(eventType, out handlers))
             {

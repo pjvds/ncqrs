@@ -81,7 +81,7 @@ namespace Ncqrs.Domain
         /// <param name="domainRepository">The domain repository to use in this unit of work.</param>
         public UnitOfWork(IDomainRepository domainRepository)
         {
-            Contract.Requires<InvalidOperationException>(Current == null, "An other UnitOfWork instance already exists in this context.");
+            //Contract.Requires<InvalidOperationException>(Current == null, "An other UnitOfWork instance already exists in this context.");
             Contract.Requires<ArgumentNullException>(domainRepository != null);
 
             Contract.Ensures(_repository == domainRepository, "The _repository member should be initialized with the one given by the domainRepository parameter.");
@@ -91,6 +91,13 @@ namespace Ncqrs.Domain
             _repository = domainRepository;
             _dirtyInstances = new Queue<AggregateRoot>();
             _threadInstance = this;
+            IsDisposed = false;
+        }
+
+        [ContractInvariantMethod]
+        private void ContractInvariants()
+        {
+            Contract.Invariant(Contract.ForAll(_dirtyInstances, (instance => instance != null)), "None of the dirty instances can be null.");
         }
 
         /// <summary>
@@ -157,6 +164,8 @@ namespace Ncqrs.Domain
             while (_dirtyInstances.Count > 0)
             {
                 var dirtyInstance = _dirtyInstances.Dequeue();
+
+                Contract.Assume(dirtyInstance != null);
                 _repository.Save(dirtyInstance);
             }
         }
