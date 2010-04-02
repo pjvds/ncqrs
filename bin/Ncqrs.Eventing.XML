@@ -1,0 +1,251 @@
+﻿<?xml version="1.0"?>
+<doc>
+  <assembly>
+    <name>Ncqrs.Eventing</name>
+  </assembly>
+  <members>
+    <member name="T:Ncqrs.Eventing.IEvent">
+      <summary>
+            Represents an event.
+            </summary>
+    </member>
+    <member name="T:Ncqrs.Eventing.Mapping.EventHandlerAlreadyRegisterException">
+      <summary>
+            The exception that is thrown when an event handler is already registered for the event.
+            </summary>
+    </member>
+    <member name="M:Ncqrs.Eventing.Mapping.EventHandlerAlreadyRegisterException.#ctor(System.String)">
+      <summary>
+            Initializes a new instance of the <see cref="T:Ncqrs.Eventing.Mapping.EventHandlerAlreadyRegisterException" /> class.
+            </summary>
+      <param name="message">The message.</param>
+    </member>
+    <member name="M:Ncqrs.Eventing.Mapping.EventHandlerAlreadyRegisterException.#ctor(System.String,System.Exception)">
+      <summary>
+            Initializes a new instance of the <see cref="T:Ncqrs.Eventing.Mapping.EventHandlerAlreadyRegisterException" /> class.
+            </summary>
+      <param name="message">The message.</param>
+      <param name="innerException">The inner exception.</param>
+    </member>
+    <member name="M:Ncqrs.Eventing.Mapping.EventHandlerAlreadyRegisterException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+      <summary>
+            Initializes a new instance of the <see cref="T:Ncqrs.Eventing.Mapping.EventHandlerAlreadyRegisterException" /> class.
+            </summary>
+      <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo" /> that holds the serialized object data about the exception being thrown.</param>
+      <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext" /> that contains contextual information about the source or destination.</param>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="info" /> parameter is null. </exception>
+      <exception cref="T:System.Runtime.Serialization.SerializationException">The class name is null or <see cref="P:System.Exception.HResult" /> is zero (0). </exception>
+    </member>
+    <member name="T:Ncqrs.Eventing.BasicGuidGenerator">
+      <summary>
+            An unique identifier generator based on the .NET <see cref="T:System.Guid" /> class.
+            </summary>
+    </member>
+    <member name="M:Ncqrs.Eventing.BasicGuidGenerator.GenerateNewId(Ncqrs.Eventing.EventSource)">
+      <summary>
+            Generates a new <see cref="T:System.Guid" /> based on the <see cref="M:System.Guid.NewGuid" /> method.
+            </summary>
+      <param name="eventSource">The <see cref="T:Ncqrs.Eventing.EventSource" /> that requests the <see cref="T:System.Guid" />.</param>
+      <returns>A new generated <see cref="T:System.Guid" />.</returns>
+    </member>
+    <member name="F:Ncqrs.Eventing.EventSource._unacceptedEvents">
+      <summary>
+            Holds the events that are not yet accepted.
+            </summary>
+    </member>
+    <member name="M:Ncqrs.Eventing.EventSource.InitializeFromHistory(System.Collections.Generic.IEnumerable{Ncqrs.Eventing.HistoricalEvent})">
+      <summary>
+            Initializes from history.
+            </summary>
+      <param name="history">The history.</param>
+    </member>
+    <member name="P:Ncqrs.Eventing.EventSource.Id">
+      <summary>
+            Gets the globally unique identifier.
+            </summary>
+    </member>
+    <member name="P:Ncqrs.Eventing.EventSource.InitializingFromHistory">
+      <summary>
+            Gets a value indicating whether this instance is initializing from history.
+            </summary>
+      <remarks>This will be set to true at the beginning of the <see cref="M:Ncqrs.Eventing.EventSource.InitializeFromHistory(System.Collections.Generic.IEnumerable{Ncqrs.Eventing.HistoricalEvent})" /> method and set to false at the end.</remarks>
+      <value>
+        <c>true</c> if this instance is initializing from history; otherwise, <c>false</c>.
+            </value>
+    </member>
+    <member name="P:Ncqrs.Eventing.EventSource.Version">
+      <summary>
+            Gets the current version.
+            </summary>
+      <value>An <see cref="T:System.Int32" /> representing the current version of the <see cref="T:Ncqrs.Eventing.EventSource" />.</value>
+    </member>
+    <member name="M:Ncqrs.Eventing.Mapping.EventHandlerFactory.CreateHandlers(Ncqrs.Eventing.Mapping.MappedEventSource)">
+      <exception cref="T:Ncqrs.Eventing.Mapping.InvalidEventHandlerMappingException">Occors if an event handler isn't mapped correctly.</exception>
+    </member>
+    <member name="T:Ncqrs.Eventing.Storage.IEventStore">
+      <summary>
+            A event store. Can store and load events from an <see cref="T:Ncqrs.Eventing.EventSource" />.
+            </summary>
+    </member>
+    <member name="M:Ncqrs.Eventing.Storage.IEventStore.GetAllEventsForEventSource(System.Guid)">
+      <summary>
+            Get all events provided by an specified event provider.
+            </summary>
+      <param name="id">The id of the event source that owns the events.</param>
+      <returns>All the events from the event source.</returns>
+      <ensures description="Result should never be null.">Contract.Result&lt;IEnumerable&lt;HistoricalEvent&gt;&gt;() != null</ensures>
+    </member>
+    <member name="M:Ncqrs.Eventing.Storage.IEventStore.Save(Ncqrs.Eventing.EventSource)">
+      <summary>
+            Save all events from a specific event provider.
+            </summary>
+      <exception cref="T:Ncqrs.Eventing.Storage.ConcurrencyException">Occurs when there is already a newer version of the event provider stored in the event store.</exception>
+      <param name="source">The source that should be saved.</param>
+      <requires description="source cannot be null." exception="T:System.ArgumentNullException">source != null</requires>
+      <exception cref="T:System.ArgumentNullException">source == null</exception>
+      <ensures description="Return should never be null.">Contract.Result&lt;IEnumerable&lt;IEvent&gt;&gt;() != null</ensures>
+    </member>
+    <member name="T:Ncqrs.Eventing.Storage.ConcurrencyException">
+      <summary>
+            Occurs when there is already a newer version of the event provider stored in the event store.
+            </summary>
+    </member>
+    <member name="M:Ncqrs.Eventing.Storage.ConcurrencyException.#ctor(System.Int64,System.Int64)">
+      <summary>
+            Initializes a new instance of the <see cref="T:Ncqrs.Eventing.Storage.ConcurrencyException" /> class.
+            </summary>
+      <param name="providerVersion">The provider version.</param>
+      <param name="versionInStore">The version in store.</param>
+    </member>
+    <member name="P:Ncqrs.Eventing.Storage.ConcurrencyException.ProviderVersion">
+      <summary>
+            Gets the provider version.
+            </summary>
+      <value>The provider version.</value>
+    </member>
+    <member name="P:Ncqrs.Eventing.Storage.ConcurrencyException.VersionInStore">
+      <summary>
+            Gets the version of the provider in the event store.
+            </summary>
+      <value>The version in store.</value>
+    </member>
+    <member name="T:Ncqrs.Eventing.Mapping.NoEventHandlerFoundException">
+      <summary>
+            Occurs when no handler was found for for a <see cref="T:Ncqrs.Eventing.IEvent" />.
+            </summary>
+    </member>
+    <member name="M:Ncqrs.Eventing.Mapping.NoEventHandlerFoundException.#ctor(Ncqrs.Eventing.IEvent)">
+      <summary>
+            Initializes a new instance of the <see cref="T:Ncqrs.Eventing.Mapping.NoEventHandlerFoundException" /> class.
+            </summary>
+      <param name="evnt">The event.</param>
+    </member>
+    <member name="M:Ncqrs.Eventing.Mapping.NoEventHandlerFoundException.#ctor(Ncqrs.Eventing.IEvent,System.String)">
+      <summary>
+            Initializes a new instance of the <see cref="T:Ncqrs.Eventing.Mapping.NoEventHandlerFoundException" /> class.
+            </summary>
+      <param name="evnt">The evnt.</param>
+      <param name="message">The message.</param>
+    </member>
+    <member name="M:Ncqrs.Eventing.Mapping.NoEventHandlerFoundException.#ctor(Ncqrs.Eventing.IEvent,System.String,System.Exception)">
+      <summary>
+            Initializes a new instance of the <see cref="T:Ncqrs.Eventing.Mapping.NoEventHandlerFoundException" /> class.
+            </summary>
+      <param name="evnt">The evnt.</param>
+      <param name="message">The message.</param>
+      <param name="innerException">The inner exception.</param>
+    </member>
+    <member name="P:Ncqrs.Eventing.Mapping.NoEventHandlerFoundException.Event">
+      <summary>
+            Gets the event.
+            </summary>
+    </member>
+    <member name="T:Ncqrs.Eventing.HistoricalEvent">
+      <summary>
+            Represents an event that has already happend.
+            </summary>
+    </member>
+    <member name="M:Ncqrs.Eventing.HistoricalEvent.#ctor(System.DateTime,Ncqrs.Eventing.IEvent)">
+      <summary>
+            Initializes a new instance of the <see cref="T:Ncqrs.Eventing.HistoricalEvent" /> class.
+            </summary>
+      <param name="timeStamp">The moment in time that the event happened.</param>
+      <param name="evnt">The event that happened.</param>
+      <exception cref="T:System.ArgumentNullException">Thrown when <i>evnt</i> is null.</exception>
+    </member>
+    <member name="P:Ncqrs.Eventing.HistoricalEvent.TimeStamp">
+      <summary>
+            Gets the moment in time that the event happened.
+            </summary>
+    </member>
+    <member name="P:Ncqrs.Eventing.HistoricalEvent.Event">
+      <summary>
+            Gets the event.
+            </summary>
+    </member>
+    <member name="T:Ncqrs.Eventing.Storage.SQL.SimpleMicrosoftSqlServerEventStore">
+      <summary>
+            Stores events for a SQL database.
+            </summary>
+    </member>
+    <member name="M:Ncqrs.Eventing.Storage.SQL.SimpleMicrosoftSqlServerEventStore.GetAllEventsForEventSource(System.Guid)">
+      <summary>
+            Get all event for a specific event provider.
+            </summary>
+      <param name="id">The id of the event provider.</param>
+      <returns>All events for the specified event provider.</returns>
+      <ensures description="Result should never be null." inheritedFrom="M:Ncqrs.Eventing.Storage.IEventStore.GetAllEventsForEventSource(System.Guid)" inheritedFromTypeName="IEventStore">Contract.Result&lt;IEnumerable&lt;HistoricalEvent&gt;&gt;() != null</ensures>
+    </member>
+    <member name="M:Ncqrs.Eventing.Storage.SQL.SimpleMicrosoftSqlServerEventStore.Save(Ncqrs.Eventing.EventSource)">
+      <summary>
+            Saves all events from an event provider.
+            </summary>
+      <param name="provider">The eventsource.</param>
+      <returns>The events that are saved.</returns>
+      <requires description="source cannot be null." inheritedFrom="M:Ncqrs.Eventing.Storage.IEventStore.Save(Ncqrs.Eventing.EventSource)" inheritedFromTypeName="IEventStore" exception="T:System.ArgumentNullException">source != null</requires>
+      <exception cref="T:System.ArgumentNullException">source == null</exception>
+      <ensures description="Return should never be null." inheritedFrom="M:Ncqrs.Eventing.Storage.IEventStore.Save(Ncqrs.Eventing.EventSource)" inheritedFromTypeName="IEventStore">Contract.Result&lt;IEnumerable&lt;IEvent&gt;&gt;() != null</ensures>
+    </member>
+    <member name="T:Ncqrs.Eventing.Mapping.EventHandlerAttribute">
+      <summary>
+            Indicates that a method is an event handler.
+            </summary>
+      <remarks>
+            The marked method should not be statis and should have on parameter that is of the type <see cref="T:Ncqrs.Eventing.IEvent" />.
+            </remarks>
+    </member>
+    <member name="M:Ncqrs.Eventing.HistoricalEventAppliedEventArgs.#ctor(Ncqrs.Eventing.HistoricalEvent)">
+      <requires exception="T:System.ArgumentNullException">historicalEvent != null</requires>
+      <exception cref="T:System.ArgumentNullException">historicalEvent == null</exception>
+      <ensures>HistoricalEvent == historicalEvent</ensures>
+    </member>
+    <member name="M:Ncqrs.Eventing.EventAppliedEventArgs.#ctor(Ncqrs.Eventing.IEvent)">
+      <requires exception="T:System.ArgumentNullException">evnt != null</requires>
+      <exception cref="T:System.ArgumentNullException">evnt == null</exception>
+      <ensures>Event == evnt</ensures>
+    </member>
+    <member name="T:Ncqrs.Eventing.EventSource">
+      <invariant description="The member _unacceptedEvents should never be null.">_unacceptedEvents != null</invariant>
+    </member>
+    <member name="M:Ncqrs.Eventing.EventSource.OnHistoricalEventApplied(Ncqrs.Eventing.HistoricalEvent)">
+      <requires description="historicalEvent cannot be null." exception="T:System.ArgumentNullException">historicalEvent != null</requires>
+      <exception cref="T:System.ArgumentNullException">historicalEvent == null</exception>
+    </member>
+    <member name="M:Ncqrs.Eventing.EventSource.OnEventApplied(Ncqrs.Eventing.IEvent)">
+      <requires description="evnt cannot be null." exception="T:System.ArgumentNullException">evnt != null</requires>
+      <exception cref="T:System.ArgumentNullException">evnt == null</exception>
+    </member>
+    <member name="M:Ncqrs.Eventing.EventSource.#ctor(System.Collections.Generic.IEnumerable{Ncqrs.Eventing.HistoricalEvent})">
+      <requires exception="T:System.ArgumentNullException">history != null</requires>
+      <exception cref="T:System.ArgumentNullException">history == null</exception>
+    </member>
+    <member name="M:Ncqrs.Eventing.EventSource.GetUncommitedEvents">
+      <ensures description="The result of this method should never be null.">Contract.Result&lt;IEnumerable&lt;IEvent&gt;&gt;() != null</ensures>
+    </member>
+    <member name="M:Ncqrs.Eventing.EventsAcceptedEventArgs.#ctor(System.Collections.Generic.IEnumerable{Ncqrs.Eventing.IEvent})">
+      <requires exception="T:System.ArgumentNullException">acceptedEvents != null</requires>
+      <exception cref="T:System.ArgumentNullException">acceptedEvents == null</exception>
+      <ensures>AcceptedEvents == acceptedEvents</ensures>
+    </member>
+  </members>
+</doc>
