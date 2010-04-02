@@ -58,7 +58,7 @@ namespace Ncqrs.Eventing
 
         protected EventSource(IEnumerable<HistoricalEvent> history)
         {
-            Contract.Requires<ArgumentNullException>(history == null);
+            Contract.Requires<ArgumentNullException>(history != null);
 
             InitializeFromHistory(history);
         }
@@ -67,7 +67,7 @@ namespace Ncqrs.Eventing
         /// Initializes from history.
         /// </summary>
         /// <param name="history">The history.</param>
-        private void InitializeFromHistory(IEnumerable<HistoricalEvent> history)
+        protected virtual void InitializeFromHistory(IEnumerable<HistoricalEvent> history)
         {
             if (history == null) throw new ArgumentNullException("history");
             if (history.Count() == 0) throw new ArgumentException("The provided history does not contain any historical event.", "history");

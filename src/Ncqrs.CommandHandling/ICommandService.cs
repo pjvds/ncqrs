@@ -37,6 +37,9 @@ namespace Ncqrs.CommandHandling
         /// <param name="handler">The handler that will be called for every command of the specified type.</param>
         /// <exception cref="ArgumentNullException">Occurs when the <i>commandType</i> or <i>handler</i> was a <c>null</c> dereference.</exception>
         void RegisterHandler(Type commandType, ICommandHandler handler);
+        
+        // TODO: Comment
+        void RegisterHandler<TCommand>(ICommandHandler handler) where TCommand : ICommand;
 
         /// <summary>
         /// Unregisters the handler of the specified command type. The handler will not be called any more.
@@ -71,6 +74,11 @@ namespace Ncqrs.CommandHandling
         public void UnregisterHandler(Type commandType, ICommandHandler handler)
         {
             Contract.Requires<ArgumentNullException>(commandType != null);
+            Contract.Requires<ArgumentNullException>(handler != null);
+        }
+
+        public void RegisterHandler<TCommand>(ICommandHandler handler) where TCommand : ICommand
+        {
             Contract.Requires<ArgumentNullException>(handler != null);
         }
     }

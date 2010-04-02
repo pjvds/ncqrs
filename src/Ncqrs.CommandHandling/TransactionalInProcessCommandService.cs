@@ -65,7 +65,7 @@ namespace Ncqrs.CommandHandling
 
         public void RegisterHandler(Type commandType, ICommandHandler handler)
         {
-            Contract.Requires<ArgumentNullException>(commandType == null);
+            Contract.Requires<ArgumentNullException>(commandType != null);
             Contract.Requires<ArgumentNullException>(handler != null);
 
             _handlers.Add(commandType, handler);

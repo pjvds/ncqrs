@@ -6,6 +6,7 @@ namespace Ncqrs.Eventing.Mapping
     public abstract class MappedEventSource : EventSource
     {
         private readonly Dictionary<Type, Action<IEvent>> _handlers = new Dictionary<Type, Action<IEvent>>(0);
+        private bool _handlersInitialized = false;
 
         protected MappedEventSource(IUniqueIdentifierGenerator idGenerator) : base(idGenerator)
         {
@@ -14,7 +15,6 @@ namespace Ncqrs.Eventing.Mapping
 
         protected MappedEventSource(IEnumerable<HistoricalEvent> history) : base(history)
         {
-            InitializeHandlers();
         }
 
         private void InitializeHandlers()
@@ -24,11 +24,21 @@ namespace Ncqrs.Eventing.Mapping
             {
                 RegisterHandler(x.Key, x.Value);
             }
+
+            _handlersInitialized = true;
+        }
+
+        protected override void InitializeFromHistory(IEnumerable<HistoricalEvent> history)
+        {
+            InitializeHandlers();
+
+            base.InitializeFromHistory(history);
         }
 
         protected void RegisterHandler<T>(Action<T> handler) where T : IEvent
         {
             if (handler == null) throw new ArgumentNullException("handler");
+
             var eventType = typeof(T);
 
             RegisterHandler(eventType, (evnt) => handler((T)evnt));
@@ -46,6 +56,7 @@ namespace Ncqrs.Eventing.Mapping
         protected override void HandleEvent(IEvent evnt)
         {
             if(evnt == null) throw new ArgumentNullException("event");
+            if (!_handlersInitialized) InitializeHandlers();
 
             var handler = GetHandlerForEvent(evnt);
             handler(evnt);
