@@ -53,6 +53,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="log4net">
+      <HintPath>..\Externals\Log4Net\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="MongoDB.Driver">
       <HintPath>..\Externals\MongoDB\MongoDB.Driver.dll</HintPath>
     </Reference>
@@ -74,7 +77,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MongoJson.cs" />
     <Compile Include="MongoDBEventStore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

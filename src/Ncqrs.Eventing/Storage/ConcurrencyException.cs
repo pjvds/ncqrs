@@ -12,7 +12,7 @@ namespace Ncqrs.Eventing.Storage
         /// </summary>
         /// <param name="providerVersion">The provider version.</param>
         /// <param name="versionInStore">The version in store.</param>
-        public ConcurrencyException(int providerVersion, int versionInStore)
+        public ConcurrencyException(long providerVersion, long versionInStore)
         {
             ProviderVersion = providerVersion;
             VersionInStore = versionInStore;
@@ -22,12 +22,12 @@ namespace Ncqrs.Eventing.Storage
         /// Gets the provider version.
         /// </summary>
         /// <value>The provider version.</value>
-        public int ProviderVersion { get; private set; }
+        public long ProviderVersion { get; private set; }
 
         /// <summary>
         /// Gets the version of the provider in the event store.
         /// </summary>
         /// <value>The version in store.</value>
-        public int VersionInStore { get; private set; }
+        public long VersionInStore { get; private set; }
     }
 }

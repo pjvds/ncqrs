@@ -8,6 +8,9 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Reflection;
 using System.Diagnostics.Contracts;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using log4net;
 
 namespace Ncqrs.Eventing.Storage.MongoDB
 {
@@ -20,8 +23,24 @@ namespace Ncqrs.Eventing.Storage.MongoDB
     /// </remarks>
     public class MongoDBEventStore : IEventStore
     {
+        /// <summary>
+        /// The log to use to log messages from this instance.
+        /// </summary>
+        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
+        /// <summary>
+        /// The reference to Mongo.
+        /// </summary>
         private readonly Mongo _mongo;
+
+        /// <summary>
+        /// The name of the database.
+        /// </summary>
         private readonly string _databaseName;
+
+        /// <summary>
+        /// The name of the collection that contains all the events.
+        /// </summary>
         private readonly string _collectionName;
 
         /// <summary>
@@ -61,6 +80,8 @@ namespace Ncqrs.Eventing.Storage.MongoDB
             _mongo = mongo;
             _databaseName = databaseName;
             _collectionName = collectionName;
+
+            Log.DebugFormat("Initialized a new instance of MongoDBEventStore with the databasename set to {0} and collection set to {1}.", databaseName, collectionName);
         }
 
         /// <summary>
@@ -70,31 +91,38 @@ namespace Ncqrs.Eventing.Storage.MongoDB
         /// <returns>All the events from the event source.</returns>
         public IEnumerable<HistoricalEvent> GetAllEventsForEventSource(Guid id)
         {
+            // Connect to Mongo.
             _mongo.Connect();
+            Log.DebugFormat("Connected to Mogno at {0}.", _mongo.ConnectionString);
 
             try
             {
-                var json = new MongoJson();
+                // Get the collection.
                 var db = _mongo.GetDatabase(_databaseName);
                 var collection = db.GetCollection(_collectionName);
 
-                var specDocument = new Document();
-                specDocument["EventSourceId"] = id;
+                Log.DebugFormat("Getting all events from {0} for event source with id {1}.", collection.FullName, id);
 
-                var foundDocuments = collection.Find(specDocument).Documents;
+                // Create sample document.
+                var exampleDoc = new Document();
+                exampleDoc["EventSourceId"] = id;
+
+                // Get documents.
+                var cursor = collection.Find(exampleDoc);
+                var foundDocuments = cursor.Documents;
+
+                Log.DebugFormat("Found {0} events for event source with id {1}.", collection.FullName, foundDocuments.Count());
 
                 foreach (var doc in foundDocuments)
                 {
-                    Type eventType = Type.GetType((string)doc["AssemblyQualifiedEventTypeName"]);
-                    var deserializationResult = json.ObjectFrom(doc, eventType);
-                    IEvent evnt = (IEvent)deserializationResult;
-
-                    yield return new HistoricalEvent((DateTime)doc["TimeStamp"], evnt);
+                    yield return DeserializeDocument(doc);
                 }
             }
             finally
             {
+                // Make sure we disconnect.
                 _mongo.Disconnect();
+                Log.Debug("Disconnected from Mogno.");
             }
         }
 
@@ -106,28 +134,83 @@ namespace Ncqrs.Eventing.Storage.MongoDB
         /// <exception cref="ConcurrencyException">Occurs when there is already a newer version of the event provider stored in the event store.</exception>
         public IEnumerable<IEvent> Save(EventSource source)
         {
-            _mongo.Connect();
+            // The events that are saved during this operation.
+            // This will be returned at the end.
+            IEnumerable<IEvent> savedEvents = new IEvent[0];
 
-            try
+            // Get all events to save.
+            var eventsToSave = source.GetUncommitedEvents();
+
+            // Only save events when they are available.
+            if (eventsToSave.Count() > 0)
             {
-                // TODO: Implement the ConcurrencyException check.
-                var events = source.GetUncommitedEvents();
+                // Connect to Mongo.
+                _mongo.Connect();
+                Log.DebugFormat("Connected to Mogno at {0}.", _mongo.ConnectionString);
 
-                var documents = GetAllDocumentsFromEventSource(source);
+                try
+                {
+                    // Get the right collection.
+                    var db = _mongo.GetDatabase(_databaseName);
+                    var collection = db.GetCollection(_collectionName);
 
-                var db = _mongo.GetDatabase(_databaseName);
-                var collection = db.GetCollection(_collectionName);
+                    // Make sure the source version matched with the version in the store.
+                    var currentVersionInStore = GetVersion(collection, source);
+                    if (currentVersionInStore != source.Version)
+                    {
+                        // Log error.
+                        Log.ErrorFormat("Unable to save events for event source with id {0}. Since "+
+                                        "the version in the store is {1} and the version of the event "+
+                                        "source to save is {2}.", source.Id, currentVersionInStore, source.Version);
 
-                collection.Insert(documents, true);
+                        throw new ConcurrencyException(source.Version, currentVersionInStore);
+                    }
 
-                return events;
+                    // Get all events as documents.
+                    var documents = GetAllDocumentsFromEventSource(source);
+
+                    // Save the documents.
+                    collection.Insert(documents, true);
+
+                    // Set saved events, they will be returned on exit.
+                    savedEvents = eventsToSave;
+                    Log.DebugFormat("Saved all events for event source with id {0}.", source.Id);
+                }
+                finally
+                {
+                    // Make sure we disconnect.
+                    _mongo.Disconnect();
+                    Log.Debug("Disconnected from Mogno.");
+                }
             }
-            finally
+            else
             {
-                _mongo.Disconnect();
+                Log.DebugFormat("No events to save for event source with id {0}.", source.Id);
             }
+
+            return savedEvents;
         }
 
+        /// <summary>
+        /// Gets the version from the event store for an event source.
+        /// </summary>
+        /// <param name="eventsCollection">The events collection.</param>
+        /// <param name="source">The event source.</param>
+        /// <returns>The version in the event store for the specified event source.</returns>
+        private static long GetVersion(IMongoCollection eventsCollection, EventSource source)
+        {
+            var exampleDoc = new Document();
+            exampleDoc["EventSourceId"] = source.Id;
+            long version = eventsCollection.Count(exampleDoc);
+
+            return version;
+        }
+
+        /// <summary>
+        /// Gets all documents from event source.
+        /// </summary>
+        /// <param name="eventSource">The event source.</param>
+        /// <returns>All the documents for the specified event source.</returns>
         private IEnumerable<Document> GetAllDocumentsFromEventSource(EventSource eventSource)
         {
             foreach (var evnt in eventSource.GetUncommitedEvents())
@@ -137,9 +220,62 @@ namespace Ncqrs.Eventing.Storage.MongoDB
                 document["TimeStamp"] = DateTime.UtcNow;
                 document["AssemblyQualifiedEventTypeName"] = evnt.GetType().AssemblyQualifiedName;
 
-                MongoJson json = new MongoJson();
-                yield return json.PopulateDocumentFrom(document, evnt);
+                yield return SerializeEventIntoDocument(document, evnt);
             }
+        }
+
+        /// <summary>
+        /// Serializes the event into a spefified document.
+        /// </summary>
+        /// <param name="document">The document.</param>
+        /// <param name="evnt">The event.</param>
+        /// <returns>The document with the added data.</returns>
+        private static Document SerializeEventIntoDocument(Document document, IEvent evnt)
+        {
+            var json = JsonConvert.SerializeObject(evnt, Formatting.None);
+            var keyValues = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
+
+            foreach (var keyValue in keyValues)
+            {
+                var isEmptyKeyField = (keyValue.Key == "_id" && document["_id"] != null);
+
+                if (isEmptyKeyField)
+                    continue;
+
+                var value = keyValue.Value ?? null;
+
+                if (value != null)
+                {
+                    var arrayValue = (keyValue.Value as JArray);
+                    if (arrayValue != null)
+                        value = arrayValue.Select(j => (string)j).ToArray();
+                }
+
+                if (document.Contains(keyValue.Key))
+                    document[keyValue.Key] = value;
+                else
+                {
+                    if (value != null)
+                        document.Add(keyValue.Key, value);
+                }
+            }
+
+            return document;
+        }
+
+        /// <summary>
+        /// Deserializes the document into a historical event.
+        /// </summary>
+        /// <param name="doc">The document to deserialize.</param>
+        /// <returns>A new historical event that was deserialized from the document.</returns>
+        private HistoricalEvent DeserializeDocument(Document doc)
+        {
+            Type eventType = Type.GetType((string)doc["AssemblyQualifiedEventTypeName"]);
+            
+            string json = doc.ToString();
+            IEvent evnt = (IEvent)JsonConvert.DeserializeObject(json, eventType);
+
+            return new HistoricalEvent((DateTime)doc["TimeStamp"], evnt);
         }
     }
 }

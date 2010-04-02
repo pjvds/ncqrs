@@ -42,7 +42,7 @@ namespace Ncqrs.Eventing
         /// Gets the current version.
         /// </summary>
         /// <value>An <see cref="int"/> representing the current version of the <see cref="EventSource"/>.</value>
-        public int Version
+        public long Version
         {
             get;
             private set;
