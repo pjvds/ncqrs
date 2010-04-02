@@ -7,6 +7,20 @@ using System.Diagnostics.Contracts;
 
 namespace Ncqrs.Domain
 {
+    /// <summary>
+    /// A context from within domain object can be changed.
+    /// <example>
+    /// using (var work = new UnitOfWork(repository))
+    /// {
+    ///     // Create the new customer.
+    ///     Customer newCustomer = new Customer();
+    ///     newCustomer.Name = "Pieter Joost van de Sande";
+    ///     
+    ///     // Accept the work that has been done in the context.
+    ///     work.Accept();
+    /// }
+    /// </example>
+    /// </summary>
     public sealed class UnitOfWork : IDisposable
     {
         /// <summary>
@@ -124,6 +138,8 @@ namespace Ncqrs.Domain
         /// <param name="dirtyInstance">The dirty instance.</param>
         internal void RegisterDirtyInstance(AggregateRoot dirtyInstance)
         {
+            Contract.Requires<ArgumentNullException>(dirtyInstance != null, "dirtyInstance could not be null.");
+
             if (!_dirtyInstances.Contains(dirtyInstance))
             {
                 _dirtyInstances.Enqueue(dirtyInstance);
@@ -136,6 +152,7 @@ namespace Ncqrs.Domain
         public void Accept()
         {
             Contract.Requires<ObjectDisposedException>(!IsDisposed);
+            Contract.Ensures(_dirtyInstances.Count == 0);
 
             while (_dirtyInstances.Count > 0)
             {
