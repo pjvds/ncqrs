@@ -1,19 +1,19 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Commands", "Ncqrs.Commands\Ncqrs.Commands.csproj", "{667C1A88-8173-454D-B44F-CE9B27CC0548}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Commands", "Framework\Ncqrs.Commands\Ncqrs.Commands.csproj", "{667C1A88-8173-454D-B44F-CE9B27CC0548}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.CommandHandling", "Ncqrs.CommandHandling\Ncqrs.CommandHandling.csproj", "{46FD95B7-ADBE-465D-989D-D316CA7887D4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.CommandHandling", "Framework\Ncqrs.CommandHandling\Ncqrs.CommandHandling.csproj", "{46FD95B7-ADBE-465D-989D-D316CA7887D4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Domain", "Ncqrs.Domain\Ncqrs.Domain.csproj", "{FC2478FB-2B60-491F-A1D8-B9C6D869B2F8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Domain", "Framework\Ncqrs.Domain\Ncqrs.Domain.csproj", "{FC2478FB-2B60-491F-A1D8-B9C6D869B2F8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Eventing.Bus", "Ncqrs.Eventing.Bus\Ncqrs.Eventing.Bus.csproj", "{0610E5DC-D7B5-4923-BB9B-52E1CD58E09C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Eventing.Bus", "Framework\Ncqrs.Eventing.Bus\Ncqrs.Eventing.Bus.csproj", "{0610E5DC-D7B5-4923-BB9B-52E1CD58E09C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Eventing", "Ncqrs.Eventing\Ncqrs.Eventing.csproj", "{56D48F9D-29F4-4E77-86B1-D988EAC1DF42}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Eventing", "Framework\Ncqrs.Eventing\Ncqrs.Eventing.csproj", "{56D48F9D-29F4-4E77-86B1-D988EAC1DF42}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Denormalization", "Ncqrs.Denormalization\Ncqrs.Denormalization.csproj", "{15EFC9E0-F103-4E90-90E8-4D1E98AB86A7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Denormalization", "Framework\Ncqrs.Denormalization\Ncqrs.Denormalization.csproj", "{15EFC9E0-F103-4E90-90E8-4D1E98AB86A7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Eventing.Storage.MongoDB", "Ncqrs.Eventing.Storage.MongoDB\Ncqrs.Eventing.Storage.MongoDB.csproj", "{E421E735-2833-4948-9BA0-94924BDC502E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Eventing.Storage.MongoDB", "Framework\Ncqrs.Eventing.Storage.MongoDB\Ncqrs.Eventing.Storage.MongoDB.csproj", "{E421E735-2833-4948-9BA0-94924BDC502E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
