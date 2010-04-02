@@ -59,6 +59,8 @@ namespace Ncqrs.Eventing.Storage.MongoDB
             Contract.Requires<ArgumentNullException>(!String.IsNullOrEmpty(collectionName));
 
             _mongo = mongo;
+            _databaseName = databaseName;
+            _collectionName = collectionName;
         }
 
         /// <summary>
@@ -70,27 +72,30 @@ namespace Ncqrs.Eventing.Storage.MongoDB
         {
             _mongo.Connect();
 
-            var formatter = new BinaryFormatter();
-            var db = _mongo.GetDatabase(_databaseName);
-            var collection = db.GetCollection(_collectionName);
-
-            var specDocument = new Document();
-            specDocument["EventSourceId"] = id;
-
-            var foundDocuments = collection.Find(specDocument).Documents;
-
-            foreach (var doc in foundDocuments)
+            try
             {
+                var json = new MongoJson();
+                var db = _mongo.GetDatabase(_databaseName);
+                var collection = db.GetCollection(_collectionName);
 
-                MongoJson json = new MongoJson();
-                Type eventType = Type.GetType((string)doc["EventTypeName"]);
-                var deserializationResult = json.ObjectFrom(doc, eventType);
-                IEvent evnt = (IEvent)deserializationResult;
+                var specDocument = new Document();
+                specDocument["EventSourceId"] = id.ToString();
 
-                yield return new HistoricalEvent((DateTime)doc["TimeStamp"], evnt);
+                var foundDocuments = collection.Find(specDocument).Documents;
+
+                foreach (var doc in foundDocuments)
+                {
+                    Type eventType = Type.GetType((string)doc["AssemblyQualifiedEventTypeName"]);
+                    var deserializationResult = json.ObjectFrom(doc, eventType);
+                    IEvent evnt = (IEvent)deserializationResult;
+
+                    yield return new HistoricalEvent((DateTime)doc["TimeStamp"], evnt);
+                }
             }
-
-            _mongo.Disconnect();
+            finally
+            {
+                _mongo.Disconnect();
+            }
         }
 
         /// <summary>
@@ -101,17 +106,26 @@ namespace Ncqrs.Eventing.Storage.MongoDB
         /// <exception cref="ConcurrencyException">Occurs when there is already a newer version of the event provider stored in the event store.</exception>
         public IEnumerable<IEvent> Save(EventSource source)
         {
-            // TODO: Implement the ConcurrencyException check.
-            var events = source.GetUncommitedEvents();
+            _mongo.Connect();
 
-            var documents = GetAllDocumentsFromEventSource(source);
+            try
+            {
+                // TODO: Implement the ConcurrencyException check.
+                var events = source.GetUncommitedEvents();
 
-            var db = _mongo.GetDatabase(_databaseName);
-            var collection = db.GetCollection(_collectionName);
+                var documents = GetAllDocumentsFromEventSource(source);
 
-            collection.Insert(documents, true);
+                var db = _mongo.GetDatabase(_databaseName);
+                var collection = db.GetCollection(_collectionName);
 
-            return events;
+                collection.Insert(documents, true);
+
+                return events;
+            }
+            finally
+            {
+                _mongo.Disconnect();
+            }
         }
 
         private IEnumerable<Document> GetAllDocumentsFromEventSource(EventSource eventSource)
@@ -119,9 +133,9 @@ namespace Ncqrs.Eventing.Storage.MongoDB
             foreach (var evnt in eventSource.GetUncommitedEvents())
             {
                 var document = new Document();
-                document["EventSourceId"] = eventSource.Id;
+                document["EventSourceId"] = eventSource.Id.ToString();
                 document["TimeStamp"] = DateTime.UtcNow;
-                document["EventTypeName"] = evnt.GetType().AssemblyQualifiedName;
+                document["AssemblyQualifiedEventTypeName"] = evnt.GetType().AssemblyQualifiedName;
 
                 MongoJson json = new MongoJson();
                 yield return json.PopulateDocumentFrom(document, evnt);
