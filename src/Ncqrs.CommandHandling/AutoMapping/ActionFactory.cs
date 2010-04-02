@@ -7,18 +7,33 @@ using Ncqrs.Domain.Storage;
 
 namespace Ncqrs.CommandHandling.AutoMapping
 {
+    /// <summary>
+    /// A factory to use the create action for commands based on mapping.
+    /// </summary>
     public class ActionFactory
     {
         private readonly IDomainRepository _repository;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ActionFactory"/> class.
+        /// </summary>
+        /// <param name="repository">The repository.</param>
+        /// <exception cref="ArgumentNullException">Occurs when <i>repository</i> is <c>null</c>.</exception>
         public ActionFactory(IDomainRepository repository)
         {
-            Contract.Requires(repository != null);
+            Contract.Requires<ArgumentNullException>(repository != null, "The repository cannot be null.");
 
             _repository = repository;
         }
 
-        public IAutoMappedCommandAction CreateActionForCommand(ICommand command) // TODO: Is a command always mapped to only one action?
+        /// <summary>
+        /// Creates an action for command based on mapping.
+        /// </summary>
+        /// <param name="command">The command.</param>
+        /// <exception cref="ActumentNullException">Occurs when <i>command</i> was <c>null</c>.</exception>
+        /// <exception cref="MappingForCommandNotFoundException">Occurs when there was an error in the mapping of the command.</exception>
+        /// <returns>A <see cref="IAutoMappedCommandAction"/> action created based on the mapping of the command.</returns>
+        public IAutoMappedCommandAction CreateActionForCommand(ICommand command)
         {
             Contract.Requires<ArgumentNullException>(command != null);
 

@@ -9,12 +9,20 @@ using System.Diagnostics.Contracts;
 
 namespace Ncqrs.CommandHandling.AutoMapping.Actions
 {
+    /// <summary>
+    /// An auto mapped action that executes a method on an aggregate root based on the mapping specified on the command.
+    /// </summary>
     public class DirectMethodAction : IAutoMappedCommandAction
     {
         private readonly ICommand _command;
         private readonly DirectMethodCommandInfo _info;
         private readonly IDomainRepository _repository;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DirectMethodAction"/> class.
+        /// </summary>
+        /// <param name="repository">The repository.</param>
+        /// <param name="command">The command.</param>
         public DirectMethodAction(IDomainRepository repository, ICommand command)
         {
             Contract.Requires<ArgumentNullException>(repository != null, "The parameter repository should not be null.");
@@ -34,16 +42,18 @@ namespace Ncqrs.CommandHandling.AutoMapping.Actions
             Contract.Invariant(_repository != null);
         }
 
+        /// <summary>
+        /// Executes this method on the aggregate root based on the mapping of the command given a construction time.
+        /// </summary>
         public void Execute()
         {
             Contract.Assume(UnitOfWork.Current == null);
 
             using (var work = new UnitOfWork(_repository))
             {
-                var config = new AutoMapperConfiguration();
                 var targetMethod = GetTargetMethodBasedOnCommandTypeName();
 
-                var parameterValues = config.GetParameterValues(_command, targetMethod.GetParameters());
+                var parameterValues = CommandAutoMappingConfiguration.GetParameterValues(_command, targetMethod.GetParameters());
                 var targetAggregateRoot = _repository.GetById(_info.AggregateType, _info.AggregateRootIdValue);
 
                 targetMethod.Invoke(targetAggregateRoot, parameterValues);
@@ -54,9 +64,8 @@ namespace Ncqrs.CommandHandling.AutoMapping.Actions
 
         private MethodInfo GetTargetMethodBasedOnCommandTypeName()
         {
-            var config = new AutoMapperConfiguration();
             var aggregateType = _info.AggregateType;
-            var propertiesToMap = config.GetCommandProperties(_command);
+            var propertiesToMap = CommandAutoMappingConfiguration.GetCommandProperties(_command);
             var ctorQuery = from method in aggregateType.GetMethods()
                             where method.Name == _info.MethodName
                             where method.GetParameters().Length == propertiesToMap.Count()

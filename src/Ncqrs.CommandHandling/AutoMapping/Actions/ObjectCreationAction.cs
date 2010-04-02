@@ -9,12 +9,20 @@ using System.Diagnostics.Contracts;
 
 namespace Ncqrs.CommandHandling.AutoMapping.Actions
 {
+    /// <summary>
+    /// An auto mapped action for a command. It created the object as specified by the mapping.
+    /// </summary>
     public class ObjectCreationAction : IAutoMappedCommandAction
     {
         private readonly ICommand _command;
         private readonly IDomainRepository _repository;
         private readonly ObjectCreationCommandInfo _commandInfo;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ObjectCreationAction"/> class.
+        /// </summary>
+        /// <param name="repository">The repository.</param>
+        /// <param name="command">The command.</param>
         public ObjectCreationAction(IDomainRepository repository, ICommand command)
         {
             Contract.Requires<ArgumentNullException>(repository != null);
@@ -25,14 +33,16 @@ namespace Ncqrs.CommandHandling.AutoMapping.Actions
             _commandInfo = ObjectCreationCommandInfo.CreateFromDirectMethodCommand(command);
         }
 
+        /// <summary>
+        /// Executes this action.
+        /// </summary>
         public void Execute()
         {
             using (var work = new UnitOfWork(_repository))
             {
-                var config = new AutoMapperConfiguration();
                 var targetCtor = GetConstructorBasedOnCommand();
 
-                var parameterValues = config.GetParameterValues(_command, targetCtor.GetParameters());
+                var parameterValues = CommandAutoMappingConfiguration.GetParameterValues(_command, targetCtor.GetParameters());
                 targetCtor.Invoke(parameterValues);
 
                 work.Accept();
@@ -41,9 +51,8 @@ namespace Ncqrs.CommandHandling.AutoMapping.Actions
 
         private ConstructorInfo GetConstructorBasedOnCommand()
         {
-            var config = new AutoMapperConfiguration();
             var aggregateType = _commandInfo.AggregateType;
-            var propertiesToMap = config.GetCommandProperties(_command);
+            var propertiesToMap = CommandAutoMappingConfiguration.GetCommandProperties(_command);
             var ctorQuery = from ctor in aggregateType.GetConstructors()
                             where ctor.GetParameters().Length == propertiesToMap.Count()
                             where ParametersDoMatchPropertiesToMap(ctor.GetParameters(), propertiesToMap)

@@ -7,7 +7,10 @@ using Ncqrs.Commands.Attributes;
 
 namespace Ncqrs.CommandHandling.AutoMapping
 {
-    public class AutoMapperConfiguration
+    /// <summary>
+    /// Helper methods to get properties and parameter values from commands.
+    /// </summary>
+    public static class CommandAutoMappingConfiguration
     {
         /// <summary>
         /// Gets all the values for the parameters filled with the values from the command.
@@ -15,7 +18,7 @@ namespace Ncqrs.CommandHandling.AutoMapping
         /// <param name="command">The command.</param>
         /// <param name="parameters">The parameters.</param>
         /// <returns>All the values for the parameters.</returns>
-        public object[] GetParameterValues(ICommand command, ParameterInfo[] parameters)
+        public static object[] GetParameterValues(ICommand command, ParameterInfo[] parameters)
         {
             var buffer = new List<object>();
 
@@ -37,7 +40,7 @@ namespace Ncqrs.CommandHandling.AutoMapping
         /// <param name="parameterInfo">The parameter info.</param>
         /// <exception cref="ArgumentNullException">Thrown when <i>command</i> or <i>parameterInfo</i> is null.</exception>
         /// <returns>The value from the first matched property.</returns>
-        public object GetPropertyValueBasedOnParameterInfo(ICommand command, ParameterInfo parameterInfo)
+        public static object GetPropertyValueBasedOnParameterInfo(ICommand command, ParameterInfo parameterInfo)
         {
             if (command == null) throw new ArgumentNullException("command");
             if (parameterInfo == null) throw new ArgumentNullException("parameterInfo");
@@ -72,7 +75,7 @@ namespace Ncqrs.CommandHandling.AutoMapping
         /// <param name="command">The command.</param>
         /// <exception cref="ArgumentNullException">Thrown when <i>command</i> is null.</exception>
         /// <returns>A result set containing all properties that should be used in the auto mapping process.</returns>
-        public IEnumerable<PropertyInfo> GetCommandProperties(ICommand command)
+        public static IEnumerable<PropertyInfo> GetCommandProperties(ICommand command)
         {
             if(command == null) throw new ArgumentNullException("command");
 

@@ -17,7 +17,7 @@ namespace Ncqrs.CommandHandling
         /// <summary>
         /// Executes the command.
         /// </summary>
-        /// <param name="message">The command to execute. This should not be null.</param>
+        /// <param name="command">The command to execute. This should not be null.</param>
         /// <exception cref="ArgumentNullException">Occurs when <i>command</i> is null.</exception>
         void Execute(ICommand command);
     }
