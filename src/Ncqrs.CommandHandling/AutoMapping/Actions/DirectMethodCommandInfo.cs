@@ -44,6 +44,7 @@ namespace Ncqrs.CommandHandling.AutoMapping.Actions
         /// <param name="command">The command.</param>
         /// <param name="aggregateType">Type of the aggregate.</param>
         /// <param name="aggregateRootIdValue">The aggregate root id.</param>
+        /// <param name="methodName">Name of the method.</param>
         public DirectMethodCommandInfo(ICommand command, Type aggregateType, Guid aggregateRootIdValue, String methodName)
         {
             if (command == null) throw new ArgumentNullException("command");

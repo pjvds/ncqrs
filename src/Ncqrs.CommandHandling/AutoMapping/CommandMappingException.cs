@@ -3,6 +3,9 @@ using System.Runtime.Serialization;
 
 namespace Ncqrs.CommandHandling.AutoMapping
 {
+    /// <summary>
+    /// Occurs when the mapping of a command is invalid.
+    /// </summary>
     [Serializable]
     internal class CommandMappingException : Exception
     {

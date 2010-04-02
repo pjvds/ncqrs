@@ -30,7 +30,7 @@ namespace Ncqrs.CommandHandling.AutoMapping
         /// Creates an action for command based on mapping.
         /// </summary>
         /// <param name="command">The command.</param>
-        /// <exception cref="ActumentNullException">Occurs when <i>command</i> was <c>null</c>.</exception>
+        /// <exception cref="ArgumentNullException">Occurs when <i>command</i> was <c>null</c>.</exception>
         /// <exception cref="MappingForCommandNotFoundException">Occurs when there was an error in the mapping of the command.</exception>
         /// <returns>A <see cref="IAutoMappedCommandAction"/> action created based on the mapping of the command.</returns>
         public IAutoMappedCommandAction CreateActionForCommand(ICommand command)

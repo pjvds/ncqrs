@@ -37,8 +37,13 @@ namespace Ncqrs.CommandHandling
         /// <param name="handler">The handler that will be called for every command of the specified type.</param>
         /// <exception cref="ArgumentNullException">Occurs when the <i>commandType</i> or <i>handler</i> was a <c>null</c> dereference.</exception>
         void RegisterHandler(Type commandType, ICommandHandler handler);
-        
-        // TODO: Comment
+
+        /// <summary>
+        /// Registers the handler for the specified command type. The handler will be called for every command of the specified type.
+        /// </summary>
+        /// <typeparam name="TCommand">The type of the command.</typeparam>
+        /// <param name="handler">The handler that will be called for every command of the specified type.</param>
+        /// <exception cref="ArgumentNullException">Occurs when the <i>commandType</i> or <i>handler</i> was a <c>null</c> dereference.</exception>
         void RegisterHandler<TCommand>(ICommandHandler handler) where TCommand : ICommand;
 
         /// <summary>
@@ -51,7 +56,7 @@ namespace Ncqrs.CommandHandling
     }
 
     [ContractClassFor(typeof(ICommandService))]
-    public sealed class ICommandServiceContracts : ICommandService
+    internal sealed class ICommandServiceContracts : ICommandService
     {
         public void Execute(ICommand command)
         {

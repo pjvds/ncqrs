@@ -65,7 +65,7 @@ namespace Ncqrs.CommandHandling
             : base(info, context) { }
 
         [ContractInvariantMethod]
-        protected virtual void ContractInvariant()
+        private void ContractInvariant()
         {
             Contract.Invariant(CommandType != null);
         }

@@ -37,7 +37,7 @@ namespace Ncqrs.CommandHandling.AutoMapping.Actions
         }
 
         [ContractInvariantMethod]
-        protected void ContractInvariants()
+        private void ContractInvariants()
         {
             Contract.Invariant(_repository != null);
         }
