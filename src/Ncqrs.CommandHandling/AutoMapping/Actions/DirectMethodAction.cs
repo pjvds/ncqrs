@@ -28,8 +28,16 @@ namespace Ncqrs.CommandHandling.AutoMapping.Actions
             _info = DirectMethodCommandInfo.CreateFromDirectMethodCommand(command);
         }
 
+        [ContractInvariantMethod]
+        protected void ContractInvariants()
+        {
+            Contract.Invariant(_repository != null);
+        }
+
         public void Execute()
         {
+            Contract.Assume(UnitOfWork.Current == null);
+
             using (var work = new UnitOfWork(_repository))
             {
                 var config = new AutoMapperConfiguration();

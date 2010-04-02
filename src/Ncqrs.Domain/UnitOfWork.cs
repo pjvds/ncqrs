@@ -72,6 +72,7 @@ namespace Ncqrs.Domain
 
             Contract.Ensures(_repository == domainRepository, "The _repository member should be initialized with the one given by the domainRepository parameter.");
             Contract.Ensures(_threadInstance == this, "The _threadInstance member should be initialized with this instance.");
+            Contract.Ensures(IsDisposed == false);
 
             _repository = domainRepository;
             _dirtyInstances = new Queue<AggregateRoot>();
@@ -92,6 +93,8 @@ namespace Ncqrs.Domain
         /// </summary>
         public void Dispose()
         {
+            Contract.Ensures(IsDisposed == true);
+
              Dispose(true);
              GC.SuppressFinalize(this);
         }
@@ -102,15 +105,17 @@ namespace Ncqrs.Domain
         /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
         private void Dispose(bool disposing)
         {
-             if (!IsDisposed)
+            Contract.Ensures(IsDisposed == true);
+
+            if (!IsDisposed)
             {
-                  if (disposing)
-                 {
-                     _threadInstance = null;
-                 }
+                if (disposing)
+                {
+                    _threadInstance = null;
+                }
 
                 IsDisposed = true;
-             }
+            }
         }
 
         /// <summary>

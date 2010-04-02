@@ -28,8 +28,7 @@ namespace Ncqrs.CommandHandling
 
                 if (!_handlers.TryGetValue(commandType, out handler))
                 {
-                    // TODO: Add details.
-                    throw new CommandHandlerNotFoundException();
+                    throw new CommandHandlerNotFoundException(commandType);
                 }
 
                 Log.DebugFormat("Found commandhandler {0} to handle the {1} command. Will start executing it now.", handler.GetType().FullName, commandType.FullName);

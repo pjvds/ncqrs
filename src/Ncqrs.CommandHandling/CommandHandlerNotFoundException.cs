@@ -11,7 +11,7 @@ namespace Ncqrs.CommandHandling
     /// </summary>
     [Serializable]
     public class CommandHandlerNotFoundException : Exception
-    
+    {
         /// <summary>
         /// Gets the type of the command.
         /// </summary>
@@ -45,18 +45,11 @@ namespace Ncqrs.CommandHandling
         /// <param name="message">The message.</param>
         /// <param name="inner">The inner exception.</param>
         /// <exception cref="ArgumentNullException">Occurs when <i>commandType</i> is a <c>null</c> dereference.</exception>
-        public CommandHandlerNotFoundException(Type commandType, string message, Exception inner)
+        public CommandHandlerNotFoundException(Type commandType, string message, Exception inner) : base((String.IsNullOrEmpty(message) ? String.Format("No handler was found for command {0}.", commandType.GetType().FullName) : message), inner)
         {
             Contract.Requires<ArgumentNullException>(commandType != null);
 
-            if(message == null)
-            {
-                message = String.Format("No handler was found for command {0}.", commandType.GetType().FullName);
-            }
-
             CommandType = commandType;
-            Message = message;
-            InnerException = inner;
         }
 
         /// <summary>
@@ -70,5 +63,11 @@ namespace Ncqrs.CommandHandling
           System.Runtime.Serialization.SerializationInfo info,
           System.Runtime.Serialization.StreamingContext context)
             : base(info, context) { }
+
+        [ContractInvariantMethod]
+        protected virtual void ContractInvariant()
+        {
+            Contract.Invariant(CommandType != null);
+        }
     }
 }
