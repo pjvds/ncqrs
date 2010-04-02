@@ -4,30 +4,6 @@
     <name>Ncqrs.Commands</name>
   </assembly>
   <members>
-    <member name="T:Ncqrs.Commands.Attributes.MapsToAggregateRootConstructorAttribute">
-      <summary>
-            Defines that the command maps directly to a constructor on an aggregate root.
-            </summary>
-    </member>
-    <member name="M:Ncqrs.Commands.Attributes.MapsToAggregateRootConstructorAttribute.#ctor(System.String)">
-      <summary>
-            Initializes a new instance of the <see cref="T:Ncqrs.Commands.Attributes.MapsToAggregateRootConstructorAttribute" /> class.
-            </summary>
-      <param name="typeName">The full qualified name of the type of the aggregate root.</param>
-      <exception cref="T:System.ArgumentNullException">Thrown when <i>typeName</i> is null or emtpy.</exception>
-    </member>
-    <member name="M:Ncqrs.Commands.Attributes.MapsToAggregateRootConstructorAttribute.#ctor(System.Type)">
-      <summary>
-            Initializes a new instance of the <see cref="T:Ncqrs.Commands.Attributes.MapsToAggregateRootConstructorAttribute" /> class.
-            </summary>
-      <param name="type">The type of the aggregate root.</param>
-      <exception cref="T:System.ArgumentNullException">Thrown when <i>type</i> is null.</exception>
-    </member>
-    <member name="P:Ncqrs.Commands.Attributes.MapsToAggregateRootConstructorAttribute.TypeName">
-      <summary>
-            Get or sets the full qualified type name of the target aggregate root.
-            </summary>
-    </member>
     <member name="T:Ncqrs.Commands.Attributes.MapsToAggregateRootMethodAttribute">
       <summary>
             Defines that the command maps directly to a method on an aggregate root.
@@ -57,14 +33,38 @@
             </summary>
       <remarks>Leave this null or empty to automap the target method based on the command name.</remarks>
     </member>
+    <member name="T:Ncqrs.Commands.Attributes.ExcludeInMappingAttribute">
+      <summary>
+            Defines that a property should be excluded in the auto mapping process.
+            </summary>
+    </member>
     <member name="T:Ncqrs.Commands.Attributes.AggregateRootIdAttribute">
       <summary>
             Marks a property as the propery that contains the aggregate root id.
             </summary>
     </member>
-    <member name="T:Ncqrs.Commands.Attributes.ExcludeInMappingAttribute">
+    <member name="T:Ncqrs.Commands.Attributes.MapsToAggregateRootConstructorAttribute">
       <summary>
-            Defines that a property should be excluded in the auto mapping process.
+            Defines that the command maps directly to a constructor on an aggregate root.
+            </summary>
+    </member>
+    <member name="M:Ncqrs.Commands.Attributes.MapsToAggregateRootConstructorAttribute.#ctor(System.String)">
+      <summary>
+            Initializes a new instance of the <see cref="T:Ncqrs.Commands.Attributes.MapsToAggregateRootConstructorAttribute" /> class.
+            </summary>
+      <param name="typeName">The full qualified name of the type of the aggregate root.</param>
+      <exception cref="T:System.ArgumentNullException">Thrown when <i>typeName</i> is null or emtpy.</exception>
+    </member>
+    <member name="M:Ncqrs.Commands.Attributes.MapsToAggregateRootConstructorAttribute.#ctor(System.Type)">
+      <summary>
+            Initializes a new instance of the <see cref="T:Ncqrs.Commands.Attributes.MapsToAggregateRootConstructorAttribute" /> class.
+            </summary>
+      <param name="type">The type of the aggregate root.</param>
+      <exception cref="T:System.ArgumentNullException">Thrown when <i>type</i> is null.</exception>
+    </member>
+    <member name="P:Ncqrs.Commands.Attributes.MapsToAggregateRootConstructorAttribute.TypeName">
+      <summary>
+            Get or sets the full qualified type name of the target aggregate root.
             </summary>
     </member>
   </members>
