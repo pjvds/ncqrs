@@ -52,9 +52,6 @@ namespace Ncqrs.CommandHandling
 
         void ICommandHandler.Execute(ICommand command)
         {
-            Contract.Requires<ArgumentNullException>(command != null, "The command cannot be null.");
-            Contract.Requires<ArgumentException>(command is T, "The command should be of type " + typeof(T).FullName);
-
             this.Execute((T)command);
         }
     }

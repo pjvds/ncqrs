@@ -60,31 +60,31 @@ namespace Ncqrs.CommandHandling
     {
         public void Execute(ICommand command)
         {
-            Contract.Requires<ArgumentNullException>(command != null);
-            Contract.Requires<ArgumentException>(typeof(ICommand).IsAssignableFrom(command.GetType()));
+            Contract.Requires<ArgumentNullException>(command != null, "The command cannot be null.");
         }
 
         public void Execute(IEnumerable<ICommand> commands)
         {
-            Contract.Requires<ArgumentNullException>(commands != null);
-            Contract.Requires<ArgumentException>(commands.Count() > 0);
+            Contract.Requires<ArgumentNullException>(commands != null, "The command cannot be null.");
+            Contract.Requires<ArgumentException>(commands.Count() > 0, "There should be at least on command to execute.");
         }
 
         public void RegisterHandler(Type commandType, ICommandHandler handler)
         {
-            Contract.Requires<ArgumentNullException>(commandType != null);
+            Contract.Requires<ArgumentNullException>(commandType != null, "The commandType cannot be null.");
             Contract.Requires<ArgumentNullException>(handler != null);
         }
 
         public void UnregisterHandler(Type commandType, ICommandHandler handler)
         {
-            Contract.Requires<ArgumentNullException>(commandType != null);
-            Contract.Requires<ArgumentNullException>(handler != null);
+            Contract.Requires<ArgumentNullException>(commandType != null, "The commandType cannot be null.");
+            Contract.Requires<ArgumentNullException>(typeof(ICommand).IsAssignableFrom(commandType), "The commandType should be of a type that implements the ICommand interface.");
+            Contract.Requires<ArgumentNullException>(handler != null, "The handler cannot be null.");
         }
 
         public void RegisterHandler<TCommand>(ICommandHandler handler) where TCommand : ICommand
         {
-            Contract.Requires<ArgumentNullException>(handler != null);
+            Contract.Requires<ArgumentNullException>(handler != null, "The handler cannot be null.");
         }
     }
 }

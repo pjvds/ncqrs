@@ -31,7 +31,6 @@ namespace Ncqrs.CommandHandling
         /// <exception cref="CommandHandlerNotFoundException">Occurs when the <see cref="ICommandHandler"/> was not found for on the given <see cref="ICommand"/>.</exception>
         public void Execute(ICommand command)
         {
-            Contract.Requires<ArgumentNullException>(command != null);
             Type commandType = command.GetType();
 
             Log.InfoFormat("Received {0} command and will now start processing it.", commandType.FullName);
@@ -65,8 +64,6 @@ namespace Ncqrs.CommandHandling
         /// <exception cref="CommandHandlerNotFoundException">Occurs when a <see cref="ICommandHandler"/> was not found for on of the given <see cref="ICommand"/>'s.</exception>
         public void Execute(IEnumerable<ICommand> commands)
         {
-            Contract.Requires(commands != null);
-
             using (var transaction = new TransactionScope())
             {
                 foreach (var command in commands)
@@ -97,9 +94,6 @@ namespace Ncqrs.CommandHandling
         /// <exception cref="ArgumentNullException">Occurs when the <i>commandType</i> or <i>handler</i> was a <c>null</c> dereference.</exception>
         public void RegisterHandler(Type commandType, ICommandHandler handler)
         {
-            Contract.Requires<ArgumentNullException>(commandType != null);
-            Contract.Requires<ArgumentNullException>(handler != null);
-
             _handlers.Add(commandType, handler);
         }
 
@@ -110,9 +104,18 @@ namespace Ncqrs.CommandHandling
         /// <param name="commandType">Type of the command.</param>
         /// <param name="handler">The handler to unregister.</param>
         /// <exception cref="ArgumentNullException">Occurs when the <i>commandType</i> or <i>handler</i> was a <c>null</c> dereference.</exception>
+        /// <exception cref="InvalidOperationException">Occurs when the <i>handler</i> is not the same as the registered handler for the specified command type.</exception>
         public void UnregisterHandler(Type commandType, ICommandHandler handler)
         {
-            throw new NotImplementedException();
+            ICommandHandler registeredHandler = null;
+
+            if (_handlers.TryGetValue(commandType, out registeredHandler))
+            {
+                if (handler != registeredHandler)
+                    throw new InvalidOperationException("The specified hander does not match with the registered handler for command type " + commandType.FullName + ".");
+
+                _handlers.Remove(commandType);
+            }
         }
     }
 }

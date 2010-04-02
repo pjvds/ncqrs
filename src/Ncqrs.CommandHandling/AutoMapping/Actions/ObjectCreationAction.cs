@@ -28,9 +28,21 @@ namespace Ncqrs.CommandHandling.AutoMapping.Actions
             Contract.Requires<ArgumentNullException>(repository != null);
             Contract.Requires<ArgumentNullException>(command != null);
 
+            Contract.Ensures(_repository == repository, "The _repository member should be initialized with the given repository parameter.");
+            Contract.Ensures(_command == command, "The _command member should be initialized with the given command parameter.");
+            Contract.Ensures(_commandInfo != null, "The _commandInfo should be initialized after construct.");
+
             _repository = repository;
             _command = command;
             _commandInfo = ObjectCreationCommandInfo.CreateFromDirectMethodCommand(command);
+        }
+
+        [ContractInvariantMethod]
+        private void ContractInvariants()
+        {
+            Contract.Invariant(_command != null, "The _command member should never be null.");
+            Contract.Invariant(_repository != null, "The _repository member should never be null.");
+            Contract.Invariant(_commandInfo != null, "The _commandInfo member should never be null.");
         }
 
         /// <summary>
@@ -38,6 +50,8 @@ namespace Ncqrs.CommandHandling.AutoMapping.Actions
         /// </summary>
         public void Execute()
         {
+            Contract.Assume(UnitOfWork.Current == null, "There should not exist a UnitOfWork at this point.");
+
             using (var work = new UnitOfWork(_repository))
             {
                 var targetCtor = GetConstructorBasedOnCommand();

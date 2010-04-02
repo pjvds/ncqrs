@@ -2,6 +2,7 @@
 using Ncqrs.Commands;
 using Ncqrs.Commands.Attributes;
 using System.Reflection;
+using System.Diagnostics.Contracts;
 
 namespace Ncqrs.CommandHandling.AutoMapping.Actions
 {
@@ -35,6 +36,8 @@ namespace Ncqrs.CommandHandling.AutoMapping.Actions
 
         public static ObjectCreationCommandInfo CreateFromDirectMethodCommand(ICommand command)
         {
+            Contract.Ensures(Contract.Result<ObjectCreationCommandInfo>() != null, "The result of the method should not be null.");
+
             if(command == null) throw new ArgumentNullException("command");
             var aggregateRootType = GetAggregateRootType(command);
 

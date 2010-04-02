@@ -51,6 +51,7 @@ namespace Ncqrs.Eventing.Storage.MongoDB
         public MongoDBEventStore(Mongo mongo)
             : this(mongo, "EventStore")
         {
+            Contract.Requires<ArgumentNullException>(mongo != null);
         }
 
         /// <summary>
@@ -62,6 +63,8 @@ namespace Ncqrs.Eventing.Storage.MongoDB
         public MongoDBEventStore(Mongo mongo, String databaseName)
             : this(mongo, databaseName, "Events")
         {
+            Contract.Requires<ArgumentNullException>(mongo != null);
+            Contract.Requires<ArgumentNullException>(!String.IsNullOrEmpty(databaseName));
         }
 
         /// <summary>
