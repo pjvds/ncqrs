@@ -61,7 +61,7 @@ namespace Ncqrs.CommandHandling
         /// </summary>
         /// <param name="command">The command to execute. This should not be null.</param>
         /// <exception cref="ArgumentNullException">Occurs when <i>command</i> is null.</exception>
-        /// <exception cref="InvalidCastException">Occurs when the <i>command</i> could not be casted to <c>TCommand</c>.</i></exception>
+        /// <exception cref="InvalidCastException">Occurs when the <i>command</i> could not be casted to <c>TCommand</c>.</exception>
         void ICommandHandler.Execute(ICommand command)
         {
             this.Execute((TCommand)command);

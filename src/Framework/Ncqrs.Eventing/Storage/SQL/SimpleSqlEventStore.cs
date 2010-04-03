@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Diagnostics.Contracts;
 
 namespace Ncqrs.Eventing.Storage.SQL
 {
@@ -108,7 +109,7 @@ namespace Ncqrs.Eventing.Storage.SQL
                     // Create new event provider when it is not found.
                     if (currentVersion == null)
                     {
-                        CreateEventSource(eventSource, transaction);
+                        AddEventSource(eventSource, transaction);
                     }
                     else if (currentVersion.Value != eventSource.Version)
                     {
@@ -184,32 +185,57 @@ namespace Ncqrs.Eventing.Storage.SQL
             }
         }
 
-        private static void SaveEvents(IEnumerable<IEvent> evnts, Guid providerId, SqlTransaction transaction)
+        /// <summary>
+        /// Saves the events to the event store.
+        /// </summary>
+        /// <param name="evnts">The events to save.</param>
+        /// <param name="eventSourceId">The event source id that owns the events.</param>
+        /// <param name="transaction">The transaction.</param>
+        private static void SaveEvents(IEnumerable<IEvent> evnts, Guid eventSourceId, SqlTransaction transaction)
         {
+            Contract.Requires<ArgumentNullException>(evnt != null, "The argument evnts could not be null.");
+            Contract.Requires<ArgumentNullException>(transaction != null, "The argument transaction could not be null.");
+
             foreach (IEvent evnt in evnts)
             {
-                SaveEvent(evnt, providerId, transaction);
+                SaveEvent(evnt, eventSourceId, transaction);
             }
         }
 
-        private static void SaveEvent(IEvent evnt, Guid providerId, SqlTransaction transaction)
+        /// <summary>
+        /// Saves the event to the data store.
+        /// </summary>
+        /// <param name="evnt">The event to save.</param>
+        /// <param name="eventSourceId">The id of the event source that owns the event.</param>
+        /// <param name="transaction">The transaction.</param>
+        private static void SaveEvent(IEvent evnt, Guid eventSourceId, SqlTransaction transaction)
         {
-            var dataStream = new MemoryStream();
-            var formatter = new BinaryFormatter();
-            formatter.Serialize(dataStream, evnt);
-            byte[] data = dataStream.ToArray();
+            Contract.Requires<ArgumentNullException>(evnt != null, "The argument evnt could not be null.");
+            Contract.Requires<ArgumentNullException>(transaction != null, "The argument transaction could not be null.");
 
-            using (var command = new SqlCommand(InsertNewEventQuery, transaction.Connection))
+            using (var dataStream = new MemoryStream())
             {
-                command.Transaction = transaction;
-                command.Parameters.AddWithValue("Id", providerId);
-                command.Parameters.AddWithValue("Name", evnt.GetType().FullName);
-                command.Parameters.AddWithValue("Data", data);
-                command.ExecuteNonQuery();
+                var formatter = new BinaryFormatter();
+                formatter.Serialize(dataStream, evnt);
+                byte[] data = dataStream.ToArray();
+
+                using (var command = new SqlCommand(InsertNewEventQuery, transaction.Connection))
+                {
+                    command.Transaction = transaction;
+                    command.Parameters.AddWithValue("Id", eventSourceId);
+                    command.Parameters.AddWithValue("Name", evnt.GetType().FullName);
+                    command.Parameters.AddWithValue("Data", data);
+                    command.ExecuteNonQuery();
+                }
             }
         }
 
-        private static void CreateEventSource(EventSource eventSource, SqlTransaction transaction)
+        /// <summary>
+        /// Adds the event source to the event store.
+        /// </summary>
+        /// <param name="eventSource">The event source to add.</param>
+        /// <param name="transaction">The transaction.</param>
+        private static void AddEventSource(EventSource eventSource, SqlTransaction transaction)
         {
             using (var command = new SqlCommand(InsertNewProviderQuery, transaction.Connection))
             {
@@ -221,6 +247,13 @@ namespace Ncqrs.Eventing.Storage.SQL
             }
         }
 
+        /// <summary>
+        /// Gets the version of the provider from the event store.
+        /// </summary>
+        /// <param name="providerId">The provider id.</param>
+        /// <param name="transaction">The transaction.</param>
+        /// <returns>A <see cref="int?"/> that is <c>null</c> when no version was known ; otherwise,
+        /// it contains the version number.</returns>
         private static int? GetVersion(Guid providerId, SqlTransaction transaction)
         {
             using (var command = new SqlCommand(SelectVersionQuery, transaction.Connection))
@@ -231,11 +264,15 @@ namespace Ncqrs.Eventing.Storage.SQL
             }
         }
 
+        /// <summary>
+        /// Gets the table creation queries that can be used to create the tables that are needed
+        /// for a database that is used as an event store.
+        /// </summary>
+        /// <returns>Queries that contain the <i>create table</i> statements.</returns>
         public static IEnumerable<String> GetTableCreationQueries()
         {
-            // TODO: Update.
-            yield return @"CREATE TABLE [dbo].[Events]([EventProviderId] [uniqueidentifier] NOT NULL, [TimeStamp] [datetime] NOT NULL, [Data] [varbinary](max) NOT NULL, [Name] [varchar](max) NOT NULL) ON [PRIMARY]";
-            yield return @"CREATE TABLE [dbo].[EventProviders]([Id] [uniqueidentifier] NOT NULL, [Type] [nvarchar](255) NOT NULL, [Version] [int] NOT NULL) ON [PRIMARY]";
+            yield return @"CREATE TABLE [dbo].[Events]([EventSourceId] [uniqueidentifier] NOT NULL, [TimeStamp] [datetime] NOT NULL, [Data] [varbinary](max) NOT NULL, [Name] [varchar](max) NOT NULL) ON [PRIMARY]";
+            yield return @"CREATE TABLE [dbo].[EventSources]([Id] [uniqueidentifier] NOT NULL, [Type] [nvarchar](255) NOT NULL, [Version] [int] NOT NULL) ON [PRIMARY]";
         }
     }
 }
