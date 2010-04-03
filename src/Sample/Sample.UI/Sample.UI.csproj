@@ -85,6 +85,8 @@
     <Content Include="Content\bg-main-corner-sprite.png" />
     <Content Include="Content\bg-main.png" />
     <Content Include="Content\bg-nav-corner-sprite.png" />
+    <Content Include="Content\close-quote.gif" />
+    <Content Include="Content\open-quote.gif" />
     <Content Include="Global.asax" />
     <Content Include="Views\Message\Add.aspx" />
     <Content Include="Views\Message\Index.aspx" />

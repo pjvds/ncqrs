@@ -15,12 +15,12 @@
 
         <div id="header">
             <div id="title">
-                <h1>My Sample MVC Application</h1>
+                <h1>Cloud messages</h1>
             </div>
              
             <div id="logindisplay">
-                <% Html.RenderPartial("LogonUserControl"); %>
-            </div> 
+                [ <a href="http://twitter.com/ncqrs">twitter</a> ]
+            </div>
             
             <div id="menucontainer">
 
@@ -41,7 +41,7 @@
             <asp:ContentPlaceHolder ID="MainContent" runat="server" />
 
             <div id="footer">
-                My Sample MVC Application &copy; Copyright 2008
+                Ncqrs sample application - 2010
             </div>
         </div>
     </div>
