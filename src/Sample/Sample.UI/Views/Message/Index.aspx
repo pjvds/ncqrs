@@ -9,12 +9,6 @@
     <h2>Index</h2>
 
     <table>
-        <tr>
-            <th></th>
-            <th>
-                Text
-            </th>
-        </tr>
 
     <% foreach (var item in Model) { %>
     

@@ -88,6 +88,7 @@
     <Content Include="Global.asax" />
     <Content Include="Views\Message\Add.aspx" />
     <Content Include="Views\Message\Index.aspx" />
+    <Content Include="Views\Message\NoMessageFound.aspx" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
