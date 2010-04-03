@@ -12,8 +12,8 @@ namespace Ncqrs.CommandHandling
     /// <summary>
     /// Represents a command handler.
     /// </summary>
-    /// <typeparam name="T">The type of the command to handle.</typeparam>
-    public abstract class CommandHandler<T> : ICommandHandler where T : ICommand
+    /// <typeparam name="TCommand">The type of the command to handle.</typeparam>
+    public abstract class CommandHandler<TCommand> : ICommandHandler where TCommand : ICommand
     {
         private readonly IDomainRepository _repository;
 
@@ -32,7 +32,7 @@ namespace Ncqrs.CommandHandling
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CommandHandler&lt;T&gt;"/> class.
+        /// Initializes a new instance of the <see cref="CommandHandler&lt;TCommand&gt;"/> class.
         /// </summary>
         /// <exception cref="ArgumentNullException">Occurs when <i>domainRepository</i> is <c>null</c>.</exception>
         protected CommandHandler(IDomainRepository domainRepository)
@@ -43,16 +43,28 @@ namespace Ncqrs.CommandHandling
             _repository = domainRepository;
         }
 
+        [ContractInvariantMethod]
+        private void ContractInvariants()
+        {
+            Contract.Invariant(_repository != null, "The _repository member should never be null.");
+        }
+
         /// <summary>
         /// Executes the command.
         /// </summary>
         /// <param name="command">The command to execute. This should not be null.</param>
         /// <exception cref="ArgumentNullException">Occurs when <i>command</i> is null.</exception>
-        public abstract void Execute(T command);
+        public abstract void Execute(TCommand command);
 
+        /// <summary>
+        /// Executes the command.
+        /// </summary>
+        /// <param name="command">The command to execute. This should not be null.</param>
+        /// <exception cref="ArgumentNullException">Occurs when <i>command</i> is null.</exception>
+        /// <exception cref="InvalidCastException">Occurs when the <i>command</i> could not be casted to <c>TCommand</c>.</i></exception>
         void ICommandHandler.Execute(ICommand command)
         {
-            this.Execute((T)command);
+            this.Execute((TCommand)command);
         }
     }
 }
