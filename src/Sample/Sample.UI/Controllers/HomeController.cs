@@ -18,5 +18,11 @@ namespace Sample.UI.Controllers
         {
             return View();
         }
+
+        public ActionResult Error()
+        {
+            var error = (Exception)Session["Error"];
+            return View(error);
+        }
     }
 }

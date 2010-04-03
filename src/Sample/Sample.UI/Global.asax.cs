@@ -14,6 +14,7 @@ using MongoDB.Driver;
 using System.Threading;
 using Sample.Events;
 using Sample.ReadModel.Denormalizers;
+using Sample.UI.Controllers;
 
 namespace Sample.UI
 {
@@ -51,6 +52,15 @@ namespace Sample.UI
         {
             InitializeEventBus();
             InitializeCommandService();
+
+            this.Error += new EventHandler(MvcApplication_Error);
+        }
+
+        void MvcApplication_Error(object sender, EventArgs e)
+        {
+            Session["Error"] = Server.GetLastError();
+
+            this.Response.Redirect("/Home/Error");
         }
 
         private void InitializeCommandService()

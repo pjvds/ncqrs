@@ -84,6 +84,7 @@
     <Content Include="Content\bg-main.png" />
     <Content Include="Content\bg-nav-corner-sprite.png" />
     <Content Include="Global.asax" />
+    <Content Include="Views\Home\Error.aspx" />
     <Content Include="Views\Home\Welcome.aspx" />
     <Content Include="Views\Message\Add.aspx" />
     <Content Include="Views\Message\Index.aspx" />
@@ -177,8 +178,8 @@
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
-          <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>25205</DevelopmentServerPort>
+          <AutoAssignPort>False</AutoAssignPort>
+          <DevelopmentServerPort>8090</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>
           </IISUrl>
