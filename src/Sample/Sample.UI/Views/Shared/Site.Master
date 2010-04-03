@@ -28,7 +28,8 @@
                 <%-- The custom Html.MenuItem() helper is used to render each menu link --%>
 
                 <ul id="menu">              
-                    <%= Html.MenuItem("Home", "Index", "Message")%>
+                    <%= Html.MenuItem("Home", "Welcome", "Home")%>
+                    <%= Html.MenuItem("Messages", "Index", "Message")%>
                     <%= Html.MenuItem("Post", "Add", "Message")%>
                     <%= Html.MenuItem("About Us", "About", "Home")%>
                 </ul>
