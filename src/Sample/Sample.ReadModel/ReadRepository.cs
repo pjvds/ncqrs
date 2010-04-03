@@ -10,9 +10,11 @@ namespace Sample.ReadModel
     {
         private Mongo _mongo;
 
-        public ReadRepository ()
-	    {
+        public ReadRepository()
+        {
+
             _mongo = new Mongo();
+
         }
 
         protected void Connect()
