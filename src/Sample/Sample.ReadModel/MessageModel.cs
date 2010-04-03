@@ -16,7 +16,7 @@ namespace Sample.ReadModel
             }
             internal set
             {
-                InnerDocument["id"] = value;
+                InnerDocument["Id"] = value;
             }
         }
 
@@ -29,6 +29,18 @@ namespace Sample.ReadModel
             internal set
             {
                 InnerDocument["Text"] = value;
+            }
+        }
+
+        public DateTime CreationDate
+        {
+            get
+            {
+                return (DateTime)InnerDocument["CreationDate"];
+            }
+            internal set
+            {
+                InnerDocument["CreationDate"] = value;
             }
         }
     }

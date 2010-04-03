@@ -6,20 +6,17 @@ using System.Web.Mvc;
 using Sample.ReadModel;
 using Sample.Commands;
 using Ncqrs.CommandHandling;
+using MongoDB.Driver;
 
 namespace Sample.UI.Controllers
 {
     public class MessageController : Controller
     {
-        //
-        // GET: /Message/
-
         public ActionResult Index()
         {
             var repository = new ReadRepository<MessageModel>();
-            var model = repository.FindAll();
-
-            return View();
+            var model = repository.Find(new Document().Append("query", new Document()).Append("orderby", new Document().Append("CreationDate", -1))); 
+            return View(model);
         }
 
         public ActionResult Add()
@@ -33,7 +30,7 @@ namespace Sample.UI.Controllers
             ICommandService service = MvcApplication.CommandService;
             service.Execute(command);
 
-            return View();
+            return RedirectToAction("Index");
         }
     }
 }

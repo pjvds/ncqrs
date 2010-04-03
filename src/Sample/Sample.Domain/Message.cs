@@ -11,13 +11,15 @@ namespace Sample.Domain
     public class Message : AggregateRoot
     {
         private String _messageText;
+        private DateTime _creationDate;
 
         public Message(Guid messageId, String text)
         {
             var e = new NewMessageAdded
             {
                 MessageId = messageId,
-                Text = text
+                Text = text,
+                CreationDate = DateTime.UtcNow
             };
 
             ApplyEvent(e);
@@ -28,6 +30,7 @@ namespace Sample.Domain
         {
             OverrideId(e.MessageId);
             _messageText = e.Text;
+            _creationDate = e.CreationDate;
         }
     }
 }

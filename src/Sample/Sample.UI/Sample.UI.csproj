@@ -76,10 +76,15 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\MenuItemHelper.cs" />
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\bg-header.png" />
+    <Content Include="Content\bg-main-corner-sprite.png" />
+    <Content Include="Content\bg-main.png" />
+    <Content Include="Content\bg-nav-corner-sprite.png" />
     <Content Include="Global.asax" />
     <Content Include="Views\Message\Add.aspx" />
     <Content Include="Views\Message\Index.aspx" />
@@ -104,7 +109,6 @@
     <Content Include="Scripts\MicrosoftMvcValidation.js" />
     <Content Include="Scripts\MicrosoftMvcValidation.debug.js" />
     <Content Include="Views\Home\About.aspx" />
-    <Content Include="Views\Home\Index.aspx" />
     <Content Include="Views\Shared\Error.aspx" />
     <Content Include="Views\Shared\LogOnUserControl.ascx" />
     <Content Include="Views\Shared\Site.Master" />

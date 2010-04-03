@@ -21,7 +21,8 @@ namespace Sample.ReadModel.Denormalizers
                 var newMessageModel = new MessageModel
                 {
                     Id = evnt.MessageId,
-                    Text = evnt.Text
+                    Text = evnt.Text,
+                    CreationDate = evnt.CreationDate
                 };
 
                 collection.Insert(newMessageModel.InnerDocument);

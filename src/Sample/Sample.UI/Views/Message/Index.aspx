@@ -20,21 +20,12 @@
     
         <tr>
             <td>
-                <%= Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) %> |
-                <%= Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ })%>
-            </td>
-            <td>
-                <%= Html.Encode(item.Text) %>
+                <span class="MessageText"><%= Html.Encode(item.Text) %></span><br />
+                <small><%= Html.Encode(item.CreationDate.ToString()) %></small>
             </td>
         </tr>
     
     <% } %>
 
     </table>
-
-    <p>
-        <%= Html.ActionLink("Create New", "Create") %>
-    </p>
-
 </asp:Content>
-
