@@ -16,7 +16,7 @@ namespace Sample.ReadModel.Denormalizers
             {
                 mongo.Connect();
                 var db = mongo.GetDatabase("ReadModel");
-                var collection = db.GetCollection("MessageModel");
+                var messageModelCol = db.GetCollection("MessageModel");
 
                 var newMessageModel = new MessageModel
                 {
@@ -25,7 +25,19 @@ namespace Sample.ReadModel.Denormalizers
                     CreationDate = evnt.CreationDate
                 };
 
-                collection.Insert(newMessageModel.InnerDocument);
+                messageModelCol.Insert(newMessageModel.InnerDocument);
+
+                var editMessageModelCol = db.GetCollection("EditMessageModel");
+
+                var newEditMessageModel = new EditMessageModel
+                {
+                    Id = evnt.MessageId,
+                    Text = evnt.Text,
+                    CreationDate = evnt.CreationDate,
+                    TextChanges = new PreviousTextModel[0]
+                };
+
+                editMessageModelCol.Insert(newEditMessageModel.InnerDocument);
             }
         }
     }

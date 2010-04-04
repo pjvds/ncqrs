@@ -86,7 +86,7 @@ namespace Sample.ReadModel
             }
         }
 
-        public IEnumerable<TModel> Find(MessageModel sample)
+        public IEnumerable<TModel> Find(TModel sample)
         {
             Connect();
 

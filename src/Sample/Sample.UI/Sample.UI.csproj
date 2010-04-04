@@ -87,6 +87,7 @@
     <Content Include="Views\Home\Error.aspx" />
     <Content Include="Views\Home\Welcome.aspx" />
     <Content Include="Views\Message\Add.aspx" />
+    <Content Include="Views\Message\Edit.aspx" />
     <Content Include="Views\Message\Index.aspx" />
     <Content Include="Views\Message\NoMessageFound.aspx" />
     <Content Include="Web.config" />

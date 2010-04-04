@@ -12,9 +12,9 @@
         <tr>
             <td>
                 <span class="MessageText">
-                    <%= Html.Encode(item.Text) %></span><br />
+                    <%= Html.Encode(item.Text) %></div><br />
                 <small>
-                    <%= Html.Encode(item.CreationDate.ToString()) %></small>
+                    <%= Html.Encode(item.CreationDate.ToString()) %> - <i><a href="/Message/Edit?MessageId=<%= Html.Encode(item.Id) %>">edit</a></i></small>
             </td>
         </tr>
         <% } %>

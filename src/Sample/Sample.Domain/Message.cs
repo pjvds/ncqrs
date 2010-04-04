@@ -6,6 +6,7 @@ using Ncqrs.Domain;
 using Sample.Events;
 using Ncqrs.Eventing.Mapping;
 using System.Diagnostics.Contracts;
+using Ncqrs.Eventing;
 
 namespace Sample.Domain
 {
@@ -26,12 +27,18 @@ namespace Sample.Domain
             ApplyEvent(e);
         }
 
-        public void UpdateMessageText(String text)
+        protected Message(IEnumerable<HistoricalEvent> history)
+            : base(history)
+        {
+        }
+
+        public void UpdateMessageText(String newMessageText)
         {
             var e = new MessageTextUpdated
             {
                 MessageId = Id,
-                UpdatedMessageText = text
+                UpdatedMessageText = newMessageText,
+                ChangeDate = DateTime.UtcNow
             };
 
             ApplyEvent(e);

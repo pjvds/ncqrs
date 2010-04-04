@@ -16,19 +16,35 @@ namespace Sample.ReadModel.Denormalizers
             {
                 mongo.Connect();
                 var db = mongo.GetDatabase("ReadModel");
-                var collection = db.GetCollection("MessageModel");
+                var messageModelCol = db.GetCollection("MessageModel");
 
                 var spec = new MessageModel();
                 spec.Id = evnt.MessageId;
 
-                var document = collection.Find(spec.InnerDocument).Documents.First();
+                var document = messageModelCol.Find(spec.InnerDocument).Documents.First();
 
                 var messageModelToUpdate = new MessageModel();
                 messageModelToUpdate.InnerDocument = document;
 
                 messageModelToUpdate.Text = evnt.UpdatedMessageText;
 
-                collection.Update(messageModelToUpdate.InnerDocument);
+                messageModelCol.Update(messageModelToUpdate.InnerDocument);
+
+
+                var editMessageModelCol = db.GetCollection("EditMessageModel");
+
+                var spec2 = new EditMessageModel();
+                spec2.Id = evnt.MessageId;
+                var document2 = editMessageModelCol.Find(spec2.InnerDocument).Documents.First();
+
+                var editMessageModelToUpdate = new EditMessageModel() { InnerDocument = document2 };
+                var newMessageTextUpdate = new PreviousTextModel() { ChangeDate = evnt.ChangeDate, Text = editMessageModelToUpdate.Text };
+                editMessageModelToUpdate.Text = evnt.UpdatedMessageText;
+                var newChanges = new List<PreviousTextModel>(editMessageModelToUpdate.TextChanges);
+                newChanges.Add(newMessageTextUpdate);
+                editMessageModelToUpdate.TextChanges = newChanges.ToArray();
+
+                editMessageModelCol.Update(editMessageModelToUpdate.InnerDocument);
             }
         }
     }

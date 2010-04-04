@@ -32,7 +32,8 @@ namespace Ncqrs.Domain.Storage
             var flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
 
             // Get the constructor that we want to invoke.
-            var ctor = aggregateRootType.GetConstructor(flags, null, new[] { typeof(IEnumerable<HistoricalEvent>) }, null);
+            var types = new Type[] { typeof(IEnumerable<HistoricalEvent>) };
+            var ctor = aggregateRootType.GetConstructor(flags, null, types, null);
 
             // If there was no ctor found, throw exception.
             if (ctor == null)

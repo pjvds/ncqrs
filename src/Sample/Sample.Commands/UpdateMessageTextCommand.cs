@@ -8,7 +8,7 @@ using Ncqrs.Commands.Attributes;
 namespace Sample.Commands
 {
     [Serializable]
-    [MapsToAggregateRootMethod("UpdateMessageText", "Sample.Domain.Message, Sample.Domain")]
+    [MapsToAggregateRootMethod("Sample.Domain.Message, Sample.Domain", "UpdateMessageText")]
     public class UpdateMessageTextCommand : ICommand
     {
         [AggregateRootId]

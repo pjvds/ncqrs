@@ -41,5 +41,25 @@ namespace Sample.UI.Controllers
 
             return RedirectToAction("Index");
         }
+
+        public ActionResult Edit()
+        {
+            var messageId = Guid.Parse(Request.QueryString["MessageId"]);
+
+            var repository = new ReadRepository<EditMessageModel>();
+            var model = repository.Find(new Document().Append("Id", messageId)).First();
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult Edit(Guid messageId, String text)
+        {
+            ICommandService service = MvcApplication.CommandService;
+            var command = new UpdateMessageTextCommand { MessageId = messageId, NewMessageText = text };
+            service.Execute(command);
+
+            return RedirectToAction("Index");
+        }
     }
 }

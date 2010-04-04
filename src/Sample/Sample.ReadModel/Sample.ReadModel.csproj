@@ -45,6 +45,8 @@
   <ItemGroup>
     <Compile Include="Denormalizers\MessageTextUpdatedDenormalizer.cs" />
     <Compile Include="Denormalizers\NewMessageDenormalizer.cs" />
+    <Compile Include="Dictionary.cs" />
+    <Compile Include="EditMessageModel.cs" />
     <Compile Include="ReadRepository.cs" />
     <Compile Include="MessageModel.cs" />
     <Compile Include="MongoReadModelEntity.cs" />

@@ -19,5 +19,11 @@ namespace Sample.Events
             get;
             set;
         }
+
+        public DateTime ChangeDate
+        {
+            get;
+            set;
+        }
     }
 }

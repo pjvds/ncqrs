@@ -70,12 +70,14 @@ namespace Sample.UI
 
             CommandService = new TransactionalInProcessCommandService();
             CommandService.RegisterHandler<AddNewMessageCommand>(new AutoMappingCommandHandler<AddNewMessageCommand>(repository));
+            CommandService.RegisterHandler<UpdateMessageTextCommand>(new AutoMappingCommandHandler<UpdateMessageTextCommand>(repository));
         }
 
         private void InitializeEventBus()
         {
             EventBus = new InProcessEventBus();
             EventBus.RegisterHandler<NewMessageAdded>(new NewMessageDenormalizer());
+            EventBus.RegisterHandler<MessageTextUpdated>(new MessageTextUpdatedDenormalizer());
         }
 
         public static void RegisterRoutes(RouteCollection routes)
