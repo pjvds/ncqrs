@@ -18,6 +18,7 @@ namespace Ncqrs.Domain.Storage
         /// </summary>
         /// <param name="aggregateRootType">Type of the aggregate root to load.</param>
         /// <param name="events">The historical events.</param>
+        /// <exception cref="AggregateLoaderException">Occurs when the aggregate root could not be loaded.</exception>
         /// <returns>A new instance of the specified aggregate root type loaded with context that has been build from the events.</returns>
         AggregateRoot LoadAggregateRootFromEvents(Type aggregateRootType, IEnumerable<HistoricalEvent> events);
     }
