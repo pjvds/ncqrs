@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Denormalizers\MessageTextUpdatedDenormalizer.cs" />
     <Compile Include="Denormalizers\NewMessageDenormalizer.cs" />
     <Compile Include="ReadRepository.cs" />
     <Compile Include="MessageModel.cs" />

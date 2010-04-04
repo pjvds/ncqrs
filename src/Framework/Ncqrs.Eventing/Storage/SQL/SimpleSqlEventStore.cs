@@ -193,7 +193,7 @@ namespace Ncqrs.Eventing.Storage.SQL
         /// <param name="transaction">The transaction.</param>
         private static void SaveEvents(IEnumerable<IEvent> evnts, Guid eventSourceId, SqlTransaction transaction)
         {
-            Contract.Requires<ArgumentNullException>(evnt != null, "The argument evnts could not be null.");
+            Contract.Requires<ArgumentNullException>(evnts != null, "The argument evnts could not be null.");
             Contract.Requires<ArgumentNullException>(transaction != null, "The argument transaction could not be null.");
 
             foreach (IEvent evnt in evnts)
