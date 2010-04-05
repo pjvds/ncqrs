@@ -14,13 +14,15 @@ namespace Sample.UI.Controllers
     {
         public ActionResult Index()
         {
-            var repository = new ReadRepository<IMessageModel>();
-            var model = repository.Find(new Document().Append("query", new Document()).Append("orderby", new Document().Append("CreationDate", -1)));
+            using(var repository = new ReadRepository<IMessageModel>())
+            {
+            var model = repository.FindAll(new Document().Append("CreationDate", -1));
 
             if (model.Count() == 0)
                 return RedirectToAction("NoMessageFound");
             else
                 return View(model);
+            }
         }
 
         public ActionResult Add()
@@ -46,10 +48,12 @@ namespace Sample.UI.Controllers
         {
             var messageId = Guid.Parse(Request.QueryString["MessageId"]);
 
-            var repository = new ReadRepository<IEditMessageModel>();
-            var model = repository.Find(new Document().Append("Id", messageId)).First();
+            using (var repository = new ReadRepository<IEditMessageModel>())
+            {
+                var model = repository.FindOne(new Document().Append("Id", messageId));
 
-            return View(model);
+                return View(model);
+            }
         }
 
         [HttpPost]
