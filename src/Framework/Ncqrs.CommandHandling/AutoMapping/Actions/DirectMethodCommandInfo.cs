@@ -4,7 +4,7 @@ using System.Reflection;
 using Ncqrs.Commands;
 using Ncqrs.Commands.Attributes;
 
-namespace Ncqrs.CommandHandling.AutoMapping.Actions
+namespace Ncqrs.CommandExecution.AutoMapping.Actions
 {
     internal class DirectMethodCommandInfo
     {

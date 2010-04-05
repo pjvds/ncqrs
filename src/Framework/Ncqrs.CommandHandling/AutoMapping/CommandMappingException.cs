@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace Ncqrs.CommandHandling.AutoMapping
+namespace Ncqrs.CommandExecution.AutoMapping
 {
     /// <summary>
     /// Occurs when the mapping of a command is invalid.

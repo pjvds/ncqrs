@@ -2,7 +2,7 @@
 using System.Runtime.Serialization;
 using Ncqrs.Commands;
 
-namespace Ncqrs.CommandHandling.AutoMapping
+namespace Ncqrs.CommandExecution.AutoMapping
 {
     /// <summary>
     /// Occurs when there is no auto mapping found for a <see cref="ICommand"/>.

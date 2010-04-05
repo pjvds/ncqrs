@@ -7,7 +7,7 @@ using Ncqrs.Commands;
 using Ncqrs.Domain.Storage;
 using Ncqrs.Domain;
 
-namespace Ncqrs.CommandHandling
+namespace Ncqrs.CommandExecution
 {
     /// <summary>
     /// Represents a command executor.

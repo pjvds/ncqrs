@@ -5,7 +5,7 @@ using System.Text;
 using Ncqrs.Commands;
 using System.Diagnostics.Contracts;
 
-namespace Ncqrs.CommandHandling
+namespace Ncqrs.CommandExecution
 {
     /// <summary>
     /// Executes a command. This means that the handles 

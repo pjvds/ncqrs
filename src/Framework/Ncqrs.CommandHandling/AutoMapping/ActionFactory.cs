@@ -1,11 +1,11 @@
 ﻿using System;
-using Ncqrs.CommandHandling.AutoMapping.Actions;
+using Ncqrs.CommandExecution.AutoMapping.Actions;
 using Ncqrs.Commands;
 using Ncqrs.Commands.Attributes;
 using System.Diagnostics.Contracts;
 using Ncqrs.Domain.Storage;
 
-namespace Ncqrs.CommandHandling.AutoMapping
+namespace Ncqrs.CommandExecution.AutoMapping
 {
     /// <summary>
     /// A factory to use the create action for commands based on mapping.

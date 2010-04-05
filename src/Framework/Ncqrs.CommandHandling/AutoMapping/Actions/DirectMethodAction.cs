@@ -7,7 +7,7 @@ using Ncqrs.Domain;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 
-namespace Ncqrs.CommandHandling.AutoMapping.Actions
+namespace Ncqrs.CommandExecution.AutoMapping.Actions
 {
     /// <summary>
     /// An auto mapped action that executes a method on an aggregate root based on the mapping specified on the command.

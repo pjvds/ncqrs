@@ -6,7 +6,7 @@ using Ncqrs.Commands;
 using log4net;
 using System.Reflection;
 
-namespace Ncqrs.CommandHandling
+namespace Ncqrs.CommandExecution
 {
     /// <summary>
     /// A command executor that dispatch the command execution to other command executors.

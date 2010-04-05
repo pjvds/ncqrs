@@ -4,7 +4,7 @@ using Ncqrs.Commands.Attributes;
 using System.Reflection;
 using System.Diagnostics.Contracts;
 
-namespace Ncqrs.CommandHandling.AutoMapping.Actions
+namespace Ncqrs.CommandExecution.AutoMapping.Actions
 {
     internal class ObjectCreationCommandInfo
     {

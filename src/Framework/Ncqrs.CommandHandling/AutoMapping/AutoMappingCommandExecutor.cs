@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using Ncqrs.Commands.Attributes;
 
-namespace Ncqrs.CommandHandling.AutoMapping
+namespace Ncqrs.CommandExecution.AutoMapping
 {
     /// <summary>
     /// A command handler that execute an action based on the mapping of a command.

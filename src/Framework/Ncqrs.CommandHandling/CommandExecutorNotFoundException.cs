@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Diagnostics.Contracts;
 
-namespace Ncqrs.CommandHandling
+namespace Ncqrs.CommandExecution
 {
     /// <summary>
     /// Occurs when no executor was not found to execute the command.

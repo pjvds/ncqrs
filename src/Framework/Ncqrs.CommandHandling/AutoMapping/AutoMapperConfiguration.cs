@@ -5,7 +5,7 @@ using System.Reflection;
 using Ncqrs.Commands;
 using Ncqrs.Commands.Attributes;
 
-namespace Ncqrs.CommandHandling.AutoMapping
+namespace Ncqrs.CommandExecution.AutoMapping
 {
     /// <summary>
     /// Helper methods to get properties and parameter values from commands.

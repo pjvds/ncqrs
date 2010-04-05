@@ -8,7 +8,7 @@ using System.Diagnostics.Contracts;
 using System.Reflection;
 using log4net;
 
-namespace Ncqrs.CommandHandling
+namespace Ncqrs.CommandExecution
 {
     /// <summary>
     /// A service that dispatches Command objects to their appropriate Commandexecutor. Commandexecutors can subscribe and

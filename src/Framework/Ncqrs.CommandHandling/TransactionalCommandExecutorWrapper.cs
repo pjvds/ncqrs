@@ -6,7 +6,7 @@ using Ncqrs.Commands;
 using System.Diagnostics.Contracts;
 using System.Transactions;
 
-namespace Ncqrs.CommandHandling
+namespace Ncqrs.CommandExecution
 {
     /// <summary>
     /// Wraps transactional behavior around the execution of command executor.

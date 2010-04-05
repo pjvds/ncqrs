@@ -7,7 +7,7 @@ using Ncqrs.Domain.Storage;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 
-namespace Ncqrs.CommandHandling.AutoMapping.Actions
+namespace Ncqrs.CommandExecution.AutoMapping.Actions
 {
     /// <summary>
     /// An auto mapped action for a command. It created the object as specified by the mapping.

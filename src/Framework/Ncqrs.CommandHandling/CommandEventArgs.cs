@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Ncqrs.Commands;
 
-namespace Ncqrs.CommandHandling
+namespace Ncqrs.CommandExecution
 {
     /// <summary>
     /// Contains the command event data.
