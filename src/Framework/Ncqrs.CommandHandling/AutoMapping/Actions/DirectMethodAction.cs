@@ -12,10 +12,8 @@ namespace Ncqrs.CommandHandling.AutoMapping.Actions
     /// <summary>
     /// An auto mapped action that executes a method on an aggregate root based on the mapping specified on the command.
     /// </summary>
-    public class DirectMethodAction : IAutoMappedCommandAction
+    public class DirectMethodAction : ICommandExecutor
     {
-        private readonly ICommand _command;
-        private readonly DirectMethodCommandInfo _info;
         private readonly IDomainRepository _repository;
 
         /// <summary>
@@ -23,17 +21,13 @@ namespace Ncqrs.CommandHandling.AutoMapping.Actions
         /// </summary>
         /// <param name="repository">The repository.</param>
         /// <param name="command">The command.</param>
-        public DirectMethodAction(IDomainRepository repository, ICommand command)
+        public DirectMethodAction(IDomainRepository repository)
         {
             Contract.Requires<ArgumentNullException>(repository != null, "The parameter repository should not be null.");
-            Contract.Requires<ArgumentNullException>(command != null, "The parameter command should not be null.");
 
             Contract.Ensures(_repository == repository, "The field _repository should be initialized by the parameter value of repository.");
-            Contract.Ensures(_command == command, "The field _command should be initialized by the parameter value of command.");
 
             _repository = repository;
-            _command = command;
-            _info = DirectMethodCommandInfo.CreateFromDirectMethodCommand(command);
         }
 
         [ContractInvariantMethod]
@@ -45,16 +39,18 @@ namespace Ncqrs.CommandHandling.AutoMapping.Actions
         /// <summary>
         /// Executes this method on the aggregate root based on the mapping of the command given a construction time.
         /// </summary>
-        public void Execute()
+        public void Execute(ICommand command)
         {
             Contract.Assume(UnitOfWork.Current == null);
 
+            var info = DirectMethodCommandInfo.CreateFromDirectMethodCommand(command);
+
             using (var work = new UnitOfWork(_repository))
             {
-                var targetMethod = GetTargetMethodBasedOnCommandTypeName();
+                var targetMethod = GetTargetMethodBasedOnCommandTypeName(info, command);
 
-                var parameterValues = CommandAutoMappingConfiguration.GetParameterValues(_command, targetMethod.GetParameters());
-                var targetAggregateRoot = _repository.GetById(_info.AggregateType, _info.AggregateRootIdValue);
+                var parameterValues = CommandAutoMappingConfiguration.GetParameterValues(command, targetMethod.GetParameters());
+                var targetAggregateRoot = _repository.GetById(info.AggregateType, info.AggregateRootIdValue);
 
                 targetMethod.Invoke(targetAggregateRoot, parameterValues);
 
@@ -62,12 +58,12 @@ namespace Ncqrs.CommandHandling.AutoMapping.Actions
             }
         }
 
-        private MethodInfo GetTargetMethodBasedOnCommandTypeName()
+        private MethodInfo GetTargetMethodBasedOnCommandTypeName(DirectMethodCommandInfo info, ICommand command)
         {
-            var aggregateType = _info.AggregateType;
-            var propertiesToMap = CommandAutoMappingConfiguration.GetCommandProperties(_command);
+            var aggregateType = info.AggregateType;
+            var propertiesToMap = CommandAutoMappingConfiguration.GetCommandProperties(command);
             var ctorQuery = from method in aggregateType.GetMethods()
-                            where method.Name == _info.MethodName
+                            where method.Name == info.MethodName
                             where method.GetParameters().Length == propertiesToMap.Count()
                             where ParametersDoMatchPropertiesToMap(method.GetParameters(), propertiesToMap)
                             select method;
@@ -75,13 +71,13 @@ namespace Ncqrs.CommandHandling.AutoMapping.Actions
             if (ctorQuery.Count() == 0)
             {
                 var message = String.Format("No method '{0}' found with {1} parameters on aggregate root {2}.",
-                                            _info.MethodName, propertiesToMap.Count(), aggregateType.FullName);
+                                            info.MethodName, propertiesToMap.Count(), aggregateType.FullName);
                 throw new CommandMappingException(message);
             }
             if (ctorQuery.Count() > 1)
             {
                 var message = String.Format("Multiple methods '{0}' found with {1} parameters on aggregate root {2}.",
-                                            _info.MethodName, propertiesToMap.Count(), aggregateType.FullName);
+                                            info.MethodName, propertiesToMap.Count(), aggregateType.FullName);
                 throw new CommandMappingException(message);
             }
 

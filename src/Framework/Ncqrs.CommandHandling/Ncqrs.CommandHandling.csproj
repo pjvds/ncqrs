@@ -43,7 +43,8 @@
     <CodeContractsBaseLineFile />
     <CodeContractsRuntimeCheckingLevel>Full</CodeContractsRuntimeCheckingLevel>
     <CodeContractsReferenceAssembly>Build</CodeContractsReferenceAssembly>
-    <DocumentationFile>bin\Debug\Ncqrs.CommandHandling.XML</DocumentationFile>
+    <DocumentationFile>
+    </DocumentationFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -70,9 +71,8 @@
   <ItemGroup>
     <Compile Include="AutoMapping\ActionFactory.cs" />
     <Compile Include="AutoMapping\Actions\DirectMethodAction.cs" />
-    <Compile Include="AutoMapping\Actions\DirectMethodCommandInfo.cs" />
-    <Compile Include="AutoMapping\Actions\IAutoMappedCommandAction.cs" />
     <Compile Include="AutoMapping\Actions\ObjectCreationAction.cs" />
+    <Compile Include="AutoMapping\Actions\DirectMethodCommandInfo.cs" />
     <Compile Include="AutoMapping\Actions\ObjectCreationCommandInfo.cs" />
     <Compile Include="AutoMapping\AutoMapperConfiguration.cs" />
     <Compile Include="AutoMapping\AutoMappingCommandExecutor.cs" />
@@ -85,7 +85,8 @@
     <Compile Include="CommandExecutorNotFoundException.cs" />
     <Compile Include="ICommandExecutor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TransactionalInProcessCommandExecutionDispatcher.cs" />
+    <Compile Include="TransactionalCommandExecutorWrapper.cs" />
+    <Compile Include="InProcessCommandExecutionDispatcher.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Ncqrs.Commands\Ncqrs.Commands.csproj">

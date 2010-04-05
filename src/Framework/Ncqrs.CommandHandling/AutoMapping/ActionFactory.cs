@@ -33,24 +33,24 @@ namespace Ncqrs.CommandHandling.AutoMapping
         }
 
         /// <summary>
-        /// Creates an action for command based on mapping.
+        /// Creates an executor for command based on mapping.
         /// </summary>
         /// <param name="command">The command.</param>
         /// <exception cref="ArgumentNullException">Occurs when <i>command</i> was <c>null</c>.</exception>
         /// <exception cref="MappingForCommandNotFoundException">Occurs when there was an error in the mapping of the command.</exception>
-        /// <returns>A <see cref="IAutoMappedCommandAction"/> action created based on the mapping of the command.</returns>
-        public IAutoMappedCommandAction CreateActionForCommand(ICommand command)
+        /// <returns>A <see cref="ICommandExecutor"/> created based on the mapping of the command.</returns>
+        public ICommandExecutor CreateExecutorForCommand(ICommand command)
         {
             Contract.Requires<ArgumentNullException>(command != null);
 
             if (IsCommandMappedToObjectCreation(command))
             {
-                return new ObjectCreationAction(_repository, command);
+                return new ObjectCreationAction(_repository);
             }
 
             if (IsCommandMappedToADirectMethod(command))
             {
-                return new DirectMethodAction(_repository, command);
+                return new DirectMethodAction(_repository);
             }
 
             var message = String.Format("No mapping attributes found on {0} command.", command.GetType().Name);

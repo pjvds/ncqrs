@@ -2,6 +2,8 @@
 using Ncqrs.Commands;
 using Ncqrs.Domain.Storage;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
+using Ncqrs.Commands.Attributes;
 
 namespace Ncqrs.CommandHandling.AutoMapping
 {
@@ -19,6 +21,7 @@ namespace Ncqrs.CommandHandling.AutoMapping
         public AutoMappingCommandExecutor(IDomainRepository domainRepository)
             : base(domainRepository)
         {
+            Contract.Requires<ArgumentNullException>(domainRepository != null, "The domainRepository cannot be null.");
         }
 
         /// <summary>
@@ -29,8 +32,14 @@ namespace Ncqrs.CommandHandling.AutoMapping
         public override void Execute(T command)
         {
             var factory = new ActionFactory(Repository);
-            var action = factory.CreateActionForCommand(command);
-            action.Execute();
+            ICommandExecutor executor = factory.CreateExecutorForCommand(command);
+
+            if (command.GetType().GetCustomAttributes(typeof(TransactionalAttribute), true).Length > 0)
+            {
+                executor = new TransactionalCommandExecutorWrapper(executor);
+            }
+
+            executor.Execute(command);
         }
     }
 }
