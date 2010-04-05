@@ -28,6 +28,8 @@ namespace Sample.ReadModel.Denormalizers.EditMessageModel
 
                 modelToUpdate.TextChanges = WrapperFactory.Instance.NewArrayWrapper(previousTexts);
 
+                modelToUpdate.Text = evnt.UpdatedMessageText;
+
                 repository.Update(modelToUpdate);
             }
         }

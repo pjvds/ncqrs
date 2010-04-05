@@ -22,7 +22,7 @@
             <%= Html.Encode(Model.Text) %></blockquote>
         <h3>
             Previous text, if any</h3>
-        <% foreach (var previousText in Model.TextChanges)
+        <% foreach (var previousText in Model.TextChanges.OrderByDescending((t => t.ChangeDate)))
            {
         %>
         <p>
