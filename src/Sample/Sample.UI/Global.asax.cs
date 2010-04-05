@@ -77,7 +77,7 @@ namespace Sample.UI
             var eventStore = new MongoDBEventStore(new Mongo());
             var repository = new DomainRepository(eventStore, EventBus);
 
-            var commandService = new TransactionalInProcessCommandService();
+            var commandService = new TransactionalInProcessCommandExecutionDispatcher();
             commandService.RegisterExecutor<AddNewMessageCommand>(new AutoMappingCommandExecutor<AddNewMessageCommand>(repository));
             commandService.RegisterExecutor<UpdateMessageTextCommand>(new AutoMappingCommandExecutor<UpdateMessageTextCommand>(repository));
 
