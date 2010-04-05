@@ -19,6 +19,8 @@ using Sample.ReadModel.Denormalizers.EditMessageModel;
 using Sample.ReadModel.Denormalizers.MessageModel;
 using Ncqrs.Denormalization;
 using System.Reflection;
+using log4net;
+using log4net.Config;
 
 namespace Sample.UI
 {
@@ -54,6 +56,9 @@ namespace Sample.UI
 
         public override void Init()
         {
+            // Configure log4net.
+            XmlConfigurator.Configure();
+
             InitializeEventBus();
             InitializeCommandService();
 
