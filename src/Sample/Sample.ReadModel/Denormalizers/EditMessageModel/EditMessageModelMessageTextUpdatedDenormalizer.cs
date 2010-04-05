@@ -4,20 +4,13 @@ using System.Linq;
 using System.Text;
 using Ncqrs.Eventing.Denormalization;
 using Sample.Events;
-using MongoDB.Driver;
 using MongoDB.Emitter;
 
-namespace Sample.ReadModel.Denormalizers
+namespace Sample.ReadModel.Denormalizers.EditMessageModel
 {
-    public class MessageTextUpdatedDenormalizer : Denormalizer<MessageTextUpdated>
+    public class EditMessageModelMessageTextUpdatedDenormalizer : Denormalizer<MessageTextUpdated>
     {
         public override void DenormalizeEvent(MessageTextUpdated evnt)
-        {
-            DenormalizeForMessageModel(evnt);
-            DenormalizeForEditMessageModel(evnt);
-        }
-
-        private void DenormalizeForEditMessageModel(MessageTextUpdated evnt)
         {
             using (var repository = new ReadRepository<IEditMessageModel>())
             {
@@ -34,20 +27,6 @@ namespace Sample.ReadModel.Denormalizers
                 previousTexts.Add(previousText);
 
                 modelToUpdate.TextChanges = WrapperFactory.Instance.NewArrayWrapper(previousTexts);
-
-                repository.Update(modelToUpdate);
-            }
-        }
-
-        private void DenormalizeForMessageModel(MessageTextUpdated evnt)
-        {
-            using (var repository = new ReadRepository<IMessageModel>())
-            {
-                var spec = repository.New();
-                spec.Id = evnt.MessageId;
-
-                var modelToUpdate = repository.FindOne(spec.Document);
-                modelToUpdate.Text = evnt.UpdatedMessageText;
 
                 repository.Update(modelToUpdate);
             }
