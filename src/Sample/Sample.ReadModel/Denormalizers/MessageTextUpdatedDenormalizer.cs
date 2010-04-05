@@ -13,54 +13,44 @@ namespace Sample.ReadModel.Denormalizers
     {
         public override void DenormalizeEvent(MessageTextUpdated evnt)
         {
-            using (Mongo mongo = new Mongo())
+            DenormalizeForMessageModel(evnt);
+            DenormalizeForEditMessageModel(evnt);
+        }
+
+        private void DenormalizeForEditMessageModel(MessageTextUpdated evnt)
+        {
+            using (var repository = new ReadRepository<IEditMessageModel>())
             {
-                mongo.Connect();
+                var spec = repository.New();
+                spec.Id = evnt.MessageId;
 
-                DenormalizeForMessageModel(mongo, evnt);
-                DenormalizeForEditMessageModel(mongo, evnt);
+                var modelToUpdate = repository.FindOne(spec);
 
-                var db = mongo.GetDatabase("ReadModel");
+                var previousText = WrapperFactory.Instance.New<IPreviousTextModel>();
+                previousText.ChangeDate = evnt.ChangeDate;
+                previousText.Text = modelToUpdate.Text;
 
+                var previousTexts = new List<IPreviousTextModel>(modelToUpdate.TextChanges);
+                previousTexts.Add(previousText);
+
+                modelToUpdate.TextChanges = WrapperFactory.Instance.NewArrayWrapper(previousTexts);
+
+                repository.Update(modelToUpdate);
             }
         }
 
-        private void DenormalizeForEditMessageModel(Mongo mongo, MessageTextUpdated evnt)
+        private void DenormalizeForMessageModel(MessageTextUpdated evnt)
         {
-            var db = mongo.GetDatabase("ReadModel");
-            var collection = db.GetCollection("EditMessageModel");
+            using (var repository = new ReadRepository<IMessageModel>())
+            {
+                var spec = repository.New();
+                spec.Id = evnt.MessageId;
 
-            var spec = WrapperFactory.Instance.New<IEditMessageModel>();
-            spec.Id = evnt.MessageId;
-            var document = collection.Find(spec.Document).Documents.First();
+                var modelToUpdate = repository.FindOne(spec.Document);
+                modelToUpdate.Text = evnt.UpdatedMessageText;
 
-            var editMessageModelToUpdate = WrapperFactory.Instance.New<IEditMessageModel>(document);
-            var newMessageTextUpdate = WrapperFactory.Instance.New<IPreviousTextModel>();
-            newMessageTextUpdate.ChangeDate = evnt.ChangeDate;
-            newMessageTextUpdate.Text = editMessageModelToUpdate.Text;
-
-            editMessageModelToUpdate.Text = evnt.UpdatedMessageText;
-            var newChanges = new List<IPreviousTextModel>(editMessageModelToUpdate.TextChanges);
-            newChanges.Add(newMessageTextUpdate);
-            editMessageModelToUpdate.TextChanges = WrapperFactory.Instance.NewArrayWrapper<IPreviousTextModel>(newChanges);
-
-            collection.Update(editMessageModelToUpdate.Document);
-        }
-
-        private void DenormalizeForMessageModel(Mongo mongo, MessageTextUpdated evnt)
-        {
-            var db = mongo.GetDatabase("ReadModel");
-            var collection = db.GetCollection("MessageModel");
-
-            var spec = WrapperFactory.Instance.New<IMessageModel>();
-            spec.Id = evnt.MessageId;
-
-
-            var document = collection.FindOne(spec.Document);
-            var found = WrapperFactory.Instance.New<IMessageModel>(document);
-            found.Text = evnt.UpdatedMessageText;
-            
-            collection.Update(found.Document);
+                repository.Update(modelToUpdate);
+            }
         }
     }
 }

@@ -7,125 +7,100 @@ using MongoDB.Emitter;
 
 namespace Sample.ReadModel
 {
-    public class ReadRepository<TModel> where TModel : class, IDocumentWrapper
+    public class ReadRepository<TModel> : IDisposable where TModel : class, IDocumentWrapper
     {
         private Mongo _mongo;
 
         public ReadRepository()
         {
-
             _mongo = new Mongo();
-
-        }
-
-        protected void Connect()
-        {
             _mongo.Connect();
+
+            var db = _mongo.GetDatabase("ReadModel");
+            Collection = db.GetCollection(typeof(TModel).Name);
         }
 
-        protected void Disconnect()
+        public void Dispose()
         {
-            _mongo.Disconnect();
+            _mongo.Dispose();
+        }
+
+        public TModel New()
+        {
+            return WrapperFactory.Instance.New<TModel>();
         }
 
         protected IMongoCollection Collection
         {
-            get
-            {
-                var db = _mongo.GetDatabase("ReadModel");
-                return db.GetCollection(typeof(TModel).Name.TrimStart('I'));
-            }
+            get;
+            private set;
         }
 
         public IEnumerable<TModel> FindAll()
         {
-            Connect();
+            return FindAll(null);
+        }
 
-            try
-            {
-                if (Collection.Count() > 0)
-                {
-                    var cursor = Collection.FindAll();
-                    var documents = cursor.Documents;
+        public void Insert(TModel model)
+        {
+            Collection.Insert(model.Document, true);
+        }
 
-                    foreach (var doc in documents)
-                    {
-                        yield return WrapperFactory.Instance.New<TModel>(doc);
-                    }
-                }
-            }
-            finally
-            {
-                Disconnect();
-            }
+        public void Update(TModel model)
+        {
+            Collection.Update(model.Document, true);
         }
 
         public IEnumerable<TModel> FindAll(Document sort)
         {
-            Connect();
+            var cursor = Collection.FindAll();
 
-            try
-            {
-                if (Collection.Count() > 0)
-                {
-                    var cursor = Collection.FindAll().Sort(sort);
-                    var documents = cursor.Documents;
+            if (sort != null)
+                cursor.Sort(sort);
 
-                    foreach (var doc in documents)
-                    {
-                        yield return WrapperFactory.Instance.New<TModel>(doc);
-                    }
-                }
-            }
-            finally
+            var documents = cursor.Documents;
+
+            foreach (var doc in documents)
             {
-                Disconnect();
+                yield return WrapperFactory.Instance.New<TModel>(doc);
             }
+        }
+
+        public TModel FindOne(TModel spec)
+        {
+            return FindOne(spec);
+        }
+
+        public TModel FindOne(Document spec)
+        {
+            TModel model = null;
+            var document = Collection.FindOne(spec);
+
+            if (document != null)
+            {
+                model = WrapperFactory.Instance.New<TModel>(document);
+            }
+
+            return model;
         }
 
         public IEnumerable<TModel> Find(TModel sample)
         {
-            Connect();
-
-            try
-            {
-                if (Collection.Count() > 0)
-                {
-                    var cursor = Collection.Find(sample.Document);
-                    var documents = cursor.Documents;
-
-                    foreach (var doc in documents)
-                    {
-                        yield return WrapperFactory.Instance.New<TModel>(doc);
-                    }
-                }
-            }
-            finally
-            {
-                Disconnect();
-            }
+            return Find(sample.Document, null);
         }
 
-        public IEnumerable<TModel> Find(Document document)
+        public IEnumerable<TModel> Find(Document document, Document sort)
         {
-            Connect();
+            var cursor = Collection.Find(document);
 
-            try
-            {
-                if (Collection.Count() > 0)
-                {
-                    var cursor = Collection.Find(document);
-                    var documents = cursor.Documents;
+            if (sort != null)
+                cursor.Sort(sort);
 
-                    foreach (var doc in documents)
-                    {
-                        yield return WrapperFactory.Instance.New<TModel>(doc);
-                    }
-                }
-            }
-            finally
+            var documents = cursor.Documents;
+
+            foreach (var doc in documents)
             {
-                Disconnect();
+                yield return WrapperFactory.Instance.New<TModel>(doc);
             }
         }
     }
