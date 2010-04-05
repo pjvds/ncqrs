@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using MongoDB.Driver;
+using MongoDB.Emitter;
 
 namespace Sample.ReadModel
 {
-    public class ReadRepository<TModel> where TModel : MongoReadModelEntity, new()
+    public class ReadRepository<TModel> where TModel : class, IDocumentWrapper
     {
         private Mongo _mongo;
 
@@ -32,7 +33,7 @@ namespace Sample.ReadModel
             get
             {
                 var db = _mongo.GetDatabase("ReadModel");
-                return db.GetCollection(typeof(TModel).Name);
+                return db.GetCollection(typeof(TModel).Name.TrimStart('I'));
             }
         }
 
@@ -49,9 +50,7 @@ namespace Sample.ReadModel
 
                     foreach (var doc in documents)
                     {
-                        var model = new TModel();
-                        model.InnerDocument = doc;
-                        yield return model;
+                        yield return WrapperFactory.Instance.New<TModel>(doc);
                     }
                 }
             }
@@ -74,9 +73,7 @@ namespace Sample.ReadModel
 
                     foreach (var doc in documents)
                     {
-                        var model = new TModel();
-                        model.InnerDocument = doc;
-                        yield return model;
+                        yield return WrapperFactory.Instance.New<TModel>(doc);
                     }
                 }
             }
@@ -94,14 +91,12 @@ namespace Sample.ReadModel
             {
                 if (Collection.Count() > 0)
                 {
-                    var cursor = Collection.Find(sample.InnerDocument);
+                    var cursor = Collection.Find(sample.Document);
                     var documents = cursor.Documents;
 
                     foreach (var doc in documents)
                     {
-                        var model = new TModel();
-                        model.InnerDocument = doc;
-                        yield return model;
+                        yield return WrapperFactory.Instance.New<TModel>(doc);
                     }
                 }
             }
@@ -124,9 +119,7 @@ namespace Sample.ReadModel
 
                     foreach (var doc in documents)
                     {
-                        var model = new TModel();
-                        model.InnerDocument = doc;
-                        yield return model;
+                        yield return WrapperFactory.Instance.New<TModel>(doc);
                     }
                 }
             }

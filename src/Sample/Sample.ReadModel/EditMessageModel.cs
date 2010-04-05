@@ -4,106 +4,49 @@ using System.Linq;
 using System.Text;
 using MongoDB.Driver;
 using System.Collections;
+using MongoDB.Emitter;
 
 namespace Sample.ReadModel
 {
-    public class PreviousTextModel : MongoReadModelEntity
+    public interface IPreviousTextModel : IDocumentWrapper
     {
-        public DateTime ChangeDate
+        DateTime ChangeDate
         {
-            get
-            {
-                return (DateTime)InnerDocument["ChangeDate"];
-            }
-            internal set
-            {
-                InnerDocument["ChangeDate"] = value;
-            }
+            get;
+            set;
         }
 
-        public String Text
+        String Text
         {
-            get
-            {
-                return (String)InnerDocument["Text"];
-            }
-            internal set
-            {
-                InnerDocument["Text"] = value;
-            }
+            get;
+            set;
         }
     }
 
-    public class EditMessageModel : MongoReadModelEntity
+    public interface IEditMessageModel : IDocumentWrapper
     {
-        public Guid Id
+        Guid Id
         {
-            get
-            {
-                return (Guid)InnerDocument["Id"];
-            }
-            internal set
-            {
-                InnerDocument["Id"] = value;
-            }
+            get;
+            set;
         }
 
-        public String Text
+        String Text
         {
-            get
-            {
-                return (String)InnerDocument["Text"];
-            }
-            internal set
-            {
-                InnerDocument["Text"] = value;
-            }
+            get;
+            set;
         }
 
-        public PreviousTextModel[] TextChanges
+        ArrayWrapper<IPreviousTextModel> TextChanges
         {
-            get
-            {
-                if (InnerDocument["TextChanges"] != null && ((IList)InnerDocument["TextChanges"]).Count > 0)
-                {
-                    var docs = (IList<Document>)InnerDocument["TextChanges"];
-                    var models = new PreviousTextModel[docs.Count];
-
-                    for (int i = 0; i < docs.Count; i++)
-                    {
-                        models[i] = new PreviousTextModel() { InnerDocument = docs[i] };
-                    }
-
-                    return models;
-                }
-                else
-                {
-                    return new PreviousTextModel[0];
-                }
-            }
-            internal set
-            {
-                var docs = new Document[value.Length];
-
-                for (int i = 0; i < value.Length; i++)
-                {
-                    docs[i] = value[i].InnerDocument;
-                }
-
-                InnerDocument["TextChanges"] = docs;
-            }
+            get;
+            set;
         }
 
-        public DateTime CreationDate
+        DateTime CreationDate
         {
-            get
-            {
-                return (DateTime)InnerDocument["CreationDate"];
-            }
-            internal set
-            {
-                InnerDocument["CreationDate"] = value;
-            }
+            get;
+            set;
         }
     }
 }

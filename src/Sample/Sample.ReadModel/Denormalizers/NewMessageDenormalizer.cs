@@ -5,6 +5,7 @@ using System.Text;
 using Ncqrs.Eventing.Denormalization;
 using Sample.Events;
 using MongoDB.Driver;
+using MongoDB.Emitter;
 
 namespace Sample.ReadModel.Denormalizers
 {
@@ -18,26 +19,23 @@ namespace Sample.ReadModel.Denormalizers
                 var db = mongo.GetDatabase("ReadModel");
                 var messageModelCol = db.GetCollection("MessageModel");
 
-                var newMessageModel = new MessageModel
-                {
-                    Id = evnt.MessageId,
-                    Text = evnt.Text,
-                    CreationDate = evnt.CreationDate
-                };
+                var newModel = WrapperFactory.Instance.New<IMessageModel>();
 
-                messageModelCol.Insert(newMessageModel.InnerDocument);
+                newModel.Id = evnt.MessageId;
+                newModel.Text = evnt.Text;
+                newModel.CreationDate = evnt.CreationDate;
+
+                messageModelCol.Insert(newModel.Document);
 
                 var editMessageModelCol = db.GetCollection("EditMessageModel");
 
-                var newEditMessageModel = new EditMessageModel
-                {
-                    Id = evnt.MessageId,
-                    Text = evnt.Text,
-                    CreationDate = evnt.CreationDate,
-                    TextChanges = new PreviousTextModel[0]
-                };
+                var newEditMessageModel = WrapperFactory.Instance.New<IEditMessageModel>();
+                newEditMessageModel.Id = evnt.MessageId;
+                newEditMessageModel.Text = evnt.Text;
+                newEditMessageModel.CreationDate = evnt.CreationDate;
+                newEditMessageModel.TextChanges = WrapperFactory.Instance.NewArrayWrapper<IPreviousTextModel>();
 
-                editMessageModelCol.Insert(newEditMessageModel.InnerDocument);
+                editMessageModelCol.Insert(newEditMessageModel.Document);
             }
         }
     }

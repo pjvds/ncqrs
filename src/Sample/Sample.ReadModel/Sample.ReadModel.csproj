@@ -34,6 +34,9 @@
     <Reference Include="MongoDB.Driver">
       <HintPath>..\..\Externals\MongoDB\MongoDB.Driver.dll</HintPath>
     </Reference>
+    <Reference Include="MongoDB.Emitter">
+      <HintPath>..\..\Externals\MongoDB\MongoDB.Emitter.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -47,9 +50,8 @@
     <Compile Include="Denormalizers\NewMessageDenormalizer.cs" />
     <Compile Include="Dictionary.cs" />
     <Compile Include="EditMessageModel.cs" />
+    <Compile Include="IMessageModel.cs" />
     <Compile Include="ReadRepository.cs" />
-    <Compile Include="MessageModel.cs" />
-    <Compile Include="MongoReadModelEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

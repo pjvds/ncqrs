@@ -5,6 +5,7 @@ using System.Text;
 using Ncqrs.Eventing.Denormalization;
 using Sample.Events;
 using MongoDB.Driver;
+using MongoDB.Emitter;
 
 namespace Sample.ReadModel.Denormalizers
 {
@@ -15,37 +16,51 @@ namespace Sample.ReadModel.Denormalizers
             using (Mongo mongo = new Mongo())
             {
                 mongo.Connect();
+
+                DenormalizeForMessageModel(mongo, evnt);
+                DenormalizeForEditMessageModel(mongo, evnt);
+
                 var db = mongo.GetDatabase("ReadModel");
-                var messageModelCol = db.GetCollection("MessageModel");
 
-                var spec = new MessageModel();
-                spec.Id = evnt.MessageId;
-
-                var document = messageModelCol.Find(spec.InnerDocument).Documents.First();
-
-                var messageModelToUpdate = new MessageModel();
-                messageModelToUpdate.InnerDocument = document;
-
-                messageModelToUpdate.Text = evnt.UpdatedMessageText;
-
-                messageModelCol.Update(messageModelToUpdate.InnerDocument);
-
-
-                var editMessageModelCol = db.GetCollection("EditMessageModel");
-
-                var spec2 = new EditMessageModel();
-                spec2.Id = evnt.MessageId;
-                var document2 = editMessageModelCol.Find(spec2.InnerDocument).Documents.First();
-
-                var editMessageModelToUpdate = new EditMessageModel() { InnerDocument = document2 };
-                var newMessageTextUpdate = new PreviousTextModel() { ChangeDate = evnt.ChangeDate, Text = editMessageModelToUpdate.Text };
-                editMessageModelToUpdate.Text = evnt.UpdatedMessageText;
-                var newChanges = new List<PreviousTextModel>(editMessageModelToUpdate.TextChanges);
-                newChanges.Add(newMessageTextUpdate);
-                editMessageModelToUpdate.TextChanges = newChanges.ToArray();
-
-                editMessageModelCol.Update(editMessageModelToUpdate.InnerDocument);
             }
+        }
+
+        private void DenormalizeForEditMessageModel(Mongo mongo, MessageTextUpdated evnt)
+        {
+            var db = mongo.GetDatabase("ReadModel");
+            var collection = db.GetCollection("EditMessageModel");
+
+            var spec = WrapperFactory.Instance.New<IEditMessageModel>();
+            spec.Id = evnt.MessageId;
+            var document = collection.Find(spec.Document).Documents.First();
+
+            var editMessageModelToUpdate = WrapperFactory.Instance.New<IEditMessageModel>(document);
+            var newMessageTextUpdate = WrapperFactory.Instance.New<IPreviousTextModel>();
+            newMessageTextUpdate.ChangeDate = evnt.ChangeDate;
+            newMessageTextUpdate.Text = editMessageModelToUpdate.Text;
+
+            editMessageModelToUpdate.Text = evnt.UpdatedMessageText;
+            var newChanges = new List<IPreviousTextModel>(editMessageModelToUpdate.TextChanges);
+            newChanges.Add(newMessageTextUpdate);
+            editMessageModelToUpdate.TextChanges = WrapperFactory.Instance.NewArrayWrapper<IPreviousTextModel>(newChanges);
+
+            collection.Update(editMessageModelToUpdate.Document);
+        }
+
+        private void DenormalizeForMessageModel(Mongo mongo, MessageTextUpdated evnt)
+        {
+            var db = mongo.GetDatabase("ReadModel");
+            var collection = db.GetCollection("MessageModel");
+
+            var spec = WrapperFactory.Instance.New<IMessageModel>();
+            spec.Id = evnt.MessageId;
+
+
+            var document = collection.FindOne(spec.Document);
+            var found = WrapperFactory.Instance.New<IMessageModel>(document);
+            found.Text = evnt.UpdatedMessageText;
+            
+            collection.Update(found.Document);
         }
     }
 }

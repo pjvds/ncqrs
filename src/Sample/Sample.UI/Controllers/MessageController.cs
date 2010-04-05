@@ -14,7 +14,7 @@ namespace Sample.UI.Controllers
     {
         public ActionResult Index()
         {
-            var repository = new ReadRepository<MessageModel>();
+            var repository = new ReadRepository<IMessageModel>();
             var model = repository.Find(new Document().Append("query", new Document()).Append("orderby", new Document().Append("CreationDate", -1)));
 
             if (model.Count() == 0)
@@ -46,7 +46,7 @@ namespace Sample.UI.Controllers
         {
             var messageId = Guid.Parse(Request.QueryString["MessageId"]);
 
-            var repository = new ReadRepository<EditMessageModel>();
+            var repository = new ReadRepository<IEditMessageModel>();
             var model = repository.Find(new Document().Append("Id", messageId)).First();
 
             return View(model);
