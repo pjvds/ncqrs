@@ -127,6 +127,10 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Framework\Ncqrs.CommandExecution\Ncqrs.CommandExecution.csproj">
+      <Project>{46FD95B7-ADBE-465D-989D-D316CA7887D4}</Project>
+      <Name>Ncqrs.CommandExecution</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Framework\Ncqrs.Commands\Ncqrs.Commands.csproj">
       <Project>{667C1A88-8173-454D-B44F-CE9B27CC0548}</Project>
       <Name>Ncqrs.Commands</Name>
