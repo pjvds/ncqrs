@@ -50,7 +50,6 @@
     <Compile Include="Denormalizers\EditMessageModel\EditMessageModelNewMessageDenormalizer.cs" />
     <Compile Include="Denormalizers\MessageModel\MessageModelMessageTextUpdatedDenormalizer.cs" />
     <Compile Include="Denormalizers\MessageModel\MessageModelNewMessageDenormalizer.cs" />
-    <Compile Include="Denormalizers\NewMessageDenormalizer.cs" />
     <Compile Include="IEditMessageModel.cs" />
     <Compile Include="IMessageModel.cs" />
     <Compile Include="IPreviousTextModel.cs" />

@@ -16,9 +16,9 @@ namespace Sample.UI.Controllers
         {
             using(var repository = new ReadRepository<IMessageModel>())
             {
-            var model = repository.FindAll(new Document().Append("CreationDate", -1));
+            var model = repository.FindAll(new Document().Append("CreationDate", -1)).ToList();
 
-            if (model.Count() == 0)
+            if (model.Count == 0)
                 return RedirectToAction("NoMessageFound");
             else
                 return View(model);

@@ -22,15 +22,15 @@ namespace Ncqrs.Eventing.Bus
 
             using (var transaction = new TransactionScope())
             {
-                List<IEventHandler> handlers = null;
+                IEnumerable<IEventHandler> handlers = GetHandlersForEvent(eventMessage);
 
-                if(!_handlerRegister.TryGetValue(eventMessageType, out handlers))
+                if(handlers.Count() == 0)
                 {
                     Log.WarnFormat("Did not found any handlers for event {0}.", eventMessageType.FullName);
                 }
                 else
                 {
-                    Log.DebugFormat("Found {0} handlers for event {1}.", handlers.Count, eventMessageType.FullName);
+                    Log.DebugFormat("Found {0} handlers for event {1}.", handlers.Count(), eventMessageType.FullName);
 
                     foreach (var handler in handlers)
                     {
@@ -43,6 +43,26 @@ namespace Ncqrs.Eventing.Bus
                 }
 
                 transaction.Complete();
+            }
+        }
+
+        protected IEnumerable<IEventHandler> GetHandlersForEvent(IEvent eventMessage)
+        {
+            var eventType = eventMessage.GetType();
+
+            if(_handlerRegister.ContainsKey(eventType))
+            {
+                foreach(var handler in _handlerRegister[eventType])
+                {
+                    yield return handler;
+                }
+            }
+            if(_handlerRegister.ContainsKey(typeof(IEvent)))
+            {
+                foreach(var handler in _handlerRegister[typeof(IEvent)])
+                {
+                    yield return handler;
+                }
             }
         }
 
@@ -69,6 +89,12 @@ namespace Ncqrs.Eventing.Bus
             }
 
             handlers.Add(handler);
+        }
+
+
+        public void RegisterHandler(IEventHandler handler)
+        {
+            RegisterHandler(typeof(IEvent), handler);
         }
     }
 }

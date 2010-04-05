@@ -17,6 +17,8 @@ using Sample.ReadModel.Denormalizers;
 using Sample.UI.Controllers;
 using Sample.ReadModel.Denormalizers.EditMessageModel;
 using Sample.ReadModel.Denormalizers.MessageModel;
+using Ncqrs.Denormalization;
+using System.Reflection;
 
 namespace Sample.UI
 {
@@ -78,10 +80,14 @@ namespace Sample.UI
         private void InitializeEventBus()
         {
             EventBus = new InProcessEventBus();
-            EventBus.RegisterHandler<NewMessageAdded>(new EditMessageModelMessageTextUpdatedDenormalizer());
-            EventBus.RegisterHandler<MessageTextUpdated>(new EditMessageModelNewMessageDenormalizer());
-            EventBus.RegisterHandler<MessageTextUpdated>(new MessageModelMessageTextUpdatedDenormalizer());
-            EventBus.RegisterHandler<MessageTextUpdated>(new MessageModelNewMessageDenormalizer());
+
+            var factory = new DenormalizerFactory();
+            var denormalizers = factory.CreateDenormalizersFromAssembly(typeof(EditMessageModelMessageTextUpdatedDenormalizer).Assembly);
+
+            foreach (var denormalizer in denormalizers)
+            {
+                EventBus.RegisterHandler(denormalizer);
+            }
         }
 
         public static void RegisterRoutes(RouteCollection routes)

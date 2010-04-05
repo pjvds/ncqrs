@@ -28,12 +28,9 @@ namespace Ncqrs.Eventing.Bus
         void Publish(IEnumerable<IEvent> eventMessages);
 
         /// <summary>
-        /// Register a handler for a specific message type.
+        /// Register a handler that will receive all messages that are published.
         /// </summary>
-        /// <typeparam name="TMessage">The type of the message to handle.</typeparam>
-        /// <param name="handler">The handler that handles the specified message.</param>
-        void RegisterHandler<TEvent>(IEventHandler handler) where TEvent : IEvent;
-
-        void RegisterHandler(Type eventType, IEventHandler handler);
+        /// <param name="handler">The handler to register.</param>
+        void RegisterHandler(IEventHandler handler);
     }
 }

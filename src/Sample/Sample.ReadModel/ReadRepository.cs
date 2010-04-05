@@ -64,11 +64,13 @@ namespace Sample.ReadModel
             {
                 yield return WrapperFactory.Instance.New<TModel>(doc);
             }
+
+            yield break;
         }
 
         public TModel FindOne(TModel spec)
         {
-            return FindOne(spec);
+            return FindOne(spec.Document);
         }
 
         public TModel FindOne(Document spec)
