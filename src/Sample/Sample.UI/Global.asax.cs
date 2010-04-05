@@ -29,15 +29,15 @@ namespace Sample.UI
 
     public class MvcApplication : System.Web.HttpApplication
     {
-        public static ICommandService CommandService
+        public static ICommandExecutor CommandExecutor
         {
             get
             {
-                return (ICommandService)HttpContext.Current.Application["CommandService"];
+                return (ICommandExecutor)HttpContext.Current.Application["CommandExecutor"];
             }
             private set
             {
-                HttpContext.Current.Application["CommandService"] = value;
+                HttpContext.Current.Application["CommandExecutor"] = value;
             }
         }
 
@@ -77,9 +77,11 @@ namespace Sample.UI
             var eventStore = new MongoDBEventStore(new Mongo());
             var repository = new DomainRepository(eventStore, EventBus);
 
-            CommandService = new TransactionalInProcessCommandService();
-            CommandService.RegisterHandler<AddNewMessageCommand>(new AutoMappingCommandHandler<AddNewMessageCommand>(repository));
-            CommandService.RegisterHandler<UpdateMessageTextCommand>(new AutoMappingCommandHandler<UpdateMessageTextCommand>(repository));
+            var commandService = new TransactionalInProcessCommandService();
+            commandService.RegisterExecutor<AddNewMessageCommand>(new AutoMappingCommandExecutor<AddNewMessageCommand>(repository));
+            commandService.RegisterExecutor<UpdateMessageTextCommand>(new AutoMappingCommandExecutor<UpdateMessageTextCommand>(repository));
+
+            CommandExecutor = commandService;
         }
 
         private void InitializeEventBus()

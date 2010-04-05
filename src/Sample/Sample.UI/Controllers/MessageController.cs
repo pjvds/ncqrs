@@ -38,7 +38,7 @@ namespace Sample.UI.Controllers
         [HttpPost]
         public ActionResult Add(AddNewMessageCommand command)
         {
-            ICommandService service = MvcApplication.CommandService;
+            var service = MvcApplication.CommandExecutor;
             service.Execute(command);
 
             return RedirectToAction("Index");
@@ -59,7 +59,7 @@ namespace Sample.UI.Controllers
         [HttpPost]
         public ActionResult Edit(Guid messageId, String text)
         {
-            ICommandService service = MvcApplication.CommandService;
+            var service = MvcApplication.CommandExecutor;
             var command = new UpdateMessageTextCommand { MessageId = messageId, NewMessageText = text };
             service.Execute(command);
 

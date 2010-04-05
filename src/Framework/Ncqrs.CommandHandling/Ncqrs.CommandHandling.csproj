@@ -75,13 +75,13 @@
     <Compile Include="AutoMapping\Actions\ObjectCreationAction.cs" />
     <Compile Include="AutoMapping\Actions\ObjectCreationCommandInfo.cs" />
     <Compile Include="AutoMapping\AutoMapperConfiguration.cs" />
-    <Compile Include="AutoMapping\AutoMappingCommandHandler.cs" />
+    <Compile Include="AutoMapping\AutoMappingCommandExecutor.cs" />
     <Compile Include="AutoMapping\AutoMappingException.cs" />
     <Compile Include="AutoMapping\CommandMappingException.cs" />
     <Compile Include="AutoMapping\MappingForCommandNotFoundException.cs" />
-    <Compile Include="CommandHandler.cs" />
-    <Compile Include="CommandHandlerNotFoundException.cs" />
-    <Compile Include="ICommandHandler.cs" />
+    <Compile Include="CommandExecutorBase.cs" />
+    <Compile Include="CommandExecutorNotFoundException.cs" />
+    <Compile Include="ICommandExecutor.cs" />
     <Compile Include="ICommandService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TransactionalInProcessCommandService.cs" />
