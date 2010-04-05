@@ -48,9 +48,9 @@
   <ItemGroup>
     <Compile Include="Denormalizers\MessageTextUpdatedDenormalizer.cs" />
     <Compile Include="Denormalizers\NewMessageDenormalizer.cs" />
-    <Compile Include="Dictionary.cs" />
-    <Compile Include="EditMessageModel.cs" />
+    <Compile Include="IEditMessageModel.cs" />
     <Compile Include="IMessageModel.cs" />
+    <Compile Include="IPreviousTextModel.cs" />
     <Compile Include="ReadRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

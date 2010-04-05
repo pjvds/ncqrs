@@ -239,7 +239,7 @@ namespace Ncqrs.Eventing.Storage.MongoDB
 
             foreach (var keyValue in keyValues)
             {
-                var isEmptyKeyField = (keyValue.Key == "_id" && document["_id"] != null);
+                var isEmptyKeyField = (keyValue.Key == "_id" && document["_id"] != null && document["_id"] == DBNull.Value);
 
                 if (isEmptyKeyField)
                     continue;
