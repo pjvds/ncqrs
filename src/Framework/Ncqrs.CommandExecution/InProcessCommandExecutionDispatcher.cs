@@ -11,13 +11,9 @@ using log4net;
 namespace Ncqrs.CommandExecution
 {
     /// <summary>
-    /// A service that dispatches Command objects to their appropriate Commandexecutor. Commandexecutors can subscribe and
-    /// unsubscribe to specific types of commands. Only a single executor may be subscribed for a single type of command at any time.
+    /// A dispatcher that dispatch command objects to their appropriate command executor. Command executors can subscribe and
+    /// unsubscribe to specific command types. Only a single executor may be subscribed for a single type of command at any time.
     /// </summary>
-    /// <remarks>
-    /// This command service is in process and transactional. The transactional system is based on <see cref="System.Transactions"/>. 
-    /// Since this service is in process, no additional software of configiration is needed.
-    /// </remarks>
     public class InProcessCommandExecutionDispatcher : CommandExecutionDispatcher
     {
         private readonly Dictionary<Type, ICommandExecutor> _executors = new Dictionary<Type, ICommandExecutor>();
