@@ -66,8 +66,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IEventBus.cs" />
-    <Compile Include="IEventHandler.cs" />
     <Compile Include="InProcessEventBus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -75,6 +73,10 @@
     <ProjectReference Include="..\Ncqrs.Eventing\Ncqrs.Eventing.csproj">
       <Project>{56D48F9D-29F4-4E77-86B1-D988EAC1DF42}</Project>
       <Name>Ncqrs.Eventing</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ncqrs\Ncqrs.csproj">
+      <Project>{01F84441-80D3-49B4-AB18-96894ACB2F90}</Project>
+      <Name>Ncqrs</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

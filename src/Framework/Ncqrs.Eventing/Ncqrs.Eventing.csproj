@@ -71,7 +71,6 @@
     <Compile Include="HistoricalEvent.cs" />
     <Compile Include="HistoricalEventAppliedEventArgs.cs" />
     <Compile Include="HistoricalEventAppliedEventHandler.cs" />
-    <Compile Include="IEvent.cs" />
     <Compile Include="IUniqueIdentifierGenerator.cs" />
     <Compile Include="Mapping\EventAlreadyHandledException.cs" />
     <Compile Include="Mapping\EventHandlerAttribute.cs" />
@@ -83,6 +82,12 @@
     <Compile Include="Storage\ConcurrencyException.cs" />
     <Compile Include="Storage\IEventStore.cs" />
     <Compile Include="Storage\SQL\SimpleSqlEventStore.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Ncqrs\Ncqrs.csproj">
+      <Project>{01F84441-80D3-49B4-AB18-96894ACB2F90}</Project>
+      <Name>Ncqrs</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
