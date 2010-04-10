@@ -9,7 +9,7 @@ namespace Ncqrs.Config.StructureMap
 {
     public class StructureMapConfiguration : IConfigurationSource
     {
-        public StructureMapConfiguration(Action<IInitializationExpression> initialization = null, Action<ConfigurationExpression> configuration = null)
+        public StructureMapConfiguration(Action<IInitializationExpression> initialization = null, Action<global::StructureMap.ConfigurationExpression> configuration = null)
         {
             if (initialization != null)
             {
