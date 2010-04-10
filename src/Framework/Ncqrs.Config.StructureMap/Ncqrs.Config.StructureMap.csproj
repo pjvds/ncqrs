@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{01F84441-80D3-49B4-AB18-96894ACB2F90}</ProjectGuid>
+    <ProjectGuid>{2558F4AD-8D5D-43A2-AAEA-75B966F9B4DE}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Ncqrs</RootNamespace>
-    <AssemblyName>Ncqrs</AssemblyName>
+    <RootNamespace>Ncqrs.Config.StructureMap</RootNamespace>
+    <AssemblyName>Ncqrs.Config.StructureMap</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>&lt;Project Location In Database&gt;</SccProjectName>
@@ -35,8 +35,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="StructureMap">
+      <HintPath>..\..\Externals\StructureMap\StructureMap.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
-    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -45,15 +47,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands\ICommand.cs" />
-    <Compile Include="Config\Configuration.cs" />
-    <Compile Include="Config\IConfigurationSource.cs" />
-    <Compile Include="Eventing\Bus\ActionBasedEventBusFactory.cs" />
-    <Compile Include="Eventing\Bus\IEventBus.cs" />
-    <Compile Include="Eventing\Bus\IEventBusFactory.cs" />
-    <Compile Include="Eventing\Bus\IEventHandler.cs" />
-    <Compile Include="Eventing\IEvent.cs" />
+    <Compile Include="Extentions.cs" />
+    <Compile Include="StructureMapInfrastructureFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Ncqrs\Ncqrs.csproj">
+      <Project>{01F84441-80D3-49B4-AB18-96894ACB2F90}</Project>
+      <Name>Ncqrs</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
