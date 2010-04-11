@@ -21,6 +21,9 @@ using Ncqrs.Denormalization;
 using System.Reflection;
 using log4net;
 using log4net.Config;
+using Ncqrs.Config;
+using Ncqrs.Config.StructureMap;
+using Ncqrs.Eventing.Storage;
 
 namespace Sample.UI
 {
@@ -56,11 +59,21 @@ namespace Sample.UI
 
         public override void Init()
         {
+            var config = new StructureMapConfiguration(x =>
+                {
+                    var eventBus = InitializeEventBus();
+                    var eventStore = InitializeEventStore();
+
+                    x.ForRequestedType<IEventBus>().TheDefault.IsThis(eventBus);
+                    x.ForRequestedType<IEventStore>().TheDefault.IsThis(eventStore);
+                    x.ForRequestedType<IUnitOfWorkFactory>().TheDefaultIsConcreteType<ThreadBasedUnitOfWorkFactory>();
+                });
+
+            NcqrsEnvironment.Configure(config);
+            InitializeCommandService();
+
             // Configure log4net.
             XmlConfigurator.Configure();
-
-            InitializeEventBus();
-            InitializeCommandService();
 
             this.Error += new EventHandler(MvcApplication_Error);
         }
@@ -72,19 +85,18 @@ namespace Sample.UI
             this.Response.Redirect("/Home/Error");
         }
 
-        private void InitializeCommandService()
+        private ICommandExecutor InitializeCommandService()
         {
-            var eventStore = new MongoDBEventStore(new Mongo());
-            var repository = new DomainRepository(eventStore, EventBus);
-
             var commandService = new InProcessCommandExecutionDispatcher();
-            commandService.RegisterExecutor<AddNewMessageCommand>(new AutoMappingCommandExecutor<AddNewMessageCommand>(repository));
-            commandService.RegisterExecutor<UpdateMessageTextCommand>(new AutoMappingCommandExecutor<UpdateMessageTextCommand>(repository));
+            commandService.RegisterExecutor<AddNewMessageCommand>(new AutoMappingCommandExecutor());
+            commandService.RegisterExecutor<UpdateMessageTextCommand>(new AutoMappingCommandExecutor());
 
             CommandExecutor = commandService;
+
+            return CommandExecutor;
         }
 
-        private void InitializeEventBus()
+        private IEventBus InitializeEventBus()
         {
             EventBus = new InProcessEventBus();
 
@@ -95,6 +107,14 @@ namespace Sample.UI
             {
                 EventBus.RegisterHandler(denormalizer);
             }
+
+            return EventBus;
+        }
+
+        private IEventStore InitializeEventStore()
+        {
+            var eventStore = new MongoDBEventStore(new Mongo());
+            return eventStore;
         }
 
         public static void RegisterRoutes(RouteCollection routes)

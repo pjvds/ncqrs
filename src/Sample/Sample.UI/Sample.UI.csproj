@@ -45,6 +45,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Externals\MongoDB\MongoDB.Emitter.dll</HintPath>
     </Reference>
+    <Reference Include="StructureMap">
+      <HintPath>..\..\Externals\StructureMap\StructureMap.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -134,6 +137,10 @@
     <ProjectReference Include="..\..\Framework\Ncqrs.Commands\Ncqrs.Commands.csproj">
       <Project>{667C1A88-8173-454D-B44F-CE9B27CC0548}</Project>
       <Name>Ncqrs.Commands</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Framework\Ncqrs.Config.StructureMap\Ncqrs.Config.StructureMap.csproj">
+      <Project>{2558F4AD-8D5D-43A2-AAEA-75B966F9B4DE}</Project>
+      <Name>Ncqrs.Config.StructureMap</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Framework\Ncqrs.Denormalization\Ncqrs.Denormalization.csproj">
       <Project>{15EFC9E0-F103-4E90-90E8-4D1E98AB86A7}</Project>

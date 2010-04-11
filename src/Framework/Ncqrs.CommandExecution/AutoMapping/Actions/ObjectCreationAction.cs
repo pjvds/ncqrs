@@ -15,30 +15,6 @@ namespace Ncqrs.CommandExecution.AutoMapping.Actions
     /// </summary>
     public class ObjectCreationAction : ICommandExecutor
     {
-        private readonly IDomainRepository _repository;
-
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ObjectCreationAction"/> class.
-        /// </summary>
-        /// <param name="repository">The repository.</param>
-        /// <param name="command">The command.</param>
-        public ObjectCreationAction(IDomainRepository repository)
-        {
-            Contract.Requires<ArgumentNullException>(repository != null);
-
-
-            Contract.Ensures(_repository == repository, "The _repository member should be initialized with the given repository parameter.");
-           
-            _repository = repository;
-        }
-
-        [ContractInvariantMethod]
-        private void ContractInvariants()
-        {
-            Contract.Invariant(_repository != null, "The _repository member should never be null.");
-        }
-
         /// <summary>
         /// Executes this action.
         /// </summary>
@@ -46,7 +22,7 @@ namespace Ncqrs.CommandExecution.AutoMapping.Actions
         {
             var commandInfo = ObjectCreationCommandInfo.CreateFromDirectMethodCommand(command);
 
-            using (var work = NcqrsEnvironment.Get<IDomainEnvironment>().CreateUnitOfWorkFactory().CreateUnitOfWork())
+            using (var work = NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork())
             {
                 var targetCtor = GetConstructorBasedOnCommand(commandInfo, command);
 

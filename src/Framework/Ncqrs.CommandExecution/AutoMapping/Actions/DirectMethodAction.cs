@@ -22,7 +22,7 @@ namespace Ncqrs.CommandExecution.AutoMapping.Actions
         {
             var info = DirectMethodCommandInfo.CreateFromDirectMethodCommand(command);
 
-            var factory = NcqrsEnvironment.Get<IDomainEnvironment>().CreateUnitOfWorkFactory();
+            var factory = NcqrsEnvironment.Get<IUnitOfWorkFactory>();
 
             using (var work = factory.CreateUnitOfWork())
             {

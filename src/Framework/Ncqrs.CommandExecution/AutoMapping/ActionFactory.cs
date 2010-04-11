@@ -12,26 +12,6 @@ namespace Ncqrs.CommandExecution.AutoMapping
     /// </summary>
     public class ActionFactory
     {
-        private readonly IDomainRepository _repository;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ActionFactory"/> class.
-        /// </summary>
-        /// <param name="repository">The repository.</param>
-        /// <exception cref="ArgumentNullException">Occurs when <i>repository</i> is <c>null</c>.</exception>
-        public ActionFactory(IDomainRepository repository)
-        {
-            Contract.Requires<ArgumentNullException>(repository != null, "The repository cannot be null.");
-
-            _repository = repository;
-        }
-
-        [ContractInvariantMethod()]
-        private void ContractInvariants()
-        {
-            Contract.Invariant(_repository != null, "The _repository member should never be null.");
-        }
-
         /// <summary>
         /// Creates an executor for command based on mapping.
         /// </summary>
@@ -45,12 +25,12 @@ namespace Ncqrs.CommandExecution.AutoMapping
 
             if (IsCommandMappedToObjectCreation(command))
             {
-                return new ObjectCreationAction(_repository);
+                return new ObjectCreationAction();
             }
 
             if (IsCommandMappedToADirectMethod(command))
             {
-                return new DirectMethodAction(_repository);
+                return new DirectMethodAction();
             }
 
             var message = String.Format("No mapping attributes found on {0} command.", command.GetType().Name);
