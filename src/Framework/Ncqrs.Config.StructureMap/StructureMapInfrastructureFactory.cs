@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Ncqrs.Eventing.Bus;
 using StructureMap;
 
 namespace Ncqrs.Config.StructureMap
@@ -24,6 +23,20 @@ namespace Ncqrs.Config.StructureMap
         public T Get<T>()
         {
             return ObjectFactory.GetInstance<T>();
+        }
+
+
+        public bool TryGet<T>(out T result)
+        {
+            result = default(T);
+            var foundInstance = ObjectFactory.TryGetInstance(typeof(T));
+
+            if (foundInstance != null)
+            {
+                result = (T)foundInstance;
+            }
+
+            return result != null;
         }
     }
 }

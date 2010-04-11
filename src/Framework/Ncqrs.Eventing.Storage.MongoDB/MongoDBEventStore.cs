@@ -17,6 +17,7 @@ namespace Ncqrs.Eventing.Storage.MongoDB
     /// An event store that uses MongoDB as storage mechanism. MongoDB is an document based database. 
     /// See <seealso cref="http://mongodb.org"/> for more information about MongoDB.
     /// </summary>
+    /// <param>This class makes use of the <see cref="Mongo"/> driver class.</param>
     /// <remarks>
     /// Be aware of the fact that MongoDB doesn't support transactions at the moment!
     /// </remarks>
