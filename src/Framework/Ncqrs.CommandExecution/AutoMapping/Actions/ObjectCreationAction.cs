@@ -6,6 +6,7 @@ using Ncqrs.Domain;
 using Ncqrs.Domain.Storage;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using Ncqrs.Config;
 
 namespace Ncqrs.CommandExecution.AutoMapping.Actions
 {
@@ -43,11 +44,9 @@ namespace Ncqrs.CommandExecution.AutoMapping.Actions
         /// </summary>
         public void Execute(ICommand command)
         {
-            Contract.Assume(UnitOfWork.Current == null, "There should not exist a UnitOfWork at this point.");
-
             var commandInfo = ObjectCreationCommandInfo.CreateFromDirectMethodCommand(command);
 
-            using (var work = new UnitOfWork(_repository))
+            using (var work = NcqrsEnvironment.Get<IDomainEnvironment>().CreateUnitOfWorkFactory().CreateUnitOfWork())
             {
                 var targetCtor = GetConstructorBasedOnCommand(commandInfo, command);
 

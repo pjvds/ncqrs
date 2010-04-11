@@ -81,6 +81,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Storage\ConcurrencyException.cs" />
     <Compile Include="Storage\IEventStore.cs" />
+    <Compile Include="Storage\InMemoryEventStore.cs" />
     <Compile Include="Storage\SQL\SimpleSqlEventStore.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -6,6 +6,7 @@ using Ncqrs.Domain.Storage;
 using Ncqrs.Domain;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using Ncqrs.Config;
 
 namespace Ncqrs.CommandExecution.AutoMapping.Actions
 {
@@ -14,43 +15,21 @@ namespace Ncqrs.CommandExecution.AutoMapping.Actions
     /// </summary>
     public class DirectMethodAction : ICommandExecutor
     {
-        private readonly IDomainRepository _repository;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DirectMethodAction"/> class.
-        /// </summary>
-        /// <param name="repository">The repository.</param>
-        /// <param name="command">The command.</param>
-        public DirectMethodAction(IDomainRepository repository)
-        {
-            Contract.Requires<ArgumentNullException>(repository != null, "The parameter repository should not be null.");
-
-            Contract.Ensures(_repository == repository, "The field _repository should be initialized by the parameter value of repository.");
-
-            _repository = repository;
-        }
-
-        [ContractInvariantMethod]
-        private void ContractInvariants()
-        {
-            Contract.Invariant(_repository != null);
-        }
-
         /// <summary>
         /// Executes this method on the aggregate root based on the mapping of the command given a construction time.
         /// </summary>
         public void Execute(ICommand command)
         {
-            Contract.Assume(UnitOfWork.Current == null);
-
             var info = DirectMethodCommandInfo.CreateFromDirectMethodCommand(command);
 
-            using (var work = new UnitOfWork(_repository))
+            var factory = NcqrsEnvironment.Get<IDomainEnvironment>().CreateUnitOfWorkFactory();
+
+            using (var work = factory.CreateUnitOfWork())
             {
                 var targetMethod = GetTargetMethodBasedOnCommandTypeName(info, command);
 
                 var parameterValues = CommandAutoMappingConfiguration.GetParameterValues(command, targetMethod.GetParameters());
-                var targetAggregateRoot = _repository.GetById(info.AggregateType, info.AggregateRootIdValue);
+                var targetAggregateRoot = work.Repository.GetById(info.AggregateType, info.AggregateRootIdValue);
 
                 targetMethod.Invoke(targetAggregateRoot, parameterValues);
 

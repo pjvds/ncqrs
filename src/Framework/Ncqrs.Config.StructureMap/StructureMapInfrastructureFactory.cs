@@ -7,7 +7,7 @@ using StructureMap;
 
 namespace Ncqrs.Config.StructureMap
 {
-    public class StructureMapConfiguration : IConfigurationSource
+    public class StructureMapConfiguration : IEnvironmentConfiguration
     {
         public StructureMapConfiguration(Action<IInitializationExpression> initialization = null, Action<global::StructureMap.ConfigurationExpression> configuration = null)
         {
@@ -26,6 +26,11 @@ namespace Ncqrs.Config.StructureMap
             IEventBus eventBus = ObjectFactory.GetInstance<IEventBus>();
         
             return new MethodBasedEventBusFactory(()=>eventBus);
+        }
+
+        public IEventBusEnvironment CreateEventBusEnvironment()
+        {
+            throw new NotImplementedException();
         }
     }
 }

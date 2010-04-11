@@ -6,7 +6,7 @@ using Ncqrs.Eventing.Bus;
 
 namespace Ncqrs.Config
 {
-    public interface IConfigurationSource
+    public interface IEventBusEnvironment
     {
         IEventBusFactory CreateEventBusFactory();
     }

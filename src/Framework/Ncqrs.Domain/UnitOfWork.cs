@@ -21,7 +21,7 @@ namespace Ncqrs.Domain
     /// }
     /// </example>
     /// </summary>
-    public sealed class UnitOfWork : IDisposable
+    internal sealed class UnitOfWork : IUnitOfWork
     {
         /// <summary>
         /// The <see cref="UnitOfWork"/> that is associated with the current thread.
@@ -67,7 +67,7 @@ namespace Ncqrs.Domain
         /// Gets the domain repository.
         /// </summary>
         /// <value>The domain repository.</value>
-        public IDomainRepository DomainRepository
+        public IDomainRepository Repository
         {
             get
             {

@@ -8,11 +8,16 @@ using System.Diagnostics.Contracts;
 
 namespace Ncqrs.Config
 {
-    public class Configuration
+    public class NcqrsEnvironment
     {
-        private static IConfigurationSource _instance;
+        private static IEnvironmentConfiguration _instance;
 
-        public IConfigurationSource Instance
+        public static T Get<T>()
+        {
+            return _instance.Get<T>();
+        }
+
+        public IEnvironmentConfiguration Instance
         {
             get
             {
@@ -22,7 +27,7 @@ namespace Ncqrs.Config
             }
         }
 
-        public static void Configure(IConfigurationSource source)
+        public static void Configure(IEnvironmentConfiguration source)
         {
             Contract.Requires<ArgumentNullException>(source != null, "The source cannot be null.");
 
