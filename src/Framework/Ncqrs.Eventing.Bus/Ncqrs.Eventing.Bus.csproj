@@ -66,6 +66,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActionBasedEventBusFactory.cs" />
+    <Compile Include="IEventBus.cs" />
+    <Compile Include="IEventBusFactory.cs" />
+    <Compile Include="IEventHandler.cs" />
     <Compile Include="InProcessEventBus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

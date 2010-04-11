@@ -67,6 +67,7 @@
     <Compile Include="Attributes\MapsToAggregateRootConstructorAttribute.cs" />
     <Compile Include="Attributes\MapsToAggregateRootMethodAttribute.cs" />
     <Compile Include="Attributes\TransactionalAttribute.cs" />
+    <Compile Include="ICommand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

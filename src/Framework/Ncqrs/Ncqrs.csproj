@@ -67,17 +67,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands\ICommand.cs" />
-    <Compile Include="Config\IEventBusEnvironment.cs" />
     <Compile Include="Config\NcqrsEnvironment.cs" />
     <Compile Include="Config\IEnvironmentConfiguration.cs" />
-    <Compile Include="Eventing\Bus\ActionBasedEventBusFactory.cs" />
-    <Compile Include="Eventing\Bus\IEventBus.cs" />
-    <Compile Include="Eventing\Bus\IEventBusFactory.cs" />
-    <Compile Include="Eventing\Bus\IEventHandler.cs" />
-    <Compile Include="Eventing\IEvent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
