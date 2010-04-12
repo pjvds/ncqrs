@@ -71,6 +71,11 @@ namespace Ncqrs.Domain.Mapping
 
             Logger.DebugFormat("{0} methods left based on parameter type.", methodMatchedByParameterType.Count());
 
+            var matchedMethods = from method in methodMatchedByParameterType
+                                 let noEventHandlerAttributes = method.GetCustomAttributes(typeof(NoEventHandlerAttribute), true)
+                                 where noEventHandlerAttributes.Length == 0
+                                 select method;
+
             foreach (var method in methodMatchedByParameterType)
             {
                 var eventType = method.GetParameters().First().ParameterType;

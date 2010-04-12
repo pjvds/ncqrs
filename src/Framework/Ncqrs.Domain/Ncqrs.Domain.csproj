@@ -77,6 +77,7 @@
     <Compile Include="Mapping\IMappingStrategy.cs" />
     <Compile Include="Mapping\InvalidEventHandlerMappingException.cs" />
     <Compile Include="Mapping\MappedAggregateRoot.cs" />
+    <Compile Include="Mapping\NoEventHandlerAttribute.cs" />
     <Compile Include="Mapping\NoEventHandlerFoundException.cs" />
     <Compile Include="Storage\AggregateLoaderException.cs" />
     <Compile Include="Storage\DefaultAggregateRootLoader.cs" />
