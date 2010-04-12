@@ -10,7 +10,6 @@ namespace Ncqrs.CommandExecution.AutoMapping
     /// <summary>
     /// A command handler that execute an action based on the mapping of a command.
     /// </summary>
-    /// <typeparam name="T">The type of the command.</typeparam>
     public class AutoMappingCommandExecutor : ICommandExecutor
     {
         /// <summary>

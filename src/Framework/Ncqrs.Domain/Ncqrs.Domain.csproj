@@ -53,6 +53,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Externals\Log4Net\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -63,12 +67,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AggregateRoot.cs" />
+    <Compile Include="AggregateRootMappedByConvention.cs" />
     <Compile Include="IUnitOfWork.cs" />
     <Compile Include="IUnitOfWorkFactory.cs" />
-    <Compile Include="MappedAggregateRoot.cs" />
+    <Compile Include="Mapping\AttributeBasedMappingStrategy.cs" />
+    <Compile Include="Mapping\ConventionBasedMappingStrategy.cs" />
     <Compile Include="Mapping\EventAlreadyHandledException.cs" />
     <Compile Include="Mapping\EventHandlerAttribute.cs" />
-    <Compile Include="Mapping\EventHandlerFactory.cs" />
+    <Compile Include="Mapping\IMappingStrategy.cs" />
     <Compile Include="Mapping\InvalidEventHandlerMappingException.cs" />
     <Compile Include="Mapping\MappedAggregateRoot.cs" />
     <Compile Include="Mapping\NoEventHandlerFoundException.cs" />

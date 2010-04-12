@@ -10,7 +10,7 @@ using Ncqrs.Domain;
 
 namespace Sample.Domain
 {
-    public class Message : AggregateRoot
+    public class Message : AggregateRootMappedByConvention
     {
         private String _messageText;
         private DateTime _creationDate;
@@ -44,16 +44,16 @@ namespace Sample.Domain
             ApplyEvent(e);
         }
 
-        [EventHandler]
-        private void NewMessageCreatedEventHandler(NewMessageAdded e)
+        //[EventHandler]
+        private void OnNewMessageAdded(NewMessageAdded e)
         {
-            OverrideId(e.MessageId);
+             OverrideId(e.MessageId);
             _messageText = e.Text;
             _creationDate = e.CreationDate;
         }
 
-        [EventHandler]
-        private void MessageTextUpdatedEventHandler(MessageTextUpdated e)
+        //[EventHandler]
+        private void OnMessageTextUpdated(MessageTextUpdated e)
         {
             Contract.Assert(e.MessageId == Id, "The MessageId should be the same as "+
                                                "the Id of this instance. Since otherwise, "+

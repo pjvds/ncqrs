@@ -51,6 +51,7 @@ namespace Ncqrs.Domain
         {
             Contract.Requires<ArgumentNullException>(eventType != null, "The eventType cannot be null.");
             Contract.Requires<ArgumentNullException>(handler != null, "The handler cannot be null.");
+            Contract.Requires<ArgumentException>(typeof(IEvent).IsAssignableFrom(eventType), "The eventType should implement the IEvent interface.");
 
             if (_handlers.ContainsKey(eventType)) throw new EventHandlerAlreadyRegisterException("");// TODO: More details.
 

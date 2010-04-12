@@ -29,6 +29,11 @@ namespace Ncqrs.CommandExecution
             }
         }
 
+        /// <summary>
+        /// Executes the command withing an unit of work context.
+        /// <remarks>Make sure you call <see cref="IUnitOfWork.Accept"/> to accept the changes that has been made in the context.</remarks>
+        /// </summary>
+        /// <param name="work">The work.</param>
         protected abstract void ExecuteWithingUnitOfWorkContext(IUnitOfWork work);
 
         /// <summary>

@@ -1,19 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Linq;
+using System.Text;
+using System.Reflection;
+using System.Diagnostics.Contracts;
 
 namespace Ncqrs.Domain.Mapping
 {
-    public class EventHandlerFactory
+    public class AttributeBasedMappingStrategy : IMappingStrategy
     {
-        /// <exception cref="InvalidEventHandlerMappingException">Occors if an event handler isn't mapped correctly.</exception>
-        public IEnumerable<KeyValuePair<Type, Action<IEvent>>> CreateHandlers(MappedAggregateRoot eventSource)
+        public IEnumerable<Tuple<Type, Action<IEvent>>> GetEventHandlersFromAggregateRoot(AggregateRoot aggregateRoot)
         {
-            if (eventSource == null) throw new ArgumentNullException("eventSource");
+            if (aggregateRoot == null) throw new ArgumentNullException("aggregateRoot");
+            Contract.EndContractBlock();
 
-            var eventSourceType = eventSource.GetType();
-            foreach (var method in eventSourceType.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static))
+            var targetType = aggregateRoot.GetType();
+            foreach (var method in targetType.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static))
             {
                 if (IsMarkedAsEventHandler(method))
                 {
@@ -39,10 +41,10 @@ namespace Ncqrs.Domain.Mapping
                     var eventType = methodCopy.GetParameters().First().ParameterType;
 
                     // TODO: Add validation for given event 'e' instance (e.q. is the type correct?).
-                    Action<IEvent> handler = (e) => methodCopy.Invoke(eventSource, new object[] { e });
+                    Action<IEvent> handler = (e) => methodCopy.Invoke(aggregateRoot, new object[] { e });
 
                     // TODO: Validate that eventType is a "end"-type of IEvent.
-                    yield return new KeyValuePair<Type, Action<IEvent>>(eventType, handler);
+                    yield return Tuple.Create(eventType, handler);
                 }
             }
         }
