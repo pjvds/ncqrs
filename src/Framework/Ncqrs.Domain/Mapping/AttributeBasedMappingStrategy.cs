@@ -11,8 +11,7 @@ namespace Ncqrs.Domain.Mapping
     {
         public IEnumerable<Tuple<Type, Action<IEvent>>> GetEventHandlersFromAggregateRoot(AggregateRoot aggregateRoot)
         {
-            if (aggregateRoot == null) throw new ArgumentNullException("aggregateRoot");
-            Contract.EndContractBlock();
+            Contract.Requires<ArgumentNullException>(aggregateRoot != null, "The aggregateRoot cannot be null.");
 
             var targetType = aggregateRoot.GetType();
             foreach (var method in targetType.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static))

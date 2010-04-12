@@ -79,6 +79,7 @@ namespace Ncqrs.Domain
             return handler;
         }
 
+        [NoEventHandler]
         protected override void OnEventApplied(IEvent evnt)
         {
             // Register this instance as a dirty one.

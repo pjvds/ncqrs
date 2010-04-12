@@ -42,13 +42,11 @@ namespace Ncqrs.Domain.Mapping
         {
             Contract.Requires<ArgumentNullException>(aggregateRoot != null, "The aggregateRoot cannot be null.");
             Contract.Ensures(Contract.Result<IEnumerable<Tuple<Type, Action<IEvent>>>>() != null, "The result should never be null.");
-           
+
             var targetType = aggregateRoot.GetType();
             Logger.DebugFormat("Trying to get all event handlers based by convention for {0}.", targetType);
 
-                var methodsToMatch = targetType.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-
-                foreach (var m in methodsToMatch) Logger.Debug(m.Name);
+            var methodsToMatch = targetType.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 
             var methodMatchedByName = from method in methodsToMatch
                                       //where Regex.IsMatch(method.Name, _regexPattern, RegexOptions.CultureInvariant | RegexOptions.IgnoreCase)
@@ -76,7 +74,9 @@ namespace Ncqrs.Domain.Mapping
                                  where noEventHandlerAttributes.Length == 0
                                  select method;
 
-            foreach (var method in methodMatchedByParameterType)
+            Logger.DebugFormat("{0} methods left that are not marked as NoEventHandler.", matchedMethods.Count());
+
+            foreach (var method in matchedMethods)
             {
                 var eventType = method.GetParameters().First().ParameterType;
                 var methodCopy = method;

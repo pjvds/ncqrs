@@ -44,7 +44,6 @@ namespace Sample.Domain
             ApplyEvent(e);
         }
 
-        //[EventHandler]
         private void OnNewMessageAdded(NewMessageAdded e)
         {
              OverrideId(e.MessageId);
@@ -52,7 +51,6 @@ namespace Sample.Domain
             _creationDate = e.CreationDate;
         }
 
-        //[EventHandler]
         private void OnMessageTextUpdated(MessageTextUpdated e)
         {
             Contract.Assert(e.MessageId == Id, "The MessageId should be the same as "+
