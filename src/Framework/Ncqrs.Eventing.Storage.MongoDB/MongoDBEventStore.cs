@@ -17,9 +17,11 @@ namespace Ncqrs.Eventing.Storage.MongoDB
     /// An event store that uses MongoDB as storage mechanism. MongoDB is an document based database. 
     /// See <seealso cref="http://mongodb.org"/> for more information about MongoDB.
     /// </summary>
-    /// <param>This class makes use of the <see cref="Mongo"/> driver class.</param>
     /// <remarks>
     /// Be aware of the fact that MongoDB doesn't support transactions at the moment!
+    /// <para>
+    /// This class makes use of the <see cref="Mongo"/> driver class.
+    /// </para>
     /// </remarks>
     public class MongoDBEventStore : IEventStore
     {
@@ -42,6 +44,18 @@ namespace Ncqrs.Eventing.Storage.MongoDB
         /// The name of the collection that contains all the events.
         /// </summary>
         private readonly string _collectionName;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MongoDBEventStore"/> class.
+        /// <remarks>
+        /// This will initialize a new default version of Mongo. That means, that it
+        /// will try to connect to a local mongo database server.
+        /// </remarks>
+        /// </summary>
+        public MongoDBEventStore() : this(new Mongo())
+        {
+
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MongoDBEventStore"/> class.
