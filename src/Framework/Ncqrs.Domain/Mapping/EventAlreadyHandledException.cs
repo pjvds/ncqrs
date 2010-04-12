@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace Ncqrs.Eventing.Mapping
+namespace Ncqrs.Domain.Mapping
 {
     /// <summary>
     /// The exception that is thrown when an event handler is already registered for the event.

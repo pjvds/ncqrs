@@ -65,6 +65,13 @@
     <Compile Include="AggregateRoot.cs" />
     <Compile Include="IUnitOfWork.cs" />
     <Compile Include="IUnitOfWorkFactory.cs" />
+    <Compile Include="MappedAggregateRoot.cs" />
+    <Compile Include="Mapping\EventAlreadyHandledException.cs" />
+    <Compile Include="Mapping\EventHandlerAttribute.cs" />
+    <Compile Include="Mapping\EventHandlerFactory.cs" />
+    <Compile Include="Mapping\InvalidEventHandlerMappingException.cs" />
+    <Compile Include="Mapping\MappedAggregateRoot.cs" />
+    <Compile Include="Mapping\NoEventHandlerFoundException.cs" />
     <Compile Include="Storage\AggregateLoaderException.cs" />
     <Compile Include="Storage\DefaultAggregateRootLoader.cs" />
     <Compile Include="Storage\DomainRepository.cs" />

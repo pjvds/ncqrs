@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Ncqrs.Eventing.Storage
+namespace Ncqrs.Domain.Storage
 {
     /// <summary>
     /// Occurs when there is already a newer version of the event provider stored in the event store.

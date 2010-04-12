@@ -27,6 +27,10 @@ namespace Ncqrs.Config
             return _instance.Get<T>();
         }
 
+        /// <summary>
+        /// Configures the Ncqrs environment.
+        /// </summary>
+        /// <param name="source">The source that contains the configuration for the current environment.</param>
         public static void Configure(IEnvironmentConfiguration source)
         {
             Contract.Requires<ArgumentNullException>(source != null, "The source cannot be null.");

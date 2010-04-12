@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Ncqrs.Eventing.Storage
+namespace Ncqrs.Domain.Storage
 {
     /// <summary>
     /// An in memory event store that can be used for unit testing purpose. We can't

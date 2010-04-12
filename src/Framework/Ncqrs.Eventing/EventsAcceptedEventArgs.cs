@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Diagnostics.Contracts;
 
-namespace Ncqrs.Eventing
+namespace Ncqrs.Domain
 {
    public class EventsAcceptedEventArgs : EventArgs
     {

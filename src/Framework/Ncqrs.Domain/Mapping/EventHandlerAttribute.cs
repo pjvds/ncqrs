@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Ncqrs.Eventing.Mapping
+namespace Ncqrs.Domain.Mapping
 {
     /// <summary>
     /// Indicates that a method is an event handler.

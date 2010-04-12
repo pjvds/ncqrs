@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Ncqrs.Domain.Storage;
-using Ncqrs.Eventing.Bus;
-using Ncqrs.Eventing.Storage;
+using Ncqrs.Domain.Bus;
+using Ncqrs.Domain.Storage;
 
 namespace Ncqrs.Domain
 {

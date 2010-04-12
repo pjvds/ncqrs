@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Ncqrs.Domain.Storage;
-using Ncqrs.Eventing.Storage;
-using Ncqrs.Eventing.Bus;
-using Ncqrs.Eventing;
+using Ncqrs.Domain.Storage;
+using Ncqrs.Domain.Bus;
+using Ncqrs.Domain;
 using System.Diagnostics.Contracts;
 
 namespace Ncqrs.Domain

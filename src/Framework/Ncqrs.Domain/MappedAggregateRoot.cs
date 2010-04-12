@@ -5,5 +5,7 @@ using System.Text;
 
 namespace Ncqrs.Domain
 {
-    public delegate void HistoricalEventAppliedEventHandler(EventSource sender, HistoricalEventAppliedEventArgs e);
+    class MappedAggregateRoot
+    {
+    }
 }

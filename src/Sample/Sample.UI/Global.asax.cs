@@ -5,11 +5,11 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Ncqrs.CommandExecution;
-using Ncqrs.Eventing.Bus;
+using Ncqrs.Domain.Bus;
 using Sample.Commands;
 using Ncqrs.CommandExecution.AutoMapping;
 using Ncqrs.Domain;
-using Ncqrs.Eventing.Storage.MongoDB;
+using Ncqrs.Domain.Storage.MongoDB;
 using MongoDB.Driver;
 using System.Threading;
 using Sample.Events;
@@ -23,7 +23,7 @@ using log4net;
 using log4net.Config;
 using Ncqrs.Config;
 using Ncqrs.Config.StructureMap;
-using Ncqrs.Eventing.Storage;
+using Ncqrs.Domain.Storage;
 
 namespace Sample.UI
 {

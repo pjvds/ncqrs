@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Diagnostics.Contracts;
 
-namespace Ncqrs.Eventing.Bus
+namespace Ncqrs.Domain.Bus
 {
     /// <summary>
     /// A simple event bus factory that uses a <see cref="Func{IEventBus}"/> to

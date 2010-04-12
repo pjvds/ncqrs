@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 
-namespace Ncqrs.Eventing.Storage
+namespace Ncqrs.Domain.Storage
 {
     /// <summary>
     /// A event store. Can store and load events from an <see cref="EventSource"/>.

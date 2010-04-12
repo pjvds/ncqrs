@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using log4net;
 
-namespace Ncqrs.Eventing.Storage.MongoDB
+namespace Ncqrs.Domain.Storage.MongoDB
 {
     /// <summary>
     /// An event store that uses MongoDB as storage mechanism. MongoDB is an document based database. 

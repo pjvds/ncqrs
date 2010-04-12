@@ -73,12 +73,6 @@
     <Compile Include="HistoricalEventAppliedEventHandler.cs" />
     <Compile Include="IEvent.cs" />
     <Compile Include="IUniqueIdentifierGenerator.cs" />
-    <Compile Include="Mapping\EventAlreadyHandledException.cs" />
-    <Compile Include="Mapping\EventHandlerAttribute.cs" />
-    <Compile Include="Mapping\EventHandlerFactory.cs" />
-    <Compile Include="Mapping\InvalidEventHandlerMappingException.cs" />
-    <Compile Include="Mapping\MappedEventSource.cs" />
-    <Compile Include="Mapping\NoEventHandlerFoundException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Storage\ConcurrencyException.cs" />
     <Compile Include="Storage\IEventStore.cs" />

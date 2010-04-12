@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Linq;
 
-namespace Ncqrs.Eventing.Mapping
+namespace Ncqrs.Domain.Mapping
 {
     public class EventHandlerFactory
     {
         /// <exception cref="InvalidEventHandlerMappingException">Occors if an event handler isn't mapped correctly.</exception>
-        public IEnumerable<KeyValuePair<Type, Action<IEvent>>> CreateHandlers(MappedEventSource eventSource)
+        public IEnumerable<KeyValuePair<Type, Action<IEvent>>> CreateHandlers(MappedAggregateRoot eventSource)
         {
             if (eventSource == null) throw new ArgumentNullException("eventSource");
 

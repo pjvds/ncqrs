@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using Ncqrs.Domain;
 using Sample.Events;
-using Ncqrs.Eventing.Mapping;
+using Ncqrs.Domain.Mapping;
 using System.Diagnostics.Contracts;
-using Ncqrs.Eventing;
+using Ncqrs.Domain;
 
 namespace Sample.Domain
 {

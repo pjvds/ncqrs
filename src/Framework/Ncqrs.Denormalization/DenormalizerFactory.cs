@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 using log4net;
-using Ncqrs.Eventing.Denormalization;
+using Ncqrs.Domain.Denormalization;
 
 namespace Ncqrs.Denormalization
 {

@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Ncqrs.Eventing;
-using Ncqrs.Eventing.Bus;
+using Ncqrs.Domain;
+using Ncqrs.Domain.Bus;
 
 namespace Ncqrs.Denormalization
 {

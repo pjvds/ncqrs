@@ -7,7 +7,7 @@ using System.Transactions;
 using log4net;
 using System.Reflection;
 
-namespace Ncqrs.Eventing.Bus
+namespace Ncqrs.Domain.Bus
 {
     public class InProcessEventBus : IEventBus
     {

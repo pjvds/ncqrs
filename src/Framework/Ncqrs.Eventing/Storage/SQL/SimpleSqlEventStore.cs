@@ -5,7 +5,7 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Diagnostics.Contracts;
 
-namespace Ncqrs.Eventing.Storage.SQL
+namespace Ncqrs.Domain.Storage.SQL
 {
     /// <summary>
     /// Stores events for a SQL database.

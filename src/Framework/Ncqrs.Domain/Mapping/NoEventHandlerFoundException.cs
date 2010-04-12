@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Ncqrs.Eventing.Mapping
+namespace Ncqrs.Domain.Mapping
 {
     /// <summary>
     /// Occurs when no handler was found for for a <see cref="IEvent"/>.

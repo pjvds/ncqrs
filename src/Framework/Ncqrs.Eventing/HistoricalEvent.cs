@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Ncqrs.Eventing
+namespace Ncqrs.Domain
 {
     /// <summary>
     /// Represents an event that has already happend.

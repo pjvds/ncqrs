@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Ncqrs.Eventing.Bus;
+using Ncqrs.Domain.Bus;
 using Ncqrs.Denormalization;
 
-namespace Ncqrs.Eventing.Denormalization
+namespace Ncqrs.Domain.Denormalization
 {
     public abstract class Denormalizer<TEvent> : IDenormalizer, IEventHandler where TEvent : IEvent
     {
