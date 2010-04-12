@@ -24,7 +24,7 @@ namespace Ncqrs.Domain.Mapping
                     }
                     if (NumberOfParameters(method) != 1) // The method should only have one parameter.
                     {
-                        var message = String.Format("The method {0}.{1} could not be mapped as an event handler, since it does not have one parameter.", method.DeclaringType.Name, method.Name);
+                        var message = String.Format("The method {0}.{1} could not be mapped as an event handler, since it has {2} parameters where 1 is required.", method.DeclaringType.Name, method.Name, NumberOfParameters(method));
                         throw new InvalidEventHandlerMappingException(message);
                     }
                     if (!typeof(IEvent).IsAssignableFrom(FirstParameterType(method))) // The parameter should be an IEvent.

@@ -5,8 +5,6 @@ namespace Ncqrs.Domain.Mapping
 {
     public abstract class MappedAggregateRoot : AggregateRoot
     {
-        private bool _handlersInitialized = false;
-
         protected MappedAggregateRoot(IUniqueIdentifierGenerator idGenerator) : base(idGenerator)
         {
             InitializeHandlers();
@@ -25,8 +23,6 @@ namespace Ncqrs.Domain.Mapping
             {
                 RegisterHandler(x.Key, x.Value);
             }
-
-            _handlersInitialized = true;
         }
     }
 }
