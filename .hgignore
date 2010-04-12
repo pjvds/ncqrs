@@ -1,2 +1,3 @@
 glob:bin
 glob:obj
+glob:src/Ncqrs.suo
