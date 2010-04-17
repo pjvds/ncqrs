@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Configuration;
 using System.Diagnostics.Contracts;
+using log4net;
 
 namespace Ncqrs.Config
 {
@@ -15,6 +17,7 @@ namespace Ncqrs.Config
     /// </summary>
     public class NcqrsEnvironment
     {
+        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private static IEnvironmentConfiguration _instance;
 
         /// <summary>
@@ -24,6 +27,8 @@ namespace Ncqrs.Config
         /// <returns>The instance of the requested type specified by <i>T</i>.</returns>
         public static T Get<T>() where T : class
         {
+            Log.DebugFormat("Requested instance {0} from the environment.", typeof(T).FullName);
+
             return _instance.Get<T>();
         }
 
@@ -37,6 +42,8 @@ namespace Ncqrs.Config
             Contract.Ensures(_instance == source, "The given source should initialize the _instance member.");
 
             _instance = source;
+
+            Log.InfoFormat("Ncqrs environment configured with {0} configuration source.", source.GetType().FullName);
         }
     }
 }
