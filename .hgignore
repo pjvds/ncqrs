@@ -1,3 +1,6 @@
 glob:bin
 glob:obj
 glob:src/Ncqrs.suo
+glob:src/*ReSharper.user
+glob:*.suo
+glob:src/_ReSharper*
