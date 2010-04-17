@@ -8,8 +8,8 @@
     <ProjectGuid>{46FD95B7-ADBE-465D-989D-D316CA7887D4}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Ncqrs.CommandHandling</RootNamespace>
-    <AssemblyName>Ncqrs.CommandHandling</AssemblyName>
+    <RootNamespace>Ncqrs.CommandExecution</RootNamespace>
+    <AssemblyName>Ncqrs.CommandExecution</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <CodeContractsAssemblyMode>0</CodeContractsAssemblyMode>
@@ -43,7 +43,7 @@
     <CodeContractsBaseLineFile />
     <CodeContractsRuntimeCheckingLevel>Full</CodeContractsRuntimeCheckingLevel>
     <CodeContractsReferenceAssembly>Build</CodeContractsReferenceAssembly>
-    <DocumentationFile>bin\Debug\Ncqrs.CommandHandling.XML</DocumentationFile>
+    <DocumentationFile>bin\Debug\Ncqrs.CommandExecution.xml</DocumentationFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
