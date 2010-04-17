@@ -22,7 +22,7 @@ namespace Ncqrs.Config
         /// </summary>
         /// <typeparam name="T">The type of the instance that is requested.</typeparam>
         /// <returns>The instance of the requested type specified by <i>T</i>.</returns>
-        public static T Get<T>()
+        public static T Get<T>() where T : class
         {
             return _instance.Get<T>();
         }
