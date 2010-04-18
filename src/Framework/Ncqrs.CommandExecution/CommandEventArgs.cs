@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Ncqrs.Commands;
 
 namespace Ncqrs.CommandExecution
@@ -9,7 +6,7 @@ namespace Ncqrs.CommandExecution
     /// <summary>
     /// Contains the command event data.
     /// </summary>
-    public class CommandEventArgs
+    public class CommandEventArgs : EventArgs
     {
         /// <summary>
         /// Gets the command.
