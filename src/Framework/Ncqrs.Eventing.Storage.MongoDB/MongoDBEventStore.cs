@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using MongoDB.Driver;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Reflection;
 using System.Diagnostics.Contracts;
+using Ncqrs.Domain;
+using Ncqrs.Domain.Storage;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using log4net;
 
-namespace Ncqrs.Domain.Storage.MongoDB
+namespace Ncqrs.Eventing.Storage.MongoDB
 {
     /// <summary>
     /// An event store that uses MongoDB as storage mechanism. MongoDB is an document based database. 
@@ -73,7 +72,7 @@ namespace Ncqrs.Domain.Storage.MongoDB
         /// </summary>
         /// <param name="mongo">The mongo to connect to.</param>
         /// <param name="databaseName">Name of the database.</param>
-        /// <exception cref="ArgumentNullException">Occurs when <i>mongo</i>, or <i>databaseName</i> is <c>null</c> or empty.</exception>
+        /// <exception cref="ArgumentNullException">Occurs when <i>mongo</i>, or <paramref name="databaseName"/> is <c>null</c> or empty.</exception>
         public MongoDBEventStore(Mongo mongo, String databaseName)
             : this(mongo, databaseName, "Events")
         {
@@ -87,7 +86,7 @@ namespace Ncqrs.Domain.Storage.MongoDB
         /// <param name="mongo">The mongo to connect to.</param>
         /// <param name="databaseName">Name of the database.</param>
         /// <param name="collectionName">Name of the collection.</param>
-        /// <exception cref="ArgumentNullException">Occurs when <i>mongo</i>, <i>databaseName</i>, or <i>collectionName</i> is <c>null</c> or empty.</exception>
+        /// <exception cref="ArgumentNullException">Occurs when <i>mongo</i>, <paramref name="databaseName"/>, or <paramref name="collectionName"/> is <c>null</c> or empty.</exception>
         public MongoDBEventStore(Mongo mongo, String databaseName, String collectionName)
         {
             Contract.Requires<ArgumentNullException>(mongo != null);
