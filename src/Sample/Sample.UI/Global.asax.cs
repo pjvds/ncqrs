@@ -6,10 +6,10 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using Ncqrs.CommandExecution;
 using Ncqrs.Domain.Bus;
+using Ncqrs.Eventing.Storage.MongoDB;
 using Sample.Commands;
 using Ncqrs.CommandExecution.AutoMapping;
 using Ncqrs.Domain;
-using Ncqrs.Domain.Storage.MongoDB;
 using MongoDB.Driver;
 using System.Threading;
 using Sample.Events;
@@ -60,14 +60,14 @@ namespace Sample.UI
         public override void Init()
         {
             var config = new StructureMapConfiguration(x =>
-                {
-                    var eventBus = InitializeEventBus();
-                    var eventStore = InitializeEventStore();
+            {
+                var eventBus = InitializeEventBus();
+                var eventStore = InitializeEventStore();
 
-                    x.ForRequestedType<IEventBus>().TheDefault.IsThis(eventBus);
-                    x.ForRequestedType<IEventStore>().TheDefault.IsThis(eventStore);
-                    x.ForRequestedType<IUnitOfWorkFactory>().TheDefaultIsConcreteType<ThreadBasedUnitOfWorkFactory>();
-                });
+                x.For<IEventBus>().Use(eventBus);
+                x.For<IEventStore>().Use(eventStore);
+                x.For<IUnitOfWorkFactory>().Use<ThreadBasedUnitOfWorkFactory>();
+            });
 
             NcqrsEnvironment.Configure(config);
             InitializeCommandService();
