@@ -7,7 +7,7 @@ namespace Ncqrs.Config
     /// Thrown when the <see cref="NcqrsEnvironment"/> is used when it is not configured.
     /// </summary>
     [Serializable]
-    public class EnvironmentNotConfiguredException : Exception
+    public class EnvironmentNotConfiguredException : NcqrsEnvironmentException
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="EnvironmentNotConfiguredException"/> class.

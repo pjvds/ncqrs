@@ -31,9 +31,16 @@ namespace Ncqrs.Config
         {
             if(_instance == null) throw new EnvironmentNotConfiguredException("The Ncqrs environment is not configured. Use the Configure method to configure it first.");
 
-            Log.DebugFormat("Requested instance {0} from the environment.", typeof(T).FullName);
+            Log.DebugFormat("Requesting instance {0} from the environment.", typeof(T).FullName);
 
-            return _instance.Get<T>();
+            T result;
+
+            if (!_instance.TryGet(out result))
+            {
+                throw new InstanceNotFoundInEnvironmentConfigurationException(typeof (T));
+            }
+
+            return result;
         }
 
         /// <summary>

@@ -76,8 +76,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Config\EnvironmentNotConfiguredException.cs" />
+    <Compile Include="Config\InstanceNotFoundInEnvironment.cs" />
     <Compile Include="Config\NcqrsEnvironment.cs" />
     <Compile Include="Config\IEnvironmentConfiguration.cs" />
+    <Compile Include="Config\NcqrsEnvironmentConfigurationException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

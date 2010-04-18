@@ -10,13 +10,6 @@ namespace Ncqrs.Config
     public interface IEnvironmentConfiguration
     {
         /// <summary>
-        /// Gets the specified instance.
-        /// </summary>
-        /// <typeparam name="T">The type of the instance to get.</typeparam>
-        /// <returns>A instance of the requested type.</returns>
-        T Get<T>() where T : class;
-
-        /// <summary>
         /// Tries to get the specified instance.
         /// </summary>
         /// <typeparam name="T">The type of the instance to get.</typeparam>
