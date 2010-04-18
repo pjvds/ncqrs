@@ -39,7 +39,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extentions", "Extentions", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Specs", "Specs", "{90D03B0C-CA2D-41A1-900F-60FFF8AE52E3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Specs", "Ncqrs.Specs\Ncqrs.Specs.csproj", "{50E98525-806C-41E3-9366-D36B1CD936D0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Specs", "Framework\Ncqrs.Specs\Ncqrs.Specs.csproj", "{50E98525-806C-41E3-9366-D36B1CD936D0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
