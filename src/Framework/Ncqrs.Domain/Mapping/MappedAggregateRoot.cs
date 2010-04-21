@@ -6,9 +6,9 @@ namespace Ncqrs.Domain.Mapping
 {
     public abstract class MappedAggregateRoot : AggregateRoot
     {
-        private readonly IMappingStrategy _mappingStrategy;
+        private readonly IInternalEventHandlerMappingStrategy _mappingStrategy;
 
-        protected MappedAggregateRoot(IMappingStrategy strategy)
+        protected MappedAggregateRoot(IInternalEventHandlerMappingStrategy strategy)
             : base()
         {
             Contract.Requires<ArgumentNullException>(strategy != null, "The strategy cannot be null.");
@@ -16,14 +16,14 @@ namespace Ncqrs.Domain.Mapping
             InitializeHandlers();
         }
 
-        protected MappedAggregateRoot(IMappingStrategy strategy, IUniqueIdentifierGenerator idGenerator)
+        protected MappedAggregateRoot(IInternalEventHandlerMappingStrategy strategy, IUniqueIdentifierGenerator idGenerator)
             : base(idGenerator)
         {
             _mappingStrategy = strategy;
             InitializeHandlers();
         }
 
-        protected MappedAggregateRoot(IMappingStrategy strategy, IEnumerable<HistoricalEvent> history)
+        protected MappedAggregateRoot(IInternalEventHandlerMappingStrategy strategy, IEnumerable<HistoricalEvent> history)
             : base()
         {
             Contract.Requires<ArgumentNullException>(strategy != null, "The strategy cannot be null.");

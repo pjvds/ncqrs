@@ -6,7 +6,7 @@ using System.Diagnostics.Contracts;
 
 namespace Ncqrs.Domain.Mapping
 {
-    public class AttributeBasedMappingStrategy : IMappingStrategy
+    public class AttributeBasedInternalEventHandlerMappingStrategy : IInternalEventHandlerMappingStrategy
     {
         public IEnumerable<IInternalEventHandler> GetEventHandlersFromAggregateRoot(AggregateRoot aggregateRoot)
         {

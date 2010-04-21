@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Ncqrs.Domain.Mapping
 {
-    public interface IMappingStrategy
+    public interface IInternalEventHandlerMappingStrategy
     {
         IEnumerable<IInternalEventHandler> GetEventHandlersFromAggregateRoot(AggregateRoot aggregateRoot);
     }

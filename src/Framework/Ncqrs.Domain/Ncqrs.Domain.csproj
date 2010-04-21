@@ -76,10 +76,10 @@
     <Compile Include="InternalEventHandler.cs" />
     <Compile Include="IUnitOfWork.cs" />
     <Compile Include="IUnitOfWorkFactory.cs" />
-    <Compile Include="Mapping\AttributeBasedMappingStrategy.cs" />
-    <Compile Include="Mapping\ConventionBasedMappingStrategy.cs" />
+    <Compile Include="Mapping\AttributeBasedInternalEventHandlerMappingStrategy.cs" />
+    <Compile Include="Mapping\ConventionBasedInternalEventHandlerMappingStrategy.cs" />
     <Compile Include="Mapping\EventHandlerAttribute.cs" />
-    <Compile Include="Mapping\IMappingStrategy.cs" />
+    <Compile Include="Mapping\IInternalEventHandlerMappingStrategy.cs" />
     <Compile Include="Mapping\InvalidEventHandlerMappingException.cs" />
     <Compile Include="Mapping\MappedAggregateRoot.cs" />
     <Compile Include="Mapping\NoEventHandlerAttribute.cs" />
