@@ -70,7 +70,7 @@
     <Compile Include="AggregateRoot.cs" />
     <Compile Include="AggregateRootMappedByConvention.cs" />
     <Compile Include="EventNotHandledException.cs" />
-    <Compile Include="FuncBasedInternalEventHandler.cs" />
+    <Compile Include="TypeThresholdedActionBasedInternalEventHandler.cs" />
     <Compile Include="IInternalEventHandler.cs" />
     <Compile Include="ExactInternalEventHandler.cs" />
     <Compile Include="InternalEventHandler.cs" />
