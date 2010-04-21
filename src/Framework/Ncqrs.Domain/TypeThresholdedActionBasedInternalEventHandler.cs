@@ -1,9 +1,5 @@
-﻿#region
-
-using System;
+﻿using System;
 using System.Diagnostics.Contracts;
-
-#endregion
 
 namespace Ncqrs.Domain
 {
@@ -55,8 +51,6 @@ namespace Ncqrs.Domain
             _exact = exact;
         }
 
-        #region IInternalEventHandler Members
-
         /// <summary>
         ///   Handles the event.
         /// </summary>
@@ -75,8 +69,6 @@ namespace Ncqrs.Domain
         public bool HandleEvent(IEvent evnt)
         {
             Contract.Requires<ArgumentNullException>(evnt != null, "The evnt cannot be null.");
-            Contract.Ensures(ShouldHandleThisEvent(evnt) == Contract.Result<bool>(),
-                             "When the threshold did non hold the event, the handler should have been executed.");
 
             var handled = false;
 
@@ -88,8 +80,6 @@ namespace Ncqrs.Domain
 
             return handled;
         }
-
-        #endregion
 
         /// <summary>
         ///   This method holds all the objects invariants.
@@ -108,7 +98,7 @@ namespace Ncqrs.Domain
         /// <returns><c>true</c> when this event should be handled; otherwise, <c>false</c>.</returns>
         private bool ShouldHandleThisEvent(IEvent evnt)
         {
-            Contract.Assert(evnt != null, "The evnt should not be null.");
+            Contract.Assume(evnt != null, "The evnt should not be null.");
 
             var shouldHandle = false;
 
