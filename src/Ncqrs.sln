@@ -41,6 +41,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Specs", "Specs", "{90D03B0C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Specs", "Framework\Ncqrs.Specs\Ncqrs.Specs.csproj", "{50E98525-806C-41E3-9366-D36B1CD936D0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Domain.Specs", "Framework\Ncqrs.Domain.Specs\Ncqrs.Domain.Specs.csproj", "{D30030C0-44C5-4478-8CCC-9A86271903E1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -211,6 +213,16 @@ Global
 		{50E98525-806C-41E3-9366-D36B1CD936D0}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{50E98525-806C-41E3-9366-D36B1CD936D0}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{50E98525-806C-41E3-9366-D36B1CD936D0}.Release|x86.ActiveCfg = Release|Any CPU
+		{D30030C0-44C5-4478-8CCC-9A86271903E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D30030C0-44C5-4478-8CCC-9A86271903E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D30030C0-44C5-4478-8CCC-9A86271903E1}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{D30030C0-44C5-4478-8CCC-9A86271903E1}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{D30030C0-44C5-4478-8CCC-9A86271903E1}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D30030C0-44C5-4478-8CCC-9A86271903E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D30030C0-44C5-4478-8CCC-9A86271903E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D30030C0-44C5-4478-8CCC-9A86271903E1}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{D30030C0-44C5-4478-8CCC-9A86271903E1}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{D30030C0-44C5-4478-8CCC-9A86271903E1}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -233,6 +245,7 @@ Global
 		{AFF0DB5A-5810-4DDE-AC88-CAEB94CDB8FB} = {D3D021A6-14D4-49A6-BDCD-FDA38746FF10}
 		{47A2A4BA-1DC5-4F67-82E0-247C695DD985} = {D3D021A6-14D4-49A6-BDCD-FDA38746FF10}
 		{50E98525-806C-41E3-9366-D36B1CD936D0} = {90D03B0C-CA2D-41A1-900F-60FFF8AE52E3}
+		{D30030C0-44C5-4478-8CCC-9A86271903E1} = {90D03B0C-CA2D-41A1-900F-60FFF8AE52E3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		VisualSVNWorkingCopyRoot = ..\..
