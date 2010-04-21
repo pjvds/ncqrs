@@ -10,7 +10,7 @@ namespace Ncqrs.Domain.Mapping
 {
     // TODO: Add detailed description.
     /// <summary>
-    /// A mapping strategy that maps methods as an event handler based on method name and parameter type.
+    /// A internal event handler mapping strategy that maps methods as an event handler based on method name and parameter type.
     /// <remarks>
     /// All method that match the following requirements are mapped as an event handler:
     /// <list type="number">
@@ -32,7 +32,7 @@ namespace Ncqrs.Domain.Mapping
     /// </list>
     /// </remarks>
     /// </summary>
-    public class ConventionBasedMappingStrategy : IMappingStrategy
+    public class ConventionBasedInternalEventHandlerMappingStrategy : IInternalEventHandlerMappingStrategy
     {
         private String _regexPattern = "^(on|On|ON)+";
         private static readonly ILog Logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
