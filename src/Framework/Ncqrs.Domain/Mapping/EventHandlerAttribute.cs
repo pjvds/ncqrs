@@ -11,5 +11,14 @@ namespace Ncqrs.Domain.Mapping
     [AttributeUsage(AttributeTargets.Method)]
     public class EventHandlerAttribute : Attribute
     {
+        public Boolean Exact
+        {
+            get; set;
+        }
+
+        public EventHandlerAttribute(Boolean exact = false)
+        {
+            Exact = exact;            
+        }
     }
 }

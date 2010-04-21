@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using log4net;
@@ -11,7 +10,7 @@ namespace Ncqrs.Domain.Mapping
 {
     // TODO: Add detailed description.
     /// <summary>
-    /// A mapping strategy that maps methods as an eventhandler based on method name and parameter type.
+    /// A mapping strategy that maps methods as an event handler based on method name and parameter type.
     /// <remarks>
     /// All method that match the following requirements are mapped as an event handler:
     /// <list type="number">
@@ -35,56 +34,45 @@ namespace Ncqrs.Domain.Mapping
     /// </summary>
     public class ConventionBasedMappingStrategy : IMappingStrategy
     {
-        //private String _regexPattern = "^on.+";
+        private String _regexPattern = "^(on|On|ON)+";
         private static readonly ILog Logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public IEnumerable<Tuple<Type, Action<IEvent>>> GetEventHandlersFromAggregateRoot(AggregateRoot aggregateRoot)
+        public IEnumerable<IInternalEventHandler> GetEventHandlersFromAggregateRoot(AggregateRoot aggregateRoot)
         {
             Contract.Requires<ArgumentNullException>(aggregateRoot != null, "The aggregateRoot cannot be null.");
-            Contract.Ensures(Contract.Result<IEnumerable<Tuple<Type, Action<IEvent>>>>() != null, "The result should never be null.");
+            Contract.Ensures(Contract.Result<IEnumerable<IInternalEventHandler>>() != null, "The result should never be null.");
 
             var targetType = aggregateRoot.GetType();
             Logger.DebugFormat("Trying to get all event handlers based by convention for {0}.", targetType);
 
             var methodsToMatch = targetType.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 
-            var methodMatchedByName = from method in methodsToMatch
-                                      //where Regex.IsMatch(method.Name, _regexPattern, RegexOptions.CultureInvariant | RegexOptions.IgnoreCase)
-                                      where method.Name.StartsWith("On", StringComparison.InvariantCultureIgnoreCase)
-                                      select method;
-
-            Logger.DebugFormat("{0} methods found based on method name on {1}.", methodMatchedByName.Count(), targetType.FullName);
-
-            var methodMatchedByParameterCount = from method in methodMatchedByName
-                                                let parameters = method.GetParameters()
-                                                where parameters.Length == 1
-                                                select method;
-
-            Logger.DebugFormat("{0} methods left based on number of parameters.", methodMatchedByParameterCount.Count());
-
-            var methodMatchedByParameterType = from method in methodMatchedByParameterCount
-                                               let parameters = method.GetParameters()
-                                               where typeof(IEvent).IsAssignableFrom(parameters[0].ParameterType)
-                                               select method;
-
-            Logger.DebugFormat("{0} methods left based on parameter type.", methodMatchedByParameterType.Count());
-
-            var matchedMethods = from method in methodMatchedByParameterType
-                                 let noEventHandlerAttributes = method.GetCustomAttributes(typeof(NoEventHandlerAttribute), true)
-                                 where noEventHandlerAttributes.Length == 0
-                                 select method;
-
-            Logger.DebugFormat("{0} methods left that are not marked as NoEventHandler.", matchedMethods.Count());
+            var matchedMethods = from method in methodsToMatch
+                                 let parameters = method.GetParameters()
+                                 let noEventHandlerAttributes =
+                                     method.GetCustomAttributes(typeof(NoEventHandlerAttribute), true)
+                                 where
+                                     // Get only methods where the name matches.
+                                    Regex.IsMatch(method.Name, _regexPattern, RegexOptions.CultureInvariant) &&
+                                     // Get only methods that have 1 parameter.
+                                    parameters.Length == 1 &&
+                                     // Get only methods where the first parameter is an event.
+                                    typeof(IEvent).IsAssignableFrom(parameters[0].ParameterType) &&
+                                     // Get only methods that are not marked with the no event handler attribute.
+                                    noEventHandlerAttributes.Length == 0
+                                 select
+                                    new { MethodInfo = method, FirstParameter = method.GetParameters()[0] };
 
             foreach (var method in matchedMethods)
             {
-                var eventType = method.GetParameters().First().ParameterType;
-                var methodCopy = method;
-                Action<IEvent> invokeAction = (e) => methodCopy.Invoke(aggregateRoot, new object[] { e });
+                var methodCopy = method.MethodInfo;
+                Type firstParameterType = methodCopy.GetParameters().First().ParameterType;
+
+                Action<IEvent> invokeAction = (e) => methodCopy.Invoke(aggregateRoot, new object[] {e});
 
                 Logger.DebugFormat("Created event handler for method {0} based on convention.", methodCopy.Name);
 
-                yield return Tuple.Create(eventType, invokeAction);
+                yield return new TypeThresholdedActionBasedInternalEventHandler(invokeAction, firstParameterType, true);
             }
         }
     }

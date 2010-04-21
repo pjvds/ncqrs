@@ -62,6 +62,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FluentAssertions">
+      <HintPath>..\..\Externals\FluentAssertions\FluentAssertions.dll</HintPath>
+    </Reference>
     <Reference Include="log4net">
       <HintPath>..\..\Externals\Log4Net\log4net.dll</HintPath>
     </Reference>

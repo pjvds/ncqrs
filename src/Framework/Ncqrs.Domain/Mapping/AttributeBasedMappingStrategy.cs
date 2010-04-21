@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Reflection;
 using System.Diagnostics.Contracts;
 
@@ -9,14 +8,16 @@ namespace Ncqrs.Domain.Mapping
 {
     public class AttributeBasedMappingStrategy : IMappingStrategy
     {
-        public IEnumerable<Tuple<Type, Action<IEvent>>> GetEventHandlersFromAggregateRoot(AggregateRoot aggregateRoot)
+        public IEnumerable<IInternalEventHandler> GetEventHandlersFromAggregateRoot(AggregateRoot aggregateRoot)
         {
             Contract.Requires<ArgumentNullException>(aggregateRoot != null, "The aggregateRoot cannot be null.");
 
             var targetType = aggregateRoot.GetType();
             foreach (var method in targetType.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static))
             {
-                if (IsMarkedAsEventHandler(method))
+                EventHandlerAttribute attribute;
+
+                if (IsMarkedAsEventHandler(method, out attribute))
                 {
                     if (method.IsStatic) // Handlers are never static. Since they need to update the internal state of an eventsource.
                     {
@@ -34,26 +35,34 @@ namespace Ncqrs.Domain.Mapping
                         throw new InvalidEventHandlerMappingException(message);
                     }
 
-                    // A method copy is needed because the method variable
-                    // itself will change in the next iteration.
-                    MethodInfo methodCopy = method;
-                    var eventType = methodCopy.GetParameters().First().ParameterType;
-
-                    // TODO: Add validation for given event 'e' instance (e.q. is the type correct?).
-                    Action<IEvent> handler = (e) => methodCopy.Invoke(aggregateRoot, new object[] { e });
-
-                    // TODO: Validate that eventType is a "end"-type of IEvent.
-                    yield return Tuple.Create(eventType, handler);
+                    yield return CreateHandlerForMethod(aggregateRoot, method, attribute);
                 }
             }
         }
 
-        private static Boolean IsMarkedAsEventHandler(MethodInfo target)
+        private static IInternalEventHandler CreateHandlerForMethod(AggregateRoot aggregateRoot, MethodInfo method, EventHandlerAttribute attribute)
+        {
+            Type firstParameterType = method.GetParameters().First().ParameterType;
+
+            Action<IEvent> handler = (e) => method.Invoke(aggregateRoot, new object[] {e});
+
+            return new TypeThresholdedActionBasedInternalEventHandler(handler, firstParameterType, attribute.Exact);
+        }
+
+        private static Boolean IsMarkedAsEventHandler(MethodInfo target, out EventHandlerAttribute attribute)
         {
             if (target == null) throw new ArgumentNullException("target");
 
             var attributeType = typeof(EventHandlerAttribute);
-            return target.GetCustomAttributes(attributeType, false).Length > 0;
+            var attributes = target.GetCustomAttributes(attributeType, false);
+            if (attributes.Length > 0)
+            {
+                attribute = (EventHandlerAttribute)attributes[0];
+                return true;
+            }
+
+            attribute = null;
+            return false;
         }
 
         private static int NumberOfParameters(MethodInfo target)

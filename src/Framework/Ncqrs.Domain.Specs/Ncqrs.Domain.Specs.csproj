@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{50E98525-806C-41E3-9366-D36B1CD936D0}</ProjectGuid>
+    <ProjectGuid>{CB6948E4-586D-46A2-AA61-69283DF2022D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Ncqrs.Specs</RootNamespace>
-    <AssemblyName>Ncqrs.Specs</AssemblyName>
+    <RootNamespace>Ncqrs.Domain.Specs</RootNamespace>
+    <AssemblyName>Ncqrs.Domain.Specs</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -36,12 +36,10 @@
     </Reference>
     <Reference Include="nunit.framework, Version=2.5.3.9345, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Externals\NUnit\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="Rhino.Mocks">
-      <HintPath>..\..\Externals\Rhino Mocks\Rhino.Mocks.dll</HintPath>
+      <HintPath>..\..\Externals\NUnit\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -49,13 +47,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Config\NcqrsEnvironmentSpecs.cs" />
+    <Compile Include="Mapping\ConventionBasedMappingStrategySpecs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Ncqrs\Ncqrs.csproj">
-      <Project>{01F84441-80D3-49B4-AB18-96894ACB2F90}</Project>
-      <Name>Ncqrs</Name>
+    <ProjectReference Include="..\Ncqrs.Domain\Ncqrs.Domain.csproj">
+      <Project>{FC2478FB-2B60-491F-A1D8-B9C6D869B2F8}</Project>
+      <Name>Ncqrs.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ncqrs.Eventing\Ncqrs.Eventing.csproj">
+      <Project>{56D48F9D-29F4-4E77-86B1-D988EAC1DF42}</Project>
+      <Name>Ncqrs.Eventing</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

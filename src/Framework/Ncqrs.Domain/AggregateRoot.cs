@@ -1,8 +1,7 @@
 ﻿using System;
+using System.Runtime.Serialization;
 using Ncqrs.Domain.Mapping;
 using System.Collections.Generic;
-using Ncqrs.Domain;
-using Ncqrs.Domain.Storage;
 using System.Diagnostics.Contracts;
 
 namespace Ncqrs.Domain
@@ -13,9 +12,9 @@ namespace Ncqrs.Domain
     public abstract class AggregateRoot : EventSource
     {
         /// <summary>
-        /// A dictionary that contains the handlers for events.
+        /// A list that contains all the event handlers.
         /// </summary>
-        private readonly Dictionary<Type, Action<IEvent>> _handlers = new Dictionary<Type, Action<IEvent>>(0);
+        private readonly List<IInternalEventHandler> _eventHandlers = new List<IInternalEventHandler>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AggregateRoot"/> class.
@@ -39,44 +38,25 @@ namespace Ncqrs.Domain
         {
         }
 
-        protected void RegisterHandler<T>(Action<T> handler) where T : IEvent
+        protected void RegisterHandler(IInternalEventHandler handler)
         {
-            if (handler == null) throw new ArgumentNullException("handler");
-            var eventType = typeof(T);
-
-            RegisterHandler(eventType, (evnt) => handler((T)evnt));
-        }
-
-        protected void RegisterHandler(Type eventType, Action<IEvent> handler)
-        {
-            Contract.Requires<ArgumentNullException>(eventType != null, "The eventType cannot be null.");
             Contract.Requires<ArgumentNullException>(handler != null, "The handler cannot be null.");
-            Contract.Requires<ArgumentException>(typeof(IEvent).IsAssignableFrom(eventType), "The eventType should implement the IEvent interface.");
 
-            if (_handlers.ContainsKey(eventType)) throw new EventHandlerAlreadyRegisterException("");// TODO: More details.
-
-            _handlers.Add(eventType, handler);
+            _eventHandlers.Add(handler);
         }
 
         protected override void HandleEvent(IEvent evnt)
         {
             Contract.Requires<ArgumentNullException>(evnt != null, "The evnt cannot be null.");
+            Boolean handled = false;
 
-            var handler = GetHandlerForEvent(evnt);
-            handler(evnt);
-        }
-
-        private Action<IEvent> GetHandlerForEvent(IEvent evnt)
-        {
-            Action<IEvent> handler;
-            Type eventType = evnt.GetType();
-
-            if (!_handlers.TryGetValue(eventType, out handler))
+            foreach(var handler in _eventHandlers)
             {
-                throw new NoEventHandlerFoundException(evnt);
+                handled |= handler.HandleEvent(evnt);
             }
 
-            return handler;
+            if (!handled)
+                throw new EventNotHandledException(evnt);
         }
 
         [NoEventHandler]

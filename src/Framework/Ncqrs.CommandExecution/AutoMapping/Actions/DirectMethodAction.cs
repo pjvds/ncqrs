@@ -2,10 +2,8 @@
 using System.Linq;
 using System.Reflection;
 using Ncqrs.Commands;
-using Ncqrs.Domain.Storage;
 using Ncqrs.Domain;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using Ncqrs.Config;
 
 namespace Ncqrs.CommandExecution.AutoMapping.Actions
@@ -23,7 +21,6 @@ namespace Ncqrs.CommandExecution.AutoMapping.Actions
             var info = DirectMethodCommandInfo.CreateFromDirectMethodCommand(command);
 
             var factory = NcqrsEnvironment.Get<IUnitOfWorkFactory>();
-
             using (var work = factory.CreateUnitOfWork())
             {
                 var targetMethod = GetTargetMethodBasedOnCommandTypeName(info, command);

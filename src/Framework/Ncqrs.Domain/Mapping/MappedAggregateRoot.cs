@@ -36,9 +36,9 @@ namespace Ncqrs.Domain.Mapping
 
         private void InitializeHandlers()
         {
-            foreach (var x in _mappingStrategy.GetEventHandlersFromAggregateRoot(this))
+            foreach (var handler in _mappingStrategy.GetEventHandlersFromAggregateRoot(this))
             {
-                RegisterHandler(x.Item1, x.Item2);
+                RegisterHandler(handler);
             }
         }
     }
