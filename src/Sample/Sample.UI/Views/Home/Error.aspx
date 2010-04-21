@@ -74,6 +74,5 @@
             </td>
         </tr>
     </table>
-    </p>
     <% } %>
 </asp:Content>
