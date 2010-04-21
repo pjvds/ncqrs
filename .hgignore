@@ -3,4 +3,5 @@ glob:obj
 glob:src/Ncqrs.suo
 glob:src/*ReSharper.user
 glob:*.suo
-glob:src/_ReSharper*
+glob:src/**.user
+glob:src/_ReSharper**
