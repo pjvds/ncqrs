@@ -6,8 +6,35 @@ using System.Diagnostics.Contracts;
 
 namespace Ncqrs.Domain.Mapping
 {
+    /// <summary>
+    /// An internal event handler mapping strategy that creates event handlers based on mapping that
+    /// is done by attributes.
+    /// <remarks>Use the <see cref="EventHandlerAttribute"/> to mark event handler methods as an event handler. You can only
+    /// mark methods that following rules:
+    /// <list type="number">
+    /// <item><description>The method should be an instance method (no static).</description></item>
+    /// <item><description>It should accept 1 parameter.</description></item>
+    /// <item><description>The parameter should be or implement the <see cref="IEvent"/> interface.</description></item>
+    /// <item><description>The method should be marked with the <see cref="EventHandlerAttribute"/>.</description></item>
+    /// </list>
+    /// <code>public class Foo : AggregateRootMappedWithAttributes
+    /// {
+    ///     [EventHandler]
+    ///     private void onFooEvent(FooEvent eventToHandle)
+    ///     {
+    ///         // ...
+    ///     }
+    /// }</code>
+    /// </remarks>
+    /// </summary>
     public class AttributeBasedInternalEventHandlerMappingStrategy : IInternalEventHandlerMappingStrategy
     {
+        /// <summary>
+        /// Gets the event handlers from aggregate root based on attributes.
+        /// </summary>
+        /// <param name="aggregateRoot">The aggregate root.</param>
+        /// <see cref="AttributeBasedInternalEventHandlerMappingStrategy"/>
+        /// <returns>All the <see cref="IInternalEventHandler"/>'s created based on attribute mapping.</returns>
         public IEnumerable<IInternalEventHandler> GetEventHandlersFromAggregateRoot(AggregateRoot aggregateRoot)
         {
             Contract.Requires<ArgumentNullException>(aggregateRoot != null, "The aggregateRoot cannot be null.");
