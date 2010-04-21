@@ -17,7 +17,7 @@
             <li>Download MongoDB 1.4.0 for windows <a href="http://downloads.mongodb.org/win32/mongodb-win32-i386-1.4.0.zip">
                 here</a>.</li>
             <li>Unpack all the content in the <strong>bin</strong> folder to <strong>c:\mongodb\</strong>.</li>
-            <li><strong>Create</strong> the following folder <strong>c:\data\db</strong></il>
+            <li><strong>Create</strong> the following folder <strong>c:\data\db</strong></li>
             <li>Start a <strong>Command Shell</strong> (cmd.exe) and <strong>cd</strong> to <strong>
                 c:\mongodb\</strong>.</li>
             <li>Now enter <strong>mongod.exe</strong> and <strong>hit enter</strong>.</li>
