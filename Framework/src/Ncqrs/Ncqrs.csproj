@@ -5,13 +5,21 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{FC2478FB-2B60-491F-A1D8-B9C6D869B2F8}</ProjectGuid>
+    <ProjectGuid>{01F84441-80D3-49B4-AB18-96894ACB2F90}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Ncqrs.Domain</RootNamespace>
-    <AssemblyName>Ncqrs.Domain</AssemblyName>
+    <RootNamespace>Ncqrs</RootNamespace>
+    <AssemblyName>Ncqrs</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
     <CodeContractsAssemblyMode>0</CodeContractsAssemblyMode>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -43,7 +51,7 @@
     <CodeContractsBaseLineFile />
     <CodeContractsRuntimeCheckingLevel>Full</CodeContractsRuntimeCheckingLevel>
     <CodeContractsReferenceAssembly>Build</CodeContractsReferenceAssembly>
-    <DocumentationFile>bin\Debug\Ncqrs.Domain.XML</DocumentationFile>
+    <DocumentationFile>bin\Debug\Ncqrs.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -54,11 +62,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Externals\Log4Net\log4net.dll</HintPath>
+    <Reference Include="log4net">
+      <HintPath>..\..\bin\log4net.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -67,45 +75,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AggregateRoot.cs" />
-    <Compile Include="AggregateRootMappedByConvention.cs" />
-    <Compile Include="AggregateRootMappedWithAttributes.cs" />
-    <Compile Include="EventNotHandledException.cs" />
-    <Compile Include="TypeThresholdedActionBasedInternalEventHandler.cs" />
-    <Compile Include="IInternalEventHandler.cs" />
-    <Compile Include="ExactInternalEventHandler.cs" />
-    <Compile Include="InternalEventHandler.cs" />
-    <Compile Include="IUnitOfWork.cs" />
-    <Compile Include="IUnitOfWorkFactory.cs" />
-    <Compile Include="Mapping\AttributeBasedInternalEventHandlerMappingStrategy.cs" />
-    <Compile Include="Mapping\ConventionBasedInternalEventHandlerMappingStrategy.cs" />
-    <Compile Include="Mapping\EventHandlerAttribute.cs" />
-    <Compile Include="Mapping\IInternalEventHandlerMappingStrategy.cs" />
-    <Compile Include="Mapping\InvalidEventHandlerMappingException.cs" />
-    <Compile Include="Mapping\MappedAggregateRoot.cs" />
-    <Compile Include="Mapping\NoEventHandlerAttribute.cs" />
-    <Compile Include="Storage\AggregateLoaderException.cs" />
-    <Compile Include="Storage\DefaultAggregateRootLoader.cs" />
-    <Compile Include="Storage\DomainRepository.cs" />
+    <Compile Include="Config\EnvironmentNotConfiguredException.cs" />
+    <Compile Include="Config\InstanceNotFoundInEnvironment.cs" />
+    <Compile Include="Config\NcqrsEnvironment.cs" />
+    <Compile Include="Config\IEnvironmentConfiguration.cs" />
+    <Compile Include="Config\NcqrsEnvironmentConfigurationException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Storage\IAggregateRootLoader.cs" />
-    <Compile Include="Storage\IDomainRepository.cs" />
-    <Compile Include="ThreadBasedUnitOfWorkFactory.cs" />
-    <Compile Include="UnitOfWork.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Ncqrs.Eventing.Bus\Ncqrs.Eventing.Bus.csproj">
-      <Project>{0610E5DC-D7B5-4923-BB9B-52E1CD58E09C}</Project>
-      <Name>Ncqrs.Eventing.Bus</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Ncqrs.Eventing\Ncqrs.Eventing.csproj">
-      <Project>{56D48F9D-29F4-4E77-86B1-D988EAC1DF42}</Project>
-      <Name>Ncqrs.Eventing</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Ncqrs\Ncqrs.csproj">
-      <Project>{01F84441-80D3-49B4-AB18-96894ACB2F90}</Project>
-      <Name>Ncqrs</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -5,22 +5,13 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{2558F4AD-8D5D-43A2-AAEA-75B966F9B4DE}</ProjectGuid>
+    <ProjectGuid>{0610E5DC-D7B5-4923-BB9B-52E1CD58E09C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Ncqrs.Config.StructureMap</RootNamespace>
-    <AssemblyName>Ncqrs.Config.StructureMap</AssemblyName>
+    <RootNamespace>Ncqrs.Eventing.Bus</RootNamespace>
+    <AssemblyName>Ncqrs.Eventing.Bus</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <SccProjectName>
-    </SccProjectName>
-    <SccLocalPath>
-    </SccLocalPath>
-    <SccAuxPath>
-    </SccAuxPath>
-    <SccProvider>
-    </SccProvider>
-    <CodeContractsAssemblyMode>0</CodeContractsAssemblyMode>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -51,7 +42,7 @@
     <CodeContractsBaseLineFile />
     <CodeContractsRuntimeCheckingLevel>Full</CodeContractsRuntimeCheckingLevel>
     <CodeContractsReferenceAssembly>Build</CodeContractsReferenceAssembly>
-    <DocumentationFile>bin\Debug\Ncqrs.Config.StructureMap.XML</DocumentationFile>
+    <DocumentationFile>bin\Debug\Ncqrs.Eventing.Bus.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -62,11 +53,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="StructureMap">
-      <HintPath>..\..\Externals\StructureMap\StructureMap.dll</HintPath>
+    <Reference Include="log4net">
+      <HintPath>..\..\bin\log4net.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -74,10 +66,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="StructureMapConfiguration.cs" />
+    <Compile Include="ActionBasedEventBusFactory.cs" />
+    <Compile Include="IEventBus.cs" />
+    <Compile Include="IEventBusFactory.cs" />
+    <Compile Include="IEventHandler.cs" />
+    <Compile Include="InProcessEventBus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Ncqrs.Eventing\Ncqrs.Eventing.csproj">
+      <Project>{56D48F9D-29F4-4E77-86B1-D988EAC1DF42}</Project>
+      <Name>Ncqrs.Eventing</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Ncqrs\Ncqrs.csproj">
       <Project>{01F84441-80D3-49B4-AB18-96894ACB2F90}</Project>
       <Name>Ncqrs</Name>

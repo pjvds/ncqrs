@@ -17,11 +17,11 @@ namespace Ncqrs.Domain.Specs
         public void When_a_new_instance_is_initialized_with_a_type_that_is_not_of_an_event_it_should_throw_an_exception()
         {
             var wrongEventType = typeof (String);
-            Action<IEvent> correctHandler = (e) => e.ToString();
+            Action<IEvent> action = (e) => e.ToString();
 
-            Action act = () => new TypeThresholdedActionBasedInternalEventHandler(correctHandler, wrongEventType);
+            Action creatingNewEventHandlerWithWrongEventType = () => new TypeThresholdedActionBasedInternalEventHandler(action, wrongEventType);
 
-            act.ShouldThrow<ArgumentException>();
+            creatingNewEventHandlerWithWrongEventType.ShouldThrow<ArgumentException>();
         }
 
         [Test]
