@@ -1,0 +1,1307 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shfbBuild product="Sandcastle Help File Builder Utilities" version="1.8.0.3" projectFile="D:\Ncqrs\Framework\docs\Ncqrs framework documentation.shfbproj" started="22-4-2010 11:45:15">
+<buildStep step="Initializing">
+</buildStep>
+<buildStep step="FindingTools">
+Finding tools...
+Found Sandcastle tools in 'C:\Program Files (x86)\Sandcastle\'
+Searching for HTML Help 1 compiler...
+Found HTML Help 1 compiler in 'C:\Program Files (x86)\HTML Help Workshop\'
+</buildStep>
+<buildStep step="ValidatingDocumentationSources">
+Validating and copying documentation source information
+Source: D:\Ncqrs\Framework\Ncqrs.sln
+    Found project 'D:\Ncqrs\Framework\src\Ncqrs.Eventing.Storage.MongoDB\Ncqrs.Eventing.Storage.MongoDB.csproj'
+    Found project 'D:\Ncqrs\Framework\src\Ncqrs\Ncqrs.csproj'
+    Found project 'D:\Ncqrs\Framework\src\Ncqrs.Config.StructureMap\Ncqrs.Config.StructureMap.csproj'
+    Found project 'D:\Ncqrs\Framework\src\Ncqrs.Specs\Ncqrs.Specs.csproj'
+
+Parsing project files
+    Found assembly 'D:\Ncqrs\Framework\src\Ncqrs.Eventing.Storage.MongoDB\bin\Debug\Ncqrs.Eventing.Storage.MongoDB.dll'
+    Found assembly 'D:\Ncqrs\Framework\src\Ncqrs\bin\Debug\Ncqrs.dll'
+    Found assembly 'D:\Ncqrs\Framework\src\Ncqrs.Config.StructureMap\bin\Debug\Ncqrs.Config.StructureMap.dll'
+    Found assembly 'D:\Ncqrs\Framework\src\Ncqrs.Specs\bin\Debug\Ncqrs.Specs.dll'
+
+References to use:
+    FluentAssertions
+    log4net
+    Microsoft.CSharp
+    MongoDB.Driver
+    Newtonsoft.Json.Net20
+    nunit.framework, Version=2.5.3.9345, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL
+    Rhino.Mocks
+    StructureMap
+    System
+    System.configuration
+    System.Core
+    System.Data
+    System.Data.DataSetExtensions
+    System.Transactions
+    System.Xml
+    System.Xml.Linq
+
+Copying XML comments files
+    D:\Ncqrs\Framework\src\Ncqrs.Eventing.Storage.MongoDB\bin\Debug\Ncqrs.Eventing.Storage.MongoDB.XML -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Ncqrs.Eventing.Storage.MongoDB.XML
+    D:\Ncqrs\Framework\src\Ncqrs\bin\Debug\Ncqrs.XML -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Ncqrs.XML
+    D:\Ncqrs\Framework\src\Ncqrs.Config.StructureMap\bin\Debug\Ncqrs.Config.StructureMap.XML -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Ncqrs.Config.StructureMap.XML
+</buildStep>
+<buildStep step="GenerateSharedContent">
+Generating shared content files (en-US, English (United States))...
+    Last step completed in 00:00:00.0170
+</buildStep>
+<buildStep step="GenerateApiFilter">
+Generating API filter for MRefBuilder...
+    Last step completed in 00:00:00.0140
+</buildStep>
+<buildStep step="GenerateReflectionInfo">
+Generating reflection information...
+[C:\Windows\Microsoft.NET\Framework64\v3.5\MSBuild.exe]
+GenerateRefInfo:
+  MrefBuilder (v2.4.10520.1)
+  Copyright &#184; Microsoft 2006
+  Info: Loaded 4 assemblies for reflection and 15 dependency assemblies.
+  Info: Wrote information on 20 namespaces, 77 types, and 199 members
+  XslTransform (v2.4.10520.1)
+  Copyright &#184; Microsoft 2005-2006
+  Info: Applying XSL transformation 'C:\Program Files (x86)\Sandcastle\ProductionTransforms\MergeDuplicates.xsl'.
+    Last step completed in 00:00:03.6272
+</buildStep>
+<buildStep step="GenerateNamespaceSummaries">
+Generating namespace summary information...
+    Last step completed in 00:00:00.0060
+</buildStep>
+<buildStep step="ApplyVisibilityProperties">
+Applying visibility properties to reflection information file
+    16 attribute nodes removed
+    5 explicit interface implementations removed
+    33 local and base class EII elements removed
+    Last step completed in 00:00:00.0960
+</buildStep>
+<buildStep step="TransformReflectionInfo">
+Transforming reflection output...
+[C:\Windows\Microsoft.NET\Framework64\v3.5\MSBuild.exe]
+TransformManifest:
+  XslTransform (v2.4.10520.1)
+  Copyright &#184; Microsoft 2005-2006
+  Info: Applying XSL transformation 'C:\Program Files (x86)\Sandcastle\ProductionTransforms\ApplyVSDocModel.xsl'.
+  Info: Applying XSL transformation 'C:\Program Files (x86)\Sandcastle\ProductionTransforms\AddGuidFilenames.xsl'.
+  XslTransform (v2.4.10520.1)
+  Copyright &#184; Microsoft 2005-2006
+  Info: Applying XSL transformation 'C:\Program Files (x86)\Sandcastle\ProductionTransforms\ReflectionToManifest.xsl'.
+    Last step completed in 00:00:03.0132
+</buildStep>
+<buildStep step="ModifyHelpTopicFilenames">
+Modifying help topic filenames in reflection information file
+    Unique name M_Ncqrs_NcqrsEnvironmentException__ctor_1 generated for M:Ncqrs.NcqrsEnvironmentException.#ctor(System.String)
+    Unique name M_Ncqrs_NcqrsEnvironmentException__ctor_2 generated for M:Ncqrs.NcqrsEnvironmentException.#ctor(System.String,System.Exception)
+    Unique name M_Ncqrs_Commanding_CommandExecution_CommandExecutorNotFoundException__ctor_1 generated for M:Ncqrs.Commanding.CommandExecution.CommandExecutorNotFoundException.#ctor(System.Type)
+    Unique name M_Ncqrs_Commanding_CommandExecution_CommandExecutorNotFoundException__ctor_2 generated for M:Ncqrs.Commanding.CommandExecution.CommandExecutorNotFoundException.#ctor(System.Type,System.String)
+    Unique name M_Ncqrs_Commanding_CommandExecution_CommandExecutorNotFoundException__ctor_3 generated for M:Ncqrs.Commanding.CommandExecution.CommandExecutorNotFoundException.#ctor(System.Type,System.String,System.Exception)
+    Unique name M_Ncqrs_Commanding_CommandExecution_Mapping_AutoMappingException__ctor_1 generated for M:Ncqrs.Commanding.CommandExecution.Mapping.AutoMappingException.#ctor(System.String)
+    Unique name M_Ncqrs_Commanding_CommandExecution_Mapping_AutoMappingException__ctor_2 generated for M:Ncqrs.Commanding.CommandExecution.Mapping.AutoMappingException.#ctor(System.String,System.Exception)
+    Unique name M_Ncqrs_Commanding_CommandExecution_Mapping_MappingForCommandNotFoundException__ctor_1 generated for M:Ncqrs.Commanding.CommandExecution.Mapping.MappingForCommandNotFoundException.#ctor(System.String,Ncqrs.Commanding.ICommand)
+    Unique name M_Ncqrs_Commanding_CommandExecution_Mapping_Attributes_MapsToAggregateRootConstructorAttribute__ctor_1 generated for M:Ncqrs.Commanding.CommandExecution.Mapping.Attributes.MapsToAggregateRootConstructorAttribute.#ctor(System.Type)
+    Unique name M_Ncqrs_Commanding_CommandExecution_Mapping_Attributes_MapsToAggregateRootMethodAttribute__ctor_1 generated for M:Ncqrs.Commanding.CommandExecution.Mapping.Attributes.MapsToAggregateRootMethodAttribute.#ctor(System.String,System.String)
+    Unique name M_Ncqrs_Commanding_CommandExecution_Mapping_Attributes_MapsToAggregateRootMethodAttribute__ctor_2 generated for M:Ncqrs.Commanding.CommandExecution.Mapping.Attributes.MapsToAggregateRootMethodAttribute.#ctor(System.Type,System.String)
+    Unique name M_Ncqrs_Config_EnvironmentNotConfiguredException__ctor_1 generated for M:Ncqrs.Config.EnvironmentNotConfiguredException.#ctor(System.String)
+    Unique name M_Ncqrs_Config_EnvironmentNotConfiguredException__ctor_2 generated for M:Ncqrs.Config.EnvironmentNotConfiguredException.#ctor(System.String,System.Exception)
+    Unique name M_Ncqrs_Config_InstanceNotFoundInEnvironmentConfigurationException__ctor_1 generated for M:Ncqrs.Config.InstanceNotFoundInEnvironmentConfigurationException.#ctor(System.Type)
+    Unique name M_Ncqrs_Config_InstanceNotFoundInEnvironmentConfigurationException__ctor_2 generated for M:Ncqrs.Config.InstanceNotFoundInEnvironmentConfigurationException.#ctor(System.Type,System.String)
+    Unique name M_Ncqrs_Config_InstanceNotFoundInEnvironmentConfigurationException__ctor_3 generated for M:Ncqrs.Config.InstanceNotFoundInEnvironmentConfigurationException.#ctor(System.Type,System.String,System.Exception)
+    Unique name M_Ncqrs_Domain_AggregateRoot__ctor_1 generated for M:Ncqrs.Domain.AggregateRoot.#ctor(Ncqrs.IUniqueIdentifierGenerator)
+    Unique name M_Ncqrs_Domain_AggregateRoot__ctor_2 generated for M:Ncqrs.Domain.AggregateRoot.#ctor(System.Collections.Generic.IEnumerable{Ncqrs.Eventing.HistoricalEvent})
+    Unique name M_Ncqrs_Domain_AggregateRootMappedByConvention__ctor_1 generated for M:Ncqrs.Domain.AggregateRootMappedByConvention.#ctor(Ncqrs.IUniqueIdentifierGenerator)
+    Unique name M_Ncqrs_Domain_AggregateRootMappedByConvention__ctor_2 generated for M:Ncqrs.Domain.AggregateRootMappedByConvention.#ctor(System.Collections.Generic.IEnumerable{Ncqrs.Eventing.HistoricalEvent})
+    Unique name M_Ncqrs_Domain_AggregateRootMappedWithAttributes__ctor_1 generated for M:Ncqrs.Domain.AggregateRootMappedWithAttributes.#ctor(Ncqrs.IUniqueIdentifierGenerator)
+    Unique name M_Ncqrs_Domain_AggregateRootMappedWithAttributes__ctor_2 generated for M:Ncqrs.Domain.AggregateRootMappedWithAttributes.#ctor(System.Collections.Generic.IEnumerable{Ncqrs.Eventing.HistoricalEvent})
+    Unique name M_Ncqrs_Domain_EventNotHandledException__ctor_1 generated for M:Ncqrs.Domain.EventNotHandledException.#ctor(Ncqrs.Eventing.IEvent,System.String)
+    Unique name M_Ncqrs_Domain_EventNotHandledException__ctor_2 generated for M:Ncqrs.Domain.EventNotHandledException.#ctor(Ncqrs.Eventing.IEvent,System.String,System.Exception)
+    Unique name M_Ncqrs_Domain_EventNotHandledException__ctor_3 generated for M:Ncqrs.Domain.EventNotHandledException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)
+    Unique name M_Ncqrs_Domain_Mapping_InvalidEventHandlerMappingException__ctor_1 generated for M:Ncqrs.Domain.Mapping.InvalidEventHandlerMappingException.#ctor(System.String)
+    Unique name M_Ncqrs_Domain_Mapping_InvalidEventHandlerMappingException__ctor_2 generated for M:Ncqrs.Domain.Mapping.InvalidEventHandlerMappingException.#ctor(System.String,System.Exception)
+    Unique name M_Ncqrs_Domain_Mapping_MappedAggregateRoot__ctor_1 generated for M:Ncqrs.Domain.Mapping.MappedAggregateRoot.#ctor(Ncqrs.Domain.Mapping.IInternalEventHandlerMappingStrategy,Ncqrs.IUniqueIdentifierGenerator)
+    Unique name M_Ncqrs_Domain_Mapping_MappedAggregateRoot__ctor_2 generated for M:Ncqrs.Domain.Mapping.MappedAggregateRoot.#ctor(Ncqrs.Domain.Mapping.IInternalEventHandlerMappingStrategy,System.Collections.Generic.IEnumerable{Ncqrs.Eventing.HistoricalEvent})
+    Unique name M_Ncqrs_Domain_Storage_AggregateLoaderException__ctor_1 generated for M:Ncqrs.Domain.Storage.AggregateLoaderException.#ctor(System.String)
+    Unique name M_Ncqrs_Domain_Storage_AggregateLoaderException__ctor_2 generated for M:Ncqrs.Domain.Storage.AggregateLoaderException.#ctor(System.String,System.Exception)
+    Unique name M_Ncqrs_Domain_Storage_DomainRepository__ctor_1 generated for M:Ncqrs.Domain.Storage.DomainRepository.#ctor(Ncqrs.Eventing.Storage.IEventStore,Ncqrs.Eventing.ServiceModel.Bus.IEventBus,Ncqrs.Domain.Storage.IAggregateRootLoader)
+    Unique name M_Ncqrs_Eventing_EventSource__ctor_1 generated for M:Ncqrs.Eventing.EventSource.#ctor(System.Collections.Generic.IEnumerable{Ncqrs.Eventing.HistoricalEvent})
+    Unique name M_Ncqrs_Eventing_ServiceModel_Bus_IEventBus_Publish_1 generated for M:Ncqrs.Eventing.ServiceModel.Bus.IEventBus.Publish(System.Collections.Generic.IEnumerable{Ncqrs.Eventing.IEvent})
+    Unique name M_Ncqrs_Eventing_ServiceModel_Bus_InProcessEventBus_Publish_1 generated for M:Ncqrs.Eventing.ServiceModel.Bus.InProcessEventBus.Publish(System.Collections.Generic.IEnumerable{Ncqrs.Eventing.IEvent})
+    Unique name M_Ncqrs_Eventing_ServiceModel_Bus_InProcessEventBus_RegisterHandler_1 generated for M:Ncqrs.Eventing.ServiceModel.Bus.InProcessEventBus.RegisterHandler(System.Type,Ncqrs.Eventing.ServiceModel.Bus.IEventHandler)
+    Last step completed in 00:00:00.1290
+</buildStep>
+<buildStep step="CopyStandardContent">
+Copying standard help content...
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\adm.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\adm.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\adm_arch.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\adm_arch.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\adm_dev.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\adm_dev.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\adm_dev_arch.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\adm_dev_arch.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\alert_caution.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\alert_caution.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\alert_note.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\alert_note.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\alert_security.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\alert_security.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\arch.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\arch.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\big_adm.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\big_adm.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\big_arch.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\big_arch.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\big_dev.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\big_dev.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\big_kw.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\big_kw.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\box.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\box.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\Caution.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\Caution.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\CFW.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\CFW.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\collall.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\collall.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\collapse.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\collapse.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\collapse_all.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\collapse_all.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\copycode.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\copycode.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\copycodeHighlight.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\copycodeHighlight.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\dev.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\dev.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\dev_arch.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\dev_arch.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\dropdown.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\dropdown.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\dropdownHover.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\dropdownHover.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\drpdown.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\drpdown.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\drpdown_orange.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\drpdown_orange.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\drpdown_orange_up.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\drpdown_orange_up.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\drpup.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\drpup.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\exp.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\exp.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\expall.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\expall.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\expand_all.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\expand_all.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\filter1a.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\filter1a.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\filter1c.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\filter1c.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\footer.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\footer.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\gradient.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\gradient.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\greencheck.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\greencheck.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\greychck.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\greychck.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\header_prev_next.jpg -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\header_prev_next.jpg
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\header_sql_tutorial_blank.jpg -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\header_sql_tutorial_blank.jpg
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\header_sql_tutorial_logo.GIF -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\header_sql_tutorial_logo.GIF
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\kw.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\kw.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\kw_adm.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\kw_adm.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\kw_adm_arch.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\kw_adm_arch.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\kw_adm_dev.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\kw_adm_dev.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\kw_adm_dev_arch.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\kw_adm_dev_arch.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\kw_arch.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\kw_arch.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\kw_dev.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\kw_dev.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\kw_dev_arch.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\kw_dev_arch.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\LastChild.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\LastChild.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\load.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\load.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\load_hover.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\load_hover.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\note.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\note.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\pencil.GIF -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\pencil.GIF
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\privclass.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\privclass.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\privdelegate.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\privdelegate.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\privenum.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\privenum.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\privenumeration.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\privenumeration.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\privevent.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\privevent.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\privextension.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\privextension.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\privfield.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\privfield.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\privinterface.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\privinterface.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\privmethod.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\privmethod.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\privproperty.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\privproperty.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\privstructure.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\privstructure.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\protclass.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\protclass.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\protdelegate.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\protdelegate.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\protenum.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\protenum.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\protenumeration.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\protenumeration.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\protevent.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\protevent.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\protextension.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\protextension.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\protfield.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\protfield.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\protinterface.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\protinterface.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\protmethod.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\protmethod.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\protoperator.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\protoperator.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\protproperty.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\protproperty.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\protstructure.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\protstructure.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\pubclass.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\pubclass.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\pubdelegate.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\pubdelegate.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\pubenum.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\pubenum.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\pubenumeration.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\pubenumeration.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\pubevent.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\pubevent.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\pubextension.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\pubextension.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\pubfield.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\pubfield.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\pubinterface.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\pubinterface.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\pubmethod.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\pubmethod.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\puboperator.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\puboperator.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\pubproperty.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\pubproperty.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\pubstructure.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\pubstructure.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\requirements1a.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\requirements1a.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\requirements1c.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\requirements1c.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\save.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\save.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\save_hover.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\save_hover.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\security.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\security.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\seealso1a.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\seealso1a.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\seealso1c.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\seealso1c.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\static.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\static.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\icons\xna.gif -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\icons\xna.gif
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\scripts\CheckboxMenu.js -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\scripts\CheckboxMenu.js
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\scripts\CommonUtilities.js -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\scripts\CommonUtilities.js
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\scripts\Dropdown.js -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\scripts\Dropdown.js
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\scripts\EventUtilities.js -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\scripts\EventUtilities.js
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\scripts\script_feedBack.js -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\scripts\script_feedBack.js
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\scripts\script_manifold.js -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\scripts\script_manifold.js
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\scripts\SplitScreen.js -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\scripts\SplitScreen.js
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\styles\Presentation.css -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\styles\Presentation.css
+C:\Program Files (x86)\Sandcastle\Presentation\vs2005\styles\Whidbey\presentation.css -&gt; D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\styles\Whidbey\presentation.css
+    Last step completed in 00:00:01.0531
+</buildStep>
+<buildStep step="CopyAdditionalContent">
+Copying additional content files...
+No additional content to copy
+    Last step completed in 00:00:00.0070
+</buildStep>
+<buildStep step="MergeTablesOfContents">
+Merging conceptual and additional tables of contents...
+    Last step completed in 00:00:00.0790
+</buildStep>
+<buildStep step="CreateBuildAssemblerConfigs">
+Creating Sandcastle configuration files...
+    sandcastle.config
+    Last step completed in 00:00:00.0110
+</buildStep>
+<buildStep step="MergeCustomConfigs">
+Merging custom build component configurations
+D:\Ncqrs\Framework\docs\ReferenceDocs\Working\sandcastle.config
+    No additional help attributes defined.  The 'MS Help 2 Attributes' component was not added.
+    Last step completed in 00:00:00.0490
+</buildStep>
+<buildStep step="BuildReferenceTopics">
+Building reference help topics...
+[C:\Windows\Microsoft.NET\Framework64\v3.5\MSBuild.exe]
+BuildReferenceTopics:
+  BuildAssembler (v2.4.10520.1)
+  Copyright &#184; Microsoft 2006
+  Info: CopyFromFileComponent: Instantiating component.
+  Info: CopyFromFileComponent: Loading data file 'C:\Program Files (x86)\Sandcastle\Presentation\vs2005\Transforms\skeleton.xml'.
+  Info: CopyFromIndexComponent: Instantiating component.
+  Info: CopyFromIndexComponent: Searching for files that match '*.xml'.
+  Info: CopyFromIndexComponent: Searching for files that match 'reflection.xml'.
+  Info: CopyFromIndexComponent: Indexed 170579 elements in 107 files.
+  Info: CopyFromIndexComponent: Loaded 0 copy components.
+  Info: CopyFromIndexComponent: Instantiating component.
+  Info: CopyFromIndexComponent: Loaded 0 copy components.
+  Info: ForEachComponent: Instantiating component.
+  Info: ForEachComponent: Loading subcomponents.
+  Info: CopyFromIndexComponent: Instantiating component.
+  Info: CopyFromIndexComponent: Loaded 0 copy components.
+  Info: ForEachComponent: Loaded 1 subcomponents.
+  Info: ForEachComponent: Instantiating component.
+  Info: ForEachComponent: Loading subcomponents.
+  Info: CopyFromIndexComponent: Instantiating component.
+  Info: CopyFromIndexComponent: Loaded 0 copy components.
+  Info: ForEachComponent: Loaded 1 subcomponents.
+  Info: ForEachComponent: Instantiating component.
+  Info: ForEachComponent: Loading subcomponents.
+  Info: CopyFromIndexComponent: Instantiating component.
+  Info: CopyFromIndexComponent: Loaded 0 copy components.
+  Info: ForEachComponent: Loaded 1 subcomponents.
+  Info: ForEachComponent: Instantiating component.
+  Info: ForEachComponent: Loading subcomponents.
+  Info: CopyFromIndexComponent: Instantiating component.
+  Info: CopyFromIndexComponent: Loaded 0 copy components.
+  Info: ForEachComponent: Loaded 1 subcomponents.
+  Info: ForEachComponent: Instantiating component.
+  Info: ForEachComponent: Loading subcomponents.
+  Info: CopyFromIndexComponent: Instantiating component.
+  Info: CopyFromIndexComponent: Loaded 0 copy components.
+  Info: ForEachComponent: Loaded 1 subcomponents.
+  Info: ForEachComponent: Instantiating component.
+  Info: ForEachComponent: Loading subcomponents.
+  Info: CopyFromIndexComponent: Instantiating component.
+  Info: CopyFromIndexComponent: Loaded 0 copy components.
+  Info: ForEachComponent: Loaded 1 subcomponents.
+  Info: ForEachComponent: Instantiating component.
+  Info: ForEachComponent: Loading subcomponents.
+  Info: CopyFromIndexComponent: Instantiating component.
+  Info: CopyFromIndexComponent: Loaded 0 copy components.
+  Info: ForEachComponent: Loaded 1 subcomponents.
+  Info: IfThenComponent: Instantiating component.
+  Info: SyntaxComponent: Instantiating component.
+  Info: SyntaxComponent: Loaded 3 syntax generators.
+  Info: CopyFromIndexComponent: Instantiating component.
+  Info: CopyFromIndexComponent: Searching for files that match 'C:\Windows\Microsoft.NET\Framework\v2.0.50727\en\*.xml'.
+  Info: CopyFromIndexComponent: Searching for files that match 'C:\Program Files\Reference Assemblies\Microsoft\Framework\v3.0\*.xml'.
+  Info: CopyFromIndexComponent: Searching for files that match 'C:\Program Files\Reference Assemblies\Microsoft\Framework\v3.5\*.xml'.
+  Info: CopyFromIndexComponent: Searching for files that match 'D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Ncqrs.Eventing.Storage.MongoDB.XML'.
+  Info: CopyFromIndexComponent: Searching for files that match 'D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Ncqrs.XML'.
+  Info: CopyFromIndexComponent: Searching for files that match 'D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Ncqrs.Config.StructureMap.XML'.
+  Info: CopyFromIndexComponent: Indexed 81512 elements in 53 files.
+  Info: CopyFromIndexComponent: Loaded 0 copy components.
+  Info: ForEachComponent: Instantiating component.
+  Info: ForEachComponent: Loading subcomponents.
+  Info: IfThenComponent: Instantiating component.
+  Info: CopyFromIndexComponent: Instantiating component.
+  Info: CopyFromIndexComponent: Loaded 0 copy components.
+  Info: CopyFromIndexComponent: Instantiating component.
+  Info: CopyFromIndexComponent: Loaded 0 copy components.
+  Info: ForEachComponent: Loaded 2 subcomponents.
+  Info: CopyFromIndexComponent: Instantiating component.
+  Info: CopyFromIndexComponent: Loaded 0 copy components.
+  Info: ShowMissingComponent: Instantiating component.
+  Info: ShowMissingComponent: 
+      [Sandcastle Help File Builder BuildAssembler Components, version 1.8.0.3]
+      Show Missing Documentation Component. Copyright &#184; 2006-2010, Eric Woodruff, All Rights Reserved
+      http://SHFB.CodePlex.com
+  Info: VersionInfoComponent: Instantiating component.
+  Info: VersionInfoComponent: 
+      [Sandcastle Help File Builder BuildAssembler Components, version 1.8.0.3]
+      Version Information Component. Copyright &#184; 2006-2010, Eric Woodruff, All Rights Reserved
+      http://SHFB.CodePlex.com
+  Info: CodeBlockComponent: Instantiating component.
+  Info: CodeBlockComponent: 
+      [Sandcastle Help File Builder BuildAssembler Components, version 1.8.0.3]
+      Code Block Component. Copyright &#184; 2006-2010, Eric Woodruff, All Rights Reserved.
+      Portions copyright (c) 2003, Jonathan de Halleux, All rights reserved.
+      http://SHFB.CodePlex.com
+  Info: TransformComponent: Instantiating component.
+  Info: PostTransformComponent: Instantiating component.
+  Info: PostTransformComponent: 
+      [Sandcastle Help File Builder BuildAssembler Components, version 1.8.0.3]
+      Post-Transform Component. Copyright &#184; 2006-2010, Eric Woodruff, All Rights Reserved
+      http://SHFB.CodePlex.com
+  Info: SharedContentComponent: Instantiating component.
+  Info: SharedContentComponent: Searching for files that match 'C:\Program Files (x86)\Sandcastle\Presentation\vs2005\content\shared_content.xml'.
+  Info: SharedContentComponent: Loading shared content file 'C:\Program Files (x86)\Sandcastle\Presentation\vs2005\content\shared_content.xml'.
+  Info: SharedContentComponent: Found 1 files in C:\Program Files (x86)\Sandcastle\Presentation\vs2005\content\shared_content.xml.
+  Info: SharedContentComponent: Searching for files that match 'C:\Program Files (x86)\Sandcastle\Presentation\vs2005\content\reference_content.xml'.
+  Info: SharedContentComponent: Loading shared content file 'C:\Program Files (x86)\Sandcastle\Presentation\vs2005\content\reference_content.xml'.
+  Info: SharedContentComponent: Found 1 files in C:\Program Files (x86)\Sandcastle\Presentation\vs2005\content\reference_content.xml.
+  Info: SharedContentComponent: Searching for files that match 'C:\Program Files (x86)\Sandcastle\Presentation\shared\content\syntax_content.xml'.
+  Info: SharedContentComponent: Loading shared content file 'C:\Program Files (x86)\Sandcastle\Presentation\shared\content\syntax_content.xml'.
+  Info: SharedContentComponent: Found 1 files in C:\Program Files (x86)\Sandcastle\Presentation\shared\content\syntax_content.xml.
+  Info: SharedContentComponent: Searching for files that match 'C:\Program Files (x86)\Sandcastle\Presentation\vs2005\content\feedback_content.xml'.
+  Info: SharedContentComponent: Loading shared content file 'C:\Program Files (x86)\Sandcastle\Presentation\vs2005\content\feedBack_content.xml'.
+  Info: SharedContentComponent: Found 1 files in C:\Program Files (x86)\Sandcastle\Presentation\vs2005\content\feedback_content.xml.
+  Info: SharedContentComponent: Searching for files that match 'SharedBuilderContent.xml'.
+  Info: SharedContentComponent: Loading shared content file 'D:\Ncqrs\Framework\docs\ReferenceDocs\Working\SharedBuilderContent.xml'.
+  Info: SharedContentComponent: Overriding shared content item 'roottopictitle' with value in file 'D:\Ncqrs\Framework\docs\ReferenceDocs\Working\SharedBuilderContent.xml'.
+  Info: SharedContentComponent: Overriding shared content item 'rootlink' with value in file 'D:\Ncqrs\Framework\docs\ReferenceDocs\Working\SharedBuilderContent.xml'.
+  Info: SharedContentComponent: Overriding shared content item 'runningheadertext' with value in file 'D:\Ncqrs\Framework\docs\ReferenceDocs\Working\SharedBuilderContent.xml'.
+  Info: SharedContentComponent: Overriding shared content item 'locationinformation' with value in file 'D:\Ncqrs\Framework\docs\ReferenceDocs\Working\SharedBuilderContent.xml'.
+  Info: SharedContentComponent: Overriding shared content item 'assemblynameandmodule' with value in file 'D:\Ncqrs\Framework\docs\ReferenceDocs\Working\SharedBuilderContent.xml'.
+  Info: SharedContentComponent: Overriding shared content item 'copycode' with value in file 'D:\Ncqrs\Framework\docs\ReferenceDocs\Working\SharedBuilderContent.xml'.
+  Info: SharedContentComponent: Overriding shared content item 'locale' with value in file 'D:\Ncqrs\Framework\docs\ReferenceDocs\Working\SharedBuilderContent.xml'.
+  Info: SharedContentComponent: Found 1 files in SharedBuilderContent.xml.
+  Info: SharedContentComponent: Searching for files that match 'PresentationStyleBuilderContent.xml'.
+  Info: SharedContentComponent: Loading shared content file 'D:\Ncqrs\Framework\docs\ReferenceDocs\Working\PresentationStyleBuilderContent.xml'.
+  Info: SharedContentComponent: Overriding shared content item 'header' with value in file 'D:\Ncqrs\Framework\docs\ReferenceDocs\Working\PresentationStyleBuilderContent.xml'.
+  Info: SharedContentComponent: Overriding shared content item 'footer' with value in file 'D:\Ncqrs\Framework\docs\ReferenceDocs\Working\PresentationStyleBuilderContent.xml'.
+  Info: SharedContentComponent: Overriding shared content item 'fb_alias' with value in file 'D:\Ncqrs\Framework\docs\ReferenceDocs\Working\PresentationStyleBuilderContent.xml'.
+  Info: SharedContentComponent: Overriding shared content item 'fb_product' with value in file 'D:\Ncqrs\Framework\docs\ReferenceDocs\Working\PresentationStyleBuilderContent.xml'.
+  Info: SharedContentComponent: Overriding shared content item 'fb_body' with value in file 'D:\Ncqrs\Framework\docs\ReferenceDocs\Working\PresentationStyleBuilderContent.xml'.
+  Info: SharedContentComponent: Overriding shared content item 'fb_send' with value in file 'D:\Ncqrs\Framework\docs\ReferenceDocs\Working\PresentationStyleBuilderContent.xml'.
+  Info: SharedContentComponent: Overriding shared content item 'fb_headerfeedback' with value in file 'D:\Ncqrs\Framework\docs\ReferenceDocs\Working\PresentationStyleBuilderContent.xml'.
+  Info: SharedContentComponent: Overriding shared content item 'feedback_alias' with value in file 'D:\Ncqrs\Framework\docs\ReferenceDocs\Working\PresentationStyleBuilderContent.xml'.
+  Info: SharedContentComponent: Overriding shared content item 'feedback_product' with value in file 'D:\Ncqrs\Framework\docs\ReferenceDocs\Working\PresentationStyleBuilderContent.xml'.
+  Info: SharedContentComponent: Overriding shared content item 'feedback_body' with value in file 'D:\Ncqrs\Framework\docs\ReferenceDocs\Working\PresentationStyleBuilderContent.xml'.
+  Info: SharedContentComponent: Found 1 files in PresentationStyleBuilderContent.xml.
+  Info: SharedContentComponent: Loaded 623 shared content items.
+  Info: ResolveReferenceLinksComponent2: Instantiating component.
+  Info: ResolveReferenceLinksComponent2: Creating MSDN URL resolver.
+  Info: ResolveReferenceLinksComponent2: Searching directory 'C:\Program Files (x86)\Sandcastle\Data\Reflection' for targets files of the form '*.xml'.
+  Info: ResolveReferenceLinksComponent2: Searching directory 'D:\Ncqrs\Framework\docs\ReferenceDocs\Working' for targets files of the form 'reflection.xml'.
+  Info: ResolveReferenceLinksComponent2: Loaded 170579 reference targets.
+  Info: SaveComponent: Instantiating component.
+  Info: BuildAssembler: Building topic N:Ncqrs
+  Warn: ResolveReferenceLinksComponent2: Unknown reference link target '!:http://ncqrs.org'.
+  Warn: ResolveReferenceLinksComponent2: Invalid reference link target '!:http://ncqrs.org'.
+  Warn: ResolveReferenceLinksComponent2: MSDN URL not found for target 'T:System.Guid'.
+  Info: BuildAssembler: Building topic T:Ncqrs.BasicGuidGenerator
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.BasicGuidGenerator
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.BasicGuidGenerator.#ctor
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.BasicGuidGenerator
+  Info: BuildAssembler: Building topic M:Ncqrs.BasicGuidGenerator.#ctor
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.BasicGuidGenerator.#ctor
+  Info: BuildAssembler: Building topic M:Ncqrs.BasicGuidGenerator.GenerateNewId
+  Info: BuildAssembler: Building topic T:Ncqrs.IUniqueIdentifierGenerator
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for T:Ncqrs.IUniqueIdentifierGenerator
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.IUniqueIdentifierGenerator
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.IUniqueIdentifierGenerator
+  Info: BuildAssembler: Building topic M:Ncqrs.IUniqueIdentifierGenerator.GenerateNewId
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for M:Ncqrs.IUniqueIdentifierGenerator.GenerateNewId
+  Warn: ShowMissingComponent: Missing &lt;returns&gt; documentation for M:Ncqrs.IUniqueIdentifierGenerator.GenerateNewId
+  Info: BuildAssembler: Building topic T:Ncqrs.NcqrsEnvironment
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.NcqrsEnvironment
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.NcqrsEnvironment
+  Info: BuildAssembler: Building topic M:Ncqrs.NcqrsEnvironment.Configure(Ncqrs.Config.IEnvironmentConfiguration)
+  Info: BuildAssembler: Building topic M:Ncqrs.NcqrsEnvironment.Get``1
+  Info: BuildAssembler: Building topic T:Ncqrs.NcqrsEnvironmentException
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.NcqrsEnvironmentException
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.NcqrsEnvironmentException
+  Info: BuildAssembler: Building topic Properties.T:Ncqrs.NcqrsEnvironmentException
+  Info: BuildAssembler: Building topic Overload:Ncqrs.NcqrsEnvironmentException.#ctor
+  Info: BuildAssembler: Building topic M:Ncqrs.NcqrsEnvironmentException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)
+  Info: BuildAssembler: Building topic M:Ncqrs.NcqrsEnvironmentException.#ctor(System.String)
+  Info: BuildAssembler: Building topic M:Ncqrs.NcqrsEnvironmentException.#ctor(System.String,System.Exception)
+  Info: BuildAssembler: Building topic N:Ncqrs.Commanding
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for N:Ncqrs.Commanding
+  Info: BuildAssembler: Building topic T:Ncqrs.Commanding.ICommand
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for T:Ncqrs.Commanding.ICommand
+  Info: BuildAssembler: Building topic N:Ncqrs.Commanding.CommandExecution
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for N:Ncqrs.Commanding.CommandExecution
+  Info: BuildAssembler: Building topic T:Ncqrs.Commanding.CommandExecution.CommandEventArgs
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Commanding.CommandExecution.CommandEventArgs
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Commanding.CommandExecution.CommandEventArgs
+  Info: BuildAssembler: Building topic Properties.T:Ncqrs.Commanding.CommandExecution.CommandEventArgs
+  Info: BuildAssembler: Building topic M:Ncqrs.Commanding.CommandExecution.CommandEventArgs.#ctor(Ncqrs.Commanding.ICommand)
+  Info: BuildAssembler: Building topic P:Ncqrs.Commanding.CommandExecution.CommandEventArgs.Command
+  Info: BuildAssembler: Building topic T:Ncqrs.Commanding.CommandExecution.CommandExecutionDispatcher
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Commanding.CommandExecution.CommandExecutionDispatcher
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Commanding.CommandExecution.CommandExecutionDispatcher.#ctor
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Commanding.CommandExecution.CommandExecutionDispatcher
+  Info: BuildAssembler: Building topic M:Ncqrs.Commanding.CommandExecution.CommandExecutionDispatcher.#ctor
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Commanding.CommandExecution.CommandExecutionDispatcher.#ctor
+  Info: BuildAssembler: Building topic M:Ncqrs.Commanding.CommandExecution.CommandExecutionDispatcher.Execute(Ncqrs.Commanding.ICommand)
+  Info: BuildAssembler: Building topic M:Ncqrs.Commanding.CommandExecution.CommandExecutionDispatcher.GetCommandExecutorForCommand(System.Type)
+  Info: BuildAssembler: Building topic T:Ncqrs.Commanding.CommandExecution.CommandExecutorBase`1
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Commanding.CommandExecution.CommandExecutorBase`1
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Commanding.CommandExecution.CommandExecutorBase`1.#ctor
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Commanding.CommandExecution.CommandExecutorBase`1
+  Info: BuildAssembler: Building topic M:Ncqrs.Commanding.CommandExecution.CommandExecutorBase`1.#ctor
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Commanding.CommandExecution.CommandExecutorBase`1.#ctor
+  Info: BuildAssembler: Building topic M:Ncqrs.Commanding.CommandExecution.CommandExecutorBase`1.Execute(`0)
+  Info: BuildAssembler: Building topic M:Ncqrs.Commanding.CommandExecution.CommandExecutorBase`1.ExecuteWithingUnitOfWorkContext(Ncqrs.Domain.IUnitOfWork)
+  Info: BuildAssembler: Building topic T:Ncqrs.Commanding.CommandExecution.CommandExecutorNotFoundException
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Commanding.CommandExecution.CommandExecutorNotFoundException
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Commanding.CommandExecution.CommandExecutorNotFoundException
+  Info: BuildAssembler: Building topic Properties.T:Ncqrs.Commanding.CommandExecution.CommandExecutorNotFoundException
+  Info: BuildAssembler: Building topic Overload:Ncqrs.Commanding.CommandExecution.CommandExecutorNotFoundException.#ctor
+  Info: BuildAssembler: Building topic M:Ncqrs.Commanding.CommandExecution.CommandExecutorNotFoundException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)
+  Info: BuildAssembler: Building topic M:Ncqrs.Commanding.CommandExecution.CommandExecutorNotFoundException.#ctor(System.Type)
+  Info: BuildAssembler: Building topic M:Ncqrs.Commanding.CommandExecution.CommandExecutorNotFoundException.#ctor(System.Type,System.String)
+  Info: BuildAssembler: Building topic M:Ncqrs.Commanding.CommandExecution.CommandExecutorNotFoundException.#ctor(System.Type,System.String,System.Exception)
+  Info: BuildAssembler: Building topic M:Ncqrs.Commanding.CommandExecution.CommandExecutorNotFoundException.$InvariantMethod$
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for M:Ncqrs.Commanding.CommandExecution.CommandExecutorNotFoundException.$InvariantMethod$
+  Info: BuildAssembler: Building topic P:Ncqrs.Commanding.CommandExecution.CommandExecutorNotFoundException.CommandType
+  Info: BuildAssembler: Building topic T:Ncqrs.Commanding.CommandExecution.ICommandExecutor
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Commanding.CommandExecution.ICommandExecutor
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Commanding.CommandExecution.ICommandExecutor
+  Info: BuildAssembler: Building topic M:Ncqrs.Commanding.CommandExecution.ICommandExecutor.Execute(Ncqrs.Commanding.ICommand)
+  Info: BuildAssembler: Building topic T:Ncqrs.Commanding.CommandExecution.TransactionalCommandExecutorWrapper
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Commanding.CommandExecution.TransactionalCommandExecutorWrapper
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Commanding.CommandExecution.TransactionalCommandExecutorWrapper
+  Info: BuildAssembler: Building topic M:Ncqrs.Commanding.CommandExecution.TransactionalCommandExecutorWrapper.#ctor(Ncqrs.Commanding.CommandExecution.ICommandExecutor)
+  Info: BuildAssembler: Building topic M:Ncqrs.Commanding.CommandExecution.TransactionalCommandExecutorWrapper.Execute(Ncqrs.Commanding.ICommand)
+  Info: BuildAssembler: Building topic N:Ncqrs.Commanding.CommandExecution.Mapping
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for N:Ncqrs.Commanding.CommandExecution.Mapping
+  Info: BuildAssembler: Building topic T:Ncqrs.Commanding.CommandExecution.Mapping.ActionFactory
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Commanding.CommandExecution.Mapping.ActionFactory
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Commanding.CommandExecution.Mapping.ActionFactory.#ctor
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Commanding.CommandExecution.Mapping.ActionFactory
+  Info: BuildAssembler: Building topic M:Ncqrs.Commanding.CommandExecution.Mapping.ActionFactory.#ctor
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Commanding.CommandExecution.Mapping.ActionFactory.#ctor
+  Info: BuildAssembler: Building topic M:Ncqrs.Commanding.CommandExecution.Mapping.ActionFactory.CreateExecutorForCommand(Ncqrs.Commanding.ICommand)
+  Info: BuildAssembler: Building topic T:Ncqrs.Commanding.CommandExecution.Mapping.AutoMappingCommandExecutor
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Commanding.CommandExecution.Mapping.AutoMappingCommandExecutor
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Commanding.CommandExecution.Mapping.AutoMappingCommandExecutor.#ctor
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Commanding.CommandExecution.Mapping.AutoMappingCommandExecutor
+  Info: BuildAssembler: Building topic M:Ncqrs.Commanding.CommandExecution.Mapping.AutoMappingCommandExecutor.#ctor
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Commanding.CommandExecution.Mapping.AutoMappingCommandExecutor.#ctor
+  Info: BuildAssembler: Building topic M:Ncqrs.Commanding.CommandExecution.Mapping.AutoMappingCommandExecutor.Execute(Ncqrs.Commanding.ICommand)
+  Info: BuildAssembler: Building topic T:Ncqrs.Commanding.CommandExecution.Mapping.AutoMappingException
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Commanding.CommandExecution.Mapping.AutoMappingException
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Commanding.CommandExecution.Mapping.AutoMappingException
+  Info: BuildAssembler: Building topic Properties.T:Ncqrs.Commanding.CommandExecution.Mapping.AutoMappingException
+  Info: BuildAssembler: Building topic Overload:Ncqrs.Commanding.CommandExecution.Mapping.AutoMappingException.#ctor
+  Info: BuildAssembler: Building topic M:Ncqrs.Commanding.CommandExecution.Mapping.AutoMappingException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)
+  Info: BuildAssembler: Building topic M:Ncqrs.Commanding.CommandExecution.Mapping.AutoMappingException.#ctor(System.String)
+  Info: BuildAssembler: Building topic M:Ncqrs.Commanding.CommandExecution.Mapping.AutoMappingException.#ctor(System.String,System.Exception)
+  Info: BuildAssembler: Building topic T:Ncqrs.Commanding.CommandExecution.Mapping.CommandAutoMappingConfiguration
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Commanding.CommandExecution.Mapping.CommandAutoMappingConfiguration
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Commanding.CommandExecution.Mapping.CommandAutoMappingConfiguration
+  Info: BuildAssembler: Building topic M:Ncqrs.Commanding.CommandExecution.Mapping.CommandAutoMappingConfiguration.GetCommandProperties(Ncqrs.Commanding.ICommand)
+  Info: BuildAssembler: Building topic M:Ncqrs.Commanding.CommandExecution.Mapping.CommandAutoMappingConfiguration.GetParameterValues(Ncqrs.Commanding.ICommand,System.Reflection.ParameterInfo[])
+  Info: BuildAssembler: Building topic M:Ncqrs.Commanding.CommandExecution.Mapping.CommandAutoMappingConfiguration.GetPropertyValueBasedOnParameterInfo(Ncqrs.Commanding.ICommand,System.Reflection.ParameterInfo)
+  Info: BuildAssembler: Building topic T:Ncqrs.Commanding.CommandExecution.Mapping.MappingForCommandNotFoundException
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Commanding.CommandExecution.Mapping.MappingForCommandNotFoundException
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Commanding.CommandExecution.Mapping.MappingForCommandNotFoundException
+  Info: BuildAssembler: Building topic Properties.T:Ncqrs.Commanding.CommandExecution.Mapping.MappingForCommandNotFoundException
+  Info: BuildAssembler: Building topic Overload:Ncqrs.Commanding.CommandExecution.Mapping.MappingForCommandNotFoundException.#ctor
+  Info: BuildAssembler: Building topic M:Ncqrs.Commanding.CommandExecution.Mapping.MappingForCommandNotFoundException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)
+  Info: BuildAssembler: Building topic M:Ncqrs.Commanding.CommandExecution.Mapping.MappingForCommandNotFoundException.#ctor(System.String,Ncqrs.Commanding.ICommand)
+  Info: BuildAssembler: Building topic P:Ncqrs.Commanding.CommandExecution.Mapping.MappingForCommandNotFoundException.Command
+  Info: BuildAssembler: Building topic N:Ncqrs.Commanding.CommandExecution.Mapping.Actions
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for N:Ncqrs.Commanding.CommandExecution.Mapping.Actions
+  Info: BuildAssembler: Building topic T:Ncqrs.Commanding.CommandExecution.Mapping.Actions.DirectMethodAction
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Commanding.CommandExecution.Mapping.Actions.DirectMethodAction
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Commanding.CommandExecution.Mapping.Actions.DirectMethodAction.#ctor
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Commanding.CommandExecution.Mapping.Actions.DirectMethodAction
+  Info: BuildAssembler: Building topic M:Ncqrs.Commanding.CommandExecution.Mapping.Actions.DirectMethodAction.#ctor
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Commanding.CommandExecution.Mapping.Actions.DirectMethodAction.#ctor
+  Info: BuildAssembler: Building topic M:Ncqrs.Commanding.CommandExecution.Mapping.Actions.DirectMethodAction.Execute(Ncqrs.Commanding.ICommand)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;command&quot;/&gt; documentation for M:Ncqrs.Commanding.CommandExecution.Mapping.Actions.DirectMethodAction.Execute(Ncqrs.Commanding.ICommand)
+  Info: BuildAssembler: Building topic T:Ncqrs.Commanding.CommandExecution.Mapping.Actions.ObjectCreationAction
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Commanding.CommandExecution.Mapping.Actions.ObjectCreationAction
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Commanding.CommandExecution.Mapping.Actions.ObjectCreationAction.#ctor
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Commanding.CommandExecution.Mapping.Actions.ObjectCreationAction
+  Info: BuildAssembler: Building topic M:Ncqrs.Commanding.CommandExecution.Mapping.Actions.ObjectCreationAction.#ctor
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Commanding.CommandExecution.Mapping.Actions.ObjectCreationAction.#ctor
+  Info: BuildAssembler: Building topic M:Ncqrs.Commanding.CommandExecution.Mapping.Actions.ObjectCreationAction.Execute(Ncqrs.Commanding.ICommand)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;command&quot;/&gt; documentation for M:Ncqrs.Commanding.CommandExecution.Mapping.Actions.ObjectCreationAction.Execute(Ncqrs.Commanding.ICommand)
+  Info: BuildAssembler: Building topic N:Ncqrs.Commanding.CommandExecution.Mapping.Attributes
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for N:Ncqrs.Commanding.CommandExecution.Mapping.Attributes
+  Info: BuildAssembler: Building topic T:Ncqrs.Commanding.CommandExecution.Mapping.Attributes.AggregateRootIdAttribute
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Commanding.CommandExecution.Mapping.Attributes.AggregateRootIdAttribute
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Commanding.CommandExecution.Mapping.Attributes.AggregateRootIdAttribute.#ctor
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Commanding.CommandExecution.Mapping.Attributes.AggregateRootIdAttribute
+  Info: BuildAssembler: Building topic Properties.T:Ncqrs.Commanding.CommandExecution.Mapping.Attributes.AggregateRootIdAttribute
+  Info: BuildAssembler: Building topic M:Ncqrs.Commanding.CommandExecution.Mapping.Attributes.AggregateRootIdAttribute.#ctor
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Commanding.CommandExecution.Mapping.Attributes.AggregateRootIdAttribute.#ctor
+  Info: BuildAssembler: Building topic T:Ncqrs.Commanding.CommandExecution.Mapping.Attributes.ExcludeInMappingAttribute
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Commanding.CommandExecution.Mapping.Attributes.ExcludeInMappingAttribute
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Commanding.CommandExecution.Mapping.Attributes.ExcludeInMappingAttribute.#ctor
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Commanding.CommandExecution.Mapping.Attributes.ExcludeInMappingAttribute
+  Info: BuildAssembler: Building topic Properties.T:Ncqrs.Commanding.CommandExecution.Mapping.Attributes.ExcludeInMappingAttribute
+  Info: BuildAssembler: Building topic M:Ncqrs.Commanding.CommandExecution.Mapping.Attributes.ExcludeInMappingAttribute.#ctor
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Commanding.CommandExecution.Mapping.Attributes.ExcludeInMappingAttribute.#ctor
+  Info: BuildAssembler: Building topic T:Ncqrs.Commanding.CommandExecution.Mapping.Attributes.MapsToAggregateRootConstructorAttribute
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Commanding.CommandExecution.Mapping.Attributes.MapsToAggregateRootConstructorAttribute
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Commanding.CommandExecution.Mapping.Attributes.MapsToAggregateRootConstructorAttribute
+  Info: BuildAssembler: Building topic Properties.T:Ncqrs.Commanding.CommandExecution.Mapping.Attributes.MapsToAggregateRootConstructorAttribute
+  Info: BuildAssembler: Building topic Overload:Ncqrs.Commanding.CommandExecution.Mapping.Attributes.MapsToAggregateRootConstructorAttribute.#ctor
+  Info: BuildAssembler: Building topic M:Ncqrs.Commanding.CommandExecution.Mapping.Attributes.MapsToAggregateRootConstructorAttribute.#ctor(System.String)
+  Info: BuildAssembler: Building topic M:Ncqrs.Commanding.CommandExecution.Mapping.Attributes.MapsToAggregateRootConstructorAttribute.#ctor(System.Type)
+  Info: BuildAssembler: Building topic P:Ncqrs.Commanding.CommandExecution.Mapping.Attributes.MapsToAggregateRootConstructorAttribute.TypeName
+  Info: BuildAssembler: Building topic T:Ncqrs.Commanding.CommandExecution.Mapping.Attributes.MapsToAggregateRootMethodAttribute
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Commanding.CommandExecution.Mapping.Attributes.MapsToAggregateRootMethodAttribute
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Commanding.CommandExecution.Mapping.Attributes.MapsToAggregateRootMethodAttribute
+  Info: BuildAssembler: Building topic Properties.T:Ncqrs.Commanding.CommandExecution.Mapping.Attributes.MapsToAggregateRootMethodAttribute
+  Info: BuildAssembler: Building topic Overload:Ncqrs.Commanding.CommandExecution.Mapping.Attributes.MapsToAggregateRootMethodAttribute.#ctor
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Commanding.CommandExecution.Mapping.Attributes.MapsToAggregateRootMethodAttribute.#ctor
+  Info: BuildAssembler: Building topic M:Ncqrs.Commanding.CommandExecution.Mapping.Attributes.MapsToAggregateRootMethodAttribute.#ctor(System.String)
+  Info: BuildAssembler: Building topic M:Ncqrs.Commanding.CommandExecution.Mapping.Attributes.MapsToAggregateRootMethodAttribute.#ctor(System.String,System.String)
+  Info: BuildAssembler: Building topic M:Ncqrs.Commanding.CommandExecution.Mapping.Attributes.MapsToAggregateRootMethodAttribute.#ctor(System.Type,System.String)
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Commanding.CommandExecution.Mapping.Attributes.MapsToAggregateRootMethodAttribute.#ctor(System.Type,System.String)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;typeName&quot;/&gt; documentation for M:Ncqrs.Commanding.CommandExecution.Mapping.Attributes.MapsToAggregateRootMethodAttribute.#ctor(System.Type,System.String)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;methodName&quot;/&gt; documentation for M:Ncqrs.Commanding.CommandExecution.Mapping.Attributes.MapsToAggregateRootMethodAttribute.#ctor(System.Type,System.String)
+  Info: BuildAssembler: Building topic P:Ncqrs.Commanding.CommandExecution.Mapping.Attributes.MapsToAggregateRootMethodAttribute.MethodName
+  Info: BuildAssembler: Building topic P:Ncqrs.Commanding.CommandExecution.Mapping.Attributes.MapsToAggregateRootMethodAttribute.TypeName
+  Info: BuildAssembler: Building topic T:Ncqrs.Commanding.CommandExecution.Mapping.Attributes.TransactionalAttribute
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for T:Ncqrs.Commanding.CommandExecution.Mapping.Attributes.TransactionalAttribute
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Commanding.CommandExecution.Mapping.Attributes.TransactionalAttribute
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Commanding.CommandExecution.Mapping.Attributes.TransactionalAttribute.#ctor
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Commanding.CommandExecution.Mapping.Attributes.TransactionalAttribute
+  Info: BuildAssembler: Building topic Properties.T:Ncqrs.Commanding.CommandExecution.Mapping.Attributes.TransactionalAttribute
+  Info: BuildAssembler: Building topic M:Ncqrs.Commanding.CommandExecution.Mapping.Attributes.TransactionalAttribute.#ctor
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Commanding.CommandExecution.Mapping.Attributes.TransactionalAttribute.#ctor
+  Info: BuildAssembler: Building topic N:Ncqrs.Commanding.ServiceModel
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for N:Ncqrs.Commanding.ServiceModel
+  Info: BuildAssembler: Building topic T:Ncqrs.Commanding.ServiceModel.InProcessCommandExecutionDispatcher
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Commanding.ServiceModel.InProcessCommandExecutionDispatcher
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Commanding.ServiceModel.InProcessCommandExecutionDispatcher.#ctor
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Commanding.ServiceModel.InProcessCommandExecutionDispatcher
+  Info: BuildAssembler: Building topic M:Ncqrs.Commanding.ServiceModel.InProcessCommandExecutionDispatcher.#ctor
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Commanding.ServiceModel.InProcessCommandExecutionDispatcher.#ctor
+  Info: BuildAssembler: Building topic M:Ncqrs.Commanding.ServiceModel.InProcessCommandExecutionDispatcher.GetCommandExecutorForCommand(System.Type)
+  Info: BuildAssembler: Building topic M:Ncqrs.Commanding.ServiceModel.InProcessCommandExecutionDispatcher.RegisterExecutor``1(Ncqrs.Commanding.CommandExecution.ICommandExecutor)
+  Info: BuildAssembler: Building topic M:Ncqrs.Commanding.ServiceModel.InProcessCommandExecutionDispatcher.RegisterExecutor(System.Type,Ncqrs.Commanding.CommandExecution.ICommandExecutor)
+  Info: BuildAssembler: Building topic M:Ncqrs.Commanding.ServiceModel.InProcessCommandExecutionDispatcher.UnregisterExecutor(System.Type,Ncqrs.Commanding.CommandExecution.ICommandExecutor)
+  Info: BuildAssembler: Building topic N:Ncqrs.Config
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for N:Ncqrs.Config
+  Info: BuildAssembler: Building topic T:Ncqrs.Config.EnvironmentNotConfiguredException
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Config.EnvironmentNotConfiguredException
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Config.EnvironmentNotConfiguredException
+  Info: BuildAssembler: Building topic Properties.T:Ncqrs.Config.EnvironmentNotConfiguredException
+  Info: BuildAssembler: Building topic Overload:Ncqrs.Config.EnvironmentNotConfiguredException.#ctor
+  Info: BuildAssembler: Building topic M:Ncqrs.Config.EnvironmentNotConfiguredException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)
+  Info: BuildAssembler: Building topic M:Ncqrs.Config.EnvironmentNotConfiguredException.#ctor(System.String)
+  Info: BuildAssembler: Building topic M:Ncqrs.Config.EnvironmentNotConfiguredException.#ctor(System.String,System.Exception)
+  Info: BuildAssembler: Building topic T:Ncqrs.Config.IEnvironmentConfiguration
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Config.IEnvironmentConfiguration
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Config.IEnvironmentConfiguration
+  Info: BuildAssembler: Building topic M:Ncqrs.Config.IEnvironmentConfiguration.TryGet``1(``0@)
+  Info: BuildAssembler: Building topic T:Ncqrs.Config.InstanceNotFoundInEnvironmentConfigurationException
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Config.InstanceNotFoundInEnvironmentConfigurationException
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Config.InstanceNotFoundInEnvironmentConfigurationException
+  Info: BuildAssembler: Building topic Properties.T:Ncqrs.Config.InstanceNotFoundInEnvironmentConfigurationException
+  Info: BuildAssembler: Building topic Overload:Ncqrs.Config.InstanceNotFoundInEnvironmentConfigurationException.#ctor
+  Info: BuildAssembler: Building topic M:Ncqrs.Config.InstanceNotFoundInEnvironmentConfigurationException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)
+  Info: BuildAssembler: Building topic M:Ncqrs.Config.InstanceNotFoundInEnvironmentConfigurationException.#ctor(System.Type)
+  Info: BuildAssembler: Building topic M:Ncqrs.Config.InstanceNotFoundInEnvironmentConfigurationException.#ctor(System.Type,System.String)
+  Info: BuildAssembler: Building topic M:Ncqrs.Config.InstanceNotFoundInEnvironmentConfigurationException.#ctor(System.Type,System.String,System.Exception)
+  Info: BuildAssembler: Building topic P:Ncqrs.Config.InstanceNotFoundInEnvironmentConfigurationException.RequestedType
+  Info: BuildAssembler: Building topic N:Ncqrs.Config.StructureMap
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for N:Ncqrs.Config.StructureMap
+  Warn: ResolveReferenceLinksComponent2: Unknown reference link target 'T:StructureMap.ObjectFactory'.
+  Info: BuildAssembler: Building topic T:Ncqrs.Config.StructureMap.StructureMapConfiguration
+  Warn: ResolveReferenceLinksComponent2: Unknown reference link target 'T:StructureMap.ObjectFactory'.
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Config.StructureMap.StructureMapConfiguration
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Config.StructureMap.StructureMapConfiguration
+  Info: BuildAssembler: Building topic M:Ncqrs.Config.StructureMap.StructureMapConfiguration.#ctor(System.Action{StructureMap.IInitializationExpression},System.Action{StructureMap.ConfigurationExpression})
+  Warn: ResolveReferenceLinksComponent2: Unknown reference link target 'T:StructureMap.IInitializationExpression'.
+  Warn: ResolveReferenceLinksComponent2: Unknown reference link target 'T:StructureMap.ConfigurationExpression'.
+  Warn: ResolveReferenceLinksComponent2: Unknown reference link target 'T:StructureMap.IInitializationExpression'.
+  Warn: ResolveReferenceLinksComponent2: Unknown reference link target 'T:StructureMap.ConfigurationExpression'.
+  Warn: ResolveReferenceLinksComponent2: Unknown reference link target 'T:StructureMap.IInitializationExpression'.
+  Warn: ResolveReferenceLinksComponent2: Unknown reference link target 'T:StructureMap.ConfigurationExpression'.
+  Warn: ResolveReferenceLinksComponent2: Unknown reference link target 'T:StructureMap.IInitializationExpression'.
+  Warn: ResolveReferenceLinksComponent2: Unknown reference link target 'T:StructureMap.ConfigurationExpression'.
+  Info: BuildAssembler: Building topic M:Ncqrs.Config.StructureMap.StructureMapConfiguration.TryGet``1(``0@)
+  Info: BuildAssembler: Building topic N:Ncqrs.Domain
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for N:Ncqrs.Domain
+  Info: BuildAssembler: Building topic T:Ncqrs.Domain.AggregateRoot
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Domain.AggregateRoot
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Domain.AggregateRoot
+  Info: BuildAssembler: Building topic Properties.T:Ncqrs.Domain.AggregateRoot
+  Info: BuildAssembler: Building topic Events.T:Ncqrs.Domain.AggregateRoot
+  Info: BuildAssembler: Building topic Overload:Ncqrs.Domain.AggregateRoot.#ctor
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Domain.AggregateRoot.#ctor
+  Info: BuildAssembler: Building topic M:Ncqrs.Domain.AggregateRoot.#ctor
+  Info: BuildAssembler: Building topic M:Ncqrs.Domain.AggregateRoot.#ctor(Ncqrs.IUniqueIdentifierGenerator)
+  Info: BuildAssembler: Building topic M:Ncqrs.Domain.AggregateRoot.#ctor(System.Collections.Generic.IEnumerable{Ncqrs.Eventing.HistoricalEvent})
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Domain.AggregateRoot.#ctor(System.Collections.Generic.IEnumerable{Ncqrs.Eventing.HistoricalEvent})
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;history&quot;/&gt; documentation for M:Ncqrs.Domain.AggregateRoot.#ctor(System.Collections.Generic.IEnumerable{Ncqrs.Eventing.HistoricalEvent})
+  Info: BuildAssembler: Building topic M:Ncqrs.Domain.AggregateRoot.$InvariantMethod$
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for M:Ncqrs.Domain.AggregateRoot.$InvariantMethod$
+  Info: BuildAssembler: Building topic M:Ncqrs.Domain.AggregateRoot.HandleEvent(Ncqrs.Eventing.IEvent)
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for M:Ncqrs.Domain.AggregateRoot.HandleEvent(Ncqrs.Eventing.IEvent)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;evnt&quot;/&gt; documentation for M:Ncqrs.Domain.AggregateRoot.HandleEvent(Ncqrs.Eventing.IEvent)
+  Info: BuildAssembler: Building topic M:Ncqrs.Domain.AggregateRoot.OnEventApplied(Ncqrs.Eventing.IEvent)
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for M:Ncqrs.Domain.AggregateRoot.OnEventApplied(Ncqrs.Eventing.IEvent)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;evnt&quot;/&gt; documentation for M:Ncqrs.Domain.AggregateRoot.OnEventApplied(Ncqrs.Eventing.IEvent)
+  Info: BuildAssembler: Building topic M:Ncqrs.Domain.AggregateRoot.RegisterHandler(Ncqrs.Domain.IInternalEventHandler)
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for M:Ncqrs.Domain.AggregateRoot.RegisterHandler(Ncqrs.Domain.IInternalEventHandler)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;handler&quot;/&gt; documentation for M:Ncqrs.Domain.AggregateRoot.RegisterHandler(Ncqrs.Domain.IInternalEventHandler)
+  Info: BuildAssembler: Building topic T:Ncqrs.Domain.AggregateRootMappedByConvention
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for T:Ncqrs.Domain.AggregateRootMappedByConvention
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Domain.AggregateRootMappedByConvention
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Domain.AggregateRootMappedByConvention
+  Info: BuildAssembler: Building topic Properties.T:Ncqrs.Domain.AggregateRootMappedByConvention
+  Info: BuildAssembler: Building topic Events.T:Ncqrs.Domain.AggregateRootMappedByConvention
+  Info: BuildAssembler: Building topic Overload:Ncqrs.Domain.AggregateRootMappedByConvention.#ctor
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Domain.AggregateRootMappedByConvention.#ctor
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Domain.AggregateRootMappedByConvention.#ctor
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Domain.AggregateRootMappedByConvention.#ctor
+  Info: BuildAssembler: Building topic M:Ncqrs.Domain.AggregateRootMappedByConvention.#ctor
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Domain.AggregateRootMappedByConvention.#ctor
+  Info: BuildAssembler: Building topic M:Ncqrs.Domain.AggregateRootMappedByConvention.#ctor(Ncqrs.IUniqueIdentifierGenerator)
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Domain.AggregateRootMappedByConvention.#ctor(Ncqrs.IUniqueIdentifierGenerator)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;idGenerator&quot;/&gt; documentation for M:Ncqrs.Domain.AggregateRootMappedByConvention.#ctor(Ncqrs.IUniqueIdentifierGenerator)
+  Info: BuildAssembler: Building topic M:Ncqrs.Domain.AggregateRootMappedByConvention.#ctor(System.Collections.Generic.IEnumerable{Ncqrs.Eventing.HistoricalEvent})
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Domain.AggregateRootMappedByConvention.#ctor(System.Collections.Generic.IEnumerable{Ncqrs.Eventing.HistoricalEvent})
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;history&quot;/&gt; documentation for M:Ncqrs.Domain.AggregateRootMappedByConvention.#ctor(System.Collections.Generic.IEnumerable{Ncqrs.Eventing.HistoricalEvent})
+  Info: BuildAssembler: Building topic M:Ncqrs.Domain.AggregateRootMappedByConvention.$InvariantMethod$
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for M:Ncqrs.Domain.AggregateRootMappedByConvention.$InvariantMethod$
+  Info: BuildAssembler: Building topic T:Ncqrs.Domain.AggregateRootMappedWithAttributes
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for T:Ncqrs.Domain.AggregateRootMappedWithAttributes
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Domain.AggregateRootMappedWithAttributes
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Domain.AggregateRootMappedWithAttributes
+  Info: BuildAssembler: Building topic Properties.T:Ncqrs.Domain.AggregateRootMappedWithAttributes
+  Info: BuildAssembler: Building topic Events.T:Ncqrs.Domain.AggregateRootMappedWithAttributes
+  Info: BuildAssembler: Building topic Overload:Ncqrs.Domain.AggregateRootMappedWithAttributes.#ctor
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Domain.AggregateRootMappedWithAttributes.#ctor
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Domain.AggregateRootMappedWithAttributes.#ctor
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Domain.AggregateRootMappedWithAttributes.#ctor
+  Info: BuildAssembler: Building topic M:Ncqrs.Domain.AggregateRootMappedWithAttributes.#ctor
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Domain.AggregateRootMappedWithAttributes.#ctor
+  Info: BuildAssembler: Building topic M:Ncqrs.Domain.AggregateRootMappedWithAttributes.#ctor(Ncqrs.IUniqueIdentifierGenerator)
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Domain.AggregateRootMappedWithAttributes.#ctor(Ncqrs.IUniqueIdentifierGenerator)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;idGenerator&quot;/&gt; documentation for M:Ncqrs.Domain.AggregateRootMappedWithAttributes.#ctor(Ncqrs.IUniqueIdentifierGenerator)
+  Info: BuildAssembler: Building topic M:Ncqrs.Domain.AggregateRootMappedWithAttributes.#ctor(System.Collections.Generic.IEnumerable{Ncqrs.Eventing.HistoricalEvent})
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Domain.AggregateRootMappedWithAttributes.#ctor(System.Collections.Generic.IEnumerable{Ncqrs.Eventing.HistoricalEvent})
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;history&quot;/&gt; documentation for M:Ncqrs.Domain.AggregateRootMappedWithAttributes.#ctor(System.Collections.Generic.IEnumerable{Ncqrs.Eventing.HistoricalEvent})
+  Info: BuildAssembler: Building topic M:Ncqrs.Domain.AggregateRootMappedWithAttributes.$InvariantMethod$
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for M:Ncqrs.Domain.AggregateRootMappedWithAttributes.$InvariantMethod$
+  Info: BuildAssembler: Building topic T:Ncqrs.Domain.EventNotHandledException
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for T:Ncqrs.Domain.EventNotHandledException
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Domain.EventNotHandledException
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Domain.EventNotHandledException
+  Info: BuildAssembler: Building topic Properties.T:Ncqrs.Domain.EventNotHandledException
+  Info: BuildAssembler: Building topic Overload:Ncqrs.Domain.EventNotHandledException.#ctor
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Domain.EventNotHandledException.#ctor
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Domain.EventNotHandledException.#ctor
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Domain.EventNotHandledException.#ctor
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Domain.EventNotHandledException.#ctor
+  Info: BuildAssembler: Building topic M:Ncqrs.Domain.EventNotHandledException.#ctor(Ncqrs.Eventing.IEvent)
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Domain.EventNotHandledException.#ctor(Ncqrs.Eventing.IEvent)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;evnt&quot;/&gt; documentation for M:Ncqrs.Domain.EventNotHandledException.#ctor(Ncqrs.Eventing.IEvent)
+  Info: BuildAssembler: Building topic M:Ncqrs.Domain.EventNotHandledException.#ctor(Ncqrs.Eventing.IEvent,System.String)
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Domain.EventNotHandledException.#ctor(Ncqrs.Eventing.IEvent,System.String)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;evnt&quot;/&gt; documentation for M:Ncqrs.Domain.EventNotHandledException.#ctor(Ncqrs.Eventing.IEvent,System.String)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;message&quot;/&gt; documentation for M:Ncqrs.Domain.EventNotHandledException.#ctor(Ncqrs.Eventing.IEvent,System.String)
+  Info: BuildAssembler: Building topic M:Ncqrs.Domain.EventNotHandledException.#ctor(Ncqrs.Eventing.IEvent,System.String,System.Exception)
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Domain.EventNotHandledException.#ctor(Ncqrs.Eventing.IEvent,System.String,System.Exception)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;evnt&quot;/&gt; documentation for M:Ncqrs.Domain.EventNotHandledException.#ctor(Ncqrs.Eventing.IEvent,System.String,System.Exception)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;message&quot;/&gt; documentation for M:Ncqrs.Domain.EventNotHandledException.#ctor(Ncqrs.Eventing.IEvent,System.String,System.Exception)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;inner&quot;/&gt; documentation for M:Ncqrs.Domain.EventNotHandledException.#ctor(Ncqrs.Eventing.IEvent,System.String,System.Exception)
+  Info: BuildAssembler: Building topic M:Ncqrs.Domain.EventNotHandledException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Domain.EventNotHandledException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;info&quot;/&gt; documentation for M:Ncqrs.Domain.EventNotHandledException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;context&quot;/&gt; documentation for M:Ncqrs.Domain.EventNotHandledException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)
+  Info: BuildAssembler: Building topic P:Ncqrs.Domain.EventNotHandledException.Event
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for P:Ncqrs.Domain.EventNotHandledException.Event
+  Info: BuildAssembler: Building topic T:Ncqrs.Domain.ExactInternalEventHandler`1
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for T:Ncqrs.Domain.ExactInternalEventHandler`1
+  Warn: ShowMissingComponent: Missing &lt;typeparam name=&quot;TEvent&quot;/&gt; documentation for T:Ncqrs.Domain.ExactInternalEventHandler`1
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Domain.ExactInternalEventHandler`1
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Domain.ExactInternalEventHandler`1.#ctor
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Domain.ExactInternalEventHandler`1
+  Info: BuildAssembler: Building topic M:Ncqrs.Domain.ExactInternalEventHandler`1.#ctor
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Domain.ExactInternalEventHandler`1.#ctor
+  Info: BuildAssembler: Building topic M:Ncqrs.Domain.ExactInternalEventHandler`1.HandleEvent(`0)
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for M:Ncqrs.Domain.ExactInternalEventHandler`1.HandleEvent(`0)
+  Warn: ShowMissingComponent: Missing &lt;returns&gt; documentation for M:Ncqrs.Domain.ExactInternalEventHandler`1.HandleEvent(`0)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;evnt&quot;/&gt; documentation for M:Ncqrs.Domain.ExactInternalEventHandler`1.HandleEvent(`0)
+  Info: BuildAssembler: Building topic T:Ncqrs.Domain.IInternalEventHandler
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Domain.IInternalEventHandler
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Domain.IInternalEventHandler
+  Info: BuildAssembler: Building topic M:Ncqrs.Domain.IInternalEventHandler.HandleEvent(Ncqrs.Eventing.IEvent)
+  Info: BuildAssembler: Building topic T:Ncqrs.Domain.InternalEventHandler`1
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for T:Ncqrs.Domain.InternalEventHandler`1
+  Warn: ShowMissingComponent: Missing &lt;typeparam name=&quot;TEvent&quot;/&gt; documentation for T:Ncqrs.Domain.InternalEventHandler`1
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Domain.InternalEventHandler`1
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Domain.InternalEventHandler`1.#ctor
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Domain.InternalEventHandler`1
+  Info: BuildAssembler: Building topic M:Ncqrs.Domain.InternalEventHandler`1.#ctor
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Domain.InternalEventHandler`1.#ctor
+  Info: BuildAssembler: Building topic M:Ncqrs.Domain.InternalEventHandler`1.HandleEvent(`0)
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for M:Ncqrs.Domain.InternalEventHandler`1.HandleEvent(`0)
+  Warn: ShowMissingComponent: Missing &lt;returns&gt; documentation for M:Ncqrs.Domain.InternalEventHandler`1.HandleEvent(`0)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;evnt&quot;/&gt; documentation for M:Ncqrs.Domain.InternalEventHandler`1.HandleEvent(`0)
+  Info: BuildAssembler: Building topic T:Ncqrs.Domain.IUnitOfWork
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for T:Ncqrs.Domain.IUnitOfWork
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Domain.IUnitOfWork
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Domain.IUnitOfWork
+  Info: BuildAssembler: Building topic Properties.T:Ncqrs.Domain.IUnitOfWork
+  Info: BuildAssembler: Building topic M:Ncqrs.Domain.IUnitOfWork.Accept
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for M:Ncqrs.Domain.IUnitOfWork.Accept
+  Info: BuildAssembler: Building topic P:Ncqrs.Domain.IUnitOfWork.Repository
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for P:Ncqrs.Domain.IUnitOfWork.Repository
+  Info: BuildAssembler: Building topic T:Ncqrs.Domain.IUnitOfWorkFactory
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for T:Ncqrs.Domain.IUnitOfWorkFactory
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Domain.IUnitOfWorkFactory
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Domain.IUnitOfWorkFactory
+  Info: BuildAssembler: Building topic M:Ncqrs.Domain.IUnitOfWorkFactory.CreateUnitOfWork
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for M:Ncqrs.Domain.IUnitOfWorkFactory.CreateUnitOfWork
+  Warn: ShowMissingComponent: Missing &lt;returns&gt; documentation for M:Ncqrs.Domain.IUnitOfWorkFactory.CreateUnitOfWork
+  Info: BuildAssembler: Building topic M:Ncqrs.Domain.IUnitOfWorkFactory.GetUnitOfWorkInCurrentContext
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for M:Ncqrs.Domain.IUnitOfWorkFactory.GetUnitOfWorkInCurrentContext
+  Warn: ShowMissingComponent: Missing &lt;returns&gt; documentation for M:Ncqrs.Domain.IUnitOfWorkFactory.GetUnitOfWorkInCurrentContext
+  Info: BuildAssembler: Building topic T:Ncqrs.Domain.ThreadBasedUnitOfWorkFactory
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for T:Ncqrs.Domain.ThreadBasedUnitOfWorkFactory
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Domain.ThreadBasedUnitOfWorkFactory
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Domain.ThreadBasedUnitOfWorkFactory.#ctor
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Domain.ThreadBasedUnitOfWorkFactory
+  Info: BuildAssembler: Building topic M:Ncqrs.Domain.ThreadBasedUnitOfWorkFactory.#ctor(Ncqrs.Eventing.Storage.IEventStore,Ncqrs.Eventing.ServiceModel.Bus.IEventBus)
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Domain.ThreadBasedUnitOfWorkFactory.#ctor(Ncqrs.Eventing.Storage.IEventStore,Ncqrs.Eventing.ServiceModel.Bus.IEventBus)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;eventStore&quot;/&gt; documentation for M:Ncqrs.Domain.ThreadBasedUnitOfWorkFactory.#ctor(Ncqrs.Eventing.Storage.IEventStore,Ncqrs.Eventing.ServiceModel.Bus.IEventBus)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;eventBus&quot;/&gt; documentation for M:Ncqrs.Domain.ThreadBasedUnitOfWorkFactory.#ctor(Ncqrs.Eventing.Storage.IEventStore,Ncqrs.Eventing.ServiceModel.Bus.IEventBus)
+  Info: BuildAssembler: Building topic M:Ncqrs.Domain.ThreadBasedUnitOfWorkFactory.CreateUnitOfWork
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for M:Ncqrs.Domain.ThreadBasedUnitOfWorkFactory.CreateUnitOfWork
+  Warn: ShowMissingComponent: Missing &lt;returns&gt; documentation for M:Ncqrs.Domain.ThreadBasedUnitOfWorkFactory.CreateUnitOfWork
+  Info: BuildAssembler: Building topic M:Ncqrs.Domain.ThreadBasedUnitOfWorkFactory.GetUnitOfWorkInCurrentContext
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for M:Ncqrs.Domain.ThreadBasedUnitOfWorkFactory.GetUnitOfWorkInCurrentContext
+  Warn: ShowMissingComponent: Missing &lt;returns&gt; documentation for M:Ncqrs.Domain.ThreadBasedUnitOfWorkFactory.GetUnitOfWorkInCurrentContext
+  Info: BuildAssembler: Building topic T:Ncqrs.Domain.TypeThresholdedActionBasedInternalEventHandler
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Domain.TypeThresholdedActionBasedInternalEventHandler
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Domain.TypeThresholdedActionBasedInternalEventHandler
+  Info: BuildAssembler: Building topic M:Ncqrs.Domain.TypeThresholdedActionBasedInternalEventHandler.#ctor(System.Action{Ncqrs.Eventing.IEvent},System.Type,System.Boolean)
+  Info: BuildAssembler: Building topic M:Ncqrs.Domain.TypeThresholdedActionBasedInternalEventHandler.$InvariantMethod$
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for M:Ncqrs.Domain.TypeThresholdedActionBasedInternalEventHandler.$InvariantMethod$
+  Info: BuildAssembler: Building topic M:Ncqrs.Domain.TypeThresholdedActionBasedInternalEventHandler.HandleEvent(Ncqrs.Eventing.IEvent)
+  Info: BuildAssembler: Building topic N:Ncqrs.Domain.Mapping
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for N:Ncqrs.Domain.Mapping
+  Info: BuildAssembler: Building topic T:Ncqrs.Domain.Mapping.AttributeBasedInternalEventHandlerMappingStrategy
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Domain.Mapping.AttributeBasedInternalEventHandlerMappingStrategy
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Domain.Mapping.AttributeBasedInternalEventHandlerMappingStrategy.#ctor
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Domain.Mapping.AttributeBasedInternalEventHandlerMappingStrategy
+  Info: BuildAssembler: Building topic M:Ncqrs.Domain.Mapping.AttributeBasedInternalEventHandlerMappingStrategy.#ctor
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Domain.Mapping.AttributeBasedInternalEventHandlerMappingStrategy.#ctor
+  Info: BuildAssembler: Building topic M:Ncqrs.Domain.Mapping.AttributeBasedInternalEventHandlerMappingStrategy.GetEventHandlersFromAggregateRoot(Ncqrs.Domain.AggregateRoot)
+  Info: BuildAssembler: Building topic T:Ncqrs.Domain.Mapping.ConventionBasedInternalEventHandlerMappingStrategy
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Domain.Mapping.ConventionBasedInternalEventHandlerMappingStrategy
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Domain.Mapping.ConventionBasedInternalEventHandlerMappingStrategy
+  Info: BuildAssembler: Building topic T:Ncqrs.Domain.Mapping.EventHandlerAttribute
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Domain.Mapping.EventHandlerAttribute
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Domain.Mapping.EventHandlerAttribute.#ctor
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Domain.Mapping.EventHandlerAttribute
+  Info: BuildAssembler: Building topic Properties.T:Ncqrs.Domain.Mapping.EventHandlerAttribute
+  Info: BuildAssembler: Building topic M:Ncqrs.Domain.Mapping.EventHandlerAttribute.#ctor(System.Boolean)
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Domain.Mapping.EventHandlerAttribute.#ctor(System.Boolean)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;exact&quot;/&gt; documentation for M:Ncqrs.Domain.Mapping.EventHandlerAttribute.#ctor(System.Boolean)
+  Info: BuildAssembler: Building topic P:Ncqrs.Domain.Mapping.EventHandlerAttribute.Exact
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for P:Ncqrs.Domain.Mapping.EventHandlerAttribute.Exact
+  Info: BuildAssembler: Building topic T:Ncqrs.Domain.Mapping.IInternalEventHandlerMappingStrategy
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for T:Ncqrs.Domain.Mapping.IInternalEventHandlerMappingStrategy
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Domain.Mapping.IInternalEventHandlerMappingStrategy
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Domain.Mapping.IInternalEventHandlerMappingStrategy
+  Info: BuildAssembler: Building topic M:Ncqrs.Domain.Mapping.IInternalEventHandlerMappingStrategy.GetEventHandlersFromAggregateRoot(Ncqrs.Domain.AggregateRoot)
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for M:Ncqrs.Domain.Mapping.IInternalEventHandlerMappingStrategy.GetEventHandlersFromAggregateRoot(Ncqrs.Domain.AggregateRoot)
+  Warn: ShowMissingComponent: Missing &lt;returns&gt; documentation for M:Ncqrs.Domain.Mapping.IInternalEventHandlerMappingStrategy.GetEventHandlersFromAggregateRoot(Ncqrs.Domain.AggregateRoot)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;aggregateRoot&quot;/&gt; documentation for M:Ncqrs.Domain.Mapping.IInternalEventHandlerMappingStrategy.GetEventHandlersFromAggregateRoot(Ncqrs.Domain.AggregateRoot)
+  Info: BuildAssembler: Building topic T:Ncqrs.Domain.Mapping.InvalidEventHandlerMappingException
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for T:Ncqrs.Domain.Mapping.InvalidEventHandlerMappingException
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Domain.Mapping.InvalidEventHandlerMappingException
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Domain.Mapping.InvalidEventHandlerMappingException
+  Info: BuildAssembler: Building topic Properties.T:Ncqrs.Domain.Mapping.InvalidEventHandlerMappingException
+  Info: BuildAssembler: Building topic Overload:Ncqrs.Domain.Mapping.InvalidEventHandlerMappingException.#ctor
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Domain.Mapping.InvalidEventHandlerMappingException.#ctor
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Domain.Mapping.InvalidEventHandlerMappingException.#ctor
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Domain.Mapping.InvalidEventHandlerMappingException.#ctor
+  Info: BuildAssembler: Building topic M:Ncqrs.Domain.Mapping.InvalidEventHandlerMappingException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Domain.Mapping.InvalidEventHandlerMappingException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;info&quot;/&gt; documentation for M:Ncqrs.Domain.Mapping.InvalidEventHandlerMappingException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;context&quot;/&gt; documentation for M:Ncqrs.Domain.Mapping.InvalidEventHandlerMappingException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)
+  Info: BuildAssembler: Building topic M:Ncqrs.Domain.Mapping.InvalidEventHandlerMappingException.#ctor(System.String)
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Domain.Mapping.InvalidEventHandlerMappingException.#ctor(System.String)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;message&quot;/&gt; documentation for M:Ncqrs.Domain.Mapping.InvalidEventHandlerMappingException.#ctor(System.String)
+  Info: BuildAssembler: Building topic M:Ncqrs.Domain.Mapping.InvalidEventHandlerMappingException.#ctor(System.String,System.Exception)
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Domain.Mapping.InvalidEventHandlerMappingException.#ctor(System.String,System.Exception)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;message&quot;/&gt; documentation for M:Ncqrs.Domain.Mapping.InvalidEventHandlerMappingException.#ctor(System.String,System.Exception)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;inner&quot;/&gt; documentation for M:Ncqrs.Domain.Mapping.InvalidEventHandlerMappingException.#ctor(System.String,System.Exception)
+  Info: BuildAssembler: Building topic T:Ncqrs.Domain.Mapping.MappedAggregateRoot
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for T:Ncqrs.Domain.Mapping.MappedAggregateRoot
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Domain.Mapping.MappedAggregateRoot
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Domain.Mapping.MappedAggregateRoot
+  Info: BuildAssembler: Building topic Properties.T:Ncqrs.Domain.Mapping.MappedAggregateRoot
+  Info: BuildAssembler: Building topic Events.T:Ncqrs.Domain.Mapping.MappedAggregateRoot
+  Info: BuildAssembler: Building topic Overload:Ncqrs.Domain.Mapping.MappedAggregateRoot.#ctor
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Domain.Mapping.MappedAggregateRoot.#ctor
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Domain.Mapping.MappedAggregateRoot.#ctor
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Domain.Mapping.MappedAggregateRoot.#ctor
+  Info: BuildAssembler: Building topic M:Ncqrs.Domain.Mapping.MappedAggregateRoot.#ctor(Ncqrs.Domain.Mapping.IInternalEventHandlerMappingStrategy)
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Domain.Mapping.MappedAggregateRoot.#ctor(Ncqrs.Domain.Mapping.IInternalEventHandlerMappingStrategy)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;strategy&quot;/&gt; documentation for M:Ncqrs.Domain.Mapping.MappedAggregateRoot.#ctor(Ncqrs.Domain.Mapping.IInternalEventHandlerMappingStrategy)
+  Info: BuildAssembler: Building topic M:Ncqrs.Domain.Mapping.MappedAggregateRoot.#ctor(Ncqrs.Domain.Mapping.IInternalEventHandlerMappingStrategy,Ncqrs.IUniqueIdentifierGenerator)
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Domain.Mapping.MappedAggregateRoot.#ctor(Ncqrs.Domain.Mapping.IInternalEventHandlerMappingStrategy,Ncqrs.IUniqueIdentifierGenerator)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;strategy&quot;/&gt; documentation for M:Ncqrs.Domain.Mapping.MappedAggregateRoot.#ctor(Ncqrs.Domain.Mapping.IInternalEventHandlerMappingStrategy,Ncqrs.IUniqueIdentifierGenerator)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;idGenerator&quot;/&gt; documentation for M:Ncqrs.Domain.Mapping.MappedAggregateRoot.#ctor(Ncqrs.Domain.Mapping.IInternalEventHandlerMappingStrategy,Ncqrs.IUniqueIdentifierGenerator)
+  Info: BuildAssembler: Building topic M:Ncqrs.Domain.Mapping.MappedAggregateRoot.#ctor(Ncqrs.Domain.Mapping.IInternalEventHandlerMappingStrategy,System.Collections.Generic.IEnumerable{Ncqrs.Eventing.HistoricalEvent})
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Domain.Mapping.MappedAggregateRoot.#ctor(Ncqrs.Domain.Mapping.IInternalEventHandlerMappingStrategy,System.Collections.Generic.IEnumerable{Ncqrs.Eventing.HistoricalEvent})
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;strategy&quot;/&gt; documentation for M:Ncqrs.Domain.Mapping.MappedAggregateRoot.#ctor(Ncqrs.Domain.Mapping.IInternalEventHandlerMappingStrategy,System.Collections.Generic.IEnumerable{Ncqrs.Eventing.HistoricalEvent})
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;history&quot;/&gt; documentation for M:Ncqrs.Domain.Mapping.MappedAggregateRoot.#ctor(Ncqrs.Domain.Mapping.IInternalEventHandlerMappingStrategy,System.Collections.Generic.IEnumerable{Ncqrs.Eventing.HistoricalEvent})
+  Info: BuildAssembler: Building topic M:Ncqrs.Domain.Mapping.MappedAggregateRoot.$InvariantMethod$
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for M:Ncqrs.Domain.Mapping.MappedAggregateRoot.$InvariantMethod$
+  Info: BuildAssembler: Building topic T:Ncqrs.Domain.Mapping.NoEventHandlerAttribute
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Domain.Mapping.NoEventHandlerAttribute
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Domain.Mapping.NoEventHandlerAttribute.#ctor
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Domain.Mapping.NoEventHandlerAttribute
+  Info: BuildAssembler: Building topic Properties.T:Ncqrs.Domain.Mapping.NoEventHandlerAttribute
+  Info: BuildAssembler: Building topic M:Ncqrs.Domain.Mapping.NoEventHandlerAttribute.#ctor
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Domain.Mapping.NoEventHandlerAttribute.#ctor
+  Info: BuildAssembler: Building topic N:Ncqrs.Domain.Storage
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for N:Ncqrs.Domain.Storage
+  Info: BuildAssembler: Building topic T:Ncqrs.Domain.Storage.AggregateLoaderException
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for T:Ncqrs.Domain.Storage.AggregateLoaderException
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Domain.Storage.AggregateLoaderException
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Domain.Storage.AggregateLoaderException
+  Info: BuildAssembler: Building topic Properties.T:Ncqrs.Domain.Storage.AggregateLoaderException
+  Info: BuildAssembler: Building topic Overload:Ncqrs.Domain.Storage.AggregateLoaderException.#ctor
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Domain.Storage.AggregateLoaderException.#ctor
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Domain.Storage.AggregateLoaderException.#ctor
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Domain.Storage.AggregateLoaderException.#ctor
+  Info: BuildAssembler: Building topic M:Ncqrs.Domain.Storage.AggregateLoaderException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Domain.Storage.AggregateLoaderException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;info&quot;/&gt; documentation for M:Ncqrs.Domain.Storage.AggregateLoaderException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;context&quot;/&gt; documentation for M:Ncqrs.Domain.Storage.AggregateLoaderException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)
+  Info: BuildAssembler: Building topic M:Ncqrs.Domain.Storage.AggregateLoaderException.#ctor(System.String)
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Domain.Storage.AggregateLoaderException.#ctor(System.String)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;message&quot;/&gt; documentation for M:Ncqrs.Domain.Storage.AggregateLoaderException.#ctor(System.String)
+  Info: BuildAssembler: Building topic M:Ncqrs.Domain.Storage.AggregateLoaderException.#ctor(System.String,System.Exception)
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Domain.Storage.AggregateLoaderException.#ctor(System.String,System.Exception)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;message&quot;/&gt; documentation for M:Ncqrs.Domain.Storage.AggregateLoaderException.#ctor(System.String,System.Exception)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;inner&quot;/&gt; documentation for M:Ncqrs.Domain.Storage.AggregateLoaderException.#ctor(System.String,System.Exception)
+  Info: BuildAssembler: Building topic T:Ncqrs.Domain.Storage.DefaultAggregateRootLoader
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Domain.Storage.DefaultAggregateRootLoader
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Domain.Storage.DefaultAggregateRootLoader.#ctor
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Domain.Storage.DefaultAggregateRootLoader
+  Info: BuildAssembler: Building topic M:Ncqrs.Domain.Storage.DefaultAggregateRootLoader.#ctor
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Domain.Storage.DefaultAggregateRootLoader.#ctor
+  Info: BuildAssembler: Building topic M:Ncqrs.Domain.Storage.DefaultAggregateRootLoader.LoadAggregateRootFromEvents(System.Type,System.Collections.Generic.IEnumerable{Ncqrs.Eventing.HistoricalEvent})
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for M:Ncqrs.Domain.Storage.DefaultAggregateRootLoader.LoadAggregateRootFromEvents(System.Type,System.Collections.Generic.IEnumerable{Ncqrs.Eventing.HistoricalEvent})
+  Warn: ShowMissingComponent: Missing &lt;returns&gt; documentation for M:Ncqrs.Domain.Storage.DefaultAggregateRootLoader.LoadAggregateRootFromEvents(System.Type,System.Collections.Generic.IEnumerable{Ncqrs.Eventing.HistoricalEvent})
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;aggregateRootType&quot;/&gt; documentation for M:Ncqrs.Domain.Storage.DefaultAggregateRootLoader.LoadAggregateRootFromEvents(System.Type,System.Collections.Generic.IEnumerable{Ncqrs.Eventing.HistoricalEvent})
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;events&quot;/&gt; documentation for M:Ncqrs.Domain.Storage.DefaultAggregateRootLoader.LoadAggregateRootFromEvents(System.Type,System.Collections.Generic.IEnumerable{Ncqrs.Eventing.HistoricalEvent})
+  Info: BuildAssembler: Building topic T:Ncqrs.Domain.Storage.DomainRepository
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for T:Ncqrs.Domain.Storage.DomainRepository
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Domain.Storage.DomainRepository
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Domain.Storage.DomainRepository
+  Info: BuildAssembler: Building topic Overload:Ncqrs.Domain.Storage.DomainRepository.#ctor
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Domain.Storage.DomainRepository.#ctor
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Domain.Storage.DomainRepository.#ctor
+  Info: BuildAssembler: Building topic M:Ncqrs.Domain.Storage.DomainRepository.#ctor(Ncqrs.Eventing.Storage.IEventStore,Ncqrs.Eventing.ServiceModel.Bus.IEventBus)
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Domain.Storage.DomainRepository.#ctor(Ncqrs.Eventing.Storage.IEventStore,Ncqrs.Eventing.ServiceModel.Bus.IEventBus)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;store&quot;/&gt; documentation for M:Ncqrs.Domain.Storage.DomainRepository.#ctor(Ncqrs.Eventing.Storage.IEventStore,Ncqrs.Eventing.ServiceModel.Bus.IEventBus)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;eventBus&quot;/&gt; documentation for M:Ncqrs.Domain.Storage.DomainRepository.#ctor(Ncqrs.Eventing.Storage.IEventStore,Ncqrs.Eventing.ServiceModel.Bus.IEventBus)
+  Info: BuildAssembler: Building topic M:Ncqrs.Domain.Storage.DomainRepository.#ctor(Ncqrs.Eventing.Storage.IEventStore,Ncqrs.Eventing.ServiceModel.Bus.IEventBus,Ncqrs.Domain.Storage.IAggregateRootLoader)
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Domain.Storage.DomainRepository.#ctor(Ncqrs.Eventing.Storage.IEventStore,Ncqrs.Eventing.ServiceModel.Bus.IEventBus,Ncqrs.Domain.Storage.IAggregateRootLoader)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;store&quot;/&gt; documentation for M:Ncqrs.Domain.Storage.DomainRepository.#ctor(Ncqrs.Eventing.Storage.IEventStore,Ncqrs.Eventing.ServiceModel.Bus.IEventBus,Ncqrs.Domain.Storage.IAggregateRootLoader)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;eventBus&quot;/&gt; documentation for M:Ncqrs.Domain.Storage.DomainRepository.#ctor(Ncqrs.Eventing.Storage.IEventStore,Ncqrs.Eventing.ServiceModel.Bus.IEventBus,Ncqrs.Domain.Storage.IAggregateRootLoader)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;loader&quot;/&gt; documentation for M:Ncqrs.Domain.Storage.DomainRepository.#ctor(Ncqrs.Eventing.Storage.IEventStore,Ncqrs.Eventing.ServiceModel.Bus.IEventBus,Ncqrs.Domain.Storage.IAggregateRootLoader)
+  Info: BuildAssembler: Building topic M:Ncqrs.Domain.Storage.DomainRepository.GetById``1(System.Guid)
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for M:Ncqrs.Domain.Storage.DomainRepository.GetById``1(System.Guid)
+  Warn: ShowMissingComponent: Missing &lt;typeparam name=&quot;T&quot;/&gt; documentation for M:Ncqrs.Domain.Storage.DomainRepository.GetById``1(System.Guid)
+  Warn: ShowMissingComponent: Missing &lt;returns&gt; documentation for M:Ncqrs.Domain.Storage.DomainRepository.GetById``1(System.Guid)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;id&quot;/&gt; documentation for M:Ncqrs.Domain.Storage.DomainRepository.GetById``1(System.Guid)
+  Info: BuildAssembler: Building topic M:Ncqrs.Domain.Storage.DomainRepository.GetById(System.Type,System.Guid)
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for M:Ncqrs.Domain.Storage.DomainRepository.GetById(System.Type,System.Guid)
+  Warn: ShowMissingComponent: Missing &lt;returns&gt; documentation for M:Ncqrs.Domain.Storage.DomainRepository.GetById(System.Type,System.Guid)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;aggregateRootType&quot;/&gt; documentation for M:Ncqrs.Domain.Storage.DomainRepository.GetById(System.Type,System.Guid)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;id&quot;/&gt; documentation for M:Ncqrs.Domain.Storage.DomainRepository.GetById(System.Type,System.Guid)
+  Info: BuildAssembler: Building topic M:Ncqrs.Domain.Storage.DomainRepository.Save(Ncqrs.Domain.AggregateRoot)
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for M:Ncqrs.Domain.Storage.DomainRepository.Save(Ncqrs.Domain.AggregateRoot)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;aggregateRoot&quot;/&gt; documentation for M:Ncqrs.Domain.Storage.DomainRepository.Save(Ncqrs.Domain.AggregateRoot)
+  Info: BuildAssembler: Building topic T:Ncqrs.Domain.Storage.IAggregateRootLoader
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Domain.Storage.IAggregateRootLoader
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Domain.Storage.IAggregateRootLoader
+  Info: BuildAssembler: Building topic M:Ncqrs.Domain.Storage.IAggregateRootLoader.LoadAggregateRootFromEvents(System.Type,System.Collections.Generic.IEnumerable{Ncqrs.Eventing.HistoricalEvent})
+  Info: BuildAssembler: Building topic T:Ncqrs.Domain.Storage.IDomainRepository
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Domain.Storage.IDomainRepository
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Domain.Storage.IDomainRepository
+  Info: BuildAssembler: Building topic M:Ncqrs.Domain.Storage.IDomainRepository.GetById``1(System.Guid)
+  Info: BuildAssembler: Building topic M:Ncqrs.Domain.Storage.IDomainRepository.GetById(System.Type,System.Guid)
+  Info: BuildAssembler: Building topic M:Ncqrs.Domain.Storage.IDomainRepository.Save(Ncqrs.Domain.AggregateRoot)
+  Info: BuildAssembler: Building topic N:Ncqrs.Eventing
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for N:Ncqrs.Eventing
+  Info: BuildAssembler: Building topic T:Ncqrs.Eventing.EventAppliedEventArgs
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for T:Ncqrs.Eventing.EventAppliedEventArgs
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Eventing.EventAppliedEventArgs
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Eventing.EventAppliedEventArgs.#ctor
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Eventing.EventAppliedEventArgs
+  Info: BuildAssembler: Building topic Properties.T:Ncqrs.Eventing.EventAppliedEventArgs
+  Info: BuildAssembler: Building topic M:Ncqrs.Eventing.EventAppliedEventArgs.#ctor(Ncqrs.Eventing.IEvent)
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Eventing.EventAppliedEventArgs.#ctor(Ncqrs.Eventing.IEvent)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;evnt&quot;/&gt; documentation for M:Ncqrs.Eventing.EventAppliedEventArgs.#ctor(Ncqrs.Eventing.IEvent)
+  Info: BuildAssembler: Building topic P:Ncqrs.Eventing.EventAppliedEventArgs.Event
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for P:Ncqrs.Eventing.EventAppliedEventArgs.Event
+  Info: BuildAssembler: Building topic T:Ncqrs.Eventing.EventAppliedEventHandler
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for T:Ncqrs.Eventing.EventAppliedEventHandler
+  Info: BuildAssembler: Building topic T:Ncqrs.Eventing.EventsAcceptedEventArgs
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for T:Ncqrs.Eventing.EventsAcceptedEventArgs
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Eventing.EventsAcceptedEventArgs
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Eventing.EventsAcceptedEventArgs.#ctor
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Eventing.EventsAcceptedEventArgs
+  Info: BuildAssembler: Building topic Properties.T:Ncqrs.Eventing.EventsAcceptedEventArgs
+  Info: BuildAssembler: Building topic M:Ncqrs.Eventing.EventsAcceptedEventArgs.#ctor(System.Collections.Generic.IEnumerable{Ncqrs.Eventing.IEvent})
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Eventing.EventsAcceptedEventArgs.#ctor(System.Collections.Generic.IEnumerable{Ncqrs.Eventing.IEvent})
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;acceptedEvents&quot;/&gt; documentation for M:Ncqrs.Eventing.EventsAcceptedEventArgs.#ctor(System.Collections.Generic.IEnumerable{Ncqrs.Eventing.IEvent})
+  Info: BuildAssembler: Building topic P:Ncqrs.Eventing.EventsAcceptedEventArgs.AcceptedEvents
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for P:Ncqrs.Eventing.EventsAcceptedEventArgs.AcceptedEvents
+  Info: BuildAssembler: Building topic T:Ncqrs.Eventing.EventsAcceptedEventHandler
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for T:Ncqrs.Eventing.EventsAcceptedEventHandler
+  Info: BuildAssembler: Building topic T:Ncqrs.Eventing.EventSource
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for T:Ncqrs.Eventing.EventSource
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Eventing.EventSource
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Eventing.EventSource
+  Info: BuildAssembler: Building topic Properties.T:Ncqrs.Eventing.EventSource
+  Info: BuildAssembler: Building topic Events.T:Ncqrs.Eventing.EventSource
+  Info: BuildAssembler: Building topic Overload:Ncqrs.Eventing.EventSource.#ctor
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Eventing.EventSource.#ctor
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Eventing.EventSource.#ctor
+  Info: BuildAssembler: Building topic M:Ncqrs.Eventing.EventSource.#ctor(Ncqrs.IUniqueIdentifierGenerator)
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Eventing.EventSource.#ctor(Ncqrs.IUniqueIdentifierGenerator)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;idGenerator&quot;/&gt; documentation for M:Ncqrs.Eventing.EventSource.#ctor(Ncqrs.IUniqueIdentifierGenerator)
+  Info: BuildAssembler: Building topic M:Ncqrs.Eventing.EventSource.#ctor(System.Collections.Generic.IEnumerable{Ncqrs.Eventing.HistoricalEvent})
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Eventing.EventSource.#ctor(System.Collections.Generic.IEnumerable{Ncqrs.Eventing.HistoricalEvent})
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;history&quot;/&gt; documentation for M:Ncqrs.Eventing.EventSource.#ctor(System.Collections.Generic.IEnumerable{Ncqrs.Eventing.HistoricalEvent})
+  Info: BuildAssembler: Building topic M:Ncqrs.Eventing.EventSource.$InvariantMethod$
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for M:Ncqrs.Eventing.EventSource.$InvariantMethod$
+  Info: BuildAssembler: Building topic M:Ncqrs.Eventing.EventSource.AcceptEvents
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for M:Ncqrs.Eventing.EventSource.AcceptEvents
+  Info: BuildAssembler: Building topic M:Ncqrs.Eventing.EventSource.ApplyEvent(Ncqrs.Eventing.IEvent)
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for M:Ncqrs.Eventing.EventSource.ApplyEvent(Ncqrs.Eventing.IEvent)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;evnt&quot;/&gt; documentation for M:Ncqrs.Eventing.EventSource.ApplyEvent(Ncqrs.Eventing.IEvent)
+  Info: BuildAssembler: Building topic M:Ncqrs.Eventing.EventSource.ApplyHistoricalEvent(Ncqrs.Eventing.HistoricalEvent)
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for M:Ncqrs.Eventing.EventSource.ApplyHistoricalEvent(Ncqrs.Eventing.HistoricalEvent)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;evnt&quot;/&gt; documentation for M:Ncqrs.Eventing.EventSource.ApplyHistoricalEvent(Ncqrs.Eventing.HistoricalEvent)
+  Info: BuildAssembler: Building topic E:Ncqrs.Eventing.EventSource.EventApplied
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for E:Ncqrs.Eventing.EventSource.EventApplied
+  Info: BuildAssembler: Building topic E:Ncqrs.Eventing.EventSource.EventsAccepted
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for E:Ncqrs.Eventing.EventSource.EventsAccepted
+  Info: BuildAssembler: Building topic M:Ncqrs.Eventing.EventSource.GetUncommitedEvents
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for M:Ncqrs.Eventing.EventSource.GetUncommitedEvents
+  Warn: ShowMissingComponent: Missing &lt;returns&gt; documentation for M:Ncqrs.Eventing.EventSource.GetUncommitedEvents
+  Info: BuildAssembler: Building topic M:Ncqrs.Eventing.EventSource.HandleEvent(Ncqrs.Eventing.IEvent)
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for M:Ncqrs.Eventing.EventSource.HandleEvent(Ncqrs.Eventing.IEvent)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;evnt&quot;/&gt; documentation for M:Ncqrs.Eventing.EventSource.HandleEvent(Ncqrs.Eventing.IEvent)
+  Info: BuildAssembler: Building topic E:Ncqrs.Eventing.EventSource.HistoricalEventApplied
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for E:Ncqrs.Eventing.EventSource.HistoricalEventApplied
+  Info: BuildAssembler: Building topic P:Ncqrs.Eventing.EventSource.Id
+  Info: BuildAssembler: Building topic M:Ncqrs.Eventing.EventSource.InitializeFromHistory(System.Collections.Generic.IEnumerable{Ncqrs.Eventing.HistoricalEvent})
+  Info: BuildAssembler: Building topic P:Ncqrs.Eventing.EventSource.InitializingFromHistory
+  Info: BuildAssembler: Building topic M:Ncqrs.Eventing.EventSource.OnEventApplied(Ncqrs.Eventing.IEvent)
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for M:Ncqrs.Eventing.EventSource.OnEventApplied(Ncqrs.Eventing.IEvent)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;evnt&quot;/&gt; documentation for M:Ncqrs.Eventing.EventSource.OnEventApplied(Ncqrs.Eventing.IEvent)
+  Info: BuildAssembler: Building topic M:Ncqrs.Eventing.EventSource.OnEventsAccepted(System.Collections.Generic.IEnumerable{Ncqrs.Eventing.IEvent})
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for M:Ncqrs.Eventing.EventSource.OnEventsAccepted(System.Collections.Generic.IEnumerable{Ncqrs.Eventing.IEvent})
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;acceptedEvents&quot;/&gt; documentation for M:Ncqrs.Eventing.EventSource.OnEventsAccepted(System.Collections.Generic.IEnumerable{Ncqrs.Eventing.IEvent})
+  Info: BuildAssembler: Building topic M:Ncqrs.Eventing.EventSource.OnHistoricalEventApplied(Ncqrs.Eventing.HistoricalEvent)
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for M:Ncqrs.Eventing.EventSource.OnHistoricalEventApplied(Ncqrs.Eventing.HistoricalEvent)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;historicalEvent&quot;/&gt; documentation for M:Ncqrs.Eventing.EventSource.OnHistoricalEventApplied(Ncqrs.Eventing.HistoricalEvent)
+  Info: BuildAssembler: Building topic M:Ncqrs.Eventing.EventSource.OverrideId(System.Guid)
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for M:Ncqrs.Eventing.EventSource.OverrideId(System.Guid)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;id&quot;/&gt; documentation for M:Ncqrs.Eventing.EventSource.OverrideId(System.Guid)
+  Info: BuildAssembler: Building topic P:Ncqrs.Eventing.EventSource.Version
+  Info: BuildAssembler: Building topic T:Ncqrs.Eventing.HistoricalEvent
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Eventing.HistoricalEvent
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Eventing.HistoricalEvent
+  Info: BuildAssembler: Building topic Properties.T:Ncqrs.Eventing.HistoricalEvent
+  Info: BuildAssembler: Building topic M:Ncqrs.Eventing.HistoricalEvent.#ctor(System.DateTime,Ncqrs.Eventing.IEvent)
+  Info: BuildAssembler: Building topic P:Ncqrs.Eventing.HistoricalEvent.Event
+  Info: BuildAssembler: Building topic P:Ncqrs.Eventing.HistoricalEvent.TimeStamp
+  Info: BuildAssembler: Building topic T:Ncqrs.Eventing.HistoricalEventAppliedEventArgs
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for T:Ncqrs.Eventing.HistoricalEventAppliedEventArgs
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Eventing.HistoricalEventAppliedEventArgs
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Eventing.HistoricalEventAppliedEventArgs.#ctor
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Eventing.HistoricalEventAppliedEventArgs
+  Info: BuildAssembler: Building topic Properties.T:Ncqrs.Eventing.HistoricalEventAppliedEventArgs
+  Info: BuildAssembler: Building topic M:Ncqrs.Eventing.HistoricalEventAppliedEventArgs.#ctor(Ncqrs.Eventing.HistoricalEvent)
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Eventing.HistoricalEventAppliedEventArgs.#ctor(Ncqrs.Eventing.HistoricalEvent)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;historicalEvent&quot;/&gt; documentation for M:Ncqrs.Eventing.HistoricalEventAppliedEventArgs.#ctor(Ncqrs.Eventing.HistoricalEvent)
+  Info: BuildAssembler: Building topic P:Ncqrs.Eventing.HistoricalEventAppliedEventArgs.HistoricalEvent
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for P:Ncqrs.Eventing.HistoricalEventAppliedEventArgs.HistoricalEvent
+  Info: BuildAssembler: Building topic T:Ncqrs.Eventing.HistoricalEventAppliedEventHandler
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for T:Ncqrs.Eventing.HistoricalEventAppliedEventHandler
+  Info: BuildAssembler: Building topic T:Ncqrs.Eventing.IEvent
+  Info: BuildAssembler: Building topic N:Ncqrs.Eventing.Denormalization
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for N:Ncqrs.Eventing.Denormalization
+  Info: BuildAssembler: Building topic T:Ncqrs.Eventing.Denormalization.Denormalizer`1
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for T:Ncqrs.Eventing.Denormalization.Denormalizer`1
+  Warn: ShowMissingComponent: Missing &lt;typeparam name=&quot;TEvent&quot;/&gt; documentation for T:Ncqrs.Eventing.Denormalization.Denormalizer`1
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Eventing.Denormalization.Denormalizer`1
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Eventing.Denormalization.Denormalizer`1.#ctor
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Eventing.Denormalization.Denormalizer`1
+  Info: BuildAssembler: Building topic M:Ncqrs.Eventing.Denormalization.Denormalizer`1.#ctor
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Eventing.Denormalization.Denormalizer`1.#ctor
+  Info: BuildAssembler: Building topic M:Ncqrs.Eventing.Denormalization.Denormalizer`1.DenormalizeEvent(`0)
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for M:Ncqrs.Eventing.Denormalization.Denormalizer`1.DenormalizeEvent(`0)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;evnt&quot;/&gt; documentation for M:Ncqrs.Eventing.Denormalization.Denormalizer`1.DenormalizeEvent(`0)
+  Info: BuildAssembler: Building topic T:Ncqrs.Eventing.Denormalization.DenormalizerFactory
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for T:Ncqrs.Eventing.Denormalization.DenormalizerFactory
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Eventing.Denormalization.DenormalizerFactory
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Eventing.Denormalization.DenormalizerFactory
+  Info: BuildAssembler: Building topic T:Ncqrs.Eventing.Denormalization.IDenormalizer
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for T:Ncqrs.Eventing.Denormalization.IDenormalizer
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Eventing.Denormalization.IDenormalizer
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Eventing.Denormalization.IDenormalizer
+  Info: BuildAssembler: Building topic M:Ncqrs.Eventing.Denormalization.IDenormalizer.DenormalizeEvent(Ncqrs.Eventing.IEvent)
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for M:Ncqrs.Eventing.Denormalization.IDenormalizer.DenormalizeEvent(Ncqrs.Eventing.IEvent)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;evnt&quot;/&gt; documentation for M:Ncqrs.Eventing.Denormalization.IDenormalizer.DenormalizeEvent(Ncqrs.Eventing.IEvent)
+  Info: BuildAssembler: Building topic N:Ncqrs.Eventing.ServiceModel.Bus
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for N:Ncqrs.Eventing.ServiceModel.Bus
+  Info: BuildAssembler: Building topic T:Ncqrs.Eventing.ServiceModel.Bus.IEventBus
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Eventing.ServiceModel.Bus.IEventBus
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Eventing.ServiceModel.Bus.IEventBus
+  Info: BuildAssembler: Building topic Overload:Ncqrs.Eventing.ServiceModel.Bus.IEventBus.Publish
+  Info: BuildAssembler: Building topic M:Ncqrs.Eventing.ServiceModel.Bus.IEventBus.Publish(Ncqrs.Eventing.IEvent)
+  Warn: ResolveReferenceLinksComponent2: Unknown reference link target '!:NoHandlerRegisteredForMessageException'.
+  Warn: ResolveReferenceLinksComponent2: Invalid reference link target '!:NoHandlerRegisteredForMessageException'.
+  Info: BuildAssembler: Building topic M:Ncqrs.Eventing.ServiceModel.Bus.IEventBus.Publish(System.Collections.Generic.IEnumerable{Ncqrs.Eventing.IEvent})
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;eventMessages&quot;/&gt; documentation for M:Ncqrs.Eventing.ServiceModel.Bus.IEventBus.Publish(System.Collections.Generic.IEnumerable{Ncqrs.Eventing.IEvent})
+  Warn: ResolveReferenceLinksComponent2: Unknown reference link target '!:NoHandlerRegisteredForMessageException'.
+  Warn: ResolveReferenceLinksComponent2: Invalid reference link target '!:NoHandlerRegisteredForMessageException'.
+  Info: BuildAssembler: Building topic M:Ncqrs.Eventing.ServiceModel.Bus.IEventBus.RegisterHandler(Ncqrs.Eventing.ServiceModel.Bus.IEventHandler)
+  Info: BuildAssembler: Building topic T:Ncqrs.Eventing.ServiceModel.Bus.IEventBusFactory
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for T:Ncqrs.Eventing.ServiceModel.Bus.IEventBusFactory
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Eventing.ServiceModel.Bus.IEventBusFactory
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Eventing.ServiceModel.Bus.IEventBusFactory
+  Info: BuildAssembler: Building topic M:Ncqrs.Eventing.ServiceModel.Bus.IEventBusFactory.CreateEventBus
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for M:Ncqrs.Eventing.ServiceModel.Bus.IEventBusFactory.CreateEventBus
+  Warn: ShowMissingComponent: Missing &lt;returns&gt; documentation for M:Ncqrs.Eventing.ServiceModel.Bus.IEventBusFactory.CreateEventBus
+  Info: BuildAssembler: Building topic T:Ncqrs.Eventing.ServiceModel.Bus.IEventHandler
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for T:Ncqrs.Eventing.ServiceModel.Bus.IEventHandler
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Eventing.ServiceModel.Bus.IEventHandler
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Eventing.ServiceModel.Bus.IEventHandler
+  Info: BuildAssembler: Building topic M:Ncqrs.Eventing.ServiceModel.Bus.IEventHandler.Handle(Ncqrs.Eventing.IEvent)
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for M:Ncqrs.Eventing.ServiceModel.Bus.IEventHandler.Handle(Ncqrs.Eventing.IEvent)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;eventMessage&quot;/&gt; documentation for M:Ncqrs.Eventing.ServiceModel.Bus.IEventHandler.Handle(Ncqrs.Eventing.IEvent)
+  Info: BuildAssembler: Building topic T:Ncqrs.Eventing.ServiceModel.Bus.InProcessEventBus
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for T:Ncqrs.Eventing.ServiceModel.Bus.InProcessEventBus
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Eventing.ServiceModel.Bus.InProcessEventBus
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Eventing.ServiceModel.Bus.InProcessEventBus.#ctor
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Eventing.ServiceModel.Bus.InProcessEventBus
+  Info: BuildAssembler: Building topic Overload:Ncqrs.Eventing.ServiceModel.Bus.InProcessEventBus.Publish
+  Info: BuildAssembler: Building topic Overload:Ncqrs.Eventing.ServiceModel.Bus.InProcessEventBus.RegisterHandler
+  Info: BuildAssembler: Building topic M:Ncqrs.Eventing.ServiceModel.Bus.InProcessEventBus.#ctor
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Eventing.ServiceModel.Bus.InProcessEventBus.#ctor
+  Info: BuildAssembler: Building topic M:Ncqrs.Eventing.ServiceModel.Bus.InProcessEventBus.GetHandlersForEvent(Ncqrs.Eventing.IEvent)
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for M:Ncqrs.Eventing.ServiceModel.Bus.InProcessEventBus.GetHandlersForEvent(Ncqrs.Eventing.IEvent)
+  Warn: ShowMissingComponent: Missing &lt;returns&gt; documentation for M:Ncqrs.Eventing.ServiceModel.Bus.InProcessEventBus.GetHandlersForEvent(Ncqrs.Eventing.IEvent)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;eventMessage&quot;/&gt; documentation for M:Ncqrs.Eventing.ServiceModel.Bus.InProcessEventBus.GetHandlersForEvent(Ncqrs.Eventing.IEvent)
+  Info: BuildAssembler: Building topic M:Ncqrs.Eventing.ServiceModel.Bus.InProcessEventBus.Publish(Ncqrs.Eventing.IEvent)
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for M:Ncqrs.Eventing.ServiceModel.Bus.InProcessEventBus.Publish(Ncqrs.Eventing.IEvent)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;eventMessage&quot;/&gt; documentation for M:Ncqrs.Eventing.ServiceModel.Bus.InProcessEventBus.Publish(Ncqrs.Eventing.IEvent)
+  Info: BuildAssembler: Building topic M:Ncqrs.Eventing.ServiceModel.Bus.InProcessEventBus.Publish(System.Collections.Generic.IEnumerable{Ncqrs.Eventing.IEvent})
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for M:Ncqrs.Eventing.ServiceModel.Bus.InProcessEventBus.Publish(System.Collections.Generic.IEnumerable{Ncqrs.Eventing.IEvent})
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;eventMessages&quot;/&gt; documentation for M:Ncqrs.Eventing.ServiceModel.Bus.InProcessEventBus.Publish(System.Collections.Generic.IEnumerable{Ncqrs.Eventing.IEvent})
+  Info: BuildAssembler: Building topic M:Ncqrs.Eventing.ServiceModel.Bus.InProcessEventBus.RegisterHandler(Ncqrs.Eventing.ServiceModel.Bus.IEventHandler)
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for M:Ncqrs.Eventing.ServiceModel.Bus.InProcessEventBus.RegisterHandler(Ncqrs.Eventing.ServiceModel.Bus.IEventHandler)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;handler&quot;/&gt; documentation for M:Ncqrs.Eventing.ServiceModel.Bus.InProcessEventBus.RegisterHandler(Ncqrs.Eventing.ServiceModel.Bus.IEventHandler)
+  Info: BuildAssembler: Building topic M:Ncqrs.Eventing.ServiceModel.Bus.InProcessEventBus.RegisterHandler``1(Ncqrs.Eventing.ServiceModel.Bus.IEventHandler)
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for M:Ncqrs.Eventing.ServiceModel.Bus.InProcessEventBus.RegisterHandler``1(Ncqrs.Eventing.ServiceModel.Bus.IEventHandler)
+  Warn: ShowMissingComponent: Missing &lt;typeparam name=&quot;TEvent&quot;/&gt; documentation for M:Ncqrs.Eventing.ServiceModel.Bus.InProcessEventBus.RegisterHandler``1(Ncqrs.Eventing.ServiceModel.Bus.IEventHandler)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;handler&quot;/&gt; documentation for M:Ncqrs.Eventing.ServiceModel.Bus.InProcessEventBus.RegisterHandler``1(Ncqrs.Eventing.ServiceModel.Bus.IEventHandler)
+  Info: BuildAssembler: Building topic M:Ncqrs.Eventing.ServiceModel.Bus.InProcessEventBus.RegisterHandler(System.Type,Ncqrs.Eventing.ServiceModel.Bus.IEventHandler)
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for M:Ncqrs.Eventing.ServiceModel.Bus.InProcessEventBus.RegisterHandler(System.Type,Ncqrs.Eventing.ServiceModel.Bus.IEventHandler)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;eventType&quot;/&gt; documentation for M:Ncqrs.Eventing.ServiceModel.Bus.InProcessEventBus.RegisterHandler(System.Type,Ncqrs.Eventing.ServiceModel.Bus.IEventHandler)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;handler&quot;/&gt; documentation for M:Ncqrs.Eventing.ServiceModel.Bus.InProcessEventBus.RegisterHandler(System.Type,Ncqrs.Eventing.ServiceModel.Bus.IEventHandler)
+  Info: BuildAssembler: Building topic T:Ncqrs.Eventing.ServiceModel.Bus.MethodBasedEventBusFactory
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Eventing.ServiceModel.Bus.MethodBasedEventBusFactory
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Eventing.ServiceModel.Bus.MethodBasedEventBusFactory
+  Info: BuildAssembler: Building topic N:Ncqrs.Eventing.ServiceModel.Bus.Specs
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for N:Ncqrs.Eventing.ServiceModel.Bus.Specs
+  Info: BuildAssembler: Building topic T:Ncqrs.Eventing.ServiceModel.Bus.Specs.TypeThresholdedActionBasedInternalEventHandlerSpecs
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for T:Ncqrs.Eventing.ServiceModel.Bus.Specs.TypeThresholdedActionBasedInternalEventHandlerSpecs
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Eventing.ServiceModel.Bus.Specs.TypeThresholdedActionBasedInternalEventHandlerSpecs
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Eventing.ServiceModel.Bus.Specs.TypeThresholdedActionBasedInternalEventHandlerSpecs.#ctor
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Eventing.ServiceModel.Bus.Specs.TypeThresholdedActionBasedInternalEventHandlerSpecs
+  Info: BuildAssembler: Building topic M:Ncqrs.Eventing.ServiceModel.Bus.Specs.TypeThresholdedActionBasedInternalEventHandlerSpecs.#ctor
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Eventing.ServiceModel.Bus.Specs.TypeThresholdedActionBasedInternalEventHandlerSpecs.#ctor
+  Info: BuildAssembler: Building topic M:Ncqrs.Eventing.ServiceModel.Bus.Specs.TypeThresholdedActionBasedInternalEventHandlerSpecs.Threshold_should_hold_event_when_it_is_of_a_higher_type_when_exact_is_true
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for M:Ncqrs.Eventing.ServiceModel.Bus.Specs.TypeThresholdedActionBasedInternalEventHandlerSpecs.Threshold_should_hold_event_when_it_is_of_a_higher_type_when_exact_is_true
+  Info: BuildAssembler: Building topic M:Ncqrs.Eventing.ServiceModel.Bus.Specs.TypeThresholdedActionBasedInternalEventHandlerSpecs.Threshold_should_hold_event_when_it_is_of_a_lower_type_when_exact_is_false
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for M:Ncqrs.Eventing.ServiceModel.Bus.Specs.TypeThresholdedActionBasedInternalEventHandlerSpecs.Threshold_should_hold_event_when_it_is_of_a_lower_type_when_exact_is_false
+  Info: BuildAssembler: Building topic M:Ncqrs.Eventing.ServiceModel.Bus.Specs.TypeThresholdedActionBasedInternalEventHandlerSpecs.Threshold_should_hold_event_when_it_is_of_a_lower_type_when_exact_is_true
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for M:Ncqrs.Eventing.ServiceModel.Bus.Specs.TypeThresholdedActionBasedInternalEventHandlerSpecs.Threshold_should_hold_event_when_it_is_of_a_lower_type_when_exact_is_true
+  Info: BuildAssembler: Building topic M:Ncqrs.Eventing.ServiceModel.Bus.Specs.TypeThresholdedActionBasedInternalEventHandlerSpecs.Threshold_should_hold_event_when_it_is_of_the_same_type_when_exact_is_true
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for M:Ncqrs.Eventing.ServiceModel.Bus.Specs.TypeThresholdedActionBasedInternalEventHandlerSpecs.Threshold_should_hold_event_when_it_is_of_the_same_type_when_exact_is_true
+  Info: BuildAssembler: Building topic M:Ncqrs.Eventing.ServiceModel.Bus.Specs.TypeThresholdedActionBasedInternalEventHandlerSpecs.Threshold_should_not_hold_event_when_it_is_of_a_higher_type_when_exact_is_false
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for M:Ncqrs.Eventing.ServiceModel.Bus.Specs.TypeThresholdedActionBasedInternalEventHandlerSpecs.Threshold_should_not_hold_event_when_it_is_of_a_higher_type_when_exact_is_false
+  Info: BuildAssembler: Building topic M:Ncqrs.Eventing.ServiceModel.Bus.Specs.TypeThresholdedActionBasedInternalEventHandlerSpecs.When_a_new_instance_is_initialized_with_a_type_that_is_not_of_an_event_it_should_throw_an_exception
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for M:Ncqrs.Eventing.ServiceModel.Bus.Specs.TypeThresholdedActionBasedInternalEventHandlerSpecs.When_a_new_instance_is_initialized_with_a_type_that_is_not_of_an_event_it_should_throw_an_exception
+  Info: BuildAssembler: Building topic T:Ncqrs.Eventing.ServiceModel.Bus.Specs.TypeThresholdedActionBasedInternalEventHandlerSpecs.BarEvent
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for T:Ncqrs.Eventing.ServiceModel.Bus.Specs.TypeThresholdedActionBasedInternalEventHandlerSpecs.BarEvent
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Eventing.ServiceModel.Bus.Specs.TypeThresholdedActionBasedInternalEventHandlerSpecs.BarEvent
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Eventing.ServiceModel.Bus.Specs.TypeThresholdedActionBasedInternalEventHandlerSpecs.BarEvent.#ctor
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Eventing.ServiceModel.Bus.Specs.TypeThresholdedActionBasedInternalEventHandlerSpecs.BarEvent
+  Info: BuildAssembler: Building topic M:Ncqrs.Eventing.ServiceModel.Bus.Specs.TypeThresholdedActionBasedInternalEventHandlerSpecs.BarEvent.#ctor
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Eventing.ServiceModel.Bus.Specs.TypeThresholdedActionBasedInternalEventHandlerSpecs.BarEvent.#ctor
+  Info: BuildAssembler: Building topic T:Ncqrs.Eventing.ServiceModel.Bus.Specs.TypeThresholdedActionBasedInternalEventHandlerSpecs.FooEvent
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for T:Ncqrs.Eventing.ServiceModel.Bus.Specs.TypeThresholdedActionBasedInternalEventHandlerSpecs.FooEvent
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Eventing.ServiceModel.Bus.Specs.TypeThresholdedActionBasedInternalEventHandlerSpecs.FooEvent
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Eventing.ServiceModel.Bus.Specs.TypeThresholdedActionBasedInternalEventHandlerSpecs.FooEvent.#ctor
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Eventing.ServiceModel.Bus.Specs.TypeThresholdedActionBasedInternalEventHandlerSpecs.FooEvent
+  Info: BuildAssembler: Building topic M:Ncqrs.Eventing.ServiceModel.Bus.Specs.TypeThresholdedActionBasedInternalEventHandlerSpecs.FooEvent.#ctor
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Eventing.ServiceModel.Bus.Specs.TypeThresholdedActionBasedInternalEventHandlerSpecs.FooEvent.#ctor
+  Info: BuildAssembler: Building topic N:Ncqrs.Eventing.Storage
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for N:Ncqrs.Eventing.Storage
+  Info: BuildAssembler: Building topic T:Ncqrs.Eventing.Storage.ConcurrencyException
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Eventing.Storage.ConcurrencyException
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Eventing.Storage.ConcurrencyException
+  Info: BuildAssembler: Building topic Properties.T:Ncqrs.Eventing.Storage.ConcurrencyException
+  Info: BuildAssembler: Building topic M:Ncqrs.Eventing.Storage.ConcurrencyException.#ctor(System.Int64,System.Int64)
+  Info: BuildAssembler: Building topic P:Ncqrs.Eventing.Storage.ConcurrencyException.ProviderVersion
+  Info: BuildAssembler: Building topic P:Ncqrs.Eventing.Storage.ConcurrencyException.VersionInStore
+  Info: BuildAssembler: Building topic T:Ncqrs.Eventing.Storage.IEventStore
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Eventing.Storage.IEventStore
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Eventing.Storage.IEventStore
+  Info: BuildAssembler: Building topic M:Ncqrs.Eventing.Storage.IEventStore.GetAllEventsForEventSource(System.Guid)
+  Info: BuildAssembler: Building topic M:Ncqrs.Eventing.Storage.IEventStore.Save(Ncqrs.Eventing.EventSource)
+  Warn: ShowMissingComponent: Missing &lt;returns&gt; documentation for M:Ncqrs.Eventing.Storage.IEventStore.Save(Ncqrs.Eventing.EventSource)
+  Info: BuildAssembler: Building topic T:Ncqrs.Eventing.Storage.InMemoryEventStore
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Eventing.Storage.InMemoryEventStore
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Eventing.Storage.InMemoryEventStore
+  Info: BuildAssembler: Building topic N:Ncqrs.Eventing.Storage.MongoDB
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for N:Ncqrs.Eventing.Storage.MongoDB
+  Info: BuildAssembler: Building topic T:Ncqrs.Eventing.Storage.MongoDB.MongoDBEventStore
+  Warn: ResolveReferenceLinksComponent2: Unknown reference link target 'T:MongoDB.Driver.Mongo'.
+  Warn: ResolveReferenceLinksComponent2: Unknown reference link target '!:http://mongodb.org'.
+  Warn: ResolveReferenceLinksComponent2: Invalid reference link target '!:http://mongodb.org'.
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Eventing.Storage.MongoDB.MongoDBEventStore
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Eventing.Storage.MongoDB.MongoDBEventStore
+  Info: BuildAssembler: Building topic N:Ncqrs.Eventing.Storage.SQL
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for N:Ncqrs.Eventing.Storage.SQL
+  Info: BuildAssembler: Building topic T:Ncqrs.Eventing.Storage.SQL.SimpleMicrosoftSqlServerEventStore
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Eventing.Storage.SQL.SimpleMicrosoftSqlServerEventStore
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Eventing.Storage.SQL.SimpleMicrosoftSqlServerEventStore.#ctor
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Eventing.Storage.SQL.SimpleMicrosoftSqlServerEventStore
+  Info: BuildAssembler: Building topic M:Ncqrs.Eventing.Storage.SQL.SimpleMicrosoftSqlServerEventStore.#ctor(System.String)
+  Info: ShowMissingComponent: Auto-documenting constructor M:Ncqrs.Eventing.Storage.SQL.SimpleMicrosoftSqlServerEventStore.#ctor(System.String)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;connectionString&quot;/&gt; documentation for M:Ncqrs.Eventing.Storage.SQL.SimpleMicrosoftSqlServerEventStore.#ctor(System.String)
+  Info: BuildAssembler: Building topic M:Ncqrs.Eventing.Storage.SQL.SimpleMicrosoftSqlServerEventStore.GetAllEventsForEventSource(System.Guid)
+  Info: BuildAssembler: Building topic M:Ncqrs.Eventing.Storage.SQL.SimpleMicrosoftSqlServerEventStore.GetAllIdsForType(System.Type)
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for M:Ncqrs.Eventing.Storage.SQL.SimpleMicrosoftSqlServerEventStore.GetAllIdsForType(System.Type)
+  Warn: ShowMissingComponent: Missing &lt;returns&gt; documentation for M:Ncqrs.Eventing.Storage.SQL.SimpleMicrosoftSqlServerEventStore.GetAllIdsForType(System.Type)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;eventProviderType&quot;/&gt; documentation for M:Ncqrs.Eventing.Storage.SQL.SimpleMicrosoftSqlServerEventStore.GetAllIdsForType(System.Type)
+  Info: BuildAssembler: Building topic M:Ncqrs.Eventing.Storage.SQL.SimpleMicrosoftSqlServerEventStore.GetTableCreationQueries
+  Info: BuildAssembler: Building topic M:Ncqrs.Eventing.Storage.SQL.SimpleMicrosoftSqlServerEventStore.RemoveUnusedProviders
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for M:Ncqrs.Eventing.Storage.SQL.SimpleMicrosoftSqlServerEventStore.RemoveUnusedProviders
+  Info: BuildAssembler: Building topic M:Ncqrs.Eventing.Storage.SQL.SimpleMicrosoftSqlServerEventStore.Save(Ncqrs.Eventing.EventSource)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;eventSource&quot;/&gt; documentation for M:Ncqrs.Eventing.Storage.SQL.SimpleMicrosoftSqlServerEventStore.Save(Ncqrs.Eventing.EventSource)
+  Info: BuildAssembler: Building topic N:Ncqrs.Specs.Config
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for N:Ncqrs.Specs.Config
+  Info: BuildAssembler: Building topic T:Ncqrs.Specs.Config.NcqrsEnvironmentSpecs
+  Warn: ShowMissingComponent: Missing &lt;summary&gt; documentation for T:Ncqrs.Specs.Config.NcqrsEnvironmentSpecs
+  Info: BuildAssembler: Building topic AllMembers.T:Ncqrs.Specs.Config.NcqrsEnvironmentSpecs
+  Info: BuildAssembler: Building topic Methods.T:Ncqrs.Specs.Config.NcqrsEnvironmentSpecs
+  Info: Processed 488 topics
+    Last step completed in 00:00:53.0090
+</buildStep>
+<buildStep step="GenerateIntermediateTableOfContents">
+Generating intermediate table of contents file...
+[C:\Windows\Microsoft.NET\Framework64\v3.5\MSBuild.exe]
+GenerateIntermediateTOC:
+  XslTransform (v2.4.10520.1)
+  Copyright &#184; Microsoft 2005-2006
+  Info: Applying XSL transformation 'C:\Program Files (x86)\Sandcastle\ProductionTransforms\CreateVSToc.xsl'.
+    Last step completed in 00:00:00.9081
+</buildStep>
+<buildStep step="ExtractingHtmlInfo">
+Extracting HTML info for HTML Help 1 and/or website...
+[C:\Windows\Microsoft.NET\Framework64\v3.5\MSBuild.exe]
+Sandcastle Help File Builder HTML Extract, version 1.8.0.3
+Copyright &#184; 2008-2010, Eric Woodruff, All Rights Reserved
+E-Mail: Eric@EWoodruff.us
+
+Using LCID '1033', code page '65001', encoding charset 'UTF-8'.
+Processed 488 HTML files
+Sorting keywords and generating See Also indices
+Saving HTML Help 1 keyword index to D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Documentation.hhk
+Saving HTML Help 1 table of contents to D:\Ncqrs\Framework\docs\ReferenceDocs\Working\Documentation.hhc
+    Last step completed in 00:00:00.6380
+</buildStep>
+<buildStep step="GenerateHelpFormatTableOfContents">
+Generating HTML Help 1 table of contents file...
+    Last step completed in 00:00:00.0030
+</buildStep>
+<buildStep step="UpdateTableOfContents">
+Updating table of contents with additional content items and determining default topic...
+    Last step completed in 00:00:00.0110
+</buildStep>
+<buildStep step="GenerateHelpFileIndex">
+Generating HTML Help 1 index file...
+    Last step completed in 00:00:00.0020
+</buildStep>
+<buildStep step="GenerateHelpProject">
+Generating HTML Help 1 project file...
+    Last step completed in 00:00:00.0150
+</buildStep>
+<buildStep step="CompilingHelpFile">
+Compiling HTML Help 1 file...
+[C:\Windows\Microsoft.NET\Framework64\v3.5\MSBuild.exe]
+Build1xHelpFile:
+  Microsoft HTML Help Compiler 4.74.8702
+  
+  
+  
+  Compiling d:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\Documentation.chm
+  
+  
+  
+  
+  
+  Compile time: 0 minutes, 10 seconds
+  
+  490	Topics
+  
+  6,309	Local links
+  
+  529	Internet links
+  
+  0	Graphics
+  
+  
+  
+  
+  
+  Created d:\Ncqrs\Framework\docs\ReferenceDocs\Working\Output\Documentation.chm, 772,556 bytes
+  
+  Compression decreased file by 7,392,676 bytes.
+  
+    Last step completed in 00:00:11.6477
+</buildStep>
+<buildStep step="CleanIntermediates">
+Removing intermediate files...
+    Last step completed in 00:00:00.1510
+</buildStep>
+<buildStep step="Completed">
+
+Build completed successfully at 04-22-2010 11:46 .  Total time: 00:01:15,1483
+
+</buildStep>
+</shfbBuild>
