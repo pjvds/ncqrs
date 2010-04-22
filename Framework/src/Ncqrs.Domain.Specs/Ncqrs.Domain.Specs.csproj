@@ -56,16 +56,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TypeThresholdedActionBasedInternalEventHandlerSpecs.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Ncqrs.Domain\Ncqrs.Domain.csproj">
-      <Project>{FC2478FB-2B60-491F-A1D8-B9C6D869B2F8}</Project>
-      <Name>Ncqrs.Domain</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Ncqrs.Eventing\Ncqrs.Eventing.csproj">
-      <Project>{56D48F9D-29F4-4E77-86B1-D988EAC1DF42}</Project>
-      <Name>Ncqrs.Eventing</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
