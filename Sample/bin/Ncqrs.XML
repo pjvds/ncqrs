@@ -38,7 +38,7 @@
     </member>
     <member name="T:Ncqrs.Eventing.Storage.IEventStore">
       <summary>
-            A event store. Can store and load events from an <see cref="T:Ncqrs.Eventing.EventSource" />.
+            A event store. Can store and load events from an <see cref="T:Ncqrs.Eventing.IEventSource" />.
             </summary>
     </member>
     <member name="M:Ncqrs.Eventing.Storage.IEventStore.GetAllEventsForEventSource(System.Guid)">
@@ -47,9 +47,9 @@
             </summary>
       <param name="id">The id of the event source that owns the events.</param>
       <returns>All the events from the event source.</returns>
-      <ensures description="Result should never be null.">Contract.Result&lt;IEnumerable&lt;HistoricalEvent&gt;&gt;() != null</ensures>
+      <ensures description="Result should never be null.">Contract.Result&lt;IEnumerable&lt;IEvent&gt;&gt;() != null</ensures>
     </member>
-    <member name="M:Ncqrs.Eventing.Storage.IEventStore.Save(Ncqrs.Eventing.EventSource)">
+    <member name="M:Ncqrs.Eventing.Storage.IEventStore.Save(Ncqrs.Eventing.IEventSource)">
       <summary>
             Save all events from a specific event provider.
             </summary>
@@ -65,17 +65,17 @@
             </summary>
       <param name="id">The id of the event provider.</param>
       <returns>All events for the specified event provider.</returns>
-      <ensures description="Result should never be null." inheritedFrom="M:Ncqrs.Eventing.Storage.IEventStore.GetAllEventsForEventSource(System.Guid)" inheritedFromTypeName="IEventStore">Contract.Result&lt;IEnumerable&lt;HistoricalEvent&gt;&gt;() != null</ensures>
+      <ensures description="Result should never be null." inheritedFrom="M:Ncqrs.Eventing.Storage.IEventStore.GetAllEventsForEventSource(System.Guid)" inheritedFromTypeName="IEventStore">Contract.Result&lt;IEnumerable&lt;IEvent&gt;&gt;() != null</ensures>
     </member>
-    <member name="M:Ncqrs.Eventing.Storage.SQL.SimpleMicrosoftSqlServerEventStore.Save(Ncqrs.Eventing.EventSource)">
+    <member name="M:Ncqrs.Eventing.Storage.SQL.SimpleMicrosoftSqlServerEventStore.Save(Ncqrs.Eventing.IEventSource)">
       <summary>
             Saves all events from an event provider.
             </summary>
       <param name="provider">The eventsource.</param>
       <returns>The events that are saved.</returns>
-      <requires description="source cannot be null." inheritedFrom="M:Ncqrs.Eventing.Storage.IEventStore.Save(Ncqrs.Eventing.EventSource)" inheritedFromTypeName="IEventStore" exception="T:System.ArgumentNullException">source != null</requires>
+      <requires description="source cannot be null." inheritedFrom="M:Ncqrs.Eventing.Storage.IEventStore.Save(Ncqrs.Eventing.IEventSource)" inheritedFromTypeName="IEventStore" exception="T:System.ArgumentNullException">source != null</requires>
       <exception cref="T:System.ArgumentNullException">source == null</exception>
-      <ensures description="Return should never be null." inheritedFrom="M:Ncqrs.Eventing.Storage.IEventStore.Save(Ncqrs.Eventing.EventSource)" inheritedFromTypeName="IEventStore">Contract.Result&lt;IEnumerable&lt;IEvent&gt;&gt;() != null</ensures>
+      <ensures description="Return should never be null." inheritedFrom="M:Ncqrs.Eventing.Storage.IEventStore.Save(Ncqrs.Eventing.IEventSource)" inheritedFromTypeName="IEventStore">Contract.Result&lt;IEnumerable&lt;IEvent&gt;&gt;() != null</ensures>
     </member>
     <member name="M:Ncqrs.Eventing.Storage.SQL.SimpleMicrosoftSqlServerEventStore.SaveEvents(System.Collections.Generic.IEnumerable{Ncqrs.Eventing.IEvent},System.Guid,System.Data.SqlClient.SqlTransaction)">
       <summary>
@@ -101,7 +101,7 @@
       <requires description="The argument transaction could not be null." exception="T:System.ArgumentNullException">transaction != null</requires>
       <exception cref="T:System.ArgumentNullException">transaction == null</exception>
     </member>
-    <member name="M:Ncqrs.Eventing.Storage.SQL.SimpleMicrosoftSqlServerEventStore.AddEventSource(Ncqrs.Eventing.EventSource,System.Data.SqlClient.SqlTransaction)">
+    <member name="M:Ncqrs.Eventing.Storage.SQL.SimpleMicrosoftSqlServerEventStore.AddEventSource(Ncqrs.Eventing.IEventSource,System.Data.SqlClient.SqlTransaction)">
       <summary>
             Adds the event source to the event store.
             </summary>
@@ -182,37 +182,22 @@
       <summary>
             The abstract concept of an aggregate root.
             </summary>
+      <invariant description="The member _unacceptedEvents should never be null.">_unacceptedEvents != null</invariant>
     </member>
-    <member name="F:Ncqrs.Eventing.EventSource._unacceptedEvents">
-      <summary>
-            Holds the events that are not yet accepted.
-            </summary>
-    </member>
-    <member name="M:Ncqrs.Eventing.EventSource.InitializeFromHistory(System.Collections.Generic.IEnumerable{Ncqrs.Eventing.HistoricalEvent})">
-      <summary>
-            Initializes from history.
-            </summary>
-      <param name="history">The history.</param>
-    </member>
-    <member name="P:Ncqrs.Eventing.EventSource.Id">
+    <member name="P:Ncqrs.Eventing.IEventSource.Id">
       <summary>
             Gets the globally unique identifier.
             </summary>
     </member>
-    <member name="P:Ncqrs.Eventing.EventSource.InitializingFromHistory">
+    <member name="P:Ncqrs.Eventing.IEventSource.Version">
       <summary>
-            Gets a value indicating whether this instance is initializing from history.
+            Gets the version of this source.
             </summary>
-      <remarks>This will be set to true at the beginning of the <see cref="M:Ncqrs.Eventing.EventSource.InitializeFromHistory(System.Collections.Generic.IEnumerable{Ncqrs.Eventing.HistoricalEvent})" /> method and set to false at the end.</remarks>
-      <value>
-        <c>true</c> if this instance is initializing from history; otherwise, <c>false</c>.
-            </value>
     </member>
-    <member name="P:Ncqrs.Eventing.EventSource.Version">
+    <member name="F:Ncqrs.Domain.AggregateRoot._unacceptedEvents">
       <summary>
-            Gets the current version.
+            Holds the events that are not yet accepted.
             </summary>
-      <value>An <see cref="T:System.Int32" /> representing the current version of the <see cref="T:Ncqrs.Eventing.EventSource" />.</value>
     </member>
     <member name="F:Ncqrs.Domain.AggregateRoot._eventHandlers">
       <summary>
@@ -227,65 +212,22 @@
             This instance will be initialized with the <see cref="T:Ncqrs.BasicGuidGenerator" />.
             </remarks>
     </member>
-    <member name="M:Ncqrs.Domain.AggregateRoot.#ctor(Ncqrs.IUniqueIdentifierGenerator)">
+    <member name="M:Ncqrs.Domain.AggregateRoot.InitializeFromHistory(System.Collections.Generic.IEnumerable{Ncqrs.Domain.DomainEvent})">
       <summary>
-            Initializes a new instance of the <see cref="T:Ncqrs.Domain.AggregateRoot" /> class.
+            Initializes from history.
             </summary>
-      <param name="idGenerator">The id generator that will be used to generate a new id for this instance.</param>
+      <param name="history">The history.</param>
     </member>
-    <member name="T:Ncqrs.Config.EnvironmentNotConfiguredException">
+    <member name="P:Ncqrs.Domain.AggregateRoot.Id">
       <summary>
-            Thrown when the <see cref="T:Ncqrs.NcqrsEnvironment" /> is used when it is not configured.
-            </summary>
-    </member>
-    <member name="T:Ncqrs.NcqrsEnvironmentException">
-      <summary>
-            Occurs when there was an exception in the Ncqrs environment configuration.
+            Gets the globally unique identifier.
             </summary>
     </member>
-    <member name="M:Ncqrs.NcqrsEnvironmentException.#ctor(System.String)">
+    <member name="P:Ncqrs.Domain.AggregateRoot.Version">
       <summary>
-            Initializes a new instance of the <see cref="T:Ncqrs.NcqrsEnvironmentException" /> class.
+            Gets the current version.
             </summary>
-      <param name="message">The message.</param>
-    </member>
-    <member name="M:Ncqrs.NcqrsEnvironmentException.#ctor(System.String,System.Exception)">
-      <summary>
-            Initializes a new instance of the <see cref="T:Ncqrs.NcqrsEnvironmentException" /> class.
-            </summary>
-      <param name="message">The message.</param>
-      <param name="inner">The inner.</param>
-    </member>
-    <member name="M:Ncqrs.NcqrsEnvironmentException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
-      <summary>
-            Initializes a new instance of the <see cref="T:Ncqrs.NcqrsEnvironmentException" /> class.
-            </summary>
-      <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo" /> that holds the serialized object data about the exception being thrown.</param>
-      <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext" /> that contains contextual information about the source or destination.</param>
-      <exception cref="T:System.ArgumentNullException">The <paramref name="info" /> parameter is null. </exception>
-      <exception cref="T:System.Runtime.Serialization.SerializationException">The class name is null or <see cref="P:System.Exception.HResult" /> is zero (0). </exception>
-    </member>
-    <member name="M:Ncqrs.Config.EnvironmentNotConfiguredException.#ctor(System.String)">
-      <summary>
-            Initializes a new instance of the <see cref="T:Ncqrs.Config.EnvironmentNotConfiguredException" /> class.
-            </summary>
-      <param name="message">The message.</param>
-    </member>
-    <member name="M:Ncqrs.Config.EnvironmentNotConfiguredException.#ctor(System.String,System.Exception)">
-      <summary>
-            Initializes a new instance of the <see cref="T:Ncqrs.Config.EnvironmentNotConfiguredException" /> class.
-            </summary>
-      <param name="message">The message.</param>
-      <param name="inner">The inner.</param>
-    </member>
-    <member name="M:Ncqrs.Config.EnvironmentNotConfiguredException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
-      <summary>
-            Initializes a new instance of the <see cref="T:Ncqrs.Config.EnvironmentNotConfiguredException" /> class.
-            </summary>
-      <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo" /> that holds the serialized object data about the exception being thrown.</param>
-      <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext" /> that contains contextual information about the source or destination.</param>
-      <exception cref="T:System.ArgumentNullException">The <paramref name="info" /> parameter is null. </exception>
-      <exception cref="T:System.Runtime.Serialization.SerializationException">The class name is null or <see cref="P:System.Exception.HResult" /> is zero (0). </exception>
+      <value>An <see cref="T:System.Int32" /> representing the current version of this aggregate root.</value>
     </member>
     <member name="T:Ncqrs.NcqrsEnvironment">
       <summary>
@@ -293,6 +235,14 @@
             <remarks>
             Make sure to call the <see cref="M:Ncqrs.NcqrsEnvironment.Configure(Ncqrs.Config.IEnvironmentConfiguration)" /> method before doing anything else with this class.
             </remarks></summary>
+    </member>
+    <member name="F:Ncqrs.NcqrsEnvironment._defaults">
+      <summary>
+            Holds the defaults for requested types that are not configured.
+            </summary>
+      <remarks>
+            Use the <see cref="M:Ncqrs.NcqrsEnvironment.SetDefault``1(``0)" /> method to set a default.
+            </remarks>
     </member>
     <member name="F:Ncqrs.NcqrsEnvironment._instance">
       <summary>
@@ -304,9 +254,28 @@
             Gets or create the requested instance specified by yhe parameter <i>T</i>.
             </summary>
       <typeparam name="T">The type of the instance that is requested.</typeparam>
-      <exception cref="T:Ncqrs.Config.EnvironmentNotConfiguredException">Occurs when the environment is not configured. Call <see cref="M:Ncqrs.NcqrsEnvironment.Configure(Ncqrs.Config.IEnvironmentConfiguration)" /> to configure
-              the environment before requesting an instance.</exception>
       <returns>The instance of the requested type specified by <i>T</i>.</returns>
+    </member>
+    <member name="M:Ncqrs.NcqrsEnvironment.SetDefault``1(``0)">
+      <summary>
+            Sets the default for an type. This default instance is returned when
+            the configured <see cref="T:Ncqrs.Config.IEnvironmentConfiguration" /> did not
+            returned an instance for this type.
+            </summary>
+      <remarks>When the type already contains a default, it is overridden.
+            </remarks>
+      <typeparam name="T">The type of the instance to set a default.
+            </typeparam>
+      <param name="instance">The instance to set as default.</param>
+      <requires description="The instance cannot be null." exception="T:System.ArgumentNullException">instance != null</requires>
+      <exception cref="T:System.ArgumentNullException">instance == null</exception>
+    </member>
+    <member name="M:Ncqrs.NcqrsEnvironment.RemoveDefault``1">
+      <summary>
+            Removes the default for specified type.
+            </summary>
+      <remarks>When there is no default set, this action is ignored.</remarks>
+      <typeparam name="T">The registered default type.</typeparam>
     </member>
     <member name="M:Ncqrs.NcqrsEnvironment.Configure(Ncqrs.Config.IEnvironmentConfiguration)">
       <summary>
@@ -516,6 +485,33 @@
             Occurs when a requested instance could not be found in the Ncqrs environment configuration.
             </summary>
     </member>
+    <member name="T:Ncqrs.NcqrsEnvironmentException">
+      <summary>
+            Occurs when there was an exception in the Ncqrs environment configuration.
+            </summary>
+    </member>
+    <member name="M:Ncqrs.NcqrsEnvironmentException.#ctor(System.String)">
+      <summary>
+            Initializes a new instance of the <see cref="T:Ncqrs.NcqrsEnvironmentException" /> class.
+            </summary>
+      <param name="message">The message.</param>
+    </member>
+    <member name="M:Ncqrs.NcqrsEnvironmentException.#ctor(System.String,System.Exception)">
+      <summary>
+            Initializes a new instance of the <see cref="T:Ncqrs.NcqrsEnvironmentException" /> class.
+            </summary>
+      <param name="message">The message.</param>
+      <param name="inner">The inner.</param>
+    </member>
+    <member name="M:Ncqrs.NcqrsEnvironmentException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+      <summary>
+            Initializes a new instance of the <see cref="T:Ncqrs.NcqrsEnvironmentException" /> class.
+            </summary>
+      <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo" /> that holds the serialized object data about the exception being thrown.</param>
+      <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext" /> that contains contextual information about the source or destination.</param>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="info" /> parameter is null. </exception>
+      <exception cref="T:System.Runtime.Serialization.SerializationException">The class name is null or <see cref="P:System.Exception.HResult" /> is zero (0). </exception>
+    </member>
     <member name="M:Ncqrs.Config.InstanceNotFoundInEnvironmentConfigurationException.#ctor(System.Type)">
       <summary>
             Initializes a new instance of the <see cref="T:Ncqrs.Config.InstanceNotFoundInEnvironmentConfigurationException" /> class.
@@ -602,6 +598,17 @@
       <summary>
             An unique identifier generator based on the .NET <see cref="T:System.Guid" /> class.
             </summary>
+    </member>
+    <member name="T:Ncqrs.IUniqueIdentifierGenerator">
+      <summary>
+            Generator that generates unique identifiers.
+            </summary>
+    </member>
+    <member name="M:Ncqrs.IUniqueIdentifierGenerator.GenerateNewId">
+      <summary>
+            Generates the new identifier.
+            </summary>
+      <returns>A new <see cref="T:System.Guid" />.</returns>
     </member>
     <member name="M:Ncqrs.BasicGuidGenerator.GenerateNewId">
       <summary>
@@ -717,7 +724,7 @@
             Can load an aggregate root from a stream of historical events.
             </summary>
     </member>
-    <member name="M:Ncqrs.Domain.Storage.IAggregateRootLoader.LoadAggregateRootFromEvents(System.Type,System.Collections.Generic.IEnumerable{Ncqrs.Eventing.HistoricalEvent})">
+    <member name="M:Ncqrs.Domain.Storage.IAggregateRootLoader.LoadAggregateRootFromEvents(System.Type,System.Collections.Generic.IEnumerable{Ncqrs.Domain.DomainEvent})">
       <summary>
             Loads the aggregate root from historical events.
             </summary>
@@ -786,28 +793,20 @@
             Represents an event.
             </summary>
     </member>
-    <member name="T:Ncqrs.Eventing.HistoricalEvent">
+    <member name="P:Ncqrs.Eventing.IEvent.EventIdentifier">
       <summary>
-            Represents an event that has already happend.
+            Gets the unique identifier for this event.
             </summary>
     </member>
-    <member name="M:Ncqrs.Eventing.HistoricalEvent.#ctor(System.DateTime,Ncqrs.Eventing.IEvent)">
+    <member name="P:Ncqrs.Eventing.IEvent.EventTimeStamp">
       <summary>
-            Initializes a new instance of the <see cref="T:Ncqrs.Eventing.HistoricalEvent" /> class.
+            Gets the time stamp for this event.
             </summary>
-      <param name="timeStamp">The moment in time that the event happened.</param>
-      <param name="evnt">The event that happened.</param>
-      <exception cref="T:System.ArgumentNullException">Thrown when <i>evnt</i> is null.</exception>
-    </member>
-    <member name="P:Ncqrs.Eventing.HistoricalEvent.TimeStamp">
-      <summary>
-            Gets the moment in time that the event happened.
-            </summary>
-    </member>
-    <member name="P:Ncqrs.Eventing.HistoricalEvent.Event">
-      <summary>
-            Gets the event.
-            </summary>
+      <value>a <see cref="T:System.DateTime" /> UTC value that represents the point
+            in time where this event occurred.</value>
+      <getter>
+        <ensures description="The event time stamp should always be in a UTC kind.">Contract.Result&lt;DateTime&gt;().Kind == DateTimeKind.Utc</ensures>
+      </getter>
     </member>
     <member name="T:Ncqrs.Domain.Mapping.NoEventHandlerAttribute">
       <summary>
@@ -837,6 +836,30 @@
       <requires description="The command cannot be null." inheritedFrom="M:Ncqrs.Commanding.CommandExecution.ICommandExecutor.Execute(Ncqrs.Commanding.ICommand)" inheritedFromTypeName="ICommandExecutor" exception="T:System.ArgumentNullException">command != null</requires>
       <exception cref="T:System.ArgumentNullException">command == null</exception>
     </member>
+    <member name="T:Ncqrs.DateTimeBasedClock">
+      <summary>
+            A clock that is based on the <see cref="T:System.DateTime" /> class from the .NET framework.
+            </summary>
+    </member>
+    <member name="T:Ncqrs.IClock">
+      <summary>
+            Represents a clock that can give the current time.
+            </summary>
+    </member>
+    <member name="M:Ncqrs.IClock.UtcNow">
+      <summary>
+            Gets the current UTC date and time from the clock.
+            </summary>
+      <returns>The current UTC date and time.</returns>
+      <ensures description="The result should be a UTC date and time.">Contract.Result&lt;DateTime&gt;().Kind == DateTimeKind.Utc</ensures>
+    </member>
+    <member name="M:Ncqrs.DateTimeBasedClock.UtcNow">
+      <summary>
+            Gets the current UTC date and time from the clock.
+            </summary>
+      <returns>The current UTC date and time.</returns>
+      <ensures description="The result should be a UTC date and time." inheritedFrom="M:Ncqrs.IClock.UtcNow" inheritedFromTypeName="IClock">Contract.Result&lt;DateTime&gt;().Kind == DateTimeKind.Utc</ensures>
+    </member>
     <member name="M:Ncqrs.Commanding.CommandExecution.Mapping.Actions.DirectMethodCommandInfo.#ctor(Ncqrs.Commanding.ICommand,System.Type,System.Guid,System.String)">
       <summary>
             Initializes a new instance of the <see cref="T:Ncqrs.Commanding.CommandExecution.Mapping.Actions.DirectMethodCommandInfo" /> struct.
@@ -863,7 +886,26 @@
             The default aggregate root loader than can load an aggregate root instance from a historic event stream.
             </summary>
     </member>
-    <!-- Badly formed XML comment ignored for member "M:Ncqrs.Domain.Storage.DefaultAggregateRootLoader.LoadAggregateRootFromEvents(System.Type,System.Collections.Generic.IEnumerable{Ncqrs.Eventing.HistoricalEvent})" -->
+    <member name="M:Ncqrs.Domain.Storage.DefaultAggregateRootLoader.LoadAggregateRootFromEvents(System.Type,System.Collections.Generic.IEnumerable{Ncqrs.Domain.DomainEvent})">
+      <summary>
+            Loads the aggregate root from historical events.
+            </summary>
+      <remarks>
+            This method searches for a public or non public constructor that accepts only one parameter of the type <see cref="T:System.Collections.Generic.IEnumerable`1" /> 
+            and invokes it with the given <i>events</i>.
+            </remarks>
+      <param name="aggregateRootType">Type of the aggregate root to load.</param>
+      <param name="events">The historical events.</param>
+      <returns>
+            A new instance of the specified aggregate root type loaded with context that has been build from the events.
+            </returns>
+      <exception cref="T:Ncqrs.Domain.Storage.AggregateLoaderException">Occurs when the aggregate root does not contains a constructor that
+            accepts only one parameter of the type <see cref="T:System.Collections.Generic.IEnumerable`1" />.</exception>
+      <requires inheritedFrom="M:Ncqrs.Domain.Storage.IAggregateRootLoader.LoadAggregateRootFromEvents(System.Type,System.Collections.Generic.IEnumerable{Ncqrs.Domain.DomainEvent})" inheritedFromTypeName="IAggregateRootLoader" exception="T:System.ArgumentNullException">aggregateRootType != null</requires>
+      <exception cref="T:System.ArgumentNullException">aggregateRootType == null</exception>
+      <requires inheritedFrom="M:Ncqrs.Domain.Storage.IAggregateRootLoader.LoadAggregateRootFromEvents(System.Type,System.Collections.Generic.IEnumerable{Ncqrs.Domain.DomainEvent})" inheritedFromTypeName="IAggregateRootLoader" exception="T:System.ArgumentNullException">events != null</requires>
+      <exception cref="T:System.ArgumentNullException">events == null</exception>
+    </member>
     <member name="T:Ncqrs.Eventing.Storage.ConcurrencyException">
       <summary>
             Occurs when there is already a newer version of the event provider stored in the event store.
@@ -1217,6 +1259,39 @@
       <exception cref="T:System.ArgumentNullException">The <paramref name="info" /> parameter is null. </exception>
       <exception cref="T:System.Runtime.Serialization.SerializationException">The class name is null or <see cref="P:System.Exception.HResult" /> is zero (0). </exception>
     </member>
+    <member name="T:Ncqrs.Eventing.EventBase">
+      <summary>
+            The base for all event messages.
+            </summary>
+    </member>
+    <member name="M:Ncqrs.Eventing.EventBase.#ctor">
+      <summary>
+            Initializes a new instance of the <see cref="T:Ncqrs.Eventing.EventBase" /> class.
+            </summary>
+    </member>
+    <member name="P:Ncqrs.Eventing.EventBase.EventIdentifier">
+      <summary>
+            Gets the unique identifier for this event.
+            </summary>
+    </member>
+    <member name="P:Ncqrs.Eventing.EventBase.EventTimeStamp">
+      <summary>
+            Gets the time stamp for this event.
+            </summary>
+      <value>a <see cref="T:System.DateTime" /> UTC value that represents the point
+            in time where this event occurred.</value>
+      <getter>
+        <ensures description="The event time stamp should always be in a UTC kind." inheritedFrom="M:Ncqrs.Eventing.IEvent.get_EventTimeStamp" inheritedFromTypeName="IEvent">Contract.Result&lt;DateTime&gt;().Kind == DateTimeKind.Utc</ensures>
+      </getter>
+    </member>
+    <member name="M:Ncqrs.Eventing.Storage.InMemoryEventStore.Save(Ncqrs.Eventing.IEventSource)">
+      <requires description="source cannot be null." inheritedFrom="M:Ncqrs.Eventing.Storage.IEventStore.Save(Ncqrs.Eventing.IEventSource)" inheritedFromTypeName="IEventStore" exception="T:System.ArgumentNullException">source != null</requires>
+      <exception cref="T:System.ArgumentNullException">source == null</exception>
+      <ensures description="Return should never be null." inheritedFrom="M:Ncqrs.Eventing.Storage.IEventStore.Save(Ncqrs.Eventing.IEventSource)" inheritedFromTypeName="IEventStore">Contract.Result&lt;IEnumerable&lt;IEvent&gt;&gt;() != null</ensures>
+    </member>
+    <member name="M:Ncqrs.Eventing.Storage.InMemoryEventStore.GetAllEventsForEventSource(System.Guid)">
+      <ensures description="Result should never be null." inheritedFrom="M:Ncqrs.Eventing.Storage.IEventStore.GetAllEventsForEventSource(System.Guid)" inheritedFromTypeName="IEventStore">Contract.Result&lt;IEnumerable&lt;IEvent&gt;&gt;() != null</ensures>
+    </member>
     <member name="M:Ncqrs.Commanding.CommandExecution.Mapping.Actions.ObjectCreationCommandInfo.CreateFromDirectMethodCommand(Ncqrs.Commanding.ICommand)">
       <ensures description="The result of the method should not be null.">Contract.Result&lt;ObjectCreationCommandInfo&gt;() != null</ensures>
     </member>
@@ -1224,41 +1299,36 @@
       <requires description="The command cannot be null." inheritedFrom="M:Ncqrs.Commanding.CommandExecution.ICommandExecutor.Execute(Ncqrs.Commanding.ICommand)" inheritedFromTypeName="ICommandExecutor" exception="T:System.ArgumentNullException">command != null</requires>
       <exception cref="T:System.ArgumentNullException">command == null</exception>
     </member>
-    <member name="M:Ncqrs.Domain.Mapping.MappedAggregateRoot.#ctor(Ncqrs.Domain.Mapping.IInternalEventHandlerMappingStrategy,System.Collections.Generic.IEnumerable{Ncqrs.Eventing.HistoricalEvent})">
-      <requires description="The strategy cannot be null." exception="T:System.ArgumentNullException">strategy != null</requires>
-      <exception cref="T:System.ArgumentNullException">strategy == null</exception>
-    </member>
     <member name="M:Ncqrs.Domain.Mapping.MappedAggregateRoot.#ctor(Ncqrs.Domain.Mapping.IInternalEventHandlerMappingStrategy)">
       <requires description="The strategy cannot be null." exception="T:System.ArgumentNullException">strategy != null</requires>
       <exception cref="T:System.ArgumentNullException">strategy == null</exception>
     </member>
-    <member name="M:Ncqrs.Domain.InternalEventHandler`1.Ncqrs#Domain#IInternalEventHandler#HandleEvent(Ncqrs.Eventing.IEvent)">
-      <requires description="The evnt cannot be null." inheritedFrom="M:Ncqrs.Domain.IInternalEventHandler.HandleEvent(Ncqrs.Eventing.IEvent)" inheritedFromTypeName="IInternalEventHandler" exception="T:System.ArgumentNullException">evnt != null</requires>
-      <exception cref="T:System.ArgumentNullException">evnt == null</exception>
+    <member name="M:Ncqrs.Domain.Mapping.MappedAggregateRoot.#ctor(Ncqrs.Domain.Mapping.IInternalEventHandlerMappingStrategy,System.Collections.Generic.IEnumerable{Ncqrs.Domain.DomainEvent})">
+      <requires description="The strategy cannot be null." exception="T:System.ArgumentNullException">strategy != null</requires>
+      <exception cref="T:System.ArgumentNullException">strategy == null</exception>
     </member>
     <member name="M:Ncqrs.Domain.ExactInternalEventHandler`1.Ncqrs#Domain#IInternalEventHandler#HandleEvent(Ncqrs.Eventing.IEvent)">
       <requires description="The evnt cannot be null." inheritedFrom="M:Ncqrs.Domain.IInternalEventHandler.HandleEvent(Ncqrs.Eventing.IEvent)" inheritedFromTypeName="IInternalEventHandler" exception="T:System.ArgumentNullException">evnt != null</requires>
       <exception cref="T:System.ArgumentNullException">evnt == null</exception>
     </member>
-    <member name="M:Ncqrs.Domain.Storage.DefaultAggregateRootLoader.LoadAggregateRootFromEvents(System.Type,System.Collections.Generic.IEnumerable{Ncqrs.Eventing.HistoricalEvent})">
-      <requires inheritedFrom="M:Ncqrs.Domain.Storage.IAggregateRootLoader.LoadAggregateRootFromEvents(System.Type,System.Collections.Generic.IEnumerable{Ncqrs.Eventing.HistoricalEvent})" inheritedFromTypeName="IAggregateRootLoader" exception="T:System.ArgumentNullException">aggregateRootType != null</requires>
-      <exception cref="T:System.ArgumentNullException">aggregateRootType == null</exception>
-      <requires inheritedFrom="M:Ncqrs.Domain.Storage.IAggregateRootLoader.LoadAggregateRootFromEvents(System.Type,System.Collections.Generic.IEnumerable{Ncqrs.Eventing.HistoricalEvent})" inheritedFromTypeName="IAggregateRootLoader" exception="T:System.ArgumentNullException">events != null</requires>
-      <exception cref="T:System.ArgumentNullException">events == null</exception>
+    <member name="P:Ncqrs.Domain.DomainEvent.EventTimeStamp">
+      <getter>
+        <ensures description="The event time stamp should always be in a UTC kind." inheritedFrom="M:Ncqrs.Eventing.IEvent.get_EventTimeStamp" inheritedFromTypeName="IEvent">Contract.Result&lt;DateTime&gt;().Kind == DateTimeKind.Utc</ensures>
+      </getter>
     </member>
     <member name="M:Ncqrs.Domain.Storage.DomainRepository.Save(Ncqrs.Domain.AggregateRoot)">
       <requires inheritedFrom="M:Ncqrs.Domain.Storage.IDomainRepository.Save(Ncqrs.Domain.AggregateRoot)" inheritedFromTypeName="IDomainRepository" exception="T:System.ArgumentNullException">aggregateRootToSave != null</requires>
       <exception cref="T:System.ArgumentNullException">aggregateRootToSave == null</exception>
+    </member>
+    <member name="M:Ncqrs.Domain.Storage.DomainRepository.GetById(System.Type,System.Guid)">
+      <requires inheritedFrom="M:Ncqrs.Domain.Storage.IDomainRepository.GetById(System.Type,System.Guid)" inheritedFromTypeName="IDomainRepository" exception="T:System.ArgumentNullException">aggregateRootType != null</requires>
+      <exception cref="T:System.ArgumentNullException">aggregateRootType == null</exception>
     </member>
     <member name="M:Ncqrs.Domain.Storage.DomainRepository.#ctor(Ncqrs.Eventing.Storage.IEventStore,Ncqrs.Eventing.ServiceModel.Bus.IEventBus)">
       <requires description="store cannot be null." exception="T:System.ArgumentNullException">store != null</requires>
       <exception cref="T:System.ArgumentNullException">store == null</exception>
       <requires description="store cannot be null." exception="T:System.ArgumentNullException">eventBus != null</requires>
       <exception cref="T:System.ArgumentNullException">eventBus == null</exception>
-    </member>
-    <member name="M:Ncqrs.Domain.Storage.DomainRepository.GetById(System.Type,System.Guid)">
-      <requires inheritedFrom="M:Ncqrs.Domain.Storage.IDomainRepository.GetById(System.Type,System.Guid)" inheritedFromTypeName="IDomainRepository" exception="T:System.ArgumentNullException">aggregateRootType != null</requires>
-      <exception cref="T:System.ArgumentNullException">aggregateRootType == null</exception>
     </member>
     <member name="M:Ncqrs.Domain.Storage.DomainRepository.#ctor(Ncqrs.Eventing.Storage.IEventStore,Ncqrs.Eventing.ServiceModel.Bus.IEventBus,Ncqrs.Domain.Storage.IAggregateRootLoader)">
       <requires exception="T:System.ArgumentNullException">store != null</requires>
@@ -1268,58 +1338,20 @@
       <requires exception="T:System.ArgumentNullException">loader != null</requires>
       <exception cref="T:System.ArgumentNullException">loader == null</exception>
     </member>
-    <member name="M:Ncqrs.Domain.AggregateRoot.OnEventApplied(Ncqrs.Eventing.IEvent)">
-      <requires description="evnt cannot be null." inheritedFrom="M:Ncqrs.Eventing.EventSource.OnEventApplied(Ncqrs.Eventing.IEvent)" inheritedFromTypeName="EventSource" exception="T:System.ArgumentNullException">evnt != null</requires>
+    <member name="M:Ncqrs.Domain.InternalEventHandler`1.Ncqrs#Domain#IInternalEventHandler#HandleEvent(Ncqrs.Eventing.IEvent)">
+      <requires description="The evnt cannot be null." inheritedFrom="M:Ncqrs.Domain.IInternalEventHandler.HandleEvent(Ncqrs.Eventing.IEvent)" inheritedFromTypeName="IInternalEventHandler" exception="T:System.ArgumentNullException">evnt != null</requires>
       <exception cref="T:System.ArgumentNullException">evnt == null</exception>
     </member>
     <member name="M:Ncqrs.Domain.AggregateRoot.RegisterHandler(Ncqrs.Domain.IInternalEventHandler)">
       <requires description="The handler cannot be null." exception="T:System.ArgumentNullException">handler != null</requires>
       <exception cref="T:System.ArgumentNullException">handler == null</exception>
     </member>
-    <member name="M:Ncqrs.Domain.AggregateRoot.HandleEvent(Ncqrs.Eventing.IEvent)">
+    <member name="M:Ncqrs.Domain.AggregateRoot.HandleEvent(Ncqrs.Domain.DomainEvent)">
       <requires description="The evnt cannot be null." exception="T:System.ArgumentNullException">evnt != null</requires>
       <exception cref="T:System.ArgumentNullException">evnt == null</exception>
     </member>
-    <member name="M:Ncqrs.Eventing.Storage.InMemoryEventStore.GetAllEventsForEventSource(System.Guid)">
-      <ensures description="Result should never be null." inheritedFrom="M:Ncqrs.Eventing.Storage.IEventStore.GetAllEventsForEventSource(System.Guid)" inheritedFromTypeName="IEventStore">Contract.Result&lt;IEnumerable&lt;HistoricalEvent&gt;&gt;() != null</ensures>
-    </member>
-    <member name="M:Ncqrs.Eventing.Storage.InMemoryEventStore.Save(Ncqrs.Eventing.EventSource)">
-      <requires description="source cannot be null." inheritedFrom="M:Ncqrs.Eventing.Storage.IEventStore.Save(Ncqrs.Eventing.EventSource)" inheritedFromTypeName="IEventStore" exception="T:System.ArgumentNullException">source != null</requires>
-      <exception cref="T:System.ArgumentNullException">source == null</exception>
-      <ensures description="Return should never be null." inheritedFrom="M:Ncqrs.Eventing.Storage.IEventStore.Save(Ncqrs.Eventing.EventSource)" inheritedFromTypeName="IEventStore">Contract.Result&lt;IEnumerable&lt;IEvent&gt;&gt;() != null</ensures>
-    </member>
-    <member name="M:Ncqrs.Eventing.EventsAcceptedEventArgs.#ctor(System.Collections.Generic.IEnumerable{Ncqrs.Eventing.IEvent})">
-      <requires exception="T:System.ArgumentNullException">acceptedEvents != null</requires>
-      <exception cref="T:System.ArgumentNullException">acceptedEvents == null</exception>
-      <ensures>AcceptedEvents == acceptedEvents</ensures>
-    </member>
-    <member name="M:Ncqrs.Eventing.EventAppliedEventArgs.#ctor(Ncqrs.Eventing.IEvent)">
-      <requires exception="T:System.ArgumentNullException">evnt != null</requires>
-      <exception cref="T:System.ArgumentNullException">evnt == null</exception>
-      <ensures>Event == evnt</ensures>
-    </member>
-    <member name="T:Ncqrs.Eventing.EventSource">
-      <invariant description="The member _unacceptedEvents should never be null.">_unacceptedEvents != null</invariant>
-    </member>
-    <member name="M:Ncqrs.Eventing.EventSource.OnHistoricalEventApplied(Ncqrs.Eventing.HistoricalEvent)">
-      <requires description="historicalEvent cannot be null." exception="T:System.ArgumentNullException">historicalEvent != null</requires>
-      <exception cref="T:System.ArgumentNullException">historicalEvent == null</exception>
-    </member>
-    <member name="M:Ncqrs.Eventing.EventSource.OnEventApplied(Ncqrs.Eventing.IEvent)">
-      <requires description="evnt cannot be null." exception="T:System.ArgumentNullException">evnt != null</requires>
-      <exception cref="T:System.ArgumentNullException">evnt == null</exception>
-    </member>
-    <member name="M:Ncqrs.Eventing.EventSource.GetUncommitedEvents">
+    <member name="M:Ncqrs.Domain.AggregateRoot.GetUncommitedEvents">
       <ensures description="The result of this method should never be null.">Contract.Result&lt;IEnumerable&lt;IEvent&gt;&gt;() != null</ensures>
-    </member>
-    <member name="M:Ncqrs.Eventing.EventSource.#ctor(System.Collections.Generic.IEnumerable{Ncqrs.Eventing.HistoricalEvent})">
-      <requires exception="T:System.ArgumentNullException">history != null</requires>
-      <exception cref="T:System.ArgumentNullException">history == null</exception>
-    </member>
-    <member name="M:Ncqrs.Eventing.HistoricalEventAppliedEventArgs.#ctor(Ncqrs.Eventing.HistoricalEvent)">
-      <requires exception="T:System.ArgumentNullException">historicalEvent != null</requires>
-      <exception cref="T:System.ArgumentNullException">historicalEvent == null</exception>
-      <ensures>HistoricalEvent == historicalEvent</ensures>
     </member>
   </members>
 </doc>

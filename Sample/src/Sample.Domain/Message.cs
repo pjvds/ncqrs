@@ -24,7 +24,7 @@ namespace Sample.Domain
             ApplyEvent(e);
         }
 
-        protected Message(IEnumerable<HistoricalEvent> history)
+        protected Message(IEnumerable<DomainEvent> history)
             : base(history)
         {
         }
@@ -43,7 +43,7 @@ namespace Sample.Domain
 
         private void OnNewMessageAdded(NewMessageAdded e)
         {
-             OverrideId(e.MessageId);
+             Id = e.MessageId;
             _messageText = e.Text;
             _creationDate = e.CreationDate;
         }

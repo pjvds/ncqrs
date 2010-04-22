@@ -1,17 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.Linq;
 using Ncqrs.Domain.Mapping;
 using Ncqrs.Eventing;
-using Ncqrs.Eventing.ServiceModel.Bus;
 
 namespace Ncqrs.Domain
 {
     /// <summary>
     /// The abstract concept of an aggregate root.
     /// </summary>
-    public abstract class AggregateRoot : EventSource
+    public abstract class AggregateRoot : IEventSource
     {
+        /// <summary>
+        /// Gets the globally unique identifier.
+        /// </summary>
+        public Guid Id
+        {
+            get;
+            protected set; // TODO: Only allow ID change when there are no events.
+        }
+
+        /// <summary>
+        /// Holds the events that are not yet accepted.
+        /// </summary>
+        private readonly Stack<DomainEvent> _unacceptedEvents = new Stack<DomainEvent>(0);
+
+        /// <summary>
+        /// Gets the current version.
+        /// </summary>
+        /// <value>An <see cref="int"/> representing the current version of this aggregate root.</value>
+        public long Version
+        {
+            get;
+            private set;
+        }
+
         /// <summary>
         /// A list that contains all the event handlers.
         /// </summary>
@@ -23,20 +47,41 @@ namespace Ncqrs.Domain
         /// <remarks>
         /// This instance will be initialized with the <see cref="BasicGuidGenerator"/>.
         /// </remarks>
-        protected AggregateRoot() : this(new BasicGuidGenerator())
+        protected AggregateRoot()
         {
+            var idGenerator = NcqrsEnvironment.Get<IUniqueIdentifierGenerator>();
+            Id = idGenerator.GenerateNewId();
+            Version = 0;
+        }
+
+        protected AggregateRoot(IEnumerable<DomainEvent> history)
+        {
+            InitializeFromHistory(history);
+        }
+
+        [ContractInvariantMethod]
+        private void ContractInvariants()
+        {
+            Contract.Invariant(_unacceptedEvents != null, "The member _unacceptedEvents should never be null.");
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AggregateRoot"/> class.
+        /// Initializes from history.
         /// </summary>
-        /// <param name="idGenerator">The id generator that will be used to generate a new id for this instance.</param>
-        protected AggregateRoot(IUniqueIdentifierGenerator idGenerator) : base(idGenerator)
+        /// <param name="history">The history.</param>
+        protected virtual void InitializeFromHistory(IEnumerable<DomainEvent> history)
         {
-        }
+            if (history == null) throw new ArgumentNullException("history");
+            if (history.Count() == 0)
+                throw new ArgumentException("The provided history does not contain any historical event.", "history");
+            if (Version != 0 || _unacceptedEvents.Count > 0)
+                throw new InvalidOperationException("Cannot load from history when a event source is already loaded.");
 
-        protected AggregateRoot(IEnumerable<HistoricalEvent> history) : base(history)
-        {
+            foreach (var historicalEvent in history)
+            {
+                ApplyEvent(historicalEvent, true);
+                Version++;
+            }
         }
 
         protected void RegisterHandler(IInternalEventHandler handler)
@@ -46,7 +91,7 @@ namespace Ncqrs.Domain
             _eventHandlers.Add(handler);
         }
 
-        protected override void HandleEvent(IEvent evnt)
+        protected void HandleEvent(DomainEvent evnt)
         {
             Contract.Requires<ArgumentNullException>(evnt != null, "The evnt cannot be null.");
             Boolean handled = false;
@@ -58,16 +103,48 @@ namespace Ncqrs.Domain
 
             if (!handled)
                 throw new EventNotHandledException(evnt);
+
+            // TODO: Add validation to make sure this ID isn't already set.
+            evnt.AggregateRootId = this.Id;
+        }
+
+        protected void ApplyEvent(DomainEvent evnt)
+        {
+            ApplyEvent(evnt, false);
+        }
+
+        private void ApplyEvent(DomainEvent evnt, Boolean historical)
+        {
+            if (evnt == null) throw new ArgumentNullException("evnt");
+            HandleEvent(evnt);
+
+            if(!historical)
+                _unacceptedEvents.Push(evnt);
+
+            OnEventApplied(evnt);
+        }
+
+        public IEnumerable<IEvent> GetUncommitedEvents()
+        {
+            Contract.Ensures(Contract.Result<IEnumerable<IEvent>>() != null, "The result of this method should never be null.");
+
+            return _unacceptedEvents;
+        }
+
+        public void AcceptEvents()
+        {
+            // Grab events that will be accepted.
+            IEnumerable<IEvent> acceptedEvents = GetUncommitedEvents();
+
+            // Clear the unaccepted event list.
+            _unacceptedEvents.Clear();
         }
 
         [NoEventHandler]
-        protected override void OnEventApplied(IEvent evnt)
+        protected void OnEventApplied(IEvent evnt)
         {
             // Register this instance as a dirty one.
             UnitOfWork.Current.RegisterDirtyInstance(this);
-
-            // Call base.
-            base.OnEventApplied(evnt);
         }
     }
 }

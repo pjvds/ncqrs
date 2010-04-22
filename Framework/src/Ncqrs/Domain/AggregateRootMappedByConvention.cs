@@ -11,11 +11,7 @@ namespace Ncqrs.Domain
         {
         }
 
-        protected AggregateRootMappedByConvention(IUniqueIdentifierGenerator idGenerator) : base(new ConventionBasedInternalEventHandlerMappingStrategy(), idGenerator)
-        {
-        }
-
-        protected AggregateRootMappedByConvention(IEnumerable<HistoricalEvent> history) : base(new ConventionBasedInternalEventHandlerMappingStrategy(), history)
+        protected AggregateRootMappedByConvention(IEnumerable<DomainEvent> history) : base(new ConventionBasedInternalEventHandlerMappingStrategy(), history)
         {
         }
     }

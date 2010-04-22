@@ -4,7 +4,6 @@ using System.Linq;
 using MongoDB.Driver;
 using System.Reflection;
 using System.Diagnostics.Contracts;
-using Ncqrs.Eventing.ServiceModel.Bus;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using log4net;
@@ -104,7 +103,7 @@ namespace Ncqrs.Eventing.Storage.MongoDB
         /// </summary>
         /// <param name="id">The id of the event source that owns the events.</param>
         /// <returns>All the events from the event source.</returns>
-        public IEnumerable<HistoricalEvent> GetAllEventsForEventSource(Guid id)
+        public IEnumerable<IEvent> GetAllEventsForEventSource(Guid id)
         {
             // Connect to Mongo.
             _mongo.Connect();
@@ -147,7 +146,7 @@ namespace Ncqrs.Eventing.Storage.MongoDB
         /// <param name="source">The source that should be saved.</param>
         /// <returns></returns>
         /// <exception cref="ConcurrencyException">Occurs when there is already a newer version of the event provider stored in the event store.</exception>
-        public IEnumerable<IEvent> Save(EventSource source)
+        public IEnumerable<IEvent> Save(IEventSource source)
         {
             // The events that are saved during this operation.
             // This will be returned at the end.
@@ -212,7 +211,7 @@ namespace Ncqrs.Eventing.Storage.MongoDB
         /// <param name="eventsCollection">The events collection.</param>
         /// <param name="source">The event source.</param>
         /// <returns>The version in the event store for the specified event source.</returns>
-        private static long GetVersion(IMongoCollection eventsCollection, EventSource source)
+        private static long GetVersion(IMongoCollection eventsCollection, IEventSource source)
         {
             var exampleDoc = new Document();
             exampleDoc["EventSourceId"] = source.Id;
@@ -226,7 +225,7 @@ namespace Ncqrs.Eventing.Storage.MongoDB
         /// </summary>
         /// <param name="eventSource">The event source.</param>
         /// <returns>All the documents for the specified event source.</returns>
-        private IEnumerable<Document> GetAllDocumentsFromEventSource(EventSource eventSource)
+        private IEnumerable<Document> GetAllDocumentsFromEventSource(IEventSource eventSource)
         {
             foreach (var evnt in eventSource.GetUncommitedEvents())
             {
@@ -283,14 +282,14 @@ namespace Ncqrs.Eventing.Storage.MongoDB
         /// </summary>
         /// <param name="doc">The document to deserialize.</param>
         /// <returns>A new historical event that was deserialized from the document.</returns>
-        private HistoricalEvent DeserializeDocument(Document doc)
+        private IEvent DeserializeDocument(Document doc)
         {
             Type eventType = Type.GetType((string)doc["AssemblyQualifiedEventTypeName"]);
             
             string json = doc.ToString();
             IEvent evnt = (IEvent)JsonConvert.DeserializeObject(json, eventType);
 
-            return new HistoricalEvent((DateTime)doc["TimeStamp"], evnt);
+            return evnt;
         }
     }
 }

@@ -47,7 +47,7 @@ namespace Ncqrs.Eventing.Storage.SQL
         /// </summary>
         /// <param name="id">The id of the event provider.</param>
         /// <returns>All events for the specified event provider.</returns>
-        public IEnumerable<HistoricalEvent> GetAllEventsForEventSource(Guid id)
+        public IEnumerable<IEvent> GetAllEventsForEventSource(Guid id)
         {
             // Create connection and command.
             using (var connection = new SqlConnection(_connectionString))
@@ -66,14 +66,12 @@ namespace Ncqrs.Eventing.Storage.SQL
                     while (reader.Read())
                     {
                         // Get event details.
-                        var timeStamp = (DateTime)reader["TimeStamp"];
                         var rawData = (Byte[])reader["Data"];
 
                         using (var dataStream = new MemoryStream(rawData))
                         {
                             // Deserialize event and yield it.
-                            var evnt = (IEvent)formatter.Deserialize(dataStream);
-                            yield return new HistoricalEvent(timeStamp, evnt);
+                            yield return (IEvent)formatter.Deserialize(dataStream);
                         }
                     }
 
@@ -88,7 +86,7 @@ namespace Ncqrs.Eventing.Storage.SQL
         /// </summary>
         /// <param name="provider">The eventsource.</param>
         /// <returns>The events that are saved.</returns>
-        public IEnumerable<IEvent> Save(EventSource eventSource)
+        public IEnumerable<IEvent> Save(IEventSource eventSource)
         {
             // Get all events.
             IEnumerable<IEvent> events = eventSource.GetUncommitedEvents();
@@ -175,7 +173,7 @@ namespace Ncqrs.Eventing.Storage.SQL
             }
         }
 
-        private static void UpdateEventSourceVersion(EventSource eventSource, SqlTransaction transaction)
+        private static void UpdateEventSourceVersion(IEventSource eventSource, SqlTransaction transaction)
         {
             using (var command = new SqlCommand(UpdateEventSourceVersionQuery, transaction.Connection))
             {
@@ -235,7 +233,7 @@ namespace Ncqrs.Eventing.Storage.SQL
         /// </summary>
         /// <param name="eventSource">The event source to add.</param>
         /// <param name="transaction">The transaction.</param>
-        private static void AddEventSource(EventSource eventSource, SqlTransaction transaction)
+        private static void AddEventSource(IEventSource eventSource, SqlTransaction transaction)
         {
             using (var command = new SqlCommand(InsertNewProviderQuery, transaction.Connection))
             {

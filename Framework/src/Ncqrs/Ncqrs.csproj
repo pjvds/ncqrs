@@ -106,10 +106,11 @@
     <Compile Include="Commanding\CommandExecution\Mapping\Attributes\MapsToAggregateRootMethodAttribute.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Attributes\TransactionalAttribute.cs" />
     <Compile Include="Commanding\ICommand.cs" />
-    <Compile Include="Config\EnvironmentNotConfiguredException.cs" />
     <Compile Include="Config\InstanceNotFoundInEnvironment.cs" />
     <Compile Include="DateTimeBasedClock.cs" />
     <Compile Include="Domain\DomainEvent.cs" />
+    <Compile Include="Eventing\EventBase.cs" />
+    <Compile Include="Eventing\IEventSource.cs" />
     <Compile Include="IClock.cs" />
     <Compile Include="NamespaceDoc.cs" />
     <Compile Include="NcqrsEnvironment.cs" />
@@ -148,14 +149,7 @@
     <Compile Include="Eventing\ServiceModel\Bus\IEventBusFactory.cs" />
     <Compile Include="Eventing\ServiceModel\Bus\IEventHandler.cs" />
     <Compile Include="Eventing\ServiceModel\Bus\InProcessEventBus.cs" />
-    <Compile Include="Eventing\EventAppliedEventArgs.cs" />
-    <Compile Include="Eventing\EventAppliedEventHandler.cs" />
-    <Compile Include="Eventing\EventsAcceptedEventArgs.cs" />
-    <Compile Include="Eventing\EventsAcceptedEventHandler.cs" />
     <Compile Include="Eventing\EventSource.cs" />
-    <Compile Include="Eventing\HistoricalEvent.cs" />
-    <Compile Include="Eventing\HistoricalEventAppliedEventArgs.cs" />
-    <Compile Include="Eventing\HistoricalEventAppliedEventHandler.cs" />
     <Compile Include="Eventing\IEvent.cs" />
     <Compile Include="IUniqueIdentifierGenerator.cs" />
     <Compile Include="Eventing\Storage\ConcurrencyException.cs" />

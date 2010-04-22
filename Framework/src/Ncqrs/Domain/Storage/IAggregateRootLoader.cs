@@ -19,13 +19,13 @@ namespace Ncqrs.Domain.Storage
         /// <param name="events">The historical events.</param>
         /// <exception cref="AggregateLoaderException">Occurs when the aggregate root could not be loaded.</exception>
         /// <returns>A new instance of the specified aggregate root type loaded with context that has been build from the events.</returns>
-        AggregateRoot LoadAggregateRootFromEvents(Type aggregateRootType, IEnumerable<HistoricalEvent> events);
+        AggregateRoot LoadAggregateRootFromEvents(Type aggregateRootType, IEnumerable<DomainEvent> events);
     }
 
     [ContractClassFor(typeof(IAggregateRootLoader))]
     internal sealed class IAggregateRootLoaderContracts : IAggregateRootLoader
     {
-        public AggregateRoot LoadAggregateRootFromEvents(Type aggregateRootType, IEnumerable<HistoricalEvent> events)
+        public AggregateRoot LoadAggregateRootFromEvents(Type aggregateRootType, IEnumerable<DomainEvent> events)
         {
             Contract.Requires<ArgumentNullException>(aggregateRootType != null);
             Contract.Requires<ArgumentNullException>(events != null);

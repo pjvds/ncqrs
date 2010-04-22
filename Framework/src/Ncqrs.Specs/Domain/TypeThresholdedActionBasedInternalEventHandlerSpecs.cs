@@ -1,18 +1,21 @@
 ﻿using System;
 using Ncqrs.Domain;
+using Ncqrs.Eventing;
 using NUnit.Framework;
 using FluentAssertions;
 
-namespace Ncqrs.Eventing.ServiceModel.Bus.Specs
+namespace Ncqrs.Specs.Domain
 {
     [TestFixture]
     public class TypeThresholdedActionBasedInternalEventHandlerSpecs
     {
-        public class FooEvent : IEvent
-        {}
+        public class FooEvent : EventBase
+        {
+        }
 
         public class BarEvent : FooEvent
-        {}
+        {
+        }
 
         [Test]
         public void When_a_new_instance_is_initialized_with_a_type_that_is_not_of_an_event_it_should_throw_an_exception()

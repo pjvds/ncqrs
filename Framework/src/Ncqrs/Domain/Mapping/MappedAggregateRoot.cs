@@ -11,22 +11,13 @@ namespace Ncqrs.Domain.Mapping
         private readonly IInternalEventHandlerMappingStrategy _mappingStrategy;
 
         protected MappedAggregateRoot(IInternalEventHandlerMappingStrategy strategy)
-            : base()
         {
             Contract.Requires<ArgumentNullException>(strategy != null, "The strategy cannot be null.");
             _mappingStrategy = strategy;
             InitializeHandlers();
         }
 
-        protected MappedAggregateRoot(IInternalEventHandlerMappingStrategy strategy, IUniqueIdentifierGenerator idGenerator)
-            : base(idGenerator)
-        {
-            _mappingStrategy = strategy;
-            InitializeHandlers();
-        }
-
-        protected MappedAggregateRoot(IInternalEventHandlerMappingStrategy strategy, IEnumerable<HistoricalEvent> history)
-            : base()
+        protected MappedAggregateRoot(IInternalEventHandlerMappingStrategy strategy, IEnumerable<DomainEvent> history)
         {
             Contract.Requires<ArgumentNullException>(strategy != null, "The strategy cannot be null.");
 

@@ -5,6 +5,7 @@ using System.Diagnostics.Contracts;
 using log4net;
 using Ncqrs.Config;
 using Ncqrs.Eventing.ServiceModel.Bus;
+using Ncqrs.Eventing.Storage;
 
 namespace Ncqrs
 {
@@ -22,7 +23,8 @@ namespace Ncqrs
             SetDefault<IClock>(new DateTimeBasedClock());
             SetDefault<IUniqueIdentifierGenerator>(new BasicGuidGenerator());
             SetDefault<IEventBus>(new InProcessEventBus());
-            //TODO: Added IDomainRepository default. (this requires the creation of a in memory event store).
+            SetDefault<IEventStore>(new InMemoryEventStore());
+            //TODO: Added IDomainRepository default..
         }
 
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -86,6 +88,7 @@ namespace Ncqrs
         /// <summary>
         /// Removes the default for specified type.
         /// </summary>
+        /// <remarks>When there is no default set, this action is ignored.</remarks>
         /// <typeparam name="T">The registered default type.</typeparam>
         public static void RemoveDefault<T>() where T : class
         {

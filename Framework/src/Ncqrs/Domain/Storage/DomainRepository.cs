@@ -33,11 +33,19 @@ namespace Ncqrs.Domain.Storage
         public AggregateRoot GetById(Type aggregateRootType, Guid id)
         {
             var events = _store.GetAllEventsForEventSource(id);
+            var eventsAsDomainEvents = new List<DomainEvent>();
+
+            // TODO: Is there a better way to cast?
+            foreach (var evnt in events)
+            {
+                eventsAsDomainEvents.Add((DomainEvent)evnt);
+            }
+
             AggregateRoot aggregate = null;
 
             try
             {
-                aggregate = _loader.LoadAggregateRootFromEvents(aggregateRootType, events);
+                aggregate = _loader.LoadAggregateRootFromEvents(aggregateRootType, eventsAsDomainEvents);
             }
             catch (MissingMethodException)
             {

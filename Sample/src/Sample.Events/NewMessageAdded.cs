@@ -1,9 +1,9 @@
 ﻿using System;
-using Ncqrs.Eventing;
+using Ncqrs.Domain;
 
 namespace Sample.Events
 {
-    public class NewMessageAdded : IEvent
+    public class NewMessageAdded : DomainEvent
     {
         public Guid MessageId
         {

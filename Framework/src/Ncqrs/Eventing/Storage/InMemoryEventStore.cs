@@ -9,35 +9,35 @@ namespace Ncqrs.Eventing.Storage
     /// </summary>
     public class InMemoryEventStore : IEventStore
     {
-        private readonly Dictionary<Guid, Stack<Tuple<DateTime, IEvent>>> _events = new Dictionary<Guid,Stack<Tuple<DateTime,IEvent>>>();
+        private readonly Dictionary<Guid, LinkedList<IEvent>> _events = new Dictionary<Guid, LinkedList<IEvent>>();
 
-        public IEnumerable<HistoricalEvent> GetAllEventsForEventSource(Guid id)
+        public IEnumerable<IEvent> GetAllEventsForEventSource(Guid id)
         {
-            Stack<Tuple<DateTime, IEvent>> events;
+            LinkedList<IEvent> events;
 
             if (_events.TryGetValue(id, out events))
             {
-                foreach (var eventData in events)
+                foreach (var evnt in events)
                 {
-                    yield return new HistoricalEvent(eventData.Item1, eventData.Item2);
+                    yield return evnt;
                 }
             }
         }
 
-        public IEnumerable<IEvent> Save(EventSource source)
+        public IEnumerable<IEvent> Save(IEventSource source)
         {
-            Stack<Tuple<DateTime, IEvent>> events;
+            LinkedList<IEvent> events;
             var eventsToCommit = source.GetUncommitedEvents();
 
             if (!_events.TryGetValue(source.Id, out events))
             {
-                events = new Stack<Tuple<DateTime,IEvent>>();
+                events = new LinkedList<IEvent>();
                 _events.Add(source.Id, events);
             }
 
             foreach (var evnt in eventsToCommit)
             {
-                events.Push(new Tuple<DateTime, IEvent>(DateTime.Now, evnt));
+                events.AddLast(evnt);
             }
 
             return eventsToCommit;
