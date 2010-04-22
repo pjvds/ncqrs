@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Reflection;
 using log4net;
+using Ncqrs.Commanding.CommandExecution;
 
-namespace Ncqrs.Commanding.CommandExecution
+namespace Ncqrs.Commanding.ServiceModel
 {
     /// <summary>
     /// A dispatcher that dispatch command objects to their appropriate command executor. Command executors can subscribe and
@@ -66,7 +67,7 @@ namespace Ncqrs.Commanding.CommandExecution
         /// </returns>
         protected override ICommandExecutor GetCommandExecutorForCommand(Type commandType)
         {
-            ICommandExecutor result = null;
+            ICommandExecutor result;
             _executors.TryGetValue(commandType, out result);
 
             return result;
