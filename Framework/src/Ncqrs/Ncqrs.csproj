@@ -91,7 +91,7 @@
     <Compile Include="Commanding\CommandExecution\CommandExecutorBase.cs" />
     <Compile Include="Commanding\CommandExecution\CommandExecutorNotFoundException.cs" />
     <Compile Include="Commanding\CommandExecution\ICommandExecutor.cs" />
-    <Compile Include="Commanding\CommandExecution\InProcessCommandExecutionDispatcher.cs" />
+    <Compile Include="Commanding\ServiceModel\InProcessCommandExecutionDispatcher.cs" />
     <Compile Include="Commanding\CommandExecution\TransactionalCommandExecutorWrapper.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Attributes\AggregateRootIdAttribute.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Attributes\ExcludeInMappingAttribute.cs" />
@@ -101,6 +101,7 @@
     <Compile Include="Commanding\ICommand.cs" />
     <Compile Include="Config\EnvironmentNotConfiguredException.cs" />
     <Compile Include="Config\InstanceNotFoundInEnvironment.cs" />
+    <Compile Include="NamespaceDoc.cs" />
     <Compile Include="NcqrsEnvironment.cs" />
     <Compile Include="Config\IEnvironmentConfiguration.cs" />
     <Compile Include="NcqrsEnvironmentConfigurationException.cs" />
