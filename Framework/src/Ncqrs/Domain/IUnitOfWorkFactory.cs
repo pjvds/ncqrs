@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Ncqrs.Eventing.ServiceModel.Bus
+namespace Ncqrs.Domain
 {
     public interface IUnitOfWorkFactory
     {

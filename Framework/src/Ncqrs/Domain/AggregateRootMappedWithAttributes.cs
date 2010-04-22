@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using Ncqrs.Eventing.ServiceModel.Bus.Mapping;
+﻿using System.Collections.Generic;
+using Ncqrs.Domain.Mapping;
+using Ncqrs.Eventing;
 
-namespace Ncqrs.Eventing.ServiceModel.Bus
+namespace Ncqrs.Domain
 {
     public abstract class AggregateRootMappedWithAttributes : MappedAggregateRoot
     {

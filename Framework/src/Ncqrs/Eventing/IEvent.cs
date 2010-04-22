@@ -1,4 +1,6 @@
-﻿namespace Ncqrs.Eventing
+﻿using System;
+
+namespace Ncqrs.Eventing
 {
     /// <summary>
     /// Represents an event.

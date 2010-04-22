@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Runtime.Serialization;
+using Ncqrs.Eventing;
 
-namespace Ncqrs.Eventing.ServiceModel.Bus
+namespace Ncqrs.Domain
 {
     [Serializable]
     public class EventNotHandledException : Exception

@@ -5,7 +5,6 @@ using MongoDB.Driver;
 using System.Reflection;
 using System.Diagnostics.Contracts;
 using Ncqrs.Eventing.ServiceModel.Bus;
-using Ncqrs.Eventing.ServiceModel.Bus.Storage;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using log4net;

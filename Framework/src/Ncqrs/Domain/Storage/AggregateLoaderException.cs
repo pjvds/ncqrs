@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Ncqrs.Eventing.ServiceModel.Bus.Storage
+namespace Ncqrs.Domain.Storage
 {
     [Serializable]
     public class AggregateLoaderException : Exception

@@ -1,4 +1,5 @@
 ﻿using System;
+using Ncqrs.Domain;
 using NUnit.Framework;
 using FluentAssertions;
 

@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Diagnostics.Contracts;
+using Ncqrs.Eventing;
+using Ncqrs.Eventing.ServiceModel.Bus;
 
-namespace Ncqrs.Eventing.ServiceModel.Bus.Mapping
+namespace Ncqrs.Domain.Mapping
 {
     /// <summary>
     /// An internal event handler mapping strategy that creates event handlers based on mapping that

@@ -1,8 +1,8 @@
-﻿using System;
-using Ncqrs.Eventing.ServiceModel.Bus.Storage;
+﻿using Ncqrs.Domain.Storage;
+using Ncqrs.Eventing.ServiceModel.Bus;
 using Ncqrs.Eventing.Storage;
 
-namespace Ncqrs.Eventing.ServiceModel.Bus
+namespace Ncqrs.Domain
 {
     public class ThreadBasedUnitOfWorkFactory : IUnitOfWorkFactory
     {

@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
+using Ncqrs.Eventing;
 
-namespace Ncqrs.Eventing.ServiceModel.Bus
+namespace Ncqrs.Domain
 {
     /// <summary>
     /// An event handler that handles the event internally. Where internally means <i>inside the domain</i>.

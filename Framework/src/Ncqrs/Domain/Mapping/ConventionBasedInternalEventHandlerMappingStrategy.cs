@@ -5,8 +5,10 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using log4net;
 using System.Diagnostics.Contracts;
+using Ncqrs.Eventing;
+using Ncqrs.Eventing.ServiceModel.Bus;
 
-namespace Ncqrs.Eventing.ServiceModel.Bus.Mapping
+namespace Ncqrs.Domain.Mapping
 {
     // TODO: Add detailed description.
     /// <summary>

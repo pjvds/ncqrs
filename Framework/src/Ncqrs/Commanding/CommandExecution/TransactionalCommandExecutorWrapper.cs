@@ -8,7 +8,7 @@ namespace Ncqrs.Commanding.CommandExecution
     /// Wraps transactional behavior around the execution of command executor.
     /// </summary>
     /// <remarks>
-    /// The transaction logic uses TransactionScope.
+    /// The transaction logic uses <c>TransactionScope</c> of the .NET framework.
     /// </remarks>
     public class TransactionalCommandExecutorWrapper : ICommandExecutor
     {

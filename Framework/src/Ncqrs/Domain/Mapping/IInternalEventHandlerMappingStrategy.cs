@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Ncqrs.Eventing.ServiceModel.Bus;
 
-namespace Ncqrs.Eventing.ServiceModel.Bus.Mapping
+namespace Ncqrs.Domain.Mapping
 {
     public interface IInternalEventHandlerMappingStrategy
     {

@@ -4,8 +4,6 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Diagnostics.Contracts;
-using Ncqrs.Eventing.ServiceModel.Bus;
-using Ncqrs.Eventing.ServiceModel.Bus.Storage;
 
 namespace Ncqrs.Eventing.Storage.SQL
 {

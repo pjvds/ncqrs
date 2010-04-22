@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Diagnostics.Contracts;
-using Ncqrs.Eventing.ServiceModel.Bus.Storage;
+using Ncqrs.Domain;
+using Ncqrs.Domain.Storage;
 
 namespace Ncqrs.Eventing.ServiceModel.Bus
 {

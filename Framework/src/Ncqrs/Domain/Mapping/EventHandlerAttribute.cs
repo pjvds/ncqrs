@@ -1,6 +1,7 @@
 ﻿using System;
+using Ncqrs.Eventing;
 
-namespace Ncqrs.Eventing.ServiceModel.Bus.Mapping
+namespace Ncqrs.Domain.Mapping
 {
     /// <summary>
     /// Indicates that a method is an event handler.

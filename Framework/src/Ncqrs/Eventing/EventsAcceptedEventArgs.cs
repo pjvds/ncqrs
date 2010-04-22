@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using Ncqrs.Eventing.ServiceModel.Bus;
 
 namespace Ncqrs.Eventing
 {

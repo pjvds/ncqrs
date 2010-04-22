@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using Ncqrs.Eventing;
+using Ncqrs.Eventing.ServiceModel.Bus;
 using Ncqrs.Eventing.Storage;
 
-namespace Ncqrs.Eventing.ServiceModel.Bus.Storage
+namespace Ncqrs.Domain.Storage
 {
     public class DomainRepository : IDomainRepository
     {

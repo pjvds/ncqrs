@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Ncqrs.Eventing.ServiceModel.Bus.Mapping
+namespace Ncqrs.Domain.Mapping
 {
     [Serializable]
     public class InvalidEventHandlerMappingException : Exception

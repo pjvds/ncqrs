@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Ncqrs.Eventing.ServiceModel.Bus;
+using Ncqrs.Domain;
 
 namespace Ncqrs.Commanding.CommandExecution.Mapping.Actions
 {

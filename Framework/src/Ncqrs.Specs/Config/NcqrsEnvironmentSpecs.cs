@@ -1,8 +1,10 @@
 ﻿using System;
 using FluentAssertions;
 using Ncqrs.Config;
+using Ncqrs.Domain;
 using NUnit.Framework;
 using Rhino.Mocks;
+using Ncqrs.Eventing.ServiceModel.Bus;
 
 namespace Ncqrs.Specs.Config
 {
@@ -18,7 +20,7 @@ namespace Ncqrs.Specs.Config
         [Test]
         public void When_get_is_called_when_the_environmemt_is_not_configured_it_should_throw_an_exception()
         {
-            Action act = () => NcqrsEnvironment.Get<NcqrsEnvironment>();
+            Action act = () => NcqrsEnvironment.Get<IUnitOfWorkFactory>();
             act.ShouldThrow<EnvironmentNotConfiguredException>();
         }
 

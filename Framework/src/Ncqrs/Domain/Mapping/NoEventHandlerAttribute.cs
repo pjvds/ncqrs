@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Ncqrs.Eventing.ServiceModel.Bus.Mapping
+namespace Ncqrs.Domain.Mapping
 {
     /// <summary>
     /// Specifies that the method is not an event handler. Use this attribute to exclude the

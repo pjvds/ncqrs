@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
+using Ncqrs.Eventing.ServiceModel.Bus;
 
-namespace Ncqrs.Eventing.ServiceModel.Bus.Storage
+namespace Ncqrs.Domain.Storage
 {
     /// <summary>
     /// A repository that can be used to get and save aggregate roots.

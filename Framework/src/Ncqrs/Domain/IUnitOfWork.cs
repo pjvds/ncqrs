@@ -1,7 +1,7 @@
 ﻿using System;
-using Ncqrs.Eventing.ServiceModel.Bus.Storage;
+using Ncqrs.Domain.Storage;
 
-namespace Ncqrs.Eventing.ServiceModel.Bus
+namespace Ncqrs.Domain
 {
     public interface IUnitOfWork : IDisposable
     {

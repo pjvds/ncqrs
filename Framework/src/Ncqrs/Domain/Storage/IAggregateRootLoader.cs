@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using Ncqrs.Eventing;
+using Ncqrs.Eventing.ServiceModel.Bus;
 
-namespace Ncqrs.Eventing.ServiceModel.Bus.Storage
+namespace Ncqrs.Domain.Storage
 {
     /// <summary>
     /// Can load an aggregate root from a stream of historical events.

@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Ncqrs.Eventing;
+using Ncqrs.Eventing.ServiceModel.Bus;
 
-namespace Ncqrs.Eventing.ServiceModel.Bus.Storage
+namespace Ncqrs.Domain.Storage
 {
     /// <summary>
     /// The default aggregate root loader than can load an aggregate root instance from a historic event stream.

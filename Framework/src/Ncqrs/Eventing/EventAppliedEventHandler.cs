@@ -1,4 +1,4 @@
-﻿using Ncqrs.Eventing.ServiceModel.Bus;
+﻿using System;
 
 namespace Ncqrs.Eventing
 {

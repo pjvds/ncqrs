@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using Ncqrs.Eventing.ServiceModel.Bus.Mapping;
+using Ncqrs.Domain.Mapping;
+using Ncqrs.Eventing;
+using Ncqrs.Eventing.ServiceModel.Bus;
 
-namespace Ncqrs.Eventing.ServiceModel.Bus
+namespace Ncqrs.Domain
 {
     /// <summary>
     /// The abstract concept of an aggregate root.

@@ -1,6 +1,7 @@
 ﻿using System;
+using Ncqrs.Eventing;
 
-namespace Ncqrs.Eventing.ServiceModel.Bus
+namespace Ncqrs.Domain
 {
     public abstract class InternalEventHandler<TEvent> : IInternalEventHandler where TEvent : IEvent
     {
