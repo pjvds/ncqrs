@@ -1,5 +1,5 @@
 ﻿using System;
-using Ncqrs.Eventing.ServiceModel.Bus;
+using Ncqrs.Domain;
 
 namespace Ncqrs.Commanding.CommandExecution
 {

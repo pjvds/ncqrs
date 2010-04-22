@@ -38,6 +38,7 @@ namespace Ncqrs.Commanding.CommandExecution
             using (var transaction = new TransactionScope())
             {
                 _executor.Execute(command);
+                transaction.Complete();
             }
         }
     }
