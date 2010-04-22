@@ -1,9 +1,9 @@
 ﻿using System;
 
-namespace Ncqrs.Eventing
+namespace Ncqrs
 {
     public interface IUniqueIdentifierGenerator
     {
-        Guid GenerateNewId(EventSource eventSource);
+        Guid GenerateNewId();
     }
 }

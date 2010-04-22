@@ -66,7 +66,7 @@ namespace Ncqrs.Specs.Config
             NcqrsEnvironment.Configure(repository.StrictMock<IEnvironmentConfiguration>());
 
             // Act
-            Action act = () => NcqrsEnvironment.Get<NcqrsEnvironment>();
+            Action act = () => NcqrsEnvironment.Get<IUnitOfWorkFactory>();
 
             // Assert
             act.ShouldThrow<InstanceNotFoundInEnvironmentConfigurationException>();

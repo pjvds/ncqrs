@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Diagnostics.Contracts;
-using Ncqrs.Eventing.ServiceModel.Bus;
 
 namespace Ncqrs.Eventing
 {
@@ -53,7 +52,7 @@ namespace Ncqrs.Eventing
         {
             if (idGenerator == null) throw new ArgumentNullException("idGenerator");
 
-            Id = idGenerator.GenerateNewId(this);
+            Id = idGenerator.GenerateNewId();
             Version = 0;
         }
 

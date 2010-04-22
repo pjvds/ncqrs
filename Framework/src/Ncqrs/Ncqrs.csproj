@@ -131,7 +131,7 @@
     <Compile Include="Domain\ThreadBasedUnitOfWorkFactory.cs" />
     <Compile Include="Domain\TypeThresholdedActionBasedInternalEventHandler.cs" />
     <Compile Include="Domain\UnitOfWork.cs" />
-    <Compile Include="Eventing\BasicGuidGenerator.cs" />
+    <Compile Include="BasicGuidGenerator.cs" />
     <Compile Include="Eventing\ServiceModel\Bus\ActionBasedEventBusFactory.cs" />
     <Compile Include="Eventing\ServiceModel\Bus\IEventBus.cs" />
     <Compile Include="Eventing\ServiceModel\Bus\IEventBusFactory.cs" />
@@ -146,7 +146,7 @@
     <Compile Include="Eventing\HistoricalEventAppliedEventArgs.cs" />
     <Compile Include="Eventing\HistoricalEventAppliedEventHandler.cs" />
     <Compile Include="Eventing\IEvent.cs" />
-    <Compile Include="Eventing\IUniqueIdentifierGenerator.cs" />
+    <Compile Include="IUniqueIdentifierGenerator.cs" />
     <Compile Include="Eventing\Storage\ConcurrencyException.cs" />
     <Compile Include="Eventing\Storage\IEventStore.cs" />
     <Compile Include="Eventing\Storage\InMemoryEventStore.cs" />

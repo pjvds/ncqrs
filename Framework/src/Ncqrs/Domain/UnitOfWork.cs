@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Diagnostics.Contracts;
-using Ncqrs.Domain;
 using Ncqrs.Domain.Storage;
 
-namespace Ncqrs.Eventing.ServiceModel.Bus
+namespace Ncqrs.Domain
 {
     /// <summary>
     /// A context from within domain object can be changed.

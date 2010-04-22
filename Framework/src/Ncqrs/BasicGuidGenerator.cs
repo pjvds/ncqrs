@@ -1,6 +1,7 @@
 ﻿using System;
+using Ncqrs.Eventing;
 
-namespace Ncqrs.Eventing
+namespace Ncqrs
 {
     /// <summary>
     /// An unique identifier generator based on the .NET <see cref="Guid"/> class.
@@ -10,9 +11,8 @@ namespace Ncqrs.Eventing
         /// <summary>
         /// Generates a new <see cref="Guid"/> based on the <see cref="Guid.NewGuid()"/> method.
         /// </summary>
-        /// <param name="eventSource">The <see cref="EventSource"/> that requests the <see cref="Guid"/>.</param>
         /// <returns>A new generated <see cref="Guid"/>.</returns>
-        public Guid GenerateNewId(EventSource eventSource)
+        public Guid GenerateNewId()
         {
             return Guid.NewGuid();
         }
