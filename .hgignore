@@ -7,3 +7,5 @@ glob:src/**.user
 glob:src/_ReSharper**
 glob:Framework/Ncqrs.5.0.ReSharper.user
 glob:Framework/_ReSharper.Ncqrs/**
+glob:Sample/Sample.5.0.ReSharper.user
+glob:Sample/_ReSharper**

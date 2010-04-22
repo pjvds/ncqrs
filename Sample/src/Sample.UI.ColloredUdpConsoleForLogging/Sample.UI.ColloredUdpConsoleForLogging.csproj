@@ -35,7 +35,19 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="log4net">
-      <HintPath>..\..\Externals\Log4Net\log4net.dll</HintPath>
+      <HintPath>..\..\bin\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="MongoDB.Driver">
+      <HintPath>..\..\bin\MongoDB.Driver.dll</HintPath>
+    </Reference>
+    <Reference Include="MongoDB.Emitter">
+      <HintPath>..\..\bin\MongoDB.Emitter.dll</HintPath>
+    </Reference>
+    <Reference Include="Ncqrs">
+      <HintPath>..\..\bin\Ncqrs.dll</HintPath>
+    </Reference>
+    <Reference Include="StructureMap">
+      <HintPath>..\..\bin\StructureMap.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

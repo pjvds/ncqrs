@@ -32,10 +32,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="MongoDB.Driver">
-      <HintPath>..\..\Externals\MongoDB\MongoDB.Driver.dll</HintPath>
+      <HintPath>..\..\bin\MongoDB.Driver.dll</HintPath>
     </Reference>
     <Reference Include="MongoDB.Emitter">
-      <HintPath>..\..\Externals\MongoDB\MongoDB.Emitter.dll</HintPath>
+      <HintPath>..\..\bin\MongoDB.Emitter.dll</HintPath>
+    </Reference>
+    <Reference Include="Ncqrs">
+      <HintPath>..\..\bin\Ncqrs.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -57,22 +60,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Framework\Ncqrs.Denormalization\Ncqrs.Denormalization.csproj">
-      <Project>{15EFC9E0-F103-4E90-90E8-4D1E98AB86A7}</Project>
-      <Name>Ncqrs.Denormalization</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Framework\Ncqrs.Eventing.Bus\Ncqrs.Eventing.Bus.csproj">
-      <Project>{0610E5DC-D7B5-4923-BB9B-52E1CD58E09C}</Project>
-      <Name>Ncqrs.Eventing.Bus</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Framework\Ncqrs.Eventing\Ncqrs.Eventing.csproj">
-      <Project>{56D48F9D-29F4-4E77-86B1-D988EAC1DF42}</Project>
-      <Name>Ncqrs.Eventing</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Framework\Ncqrs\Ncqrs.csproj">
-      <Project>{01F84441-80D3-49B4-AB18-96894ACB2F90}</Project>
-      <Name>Ncqrs</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Sample.Events\Sample.Events.csproj">
       <Project>{EED221DB-3832-4256-AA3D-A7BA2DBC8C9D}</Project>
       <Name>Sample.Events</Name>

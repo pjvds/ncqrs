@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Ncqrs.Domain.Denormalization;
+using Ncqrs.Eventing.Denormalization;
 using Sample.Events;
-using MongoDB.Emitter;
 
 namespace Sample.ReadModel.Denormalizers.MessageModel
 {

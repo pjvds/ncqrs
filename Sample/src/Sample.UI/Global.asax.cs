@@ -1,36 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Ncqrs.CommandExecution;
-using Ncqrs.Domain.Bus;
+using MongoDB.Driver;
+using Ncqrs;
+using Ncqrs.Commanding.CommandExecution;
+using Ncqrs.Commanding.CommandExecution.Mapping;
+using Ncqrs.Commanding.ServiceModel;
+using Ncqrs.Config.StructureMap;
+using Ncqrs.Eventing.Denormalization;
+using Ncqrs.Eventing.ServiceModel.Bus;
+using Ncqrs.Eventing.Storage;
 using Ncqrs.Eventing.Storage.MongoDB;
 using Sample.Commands;
-using Ncqrs.CommandExecution.AutoMapping;
 using Ncqrs.Domain;
-using MongoDB.Driver;
-using System.Threading;
-using Sample.Events;
-using Sample.ReadModel.Denormalizers;
-using Sample.UI.Controllers;
 using Sample.ReadModel.Denormalizers.EditMessageModel;
-using Sample.ReadModel.Denormalizers.MessageModel;
-using Ncqrs.Denormalization;
-using System.Reflection;
-using log4net;
 using log4net.Config;
-using Ncqrs.Config;
-using Ncqrs.Config.StructureMap;
-using Ncqrs.Domain.Storage;
 
 namespace Sample.UI
 {
-    // Note: For instructions on enabling IIS6 or IIS7 classic mode, 
-    // visit http://go.microsoft.com/?LinkId=9394801
-
-    public class MvcApplication : System.Web.HttpApplication
+    public class MvcApplication : HttpApplication
     {
         public static ICommandExecutor CommandExecutor
         {

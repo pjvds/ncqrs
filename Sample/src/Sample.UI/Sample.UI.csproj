@@ -38,15 +38,26 @@
       <HintPath>..\..\Externals\Log4Net\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="MongoDB.Driver">
-      <HintPath>..\..\Externals\MongoDB\MongoDB.Driver.dll</HintPath>
-    </Reference>
-    <Reference Include="MongoDB.Emitter, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="MongoDB.Driver, Version=1.0.3728.40257, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Externals\MongoDB\MongoDB.Emitter.dll</HintPath>
+      <HintPath>..\..\bin\MongoDB.Driver.dll</HintPath>
+    </Reference>
+    <Reference Include="MongoDB.Emitter, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="Ncqrs, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\Ncqrs.dll</HintPath>
+    </Reference>
+    <Reference Include="Ncqrs.Config.StructureMap">
+      <HintPath>..\..\bin\Ncqrs.Config.StructureMap.dll</HintPath>
+    </Reference>
+    <Reference Include="Ncqrs.Eventing.Storage.MongoDB">
+      <HintPath>..\..\bin\Ncqrs.Eventing.Storage.MongoDB.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json.Net20">
+      <HintPath>..\..\bin\Newtonsoft.Json.Net20.dll</HintPath>
     </Reference>
     <Reference Include="StructureMap">
-      <HintPath>..\..\Externals\StructureMap\StructureMap.dll</HintPath>
+      <HintPath>..\..\bin\StructureMap.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -129,42 +140,6 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Framework\Ncqrs.CommandExecution\Ncqrs.CommandExecution.csproj">
-      <Project>{46FD95B7-ADBE-465D-989D-D316CA7887D4}</Project>
-      <Name>Ncqrs.CommandExecution</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Framework\Ncqrs.Commands\Ncqrs.Commands.csproj">
-      <Project>{667C1A88-8173-454D-B44F-CE9B27CC0548}</Project>
-      <Name>Ncqrs.Commands</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Framework\Ncqrs.Config.StructureMap\Ncqrs.Config.StructureMap.csproj">
-      <Project>{2558F4AD-8D5D-43A2-AAEA-75B966F9B4DE}</Project>
-      <Name>Ncqrs.Config.StructureMap</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Framework\Ncqrs.Denormalization\Ncqrs.Denormalization.csproj">
-      <Project>{15EFC9E0-F103-4E90-90E8-4D1E98AB86A7}</Project>
-      <Name>Ncqrs.Denormalization</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Framework\Ncqrs.Domain\Ncqrs.Domain.csproj">
-      <Project>{FC2478FB-2B60-491F-A1D8-B9C6D869B2F8}</Project>
-      <Name>Ncqrs.Domain</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Framework\Ncqrs.Eventing.Bus\Ncqrs.Eventing.Bus.csproj">
-      <Project>{0610E5DC-D7B5-4923-BB9B-52E1CD58E09C}</Project>
-      <Name>Ncqrs.Eventing.Bus</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Framework\Ncqrs.Eventing.Storage.MongoDB\Ncqrs.Eventing.Storage.MongoDB.csproj">
-      <Project>{E421E735-2833-4948-9BA0-94924BDC502E}</Project>
-      <Name>Ncqrs.Eventing.Storage.MongoDB</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Framework\Ncqrs.Eventing\Ncqrs.Eventing.csproj">
-      <Project>{56D48F9D-29F4-4E77-86B1-D988EAC1DF42}</Project>
-      <Name>Ncqrs.Eventing</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Framework\Ncqrs\Ncqrs.csproj">
-      <Project>{01F84441-80D3-49B4-AB18-96894ACB2F90}</Project>
-      <Name>Ncqrs</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Sample.Commands\Sample.Commands.csproj">
       <Project>{107CC343-852F-4892-8332-6433C406C813}</Project>
       <Name>Sample.Commands</Name>

@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Ncqrs">
+      <HintPath>..\..\bin\Ncqrs.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -43,16 +46,6 @@
     <Compile Include="AddNewMessageCommand.cs" />
     <Compile Include="UpdateMessageTextCommand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\Framework\Ncqrs.Commands\Ncqrs.Commands.csproj">
-      <Project>{667C1A88-8173-454D-B44F-CE9B27CC0548}</Project>
-      <Name>Ncqrs.Commands</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Framework\Ncqrs\Ncqrs.csproj">
-      <Project>{01F84441-80D3-49B4-AB18-96894ACB2F90}</Project>
-      <Name>Ncqrs</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

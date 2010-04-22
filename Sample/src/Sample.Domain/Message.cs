@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Ncqrs.Domain;
+using Ncqrs.Eventing;
 using Sample.Events;
-using Ncqrs.Domain.Mapping;
 using System.Diagnostics.Contracts;
-using Ncqrs.Domain;
 
 namespace Sample.Domain
 {

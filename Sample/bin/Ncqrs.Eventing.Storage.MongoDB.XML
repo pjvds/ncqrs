@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Ncqrs.Eventing.Storage.MongoDB</name>
+    </assembly>
+    <members>
+        <member name="T:Ncqrs.Eventing.Storage.MongoDB.MongoDBEventStore">
+            <summary>
+            An event store that uses MongoDB as storage mechanism. MongoDB is an document based database. 
+            See <seealso cref="!:http://mongodb.org"/> for more information about MongoDB.
+            </summary>
+            <remarks>
+            Be aware of the fact that MongoDB doesn't support transactions at the moment!
+            <para>
+            This class makes use of the <see cref="T:MongoDB.Driver.Mongo"/> driver class.
+            </para>
+            </remarks>
+        </member>
+        <member name="F:Ncqrs.Eventing.Storage.MongoDB.MongoDBEventStore.Log">
+            <summary>
+            The log to use to log messages from this instance.
+            </summary>
+        </member>
+        <member name="F:Ncqrs.Eventing.Storage.MongoDB.MongoDBEventStore._mongo">
+            <summary>
+            The reference to Mongo.
+            </summary>
+        </member>
+        <member name="F:Ncqrs.Eventing.Storage.MongoDB.MongoDBEventStore._databaseName">
+            <summary>
+            The name of the database.
+            </summary>
+        </member>
+        <member name="F:Ncqrs.Eventing.Storage.MongoDB.MongoDBEventStore._collectionName">
+            <summary>
+            The name of the collection that contains all the events.
+            </summary>
+        </member>
+        <member name="M:Ncqrs.Eventing.Storage.MongoDB.MongoDBEventStore.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Ncqrs.Eventing.Storage.MongoDB.MongoDBEventStore"/> class.
+            <remarks>
+            This will initialize a new default version of Mongo. That means, that it
+            will try to connect to a local mongo database server.
+            </remarks>
+            </summary>
+        </member>
+        <member name="M:Ncqrs.Eventing.Storage.MongoDB.MongoDBEventStore.#ctor(MongoDB.Driver.Mongo)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Ncqrs.Eventing.Storage.MongoDB.MongoDBEventStore"/> class.
+            </summary>
+            <param name="mongo">The mongo to connect to.</param>
+            <exception cref="T:System.ArgumentNullException">Occurs when <i>mongo</i> is <c>null</c>.</exception>
+        </member>
+        <member name="M:Ncqrs.Eventing.Storage.MongoDB.MongoDBEventStore.#ctor(MongoDB.Driver.Mongo,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Ncqrs.Eventing.Storage.MongoDB.MongoDBEventStore"/> class.
+            </summary>
+            <param name="mongo">The mongo to connect to.</param>
+            <param name="databaseName">Name of the database.</param>
+            <exception cref="T:System.ArgumentNullException">Occurs when <i>mongo</i>, or <paramref name="databaseName"/> is <c>null</c> or empty.</exception>
+        </member>
+        <member name="M:Ncqrs.Eventing.Storage.MongoDB.MongoDBEventStore.#ctor(MongoDB.Driver.Mongo,System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Ncqrs.Eventing.Storage.MongoDB.MongoDBEventStore"/> class.
+            </summary>
+            <param name="mongo">The mongo to connect to.</param>
+            <param name="databaseName">Name of the database.</param>
+            <param name="collectionName">Name of the collection.</param>
+            <exception cref="T:System.ArgumentNullException">Occurs when <i>mongo</i>, <paramref name="databaseName"/>, or <paramref name="collectionName"/> is <c>null</c> or empty.</exception>
+        </member>
+        <member name="M:Ncqrs.Eventing.Storage.MongoDB.MongoDBEventStore.GetAllEventsForEventSource(System.Guid)">
+            <summary>
+            Get all events provided by an specified event provider.
+            </summary>
+            <param name="id">The id of the event source that owns the events.</param>
+            <returns>All the events from the event source.</returns>
+        </member>
+        <member name="M:Ncqrs.Eventing.Storage.MongoDB.MongoDBEventStore.Save(Ncqrs.Eventing.EventSource)">
+            <summary>
+            Save all events from a specific event provider.
+            </summary>
+            <param name="source">The source that should be saved.</param>
+            <returns></returns>
+            <exception cref="T:Ncqrs.Eventing.Storage.ConcurrencyException">Occurs when there is already a newer version of the event provider stored in the event store.</exception>
+        </member>
+        <member name="M:Ncqrs.Eventing.Storage.MongoDB.MongoDBEventStore.GetVersion(MongoDB.Driver.IMongoCollection,Ncqrs.Eventing.EventSource)">
+            <summary>
+            Gets the version from the event store for an event source.
+            </summary>
+            <param name="eventsCollection">The events collection.</param>
+            <param name="source">The event source.</param>
+            <returns>The version in the event store for the specified event source.</returns>
+        </member>
+        <member name="M:Ncqrs.Eventing.Storage.MongoDB.MongoDBEventStore.GetAllDocumentsFromEventSource(Ncqrs.Eventing.EventSource)">
+            <summary>
+            Gets all documents from event source.
+            </summary>
+            <param name="eventSource">The event source.</param>
+            <returns>All the documents for the specified event source.</returns>
+        </member>
+        <member name="M:Ncqrs.Eventing.Storage.MongoDB.MongoDBEventStore.SerializeEventIntoDocument(MongoDB.Driver.Document,Ncqrs.Eventing.IEvent)">
+            <summary>
+            Serializes the event into a spefified document.
+            </summary>
+            <param name="document">The document.</param>
+            <param name="evnt">The event.</param>
+            <returns>The document with the added data.</returns>
+        </member>
+        <member name="M:Ncqrs.Eventing.Storage.MongoDB.MongoDBEventStore.DeserializeDocument(MongoDB.Driver.Document)">
+            <summary>
+            Deserializes the document into a historical event.
+            </summary>
+            <param name="doc">The document to deserialize.</param>
+            <returns>A new historical event that was deserialized from the document.</returns>
+        </member>
+    </members>
+</doc>
