@@ -68,8 +68,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AggregateRoot.cs" />
-    <Compile Include="AggregateRootMappedByAttributes.cs" />
     <Compile Include="AggregateRootMappedByConvention.cs" />
+    <Compile Include="AggregateRootMappedWithAttributes.cs" />
     <Compile Include="EventNotHandledException.cs" />
     <Compile Include="TypeThresholdedActionBasedInternalEventHandler.cs" />
     <Compile Include="IInternalEventHandler.cs" />
