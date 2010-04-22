@@ -32,14 +32,17 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="FluentAssertions">
-      <HintPath>..\..\Externals\FluentAssertions\FluentAssertions.dll</HintPath>
+      <HintPath>..\..\bin\FluentAssertions.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\..\bin\log4net.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework, Version=2.5.3.9345, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Externals\NUnit\nunit.framework.dll</HintPath>
+      <HintPath>..\..\bin\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="Rhino.Mocks">
-      <HintPath>..\..\Externals\Rhino Mocks\Rhino.Mocks.dll</HintPath>
+      <HintPath>..\..\bin\Rhino.Mocks.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
