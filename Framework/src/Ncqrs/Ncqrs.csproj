@@ -108,7 +108,7 @@
     <Compile Include="Commanding\ICommand.cs" />
     <Compile Include="Config\EnvironmentNotConfiguredException.cs" />
     <Compile Include="Config\InstanceNotFoundInEnvironment.cs" />
-    <Compile Include="DateTimeBasedSystemTime.cs" />
+    <Compile Include="DateTimeBasedClock.cs" />
     <Compile Include="IClock.cs" />
     <Compile Include="NamespaceDoc.cs" />
     <Compile Include="NcqrsEnvironment.cs" />
