@@ -76,6 +76,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commanding\CommandExecution\DirectActionOnAggregateRootCommandExecutor.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\ActionFactory.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Actions\DirectMethodAction.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Actions\DirectMethodCommandInfo.cs" />
@@ -85,6 +86,12 @@
     <Compile Include="Commanding\CommandExecution\Mapping\AutoMappingCommandExecutor.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\AutoMappingException.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\CommandMappingException.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\Fluent\FluentAndWord.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\Fluent\FluentCommandExecutorBuilderThatMapsTo.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\Fluent\FluentCommandExecutorBuilderWithAggregateRootSource.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\Fluent\FluentDirectMethodCommandExecutorBuilderWithClosure.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\Fluent\FluentWhereWord.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\Fluent\Mapping.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\MappingForCommandNotFoundException.cs" />
     <Compile Include="Commanding\CommandExecution\CommandEventArgs.cs" />
     <Compile Include="Commanding\CommandExecution\CommandExecutionDispatcher.cs" />

@@ -4,7 +4,6 @@ using Ncqrs.Config;
 using Ncqrs.Domain;
 using NUnit.Framework;
 using Rhino.Mocks;
-using Ncqrs.Eventing.ServiceModel.Bus;
 
 namespace Ncqrs.Specs.Config
 {
