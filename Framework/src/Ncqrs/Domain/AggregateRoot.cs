@@ -12,13 +12,24 @@ namespace Ncqrs.Domain
     /// </summary>
     public abstract class AggregateRoot : IEventSource
     {
+        private Guid _id;
+
         /// <summary>
         /// Gets the globally unique identifier.
         /// </summary>
+        /// <exception cref="InvalidOperationException">Thrown when setting this
+        /// value when the version of this aggregate root is not 0 or this
+        /// instance contains are any uncommitted events.</exception>
         public Guid Id
         {
-            get;
-            protected set; // TODO: Only allow ID change when there are no events.
+            get { return _id; }
+            protected set
+            {
+                Contract.Requires<InvalidOperationException>(Version == 0);
+                Contract.Requires<InvalidOperationException>(_uncommittedEvent.Count == 0);
+
+                _id = value;
+            }
         }
 
         /// <summary>
@@ -49,9 +60,10 @@ namespace Ncqrs.Domain
         /// </remarks>
         protected AggregateRoot()
         {
+            Version = 0;
+
             var idGenerator = NcqrsEnvironment.Get<IUniqueIdentifierGenerator>();
             Id = idGenerator.GenerateNewId();
-            Version = 0;
         }
 
         protected AggregateRoot(IEnumerable<DomainEvent> history)
