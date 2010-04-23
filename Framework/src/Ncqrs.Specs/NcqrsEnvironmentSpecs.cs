@@ -101,6 +101,8 @@ namespace Ncqrs.Specs
         [Test]
         public void When_get_is_called_the_call_should_return_what_the_environment_configuration_returned()
         {
+            NcqrsEnvironment.Deconfigure();
+
             // Arrange
             IFoo outParameter;
             IFoo returnValue = new Foo();

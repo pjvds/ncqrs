@@ -97,37 +97,38 @@ namespace Ncqrs.Eventing.Storage.SQL
                 // Open connection and begin a transaction so we can
                 // commit or rollback all the changes that has been made.
                 connection.Open();
-                SqlTransaction transaction = connection.BeginTransaction();
-
-                try
+                using (SqlTransaction transaction = connection.BeginTransaction())
                 {
-                    // Get the current version of the event provider.
-                    int? currentVersion = GetVersion(eventSource.Id, transaction);
-
-                    // Create new event provider when it is not found.
-                    if (currentVersion == null)
+                    try
                     {
-                        AddEventSource(eventSource, transaction);
+                        // Get the current version of the event provider.
+                        int? currentVersion = GetVersion(eventSource.Id, transaction);
+
+                        // Create new event provider when it is not found.
+                        if (currentVersion == null)
+                        {
+                            AddEventSource(eventSource, transaction);
+                        }
+                        else if (currentVersion.Value != eventSource.Version)
+                        {
+                            throw new ConcurrencyException(eventSource.Id, eventSource.Version, currentVersion.Value);
+                        }
+
+                        // Save all events to the store.
+                        SaveEvents(events, eventSource.Id, transaction);
+
+                        // Update the version of the provider.
+                        UpdateEventSourceVersion(eventSource, transaction);
+
+                        // Everything is handled, commint transaction.
+                        transaction.Commit();
                     }
-                    else if (currentVersion.Value != eventSource.Version)
+                    catch
                     {
-                        throw new ConcurrencyException(eventSource.Version, currentVersion.Value);
+                        // Something went wrong, rollback transaction.
+                        transaction.Rollback();
+                        throw;
                     }
-
-                    // Save all events to the store.
-                    SaveEvents(events, eventSource.Id, transaction);
-
-                    // Update the version of the provider.
-                    UpdateEventSourceVersion(eventSource, transaction);
-
-                    // Everything is handled, commint transaction.
-                    transaction.Commit();
-                }
-                catch
-                {
-                    // Something went wrong, rollback transaction.
-                    transaction.Rollback();
-                    throw;
                 }
             }
 

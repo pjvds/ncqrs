@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BasicGuidGeneratorSpecs.cs" />
+    <Compile Include="Eventing\Storage\ConcurrencyExceptionSpecs.cs" />
     <Compile Include="NcqrsEnvironmentConfigurationExceptionSpecs.cs" />
     <Compile Include="NcqrsEnvironmentSpecs.cs" />
     <Compile Include="DateTimeBasedClockSpecs.cs" />

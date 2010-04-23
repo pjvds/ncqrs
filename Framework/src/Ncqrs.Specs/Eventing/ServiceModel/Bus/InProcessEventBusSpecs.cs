@@ -22,7 +22,7 @@ namespace Ncqrs.Specs.Eventing.ServiceModel.Bus
         [Test]
         public void When_a_catch_all_handler_is_register_it_should_be_called_for_all_events()
         {
-            var catchAllEventHandler = MockRepository.GenerateStrictMock<IEventHandler>();
+            var catchAllEventHandler = MockRepository.GenerateMock<IEventHandler>();
 
             var bus = new InProcessEventBus();
             bus.RegisterHandler(catchAllEventHandler);
@@ -30,7 +30,7 @@ namespace Ncqrs.Specs.Eventing.ServiceModel.Bus
             bus.Publish(new ADomainEvent());
             bus.Publish(new AEvent());
 
-            catchAllEventHandler.AssertWasCalled(h=>h.Handle(null), options => options.Repeat.Twice());
+            catchAllEventHandler.AssertWasCalled(h=>h.Handle(null), options => options.IgnoreArguments().Repeat.Twice());
         }
 
         [Test]

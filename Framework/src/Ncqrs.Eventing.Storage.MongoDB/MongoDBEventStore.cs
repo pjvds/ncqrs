@@ -177,7 +177,7 @@ namespace Ncqrs.Eventing.Storage.MongoDB
                                         "the version in the store is {1} and the version of the event "+
                                         "source to save is {2}.", source.Id, currentVersionInStore, source.Version);
 
-                        throw new ConcurrencyException(source.Version, currentVersionInStore);
+                        throw new ConcurrencyException(source.Id, source.Version, currentVersionInStore);
                     }
 
                     // Get all events as documents.
