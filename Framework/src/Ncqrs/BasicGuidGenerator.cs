@@ -1,5 +1,4 @@
 ﻿using System;
-using Ncqrs.Eventing;
 
 namespace Ncqrs
 {

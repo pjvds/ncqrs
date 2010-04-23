@@ -3,6 +3,11 @@ using Ncqrs.Commanding.CommandExecution.Mapping.Attributes;
 
 namespace Ncqrs.Commanding
 {
+    /// <summary>
+    /// The base of a command message. A command should contain all the
+    /// information and intend that is needed to execute an corresponding
+    /// action.
+    /// </summary>
     [Serializable]
     public abstract class CommandBase : ICommand
     {
