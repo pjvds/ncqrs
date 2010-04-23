@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BasicGuidGeneratorSpecs.cs" />
     <Compile Include="Config\NcqrsEnvironmentSpecs.cs" />
     <Compile Include="DateTimeBasedClockSpecs.cs" />
     <Compile Include="Domain\TypeThresholdedActionBasedInternalEventHandlerSpecs.cs" />

@@ -4,6 +4,7 @@ using NUnit.Framework;
 
 namespace Ncqrs.Specs
 {
+    [TestFixture]
     public class DateTimeBasedClockSpecs
     {
         [Test]
