@@ -96,7 +96,7 @@ namespace Ncqrs.Domain
             Contract.Requires<ArgumentNullException>(evnt != null, "The evnt cannot be null.");
             Boolean handled = false;
 
-            foreach(var handler in _eventHandlers)
+            foreach (var handler in _eventHandlers)
             {
                 handled |= handler.HandleEvent(evnt);
             }
@@ -115,11 +115,18 @@ namespace Ncqrs.Domain
 
         private void ApplyEvent(DomainEvent evnt, Boolean historical)
         {
-            if (evnt == null) throw new ArgumentNullException("evnt");
             HandleEvent(evnt);
 
-            if(!historical)
+            if (!historical)
             {
+                if (evnt.AggregateRootId != Guid.Empty)
+                {
+                    var message = "The {0} event cannot be applied to aggregate root {1} with id {2} "
+                                  + "since it was already owned by event aggregate root with id {3}."
+                                  .FormatWith(evnt.GetType().FullName, this.GetType().FullName, Id, evnt.AggregateRootId);
+                    throw new InvalidOperationException(message);
+                }
+
                 // TODO: Validate id.
                 evnt.AggregateRootId = this.Id;
                 _uncommittedEvent.Push(evnt);
@@ -136,9 +143,9 @@ namespace Ncqrs.Domain
         }
 
         IEnumerable<IEventSourcedEvent> IEventSource.GetUncommittedEvents()
-         {
-             return GetUncommitedEvents();
-         }
+        {
+            return GetUncommitedEvents();
+        }
 
         public void CommitEvents()
         {
@@ -152,7 +159,7 @@ namespace Ncqrs.Domain
             // Register this instance as a dirty one.
             var unitOfWorkFactory = NcqrsEnvironment.Get<IUnitOfWorkFactory>();
             var currentUnitOfWork = unitOfWorkFactory.GetUnitOfWorkInCurrentContext();
-            
+
             currentUnitOfWork.RegisterDirtyInstance(this);
         }
     }
