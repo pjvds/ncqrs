@@ -50,7 +50,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BasicGuidGeneratorSpecs.cs" />
-    <Compile Include="Config\NcqrsEnvironmentSpecs.cs" />
+    <Compile Include="NcqrsEnvironmentConfigurationExceptionSpecs.cs" />
+    <Compile Include="NcqrsEnvironmentSpecs.cs" />
     <Compile Include="DateTimeBasedClockSpecs.cs" />
     <Compile Include="Domain\TypeThresholdedActionBasedInternalEventHandlerSpecs.cs" />
     <Compile Include="Eventing\EventBaseSpecs.cs" />
@@ -63,6 +64,9 @@
       <Project>{01F84441-80D3-49B4-AB18-96894ACB2F90}</Project>
       <Name>Ncqrs</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Config\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
