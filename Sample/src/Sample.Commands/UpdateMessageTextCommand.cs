@@ -6,7 +6,7 @@ namespace Sample.Commands
 {
     [Serializable]
     [MapsToAggregateRootMethod("Sample.Domain.Message, Sample.Domain", "UpdateMessageText")]
-    public class UpdateMessageTextCommand : ICommand
+    public class UpdateMessageTextCommand : CommandBase
     {
         [AggregateRootId]
         public Guid MessageId

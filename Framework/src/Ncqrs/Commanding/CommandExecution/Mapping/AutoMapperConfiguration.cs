@@ -68,7 +68,7 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping
         }
 
         /// <summary>
-        /// Gets all the propertie from the command that should be used in the auto mapping process.
+        /// Gets all the properties from the command that should be used in the auto mapping process.
         /// </summary>
         /// <remarks>All properties marked with the <see cref="ExcludeInMappingAttribute"/> are ignored.</remarks>
         /// <param name="command">The command.</param>

@@ -6,7 +6,7 @@ namespace Sample.Commands
 {
     [Serializable]
     [MapsToAggregateRootConstructor("Sample.Domain.Message, Sample.Domain")]
-    public class AddNewMessageCommand : ICommand
+    public class AddNewMessageCommand : CommandBase
     {
         public Guid MessageId
         {

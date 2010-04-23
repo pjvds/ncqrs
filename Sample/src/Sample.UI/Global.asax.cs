@@ -15,7 +15,6 @@ using Ncqrs.Eventing.Storage.MongoDB;
 using Sample.Commands;
 using Ncqrs.Domain;
 using Sample.ReadModel.Denormalizers.EditMessageModel;
-using log4net.Config;
 
 namespace Sample.UI
 {
@@ -62,7 +61,7 @@ namespace Sample.UI
             InitializeCommandService();
 
             // Configure log4net.
-            XmlConfigurator.Configure();
+            log4net.Config.XmlConfigurator.Configure();
 
             this.Error += new EventHandler(MvcApplication_Error);
         }
