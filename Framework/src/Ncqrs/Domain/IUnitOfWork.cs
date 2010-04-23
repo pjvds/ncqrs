@@ -1,5 +1,6 @@
 ﻿using System;
 using Ncqrs.Domain.Storage;
+using Ncqrs.Eventing;
 
 namespace Ncqrs.Domain
 {
@@ -11,5 +12,7 @@ namespace Ncqrs.Domain
         }
 
         void Accept();
+
+        void RegisterDirtyInstance(AggregateRoot dirtyAggregateRoot);
     }
 }

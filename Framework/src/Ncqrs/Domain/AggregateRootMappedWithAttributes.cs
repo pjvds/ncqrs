@@ -7,12 +7,12 @@ namespace Ncqrs.Domain
     public abstract class AggregateRootMappedWithAttributes : MappedAggregateRoot
     {
         protected AggregateRootMappedWithAttributes()
-            : base(new AttributeBasedInternalEventHandlerMappingStrategy())
+            : base(new AttributeBasedDomainEventHandlerMappingStrategy())
         {
         }
 
         protected AggregateRootMappedWithAttributes(IEnumerable<DomainEvent> history)
-            : base(new AttributeBasedInternalEventHandlerMappingStrategy(), history)
+            : base(new AttributeBasedDomainEventHandlerMappingStrategy(), history)
         {
         }
     }

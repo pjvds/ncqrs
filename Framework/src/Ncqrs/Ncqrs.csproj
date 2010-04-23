@@ -111,6 +111,7 @@
     <Compile Include="Domain\DomainEvent.cs" />
     <Compile Include="Eventing\EventBase.cs" />
     <Compile Include="Eventing\IEventSource.cs" />
+    <Compile Include="Eventing\IEventSourcedEvent.cs" />
     <Compile Include="IClock.cs" />
     <Compile Include="NamespaceDoc.cs" />
     <Compile Include="NcqrsEnvironment.cs" />
@@ -123,15 +124,15 @@
     <Compile Include="Domain\AggregateRootMappedByConvention.cs" />
     <Compile Include="Domain\AggregateRootMappedWithAttributes.cs" />
     <Compile Include="Domain\EventNotHandledException.cs" />
-    <Compile Include="Domain\ExactInternalEventHandler.cs" />
-    <Compile Include="Domain\IInternalEventHandler.cs" />
-    <Compile Include="Domain\InternalEventHandler.cs" />
+    <Compile Include="Domain\ExactDomainEventHandler.cs" />
+    <Compile Include="Domain\IDomainEventHandler.cs" />
+    <Compile Include="Domain\DomainEventHandler.cs" />
     <Compile Include="Domain\IUnitOfWork.cs" />
     <Compile Include="Domain\IUnitOfWorkFactory.cs" />
-    <Compile Include="Domain\Mapping\AttributeBasedInternalEventHandlerMappingStrategy.cs" />
-    <Compile Include="Domain\Mapping\ConventionBasedInternalEventHandlerMappingStrategy.cs" />
+    <Compile Include="Domain\Mapping\AttributeBasedDomainEventHandlerMappingStrategy.cs" />
+    <Compile Include="Domain\Mapping\ConventionBasedDomainEventHandlerMappingStrategy.cs" />
     <Compile Include="Domain\Mapping\EventHandlerAttribute.cs" />
-    <Compile Include="Domain\Mapping\IInternalEventHandlerMappingStrategy.cs" />
+    <Compile Include="Domain\Mapping\IDomainEventHandlerMappingStrategy.cs" />
     <Compile Include="Domain\Mapping\InvalidEventHandlerMappingException.cs" />
     <Compile Include="Domain\Mapping\MappedAggregateRoot.cs" />
     <Compile Include="Domain\Mapping\NoEventHandlerAttribute.cs" />
@@ -141,7 +142,7 @@
     <Compile Include="Domain\Storage\IAggregateRootLoader.cs" />
     <Compile Include="Domain\Storage\IDomainRepository.cs" />
     <Compile Include="Domain\ThreadBasedUnitOfWorkFactory.cs" />
-    <Compile Include="Domain\TypeThresholdedActionBasedInternalEventHandler.cs" />
+    <Compile Include="Domain\TypeThresholdedActionBasedDomainEventHandler.cs" />
     <Compile Include="Domain\UnitOfWork.cs" />
     <Compile Include="BasicGuidGenerator.cs" />
     <Compile Include="Eventing\ServiceModel\Bus\ActionBasedEventBusFactory.cs" />
@@ -149,7 +150,6 @@
     <Compile Include="Eventing\ServiceModel\Bus\IEventBusFactory.cs" />
     <Compile Include="Eventing\ServiceModel\Bus\IEventHandler.cs" />
     <Compile Include="Eventing\ServiceModel\Bus\InProcessEventBus.cs" />
-    <Compile Include="Eventing\EventSource.cs" />
     <Compile Include="Eventing\IEvent.cs" />
     <Compile Include="IUniqueIdentifierGenerator.cs" />
     <Compile Include="Eventing\Storage\ConcurrencyException.cs" />

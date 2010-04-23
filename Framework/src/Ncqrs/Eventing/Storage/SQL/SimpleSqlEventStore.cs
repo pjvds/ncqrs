@@ -89,7 +89,7 @@ namespace Ncqrs.Eventing.Storage.SQL
         public IEnumerable<IEvent> Save(IEventSource eventSource)
         {
             // Get all events.
-            IEnumerable<IEvent> events = eventSource.GetUncommitedEvents();
+            IEnumerable<IEvent> events = eventSource.GetUncommittedEvents();
 
             // Create new connection.
             using (var connection = new SqlConnection(_connectionString))

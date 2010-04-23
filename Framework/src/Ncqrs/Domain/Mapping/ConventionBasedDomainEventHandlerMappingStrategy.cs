@@ -18,7 +18,7 @@ namespace Ncqrs.Domain.Mapping
     /// <list type="number">
     ///     <item>
     ///         <value>
-    ///             Methodname should start with <i>On</i> or <i>on</i>. Like: <i>OnProductAdded</i> or <i>onProductAdded</i>.
+    ///             Method name should start with <i>On</i> or <i>on</i>. Like: <i>OnProductAdded</i> or <i>onProductAdded</i>.
     ///         </value>
     ///     </item>
     ///     <item>
@@ -28,21 +28,21 @@ namespace Ncqrs.Domain.Mapping
     ///     </item>
     ///     <item>
     ///         <value>
-    ///             The parameter must be of a type that implements the <see cref="IEvent"/> interface.
+    ///             The parameter must be, or inhired from, the <see cref="DomainEvent"/> class.
     ///         </value>
     ///     </item>
     /// </list>
     /// </remarks>
     /// </summary>
-    public class ConventionBasedInternalEventHandlerMappingStrategy : IInternalEventHandlerMappingStrategy
+    public class ConventionBasedDomainEventHandlerMappingStrategy : IDomainEventHandlerMappingStrategy
     {
         private String _regexPattern = "^(on|On|ON)+";
         private static readonly ILog Logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public IEnumerable<IInternalEventHandler> GetEventHandlersFromAggregateRoot(AggregateRoot aggregateRoot)
+        public IEnumerable<IDomainEventHandler> GetEventHandlersFromAggregateRoot(AggregateRoot aggregateRoot)
         {
             Contract.Requires<ArgumentNullException>(aggregateRoot != null, "The aggregateRoot cannot be null.");
-            Contract.Ensures(Contract.Result<IEnumerable<IInternalEventHandler>>() != null, "The result should never be null.");
+            Contract.Ensures(Contract.Result<IEnumerable<IDomainEventHandler>>() != null, "The result should never be null.");
 
             var targetType = aggregateRoot.GetType();
             Logger.DebugFormat("Trying to get all event handlers based by convention for {0}.", targetType);
@@ -59,7 +59,7 @@ namespace Ncqrs.Domain.Mapping
                                      // Get only methods that have 1 parameter.
                                     parameters.Length == 1 &&
                                      // Get only methods where the first parameter is an event.
-                                    typeof(IEvent).IsAssignableFrom(parameters[0].ParameterType) &&
+                                    typeof(DomainEvent).IsAssignableFrom(parameters[0].ParameterType) &&
                                      // Get only methods that are not marked with the no event handler attribute.
                                     noEventHandlerAttributes.Length == 0
                                  select
@@ -70,11 +70,11 @@ namespace Ncqrs.Domain.Mapping
                 var methodCopy = method.MethodInfo;
                 Type firstParameterType = methodCopy.GetParameters().First().ParameterType;
 
-                Action<IEvent> invokeAction = (e) => methodCopy.Invoke(aggregateRoot, new object[] {e});
+                Action<DomainEvent> invokeAction = (e) => methodCopy.Invoke(aggregateRoot, new object[] {e});
 
                 Logger.DebugFormat("Created event handler for method {0} based on convention.", methodCopy.Name);
 
-                yield return new TypeThresholdedActionBasedInternalEventHandler(invokeAction, firstParameterType, true);
+                yield return new TypeThresholdedActionBasedDomainEventHandler(invokeAction, firstParameterType, true);
             }
         }
     }

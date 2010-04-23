@@ -153,7 +153,7 @@ namespace Ncqrs.Eventing.Storage.MongoDB
             IEnumerable<IEvent> savedEvents = new IEvent[0];
 
             // Get all events to save.
-            var eventsToSave = source.GetUncommitedEvents();
+            var eventsToSave = source.GetUncommittedEvents();
 
             // Only save events when they are available.
             if (eventsToSave.Count() > 0)
@@ -227,7 +227,7 @@ namespace Ncqrs.Eventing.Storage.MongoDB
         /// <returns>All the documents for the specified event source.</returns>
         private IEnumerable<Document> GetAllDocumentsFromEventSource(IEventSource eventSource)
         {
-            foreach (var evnt in eventSource.GetUncommitedEvents())
+            foreach (var evnt in eventSource.GetUncommittedEvents())
             {
                 var document = new Document();
                 document["EventSourceId"] = eventSource.Id;

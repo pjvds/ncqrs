@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using Ncqrs.Domain.Storage;
+using Ncqrs.Eventing;
 
 namespace Ncqrs.Domain
 {
@@ -33,7 +34,7 @@ namespace Ncqrs.Domain
         private readonly Queue<AggregateRoot> _dirtyInstances;
 
         /// <summary>
-        /// A reference to the repository that is asociated with this instance.
+        /// A reference to the repository that is associated with this instance.
         /// </summary>
         private readonly IDomainRepository _repository;
 
@@ -141,7 +142,7 @@ namespace Ncqrs.Domain
         /// Registers the dirty.
         /// </summary>
         /// <param name="dirtyInstance">The dirty instance.</param>
-        internal void RegisterDirtyInstance(AggregateRoot dirtyInstance)
+        public void RegisterDirtyInstance(AggregateRoot dirtyInstance)
         {
             Contract.Requires<ArgumentNullException>(dirtyInstance != null, "dirtyInstance could not be null.");
 
@@ -166,15 +167,6 @@ namespace Ncqrs.Domain
                 Contract.Assume(dirtyInstance != null);
                 _repository.Save(dirtyInstance);
             }
-        }
-
-        /// <summary>
-        /// Make sure that a valid <see cref="UnitOfWork"/> is available.
-        /// </summary>
-        public static void Required()
-        {
-            Contract.Requires<InvalidOperationException>(Current != null);
-            Contract.Requires<ObjectDisposedException>(!Current.IsDisposed);
-        }
+       }
     }
 }

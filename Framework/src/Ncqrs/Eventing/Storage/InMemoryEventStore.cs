@@ -27,7 +27,7 @@ namespace Ncqrs.Eventing.Storage
         public IEnumerable<IEvent> Save(IEventSource source)
         {
             LinkedList<IEvent> events;
-            var eventsToCommit = source.GetUncommitedEvents();
+            var eventsToCommit = source.GetUncommittedEvents();
 
             if (!_events.TryGetValue(source.Id, out events))
             {

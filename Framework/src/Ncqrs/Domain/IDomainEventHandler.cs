@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
-using Ncqrs.Eventing;
 
 namespace Ncqrs.Domain
 {
     /// <summary>
-    /// An event handler that handles the event internally. Where internally means <i>inside the domain</i>.
+    /// An event handler that handles the domain events.
     /// </summary>
-    [ContractClass(typeof(IInternalEventHandlerContracts))]
-    public interface IInternalEventHandler
+    [ContractClass(typeof(DomainEventHandlerContracts))]
+    public interface IDomainEventHandler
     {
         /// <summary>
         /// Handles the event.
@@ -17,13 +16,13 @@ namespace Ncqrs.Domain
         /// <returns><c>true</c> when the event was handled; otherwise, <c>false</c>.
         /// <remarks><c>false</c> does not mean that the handling failed, but that the 
         /// handler was not interested in handling this event.</remarks></returns>
-        Boolean HandleEvent(IEvent evnt);
+        Boolean HandleEvent(DomainEvent evnt);
     }
 
-    [ContractClassFor(typeof(IInternalEventHandler))]
-    public class IInternalEventHandlerContracts : IInternalEventHandler
+    [ContractClassFor(typeof(IDomainEventHandler))]
+    public class DomainEventHandlerContracts : IDomainEventHandler
     {
-        public bool HandleEvent(IEvent evnt)
+        public bool HandleEvent(DomainEvent evnt)
         {
             Contract.Requires<ArgumentNullException>(evnt != null, "The evnt cannot be null.");
 

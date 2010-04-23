@@ -16,7 +16,7 @@ namespace Ncqrs.Domain.Mapping
     /// <list type="number">
     /// <item><description>The method should be an instance method (no static).</description></item>
     /// <item><description>It should accept 1 parameter.</description></item>
-    /// <item><description>The parameter should be or implement the <see cref="IEvent"/> interface.</description></item>
+    /// <item><description>The parameter should be, or inherited from, the <see cref="DomainEvent"/> class.</description></item>
     /// <item><description>The method should be marked with the <see cref="EventHandlerAttribute"/>.</description></item>
     /// </list>
     /// <code>public class Foo : AggregateRootMappedWithAttributes
@@ -29,15 +29,15 @@ namespace Ncqrs.Domain.Mapping
     /// }</code>
     /// </remarks>
     /// </summary>
-    public class AttributeBasedInternalEventHandlerMappingStrategy : IInternalEventHandlerMappingStrategy
+    public class AttributeBasedDomainEventHandlerMappingStrategy : IDomainEventHandlerMappingStrategy
     {
         /// <summary>
         /// Gets the event handlers from aggregate root based on attributes.
         /// </summary>
         /// <param name="aggregateRoot">The aggregate root.</param>
-        /// <see cref="AttributeBasedInternalEventHandlerMappingStrategy"/>
-        /// <returns>All the <see cref="IInternalEventHandler"/>'s created based on attribute mapping.</returns>
-        public IEnumerable<IInternalEventHandler> GetEventHandlersFromAggregateRoot(AggregateRoot aggregateRoot)
+        /// <see cref="AttributeBasedDomainEventHandlerMappingStrategy"/>
+        /// <returns>All the <see cref="IDomainEventHandler"/>'s created based on attribute mapping.</returns>
+        public IEnumerable<IDomainEventHandler> GetEventHandlersFromAggregateRoot(AggregateRoot aggregateRoot)
         {
             Contract.Requires<ArgumentNullException>(aggregateRoot != null, "The aggregateRoot cannot be null.");
 
@@ -58,7 +58,7 @@ namespace Ncqrs.Domain.Mapping
                         var message = String.Format("The method {0}.{1} could not be mapped as an event handler, since it has {2} parameters where 1 is required.", method.DeclaringType.Name, method.Name, NumberOfParameters(method));
                         throw new InvalidEventHandlerMappingException(message);
                     }
-                    if (!typeof(IEvent).IsAssignableFrom(FirstParameterType(method))) // The parameter should be an IEvent.
+                    if (!typeof(DomainEvent).IsAssignableFrom(FirstParameterType(method))) // The parameter should be an IEvent.
                     {
                         var message = String.Format("The method {0}.{1} could not be mapped as an event handler, since it the first parameter is not an event type.", method.DeclaringType.Name, method.Name);
                         throw new InvalidEventHandlerMappingException(message);
@@ -69,13 +69,13 @@ namespace Ncqrs.Domain.Mapping
             }
         }
 
-        private static IInternalEventHandler CreateHandlerForMethod(AggregateRoot aggregateRoot, MethodInfo method, EventHandlerAttribute attribute)
+        private static IDomainEventHandler CreateHandlerForMethod(AggregateRoot aggregateRoot, MethodInfo method, EventHandlerAttribute attribute)
         {
             Type firstParameterType = method.GetParameters().First().ParameterType;
 
-            Action<IEvent> handler = (e) => method.Invoke(aggregateRoot, new object[] {e});
+            Action<DomainEvent> handler = e => method.Invoke(aggregateRoot, new object[] {e});
 
-            return new TypeThresholdedActionBasedInternalEventHandler(handler, firstParameterType, attribute.Exact);
+            return new TypeThresholdedActionBasedDomainEventHandler(handler, firstParameterType, attribute.Exact);
         }
 
         private static Boolean IsMarkedAsEventHandler(MethodInfo target, out EventHandlerAttribute attribute)

@@ -70,7 +70,7 @@ namespace Ncqrs.Domain.Storage
             _eventBus.Publish(events);
 
             // Accept the changes.
-            aggregateRoot.AcceptEvents();
+            aggregateRoot.CommitEvents();
         }
     }
 }

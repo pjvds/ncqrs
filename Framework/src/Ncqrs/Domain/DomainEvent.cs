@@ -4,11 +4,19 @@ using Ncqrs.Eventing;
 namespace Ncqrs.Domain
 {
     [Serializable]
-    public abstract class DomainEvent : IEvent
+    public abstract class DomainEvent : IEventSourcedEvent
     {
         public Guid AggregateRootId
         {
             get; internal set;
+        }
+
+        Guid IEventSourcedEvent.EventSourceId
+        {
+            get
+            {
+                return AggregateRootId;
+            }
         }
 
         public Guid EventIdentifier

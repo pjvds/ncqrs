@@ -14,7 +14,7 @@ namespace Ncqrs.Domain.Storage
         /// Loads the aggregate root from historical events.
         /// </summary>
         /// <remarks>
-        /// This method searches for a public or non public constructor that accepts only one parameter of the type <see cref="IEnumerable{IEvent}"/> 
+        /// This method searches for a public or non public constructor that accepts only one parameter of the type <see cref="IEnumerable{DomainEvent}"/> 
         /// and invokes it with the given <i>events</i>.
         /// </remarks>
         /// <param name="aggregateRootType">Type of the aggregate root to load.</param>
@@ -23,7 +23,7 @@ namespace Ncqrs.Domain.Storage
         /// A new instance of the specified aggregate root type loaded with context that has been build from the events.
         /// </returns>
         /// <exception cref="AggregateLoaderException">Occurs when the aggregate root does not contains a constructor that
-        /// accepts only one parameter of the type <see cref="IEnumerable{IEvent}"/>.</exception>
+        /// accepts only one parameter of the type <see cref="IEnumerable{DomainEvent}"/>.</exception>
         public AggregateRoot LoadAggregateRootFromEvents(Type aggregateRootType, IEnumerable<DomainEvent> events)
         {
             // Flags to search for a public and non public contructor.
@@ -38,7 +38,7 @@ namespace Ncqrs.Domain.Storage
             {
                 var message = String.Format("No constructor found on aggregate root type {0} that accepts " +
                                             "only one parameter of the type {1}.", aggregateRootType.AssemblyQualifiedName,
-                                            typeof(IEnumerable<IEvent>).AssemblyQualifiedName);
+                                            typeof(IEnumerable<DomainEvent>).AssemblyQualifiedName);
                 throw new AggregateLoaderException(message);
             }
 

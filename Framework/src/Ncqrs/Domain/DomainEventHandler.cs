@@ -3,11 +3,11 @@ using Ncqrs.Eventing;
 
 namespace Ncqrs.Domain
 {
-    public abstract class InternalEventHandler<TEvent> : IInternalEventHandler where TEvent : IEvent
+    public abstract class DomainEventHandler<TEvent> : IDomainEventHandler where TEvent : DomainEvent
     {
         public abstract Boolean HandleEvent(TEvent evnt);
 
-        Boolean IInternalEventHandler.HandleEvent(IEvent evnt)
+        Boolean IDomainEventHandler.HandleEvent(DomainEvent evnt)
         {
             Boolean handled = false;
 

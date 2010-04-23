@@ -22,9 +22,9 @@ namespace Ncqrs.Domain
         }
 
         /// <summary>
-        /// Holds the events that are not yet accepted.
+        /// Holds the events that are not yet committed.
         /// </summary>
-        private readonly Stack<DomainEvent> _unacceptedEvents = new Stack<DomainEvent>(0);
+        private readonly Stack<DomainEvent> _uncommittedEvent = new Stack<DomainEvent>(0);
 
         /// <summary>
         /// Gets the current version.
@@ -39,7 +39,7 @@ namespace Ncqrs.Domain
         /// <summary>
         /// A list that contains all the event handlers.
         /// </summary>
-        private readonly List<IInternalEventHandler> _eventHandlers = new List<IInternalEventHandler>();
+        private readonly List<IDomainEventHandler> _eventHandlers = new List<IDomainEventHandler>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AggregateRoot"/> class.
@@ -62,7 +62,7 @@ namespace Ncqrs.Domain
         [ContractInvariantMethod]
         private void ContractInvariants()
         {
-            Contract.Invariant(_unacceptedEvents != null, "The member _unacceptedEvents should never be null.");
+            Contract.Invariant(_uncommittedEvent != null, "The member _unacceptedEvents should never be null.");
         }
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace Ncqrs.Domain
             if (history == null) throw new ArgumentNullException("history");
             if (history.Count() == 0)
                 throw new ArgumentException("The provided history does not contain any historical event.", "history");
-            if (Version != 0 || _unacceptedEvents.Count > 0)
+            if (Version != 0 || _uncommittedEvent.Count > 0)
                 throw new InvalidOperationException("Cannot load from history when a event source is already loaded.");
 
             foreach (var historicalEvent in history)
@@ -84,14 +84,14 @@ namespace Ncqrs.Domain
             }
         }
 
-        protected void RegisterHandler(IInternalEventHandler handler)
+        protected void RegisterHandler(IDomainEventHandler handler)
         {
             Contract.Requires<ArgumentNullException>(handler != null, "The handler cannot be null.");
 
             _eventHandlers.Add(handler);
         }
 
-        protected void HandleEvent(DomainEvent evnt)
+        protected virtual void HandleEvent(DomainEvent evnt)
         {
             Contract.Requires<ArgumentNullException>(evnt != null, "The evnt cannot be null.");
             Boolean handled = false;
@@ -119,32 +119,37 @@ namespace Ncqrs.Domain
             HandleEvent(evnt);
 
             if(!historical)
-                _unacceptedEvents.Push(evnt);
+                _uncommittedEvent.Push(evnt);
 
             OnEventApplied(evnt);
         }
 
-        public IEnumerable<IEvent> GetUncommitedEvents()
+        public IEnumerable<DomainEvent> GetUncommitedEvents()
         {
-            Contract.Ensures(Contract.Result<IEnumerable<IEvent>>() != null, "The result of this method should never be null.");
+            Contract.Ensures(Contract.Result<IEnumerable<DomainEvent>>() != null, "The result of this method should never be null.");
 
-            return _unacceptedEvents;
+            return _uncommittedEvent;
         }
 
-        public void AcceptEvents()
-        {
-            // Grab events that will be accepted.
-            IEnumerable<IEvent> acceptedEvents = GetUncommitedEvents();
+        IEnumerable<IEventSourcedEvent> IEventSource.GetUncommittedEvents()
+         {
+             return GetUncommitedEvents();
+         }
 
+        public void CommitEvents()
+        {
             // Clear the unaccepted event list.
-            _unacceptedEvents.Clear();
+            _uncommittedEvent.Clear();
         }
 
         [NoEventHandler]
-        protected void OnEventApplied(IEvent evnt)
+        protected void OnEventApplied(DomainEvent evnt)
         {
             // Register this instance as a dirty one.
-            UnitOfWork.Current.RegisterDirtyInstance(this);
+            var unitOfWorkFactory = NcqrsEnvironment.Get<IUnitOfWorkFactory>();
+            var currentUnitOfWork = unitOfWorkFactory.GetUnitOfWorkInCurrentContext();
+            
+            currentUnitOfWork.RegisterDirtyInstance(this);
         }
     }
 }

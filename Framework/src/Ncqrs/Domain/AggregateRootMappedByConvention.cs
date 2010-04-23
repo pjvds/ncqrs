@@ -7,11 +7,11 @@ namespace Ncqrs.Domain
     public abstract class AggregateRootMappedByConvention : MappedAggregateRoot
     {
         protected AggregateRootMappedByConvention()
-            : base(new ConventionBasedInternalEventHandlerMappingStrategy())
+            : base(new ConventionBasedDomainEventHandlerMappingStrategy())
         {
         }
 
-        protected AggregateRootMappedByConvention(IEnumerable<DomainEvent> history) : base(new ConventionBasedInternalEventHandlerMappingStrategy(), history)
+        protected AggregateRootMappedByConvention(IEnumerable<DomainEvent> history) : base(new ConventionBasedDomainEventHandlerMappingStrategy(), history)
         {
         }
     }
