@@ -1,11 +1,10 @@
 ﻿using System;
 using FluentAssertions;
 using Ncqrs.Config;
-using Ncqrs.Domain;
 using NUnit.Framework;
 using Rhino.Mocks;
 
-namespace Ncqrs.Specs.Config
+namespace Ncqrs.Specs
 {
     [TestFixture]
     public class NcqrsEnvironmentSpecs
@@ -16,24 +15,76 @@ namespace Ncqrs.Specs.Config
         public class Foo : IFoo
         {}
 
-        [SetUp]
-        public void Setup()
+        public interface IBar
+        {}
+
+        [Test]
+        public void When_get_is_called_when_the_environmemt_is_not_configured_defaults_should_still_be_returned()
         {
-            var configuration = MockRepository.GenerateStrictMock<IEnvironmentConfiguration>();
+            NcqrsEnvironment.Deconfigure();
+
+            var defaultClock = new DateTimeBasedClock();
+            NcqrsEnvironment.SetDefault<IClock>(defaultClock);
+
+            NcqrsEnvironment.Get<IClock>().Should().Be(defaultClock);
+        }
+
+        [Test] public void Configured_instance_should_over_rule_default()
+        {
+            var defaultClock = new DateTimeBasedClock();
+            var configuredClock = MockRepository.GenerateMock<IClock>();
+            IClock ingore;
+
+            var configuration = MockRepository.GenerateMock<IEnvironmentConfiguration>();
+            configuration.Stub((m) => m.TryGet(out ingore)).IgnoreArguments().OutRef(configuredClock).Return(true);
+
+            NcqrsEnvironment.SetDefault<IClock>(defaultClock);
             NcqrsEnvironment.Configure(configuration);
+
+            var result = NcqrsEnvironment.Get<IClock>();
+
+            Assert.AreSame(configuredClock, result);
+            Assert.AreNotSame(defaultClock, result);
+
+            NcqrsEnvironment.Deconfigure();
+        }
+
+        [Test] public void Removing_a_default_while_there_is_no_default_registered_should_not_throw_an_exception()
+        {
+            NcqrsEnvironment.RemoveDefault<IFoo>();
+            NcqrsEnvironment.RemoveDefault<IFoo>();
+        }
+
+        [Test] public void Setting_a_default_should_multiple_times_should_not_throw_an_exception()
+        {
+            var defaultFoo = MockRepository.GenerateMock<IFoo>();
+            var newDefaultFoo = MockRepository.GenerateMock<IFoo>();
+
+            NcqrsEnvironment.SetDefault<IFoo>(defaultFoo);
+            NcqrsEnvironment.SetDefault<IFoo>(newDefaultFoo);
+            NcqrsEnvironment.SetDefault<IFoo>(defaultFoo);
+            NcqrsEnvironment.SetDefault<IFoo>(newDefaultFoo);
         }
 
         [Test]
-        public void When_get_is_called_when_the_environmemt_is_not_configured_it_should_throw_an_exception()
+        public void Setting_a_default_should_override_the_exiting_default()
         {
-            Assert.Ignore();
-            //Action act = () => NcqrsEnvironment.Get<IUnitOfWorkFactory>();
-            //act.ShouldThrow<>();
+            var defaultFoo = MockRepository.GenerateMock<IFoo>();
+            var newDefaultFoo = MockRepository.GenerateMock<IFoo>();
+
+            NcqrsEnvironment.SetDefault<IFoo>(defaultFoo);
+            NcqrsEnvironment.SetDefault<IFoo>(newDefaultFoo);
+
+            var result = NcqrsEnvironment.Get<IFoo>();
+
+            result.Should().BeSameAs(newDefaultFoo);
         }
 
         [Test]
         public void When_get_is_called_the_call_should_be_redirected_to_the_configuration()
         {
+            NcqrsEnvironment.Deconfigure();
+
             // Arrange
             IFoo outParameter;
             var configuration = MockRepository.GenerateStub<IEnvironmentConfiguration>();
@@ -73,7 +124,7 @@ namespace Ncqrs.Specs.Config
             NcqrsEnvironment.Configure(repository.StrictMock<IEnvironmentConfiguration>());
 
             // Act
-            Action act = () => NcqrsEnvironment.Get<IUnitOfWorkFactory>();
+            Action act = () => NcqrsEnvironment.Get<IBar>();
 
             // Assert
             act.ShouldThrow<InstanceNotFoundInEnvironmentConfigurationException>();

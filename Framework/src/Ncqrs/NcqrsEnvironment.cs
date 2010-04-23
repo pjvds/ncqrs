@@ -104,11 +104,35 @@ namespace Ncqrs
         public static void Configure(IEnvironmentConfiguration source)
         {
             Contract.Requires<ArgumentNullException>(source != null, "The source cannot be null.");
+            Contract.Requires<InvalidOperationException>(!IsConfigured, "Cannot configure the environment when it is already configured.");
             Contract.Ensures(_instance == source, "The given source should initialize the _instance member.");
+            Contract.Ensures(IsConfigured, "The given source should configure this environment.");
 
             _instance = source;
 
             Log.InfoFormat("Ncqrs environment configured with {0} configuration source.", source.GetType().FullName);
+        }
+
+        /// <summary>
+        /// When the environment is configured it removes the configuration. Defaults are not removed.
+        /// </summary>
+        public static void Deconfigure()
+        {
+            _instance = null;
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether this environment is configured.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if this environment is configured; otherwise, <c>false</c>.
+        /// </value>
+        public static Boolean IsConfigured
+        {
+            get
+            {
+                return _instance != null;
+            }
         }
     }
 }
