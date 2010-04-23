@@ -1,6 +1,5 @@
 ﻿using System;
 using Ncqrs.Domain;
-using Ncqrs.Eventing;
 using NUnit.Framework;
 using FluentAssertions;
 

@@ -16,6 +16,13 @@ namespace Ncqrs.Specs.Config
         public class Foo : IFoo
         {}
 
+        [SetUp]
+        public void Setup()
+        {
+            var configuration = MockRepository.GenerateStrictMock<IEnvironmentConfiguration>();
+            NcqrsEnvironment.Configure(configuration);
+        }
+
         [Test]
         public void When_get_is_called_when_the_environmemt_is_not_configured_it_should_throw_an_exception()
         {
