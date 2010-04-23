@@ -44,28 +44,6 @@ namespace Sample.UI
             }
         }
 
-
-        public override void Init()
-        {
-            var config = new StructureMapConfiguration(x =>
-            {
-                var eventBus = InitializeEventBus();
-                var eventStore = InitializeEventStore();
-
-                x.For<IEventBus>().Use(eventBus);
-                x.For<IEventStore>().Use(eventStore);
-                x.For<IUnitOfWorkFactory>().Use<ThreadBasedUnitOfWorkFactory>();
-            });
-
-            NcqrsEnvironment.Configure(config);
-            InitializeCommandService();
-
-            // Configure log4net.
-            log4net.Config.XmlConfigurator.Configure();
-
-            this.Error += new EventHandler(MvcApplication_Error);
-        }
-
         void MvcApplication_Error(object sender, EventArgs e)
         {
             Session["Error"] = Server.GetLastError();
@@ -119,6 +97,24 @@ namespace Sample.UI
 
         protected void Application_Start()
         {
+            var config = new StructureMapConfiguration(x =>
+            {
+                var eventBus = InitializeEventBus();
+                var eventStore = InitializeEventStore();
+
+                x.For<IEventBus>().Use(eventBus);
+                x.For<IEventStore>().Use(eventStore);
+                x.For<IUnitOfWorkFactory>().Use<ThreadBasedUnitOfWorkFactory>();
+            });
+
+            NcqrsEnvironment.Configure(config);
+            InitializeCommandService();
+
+            // Configure log4net.
+            log4net.Config.XmlConfigurator.Configure();
+
+            this.Error += new EventHandler(MvcApplication_Error);
+
             AreaRegistration.RegisterAllAreas();
 
             RegisterRoutes(RouteTable.Routes);

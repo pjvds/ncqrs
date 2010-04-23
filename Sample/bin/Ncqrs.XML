@@ -4,6 +4,23 @@
     <name>Ncqrs</name>
   </assembly>
   <members>
+    <member name="T:Ncqrs.Domain.IDomainEventHandler">
+      <summary>
+            An event handler that handles the domain events.
+            </summary>
+    </member>
+    <member name="M:Ncqrs.Domain.IDomainEventHandler.HandleEvent(Ncqrs.Domain.DomainEvent)">
+      <summary>
+            Handles the event.
+            </summary>
+      <param name="evnt">The event to handle.</param>
+      <returns>
+        <c>true</c> when the event was handled; otherwise, <c>false</c>.
+            <remarks><c>false</c> does not mean that the handling failed, but that the 
+            handler was not interested in handling this event.</remarks></returns>
+      <requires description="The evnt cannot be null." exception="T:System.ArgumentNullException">evnt != null</requires>
+      <exception cref="T:System.ArgumentNullException">evnt == null</exception>
+    </member>
     <member name="T:Ncqrs.Config.IEnvironmentConfiguration">
       <summary>
             A configuration that can resolve requested instances.
@@ -209,6 +226,19 @@
             </summary>
       <value>An <see cref="T:System.Int32" /> representing the current version of this aggregate root.</value>
     </member>
+    <member name="T:Ncqrs.Domain.Mapping.ConventionBasedDomainEventHandlerMappingStrategy">
+      <summary>
+            A internal event handler mapping strategy that maps methods as an event handler based on method name and parameter type.
+            <remarks>
+            All method that match the following requirements are mapped as an event handler:
+            <list type="number"><item><value>
+                        Method name should start with <i>On</i> or <i>on</i>. Like: <i>OnProductAdded</i> or <i>onProductAdded</i>.
+                    </value></item><item><value>
+                        The method should only accept one parameter.
+                    </value></item><item><value>
+                        The parameter must be, or inhired from, the <see cref="T:Ncqrs.Domain.DomainEvent" /> class.
+                    </value></item></list></remarks></summary>
+    </member>
     <member name="T:Ncqrs.NcqrsEnvironment">
       <summary>
             The Ncqrs environment. This class gives access to other components registered in this environment.
@@ -264,7 +294,23 @@
       <param name="source">The source that contains the configuration for the current environment.</param>
       <requires description="The source cannot be null." exception="T:System.ArgumentNullException">source != null</requires>
       <exception cref="T:System.ArgumentNullException">source == null</exception>
+      <requires description="Cannot configure the environment when it is already configured." exception="T:System.InvalidOperationException">!IsConfigured</requires>
+      <exception cref="T:System.InvalidOperationException">IsConfigured</exception>
       <ensures description="The given source should initialize the _instance member.">_instance == source</ensures>
+      <ensures description="The given source should configure this environment.">IsConfigured</ensures>
+    </member>
+    <member name="M:Ncqrs.NcqrsEnvironment.Deconfigure">
+      <summary>
+            When the environment is configured it removes the configuration. Defaults are not removed.
+            </summary>
+    </member>
+    <member name="P:Ncqrs.NcqrsEnvironment.IsConfigured">
+      <summary>
+            Gets a value indicating whether this environment is configured.
+            </summary>
+      <value>
+        <c>true</c> if this environment is configured; otherwise, <c>false</c>.
+            </value>
     </member>
     <member name="T:Ncqrs.Commanding.CommandExecution.Mapping.AutoMappingException">
       <summary>
@@ -367,6 +413,26 @@
             </summary>
       <requires description="The command cannot be null." inheritedFrom="M:Ncqrs.Commanding.CommandExecution.ICommandExecutor.Execute(Ncqrs.Commanding.ICommand)" inheritedFromTypeName="ICommandExecutor" exception="T:System.ArgumentNullException">command != null</requires>
       <exception cref="T:System.ArgumentNullException">command == null</exception>
+    </member>
+    <member name="T:Ncqrs.Eventing.IEvent">
+      <summary>
+            Represents an event.
+            </summary>
+    </member>
+    <member name="P:Ncqrs.Eventing.IEvent.EventIdentifier">
+      <summary>
+            Gets the unique identifier for this event.
+            </summary>
+    </member>
+    <member name="P:Ncqrs.Eventing.IEvent.EventTimeStamp">
+      <summary>
+            Gets the time stamp for this event.
+            </summary>
+      <value>a <see cref="T:System.DateTime" /> UTC value that represents the point
+            in time where this event occurred.</value>
+      <getter>
+        <ensures description="The event time stamp should always be in a UTC kind.">Contract.Result&lt;DateTime&gt;().Kind == DateTimeKind.Utc</ensures>
+      </getter>
     </member>
     <member name="T:Ncqrs.Config.InstanceNotFoundInEnvironmentConfigurationException">
       <summary>
@@ -676,26 +742,6 @@
             </summary>
       <value>The command.</value>
     </member>
-    <member name="T:Ncqrs.Eventing.IEvent">
-      <summary>
-            Represents an event.
-            </summary>
-    </member>
-    <member name="P:Ncqrs.Eventing.IEvent.EventIdentifier">
-      <summary>
-            Gets the unique identifier for this event.
-            </summary>
-    </member>
-    <member name="P:Ncqrs.Eventing.IEvent.EventTimeStamp">
-      <summary>
-            Gets the time stamp for this event.
-            </summary>
-      <value>a <see cref="T:System.DateTime" /> UTC value that represents the point
-            in time where this event occurred.</value>
-      <getter>
-        <ensures description="The event time stamp should always be in a UTC kind.">Contract.Result&lt;DateTime&gt;().Kind == DateTimeKind.Utc</ensures>
-      </getter>
-    </member>
     <member name="T:Ncqrs.Domain.Mapping.NoEventHandlerAttribute">
       <summary>
             Specifies that the method is not an event handler. Use this attribute to exclude the
@@ -794,29 +840,143 @@
       <requires inheritedFrom="M:Ncqrs.Domain.Storage.IAggregateRootLoader.LoadAggregateRootFromEvents(System.Type,System.Collections.Generic.IEnumerable{Ncqrs.Domain.DomainEvent})" inheritedFromTypeName="IAggregateRootLoader" exception="T:System.ArgumentNullException">events != null</requires>
       <exception cref="T:System.ArgumentNullException">events == null</exception>
     </member>
+    <member name="T:Ncqrs.Domain.Mapping.AttributeBasedDomainEventHandlerMappingStrategy">
+      <summary>
+            An internal event handler mapping strategy that creates event handlers based on mapping that
+            is done by attributes.
+            <remarks>Use the <see cref="T:Ncqrs.Domain.Mapping.EventHandlerAttribute" /> to mark event handler methods as an event handler. You can only
+            mark methods that following rules:
+            <list type="number"><item><description>The method should be an instance method (no static).</description></item><item><description>It should accept 1 parameter.</description></item><item><description>The parameter should be, or inherited from, the <see cref="T:Ncqrs.Domain.DomainEvent" /> class.</description></item><item><description>The method should be marked with the <see cref="T:Ncqrs.Domain.Mapping.EventHandlerAttribute" />.</description></item></list><code>public class Foo : AggregateRootMappedWithAttributes
+            {
+                [EventHandler]
+                private void onFooEvent(FooEvent eventToHandle)
+                {
+                    // ...
+                }
+            }</code></remarks></summary>
+    </member>
+    <member name="M:Ncqrs.Domain.Mapping.AttributeBasedDomainEventHandlerMappingStrategy.GetEventHandlersFromAggregateRoot(Ncqrs.Domain.AggregateRoot)">
+      <summary>
+            Gets the event handlers from aggregate root based on attributes.
+            </summary>
+      <param name="aggregateRoot">The aggregate root.</param>
+      <see cref="T:Ncqrs.Domain.Mapping.AttributeBasedDomainEventHandlerMappingStrategy" />
+      <returns>All the <see cref="T:Ncqrs.Domain.IDomainEventHandler" />'s created based on attribute mapping.</returns>
+    </member>
     <member name="T:Ncqrs.Eventing.Storage.ConcurrencyException">
       <summary>
-            Occurs when there is already a newer version of the event provider stored in the event store.
+            Occurs when there is already a newer version of the event source stored in the event store.
             </summary>
     </member>
-    <member name="M:Ncqrs.Eventing.Storage.ConcurrencyException.#ctor(System.Int64,System.Int64)">
+    <member name="M:Ncqrs.Eventing.Storage.ConcurrencyException.#ctor(System.Guid,System.Int64,System.Int64)">
       <summary>
             Initializes a new instance of the <see cref="T:Ncqrs.Eventing.Storage.ConcurrencyException" /> class.
             </summary>
-      <param name="providerVersion">The provider version.</param>
+      <param name="eventSourceId">The id of the event source.</param>
+      <param name="providerVersion">The event source version.</param>
       <param name="versionInStore">The version in store.</param>
     </member>
-    <member name="P:Ncqrs.Eventing.Storage.ConcurrencyException.ProviderVersion">
+    <member name="M:Ncqrs.Eventing.Storage.ConcurrencyException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
       <summary>
-            Gets the provider version.
+            Initializes a new instance of the <see cref="T:Ncqrs.Eventing.Storage.ConcurrencyException" /> class.
             </summary>
-      <value>The provider version.</value>
+      <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo" /> that holds the serialized object data about the exception being thrown.</param>
+      <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext" /> that contains contextual information about the source or destination.</param>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="info" /> parameter is null. </exception>
+      <exception cref="T:System.Runtime.Serialization.SerializationException">The class name is null or <see cref="P:System.Exception.HResult" /> is zero (0). </exception>
+    </member>
+    <member name="P:Ncqrs.Eventing.Storage.ConcurrencyException.EventSourceId">
+      <summary>
+            Gets the id of the event source.
+            </summary>
+      <value>The id event source.</value>
+    </member>
+    <member name="P:Ncqrs.Eventing.Storage.ConcurrencyException.EventSourceVersion">
+      <summary>
+            Gets the event source version.
+            </summary>
+      <value>The event source version.</value>
     </member>
     <member name="P:Ncqrs.Eventing.Storage.ConcurrencyException.VersionInStore">
       <summary>
             Gets the version of the provider in the event store.
             </summary>
       <value>The version in store.</value>
+    </member>
+    <member name="T:Ncqrs.Domain.TypeThresholdedActionBasedDomainEventHandler">
+      <summary>
+              An event handler that uses a specified action as handler, but only calls this when the event
+              is of a certain type, or is inherited from it.
+            </summary>
+      <invariant>_handler != null</invariant>
+      <invariant>_eventTypeThreshold != null</invariant>
+    </member>
+    <member name="F:Ncqrs.Domain.TypeThresholdedActionBasedDomainEventHandler._eventTypeThreshold">
+      <summary>
+              The event type that should be used as threshold.
+            </summary>
+    </member>
+    <member name="F:Ncqrs.Domain.TypeThresholdedActionBasedDomainEventHandler._exact">
+      <summary>
+              Specifies whether the event type threshold should be used as an exact or at least threshold.
+            </summary>
+      <remarks>
+        <c>true</c> means that the event type threshold should be the same type as the event, otherwise
+              the event handler will not be executed. <c>false</c> means that the threshold type should be in 
+              the inheritance hierarchy of the event type, or that the threshold type should be an interface 
+              that the event type implements, otherwise the handler will not be executed.
+            </remarks>
+    </member>
+    <member name="F:Ncqrs.Domain.TypeThresholdedActionBasedDomainEventHandler._handler">
+      <summary>
+              The handler that should be called when the threshold did not hold the event.
+            </summary>
+    </member>
+    <member name="M:Ncqrs.Domain.TypeThresholdedActionBasedDomainEventHandler.#ctor(System.Action{Ncqrs.Domain.DomainEvent},System.Type,System.Boolean)">
+      <summary>
+              Initializes a new instance of the <see cref="T:Ncqrs.Domain.TypeThresholdedActionBasedDomainEventHandler" /> class.
+            </summary>
+      <param name="handler">The handler that will be called to handle a event when the threshold did not hold the event.</param>
+      <param name="eventTypeThreshold">The event type that should be used as threshold.</param>
+      <param name="exact">if set to <c>true</c> the threshold will hold all types that are not the same type; otherwise it hold 
+            all types that are not inhered from the event type threshold or implement the interface that is specified by the threshold type.</param>
+      <requires description="The handler cannot be null." exception="T:System.ArgumentNullException">handler != null</requires>
+      <exception cref="T:System.ArgumentNullException">handler == null</exception>
+      <requires description="The eventTypeThreshold cannot be null." exception="T:System.ArgumentNullException">eventTypeThreshold != null</requires>
+      <exception cref="T:System.ArgumentNullException">eventTypeThreshold == null</exception>
+      <requires description="The eventTypeThreshold should be of a type that implements the IEvent interface." exception="T:System.ArgumentException">typeof(DomainEvent).IsAssignableFrom(eventTypeThreshold)</requires>
+      <exception cref="T:System.ArgumentException">!(typeof(DomainEvent).IsAssignableFrom(eventTypeThreshold))</exception>
+    </member>
+    <member name="M:Ncqrs.Domain.TypeThresholdedActionBasedDomainEventHandler.HandleEvent(Ncqrs.Domain.DomainEvent)">
+      <summary>
+              Handles the event.
+            </summary>
+      <param name="evnt">The event to handle.
+              <remarks>
+                This value should not be <c>null</c>.
+              </remarks></param>
+      <returns>
+        <c>true</c> when the event was handled; otherwise, <c>false</c>.
+              <remarks><c>false</c> does not mean that the handling failed, but that the
+                handler was not interested in handling this event.
+              </remarks></returns>
+      <requires description="The evnt cannot be null." exception="T:System.ArgumentNullException">evnt != null</requires>
+      <exception cref="T:System.ArgumentNullException">evnt == null</exception>
+      <requires description="The evnt cannot be null." inheritedFrom="M:Ncqrs.Domain.IDomainEventHandler.HandleEvent(Ncqrs.Domain.DomainEvent)" inheritedFromTypeName="IDomainEventHandler" exception="T:System.ArgumentNullException">evnt != null</requires>
+      <exception cref="T:System.ArgumentNullException">evnt == null</exception>
+    </member>
+    <member name="M:Ncqrs.Domain.TypeThresholdedActionBasedDomainEventHandler.ObjectInvariants">
+      <summary>
+              This method holds all the objects invariants.
+            </summary>
+    </member>
+    <member name="M:Ncqrs.Domain.TypeThresholdedActionBasedDomainEventHandler.ShouldHandleThisEvent(Ncqrs.Domain.DomainEvent)">
+      <summary>
+              Determine whether the event should be handled or not.
+            </summary>
+      <param name="evnt">The event.</param>
+      <returns>
+        <c>true</c> when this event should be handled; otherwise, <c>false</c>.</returns>
     </member>
     <member name="T:Ncqrs.Commanding.CommandExecution.Mapping.CommandAutoMappingConfiguration">
       <summary>
@@ -875,25 +1035,6 @@
             </summary>
       <requires description="The command cannot be null." inheritedFrom="M:Ncqrs.Commanding.CommandExecution.ICommandExecutor.Execute(Ncqrs.Commanding.ICommand)" inheritedFromTypeName="ICommandExecutor" exception="T:System.ArgumentNullException">command != null</requires>
       <exception cref="T:System.ArgumentNullException">command == null</exception>
-    </member>
-    <member name="T:Ncqrs.Eventing.ServiceModel.Bus.MethodBasedEventBusFactory">
-      <summary>
-            A simple event bus factory that uses a <see cref="T:System.Func`1" /> to
-            create the instance.
-            </summary>
-    </member>
-    <member name="F:Ncqrs.Eventing.ServiceModel.Bus.MethodBasedEventBusFactory._eventBusCreationMethod">
-      <summary>
-            The method that creates the event bus.
-            </summary>
-    </member>
-    <member name="M:Ncqrs.Eventing.ServiceModel.Bus.MethodBasedEventBusFactory.#ctor(System.Func{Ncqrs.Eventing.ServiceModel.Bus.IEventBus})">
-      <summary>
-            Initializes a new instance of the <see cref="T:Ncqrs.Eventing.ServiceModel.Bus.MethodBasedEventBusFactory" /> class.
-            </summary>
-      <param name="eventBusCreationMethod">The event bus creation method.</param>
-      <requires description="The eventBusCreationMethod cannot be null." exception="T:System.ArgumentNullException">eventBusCreationMethod != null</requires>
-      <exception cref="T:System.ArgumentNullException">eventBusCreationMethod == null</exception>
     </member>
     <member name="T:Ncqrs.Domain.UnitOfWork">
       <summary>
@@ -991,6 +1132,31 @@
             Gets the domain repository.
             </summary>
       <value>The domain repository.</value>
+    </member>
+    <member name="T:Ncqrs.Eventing.EventBase">
+      <summary>
+            The base for all event messages.
+            </summary>
+    </member>
+    <member name="M:Ncqrs.Eventing.EventBase.#ctor">
+      <summary>
+            Initializes a new instance of the <see cref="T:Ncqrs.Eventing.EventBase" /> class.
+            </summary>
+    </member>
+    <member name="P:Ncqrs.Eventing.EventBase.EventIdentifier">
+      <summary>
+            Gets the unique identifier for this event.
+            </summary>
+    </member>
+    <member name="P:Ncqrs.Eventing.EventBase.EventTimeStamp">
+      <summary>
+            Gets the time stamp for this event.
+            </summary>
+      <value>a <see cref="T:System.DateTime" /> UTC value that represents the point
+            in time where this event occurred.</value>
+      <getter>
+        <ensures description="The event time stamp should always be in a UTC kind." inheritedFrom="M:Ncqrs.Eventing.IEvent.get_EventTimeStamp" inheritedFromTypeName="IEvent">Contract.Result&lt;DateTime&gt;().Kind == DateTimeKind.Utc</ensures>
+      </getter>
     </member>
     <member name="T:Ncqrs.Commanding.ServiceModel.InProcessCommandExecutionDispatcher">
       <summary>
@@ -1138,159 +1304,6 @@
       <exception cref="T:System.ArgumentNullException">The <paramref name="info" /> parameter is null. </exception>
       <exception cref="T:System.Runtime.Serialization.SerializationException">The class name is null or <see cref="P:System.Exception.HResult" /> is zero (0). </exception>
     </member>
-    <member name="T:Ncqrs.Eventing.EventBase">
-      <summary>
-            The base for all event messages.
-            </summary>
-    </member>
-    <member name="M:Ncqrs.Eventing.EventBase.#ctor">
-      <summary>
-            Initializes a new instance of the <see cref="T:Ncqrs.Eventing.EventBase" /> class.
-            </summary>
-    </member>
-    <member name="P:Ncqrs.Eventing.EventBase.EventIdentifier">
-      <summary>
-            Gets the unique identifier for this event.
-            </summary>
-    </member>
-    <member name="P:Ncqrs.Eventing.EventBase.EventTimeStamp">
-      <summary>
-            Gets the time stamp for this event.
-            </summary>
-      <value>a <see cref="T:System.DateTime" /> UTC value that represents the point
-            in time where this event occurred.</value>
-      <getter>
-        <ensures description="The event time stamp should always be in a UTC kind." inheritedFrom="M:Ncqrs.Eventing.IEvent.get_EventTimeStamp" inheritedFromTypeName="IEvent">Contract.Result&lt;DateTime&gt;().Kind == DateTimeKind.Utc</ensures>
-      </getter>
-    </member>
-    <member name="T:Ncqrs.Domain.IDomainEventHandler">
-      <summary>
-            An event handler that handles the domain events.
-            </summary>
-    </member>
-    <member name="M:Ncqrs.Domain.IDomainEventHandler.HandleEvent(Ncqrs.Domain.DomainEvent)">
-      <summary>
-            Handles the event.
-            </summary>
-      <param name="evnt">The event to handle.</param>
-      <returns>
-        <c>true</c> when the event was handled; otherwise, <c>false</c>.
-            <remarks><c>false</c> does not mean that the handling failed, but that the 
-            handler was not interested in handling this event.</remarks></returns>
-      <requires description="The evnt cannot be null." exception="T:System.ArgumentNullException">evnt != null</requires>
-      <exception cref="T:System.ArgumentNullException">evnt == null</exception>
-    </member>
-    <member name="T:Ncqrs.Domain.TypeThresholdedActionBasedDomainEventHandler">
-      <summary>
-              An event handler that uses a specified action as handler, but only calls this when the event
-              is of a certain type, or is inherited from it.
-            </summary>
-      <invariant>_handler != null</invariant>
-      <invariant>_eventTypeThreshold != null</invariant>
-    </member>
-    <member name="F:Ncqrs.Domain.TypeThresholdedActionBasedDomainEventHandler._eventTypeThreshold">
-      <summary>
-              The event type that should be used as threshold.
-            </summary>
-    </member>
-    <member name="F:Ncqrs.Domain.TypeThresholdedActionBasedDomainEventHandler._exact">
-      <summary>
-              Specifies whether the event type threshold should be used as an exact or at least threshold.
-            </summary>
-      <remarks>
-        <c>true</c> means that the event type threshold should be the same type as the event, otherwise
-              the event handler will not be executed. <c>false</c> means that the threshold type should be in 
-              the inheritance hierarchy of the event type, or that the threshold type should be an interface 
-              that the event type implements, otherwise the handler will not be executed.
-            </remarks>
-    </member>
-    <member name="F:Ncqrs.Domain.TypeThresholdedActionBasedDomainEventHandler._handler">
-      <summary>
-              The handler that should be called when the threshold did not hold the event.
-            </summary>
-    </member>
-    <member name="M:Ncqrs.Domain.TypeThresholdedActionBasedDomainEventHandler.#ctor(System.Action{Ncqrs.Domain.DomainEvent},System.Type,System.Boolean)">
-      <summary>
-              Initializes a new instance of the <see cref="T:Ncqrs.Domain.TypeThresholdedActionBasedDomainEventHandler" /> class.
-            </summary>
-      <param name="handler">The handler that will be called to handle a event when the threshold did not hold the event.</param>
-      <param name="eventTypeThreshold">The event type that should be used as threshold.</param>
-      <param name="exact">if set to <c>true</c> the threshold will hold all types that are not the same type; otherwise it hold 
-            all types that are not inhered from the event type threshold or implement the interface that is specified by the threshold type.</param>
-      <requires description="The handler cannot be null." exception="T:System.ArgumentNullException">handler != null</requires>
-      <exception cref="T:System.ArgumentNullException">handler == null</exception>
-      <requires description="The eventTypeThreshold cannot be null." exception="T:System.ArgumentNullException">eventTypeThreshold != null</requires>
-      <exception cref="T:System.ArgumentNullException">eventTypeThreshold == null</exception>
-      <requires description="The eventTypeThreshold should be of a type that implements the IEvent interface." exception="T:System.ArgumentException">typeof(DomainEvent).IsAssignableFrom(eventTypeThreshold)</requires>
-      <exception cref="T:System.ArgumentException">!(typeof(DomainEvent).IsAssignableFrom(eventTypeThreshold))</exception>
-    </member>
-    <member name="M:Ncqrs.Domain.TypeThresholdedActionBasedDomainEventHandler.HandleEvent(Ncqrs.Domain.DomainEvent)">
-      <summary>
-              Handles the event.
-            </summary>
-      <param name="evnt">The event to handle.
-              <remarks>
-                This value should not be <c>null</c>.
-              </remarks></param>
-      <returns>
-        <c>true</c> when the event was handled; otherwise, <c>false</c>.
-              <remarks><c>false</c> does not mean that the handling failed, but that the
-                handler was not interested in handling this event.
-              </remarks></returns>
-      <requires description="The evnt cannot be null." exception="T:System.ArgumentNullException">evnt != null</requires>
-      <exception cref="T:System.ArgumentNullException">evnt == null</exception>
-      <requires description="The evnt cannot be null." inheritedFrom="M:Ncqrs.Domain.IDomainEventHandler.HandleEvent(Ncqrs.Domain.DomainEvent)" inheritedFromTypeName="IDomainEventHandler" exception="T:System.ArgumentNullException">evnt != null</requires>
-      <exception cref="T:System.ArgumentNullException">evnt == null</exception>
-    </member>
-    <member name="M:Ncqrs.Domain.TypeThresholdedActionBasedDomainEventHandler.ObjectInvariants">
-      <summary>
-              This method holds all the objects invariants.
-            </summary>
-    </member>
-    <member name="M:Ncqrs.Domain.TypeThresholdedActionBasedDomainEventHandler.ShouldHandleThisEvent(Ncqrs.Domain.DomainEvent)">
-      <summary>
-              Determine whether the event should be handled or not.
-            </summary>
-      <param name="evnt">The event.</param>
-      <returns>
-        <c>true</c> when this event should be handled; otherwise, <c>false</c>.</returns>
-    </member>
-    <member name="T:Ncqrs.Domain.Mapping.ConventionBasedDomainEventHandlerMappingStrategy">
-      <summary>
-            A internal event handler mapping strategy that maps methods as an event handler based on method name and parameter type.
-            <remarks>
-            All method that match the following requirements are mapped as an event handler:
-            <list type="number"><item><value>
-                        Method name should start with <i>On</i> or <i>on</i>. Like: <i>OnProductAdded</i> or <i>onProductAdded</i>.
-                    </value></item><item><value>
-                        The method should only accept one parameter.
-                    </value></item><item><value>
-                        The parameter must be, or inhired from, the <see cref="T:Ncqrs.Domain.DomainEvent" /> class.
-                    </value></item></list></remarks></summary>
-    </member>
-    <member name="T:Ncqrs.Domain.Mapping.AttributeBasedDomainEventHandlerMappingStrategy">
-      <summary>
-            An internal event handler mapping strategy that creates event handlers based on mapping that
-            is done by attributes.
-            <remarks>Use the <see cref="T:Ncqrs.Domain.Mapping.EventHandlerAttribute" /> to mark event handler methods as an event handler. You can only
-            mark methods that following rules:
-            <list type="number"><item><description>The method should be an instance method (no static).</description></item><item><description>It should accept 1 parameter.</description></item><item><description>The parameter should be, or inherited from, the <see cref="T:Ncqrs.Domain.DomainEvent" /> class.</description></item><item><description>The method should be marked with the <see cref="T:Ncqrs.Domain.Mapping.EventHandlerAttribute" />.</description></item></list><code>public class Foo : AggregateRootMappedWithAttributes
-            {
-                [EventHandler]
-                private void onFooEvent(FooEvent eventToHandle)
-                {
-                    // ...
-                }
-            }</code></remarks></summary>
-    </member>
-    <member name="M:Ncqrs.Domain.Mapping.AttributeBasedDomainEventHandlerMappingStrategy.GetEventHandlersFromAggregateRoot(Ncqrs.Domain.AggregateRoot)">
-      <summary>
-            Gets the event handlers from aggregate root based on attributes.
-            </summary>
-      <param name="aggregateRoot">The aggregate root.</param>
-      <see cref="T:Ncqrs.Domain.Mapping.AttributeBasedDomainEventHandlerMappingStrategy" />
-      <returns>All the <see cref="T:Ncqrs.Domain.IDomainEventHandler" />'s created based on attribute mapping.</returns>
-    </member>
     <member name="M:Ncqrs.Commanding.CommandBase.#ctor">
       <summary>
             Initializes a new instance of the <see cref="T:Ncqrs.Commanding.CommandBase" /> class.
@@ -1326,6 +1339,9 @@
         <ensures description="The event time stamp should always be in a UTC kind." inheritedFrom="M:Ncqrs.Eventing.IEvent.get_EventTimeStamp" inheritedFromTypeName="IEvent">Contract.Result&lt;DateTime&gt;().Kind == DateTimeKind.Utc</ensures>
       </getter>
     </member>
+    <member name="M:Ncqrs.Domain.AggregateRoot.GetUncommitedEvents">
+      <ensures description="The result of this method should never be null.">Contract.Result&lt;IEnumerable&lt;DomainEvent&gt;&gt;() != null</ensures>
+    </member>
     <member name="M:Ncqrs.Domain.AggregateRoot.RegisterHandler(Ncqrs.Domain.IDomainEventHandler)">
       <requires description="The handler cannot be null." exception="T:System.ArgumentNullException">handler != null</requires>
       <exception cref="T:System.ArgumentNullException">handler == null</exception>
@@ -1333,9 +1349,6 @@
     <member name="M:Ncqrs.Domain.AggregateRoot.HandleEvent(Ncqrs.Domain.DomainEvent)">
       <requires description="The evnt cannot be null." exception="T:System.ArgumentNullException">evnt != null</requires>
       <exception cref="T:System.ArgumentNullException">evnt == null</exception>
-    </member>
-    <member name="M:Ncqrs.Domain.AggregateRoot.GetUncommitedEvents">
-      <ensures description="The result of this method should never be null.">Contract.Result&lt;IEnumerable&lt;DomainEvent&gt;&gt;() != null</ensures>
     </member>
     <member name="M:Ncqrs.Domain.DomainEventHandler`1.Ncqrs#Domain#IDomainEventHandler#HandleEvent(Ncqrs.Domain.DomainEvent)">
       <requires description="The evnt cannot be null." inheritedFrom="M:Ncqrs.Domain.IDomainEventHandler.HandleEvent(Ncqrs.Domain.DomainEvent)" inheritedFromTypeName="IDomainEventHandler" exception="T:System.ArgumentNullException">evnt != null</requires>
@@ -1346,6 +1359,10 @@
       <exception cref="T:System.ArgumentNullException">store == null</exception>
       <requires description="store cannot be null." exception="T:System.ArgumentNullException">eventBus != null</requires>
       <exception cref="T:System.ArgumentNullException">eventBus == null</exception>
+    </member>
+    <member name="M:Ncqrs.Domain.Storage.DomainRepository.Save(Ncqrs.Domain.AggregateRoot)">
+      <requires inheritedFrom="M:Ncqrs.Domain.Storage.IDomainRepository.Save(Ncqrs.Domain.AggregateRoot)" inheritedFromTypeName="IDomainRepository" exception="T:System.ArgumentNullException">aggregateRootToSave != null</requires>
+      <exception cref="T:System.ArgumentNullException">aggregateRootToSave == null</exception>
     </member>
     <member name="M:Ncqrs.Domain.Storage.DomainRepository.GetById(System.Type,System.Guid)">
       <requires inheritedFrom="M:Ncqrs.Domain.Storage.IDomainRepository.GetById(System.Type,System.Guid)" inheritedFromTypeName="IDomainRepository" exception="T:System.ArgumentNullException">aggregateRootType != null</requires>
@@ -1358,10 +1375,6 @@
       <exception cref="T:System.ArgumentNullException">eventBus == null</exception>
       <requires exception="T:System.ArgumentNullException">loader != null</requires>
       <exception cref="T:System.ArgumentNullException">loader == null</exception>
-    </member>
-    <member name="M:Ncqrs.Domain.Storage.DomainRepository.Save(Ncqrs.Domain.AggregateRoot)">
-      <requires inheritedFrom="M:Ncqrs.Domain.Storage.IDomainRepository.Save(Ncqrs.Domain.AggregateRoot)" inheritedFromTypeName="IDomainRepository" exception="T:System.ArgumentNullException">aggregateRootToSave != null</requires>
-      <exception cref="T:System.ArgumentNullException">aggregateRootToSave == null</exception>
     </member>
     <member name="M:Ncqrs.Domain.ExactDomainEventHandler`1.Ncqrs#Domain#IDomainEventHandler#HandleEvent(Ncqrs.Domain.DomainEvent)">
       <requires description="The evnt cannot be null." inheritedFrom="M:Ncqrs.Domain.IDomainEventHandler.HandleEvent(Ncqrs.Domain.DomainEvent)" inheritedFromTypeName="IDomainEventHandler" exception="T:System.ArgumentNullException">evnt != null</requires>

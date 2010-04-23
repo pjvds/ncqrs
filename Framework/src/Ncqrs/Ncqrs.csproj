@@ -114,6 +114,7 @@
     <Compile Include="Eventing\IEventSource.cs" />
     <Compile Include="Eventing\IEventSourcedEvent.cs" />
     <Compile Include="IClock.cs" />
+    <Compile Include="InternalExtensions.cs" />
     <Compile Include="NamespaceDoc.cs" />
     <Compile Include="NcqrsEnvironment.cs" />
     <Compile Include="Config\IEnvironmentConfiguration.cs" />
