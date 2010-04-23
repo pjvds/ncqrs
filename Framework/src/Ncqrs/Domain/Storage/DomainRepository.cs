@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.Linq;
 using Ncqrs.Eventing;
 using Ncqrs.Eventing.ServiceModel.Bus;
 using Ncqrs.Eventing.Storage;
@@ -32,20 +33,12 @@ namespace Ncqrs.Domain.Storage
 
         public AggregateRoot GetById(Type aggregateRootType, Guid id)
         {
-            var events = _store.GetAllEventsForEventSource(id);
-            var eventsAsDomainEvents = new List<DomainEvent>();
-
-            // TODO: Is there a better way to cast?
-            foreach (var evnt in events)
-            {
-                eventsAsDomainEvents.Add((DomainEvent)evnt);
-            }
-
+            var events = _store.GetAllEventsForEventSource(id).Cast<DomainEvent>();
             AggregateRoot aggregate = null;
 
             try
             {
-                aggregate = _loader.LoadAggregateRootFromEvents(aggregateRootType, eventsAsDomainEvents);
+                aggregate = _loader.LoadAggregateRootFromEvents(aggregateRootType, events);
             }
             catch (MissingMethodException)
             {
