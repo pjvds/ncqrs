@@ -146,7 +146,6 @@
     <Compile Include="Domain\TypeThresholdedActionBasedDomainEventHandler.cs" />
     <Compile Include="Domain\UnitOfWork.cs" />
     <Compile Include="BasicGuidGenerator.cs" />
-    <Compile Include="Eventing\ServiceModel\Bus\ActionBasedEventBusFactory.cs" />
     <Compile Include="Eventing\ServiceModel\Bus\IEventBus.cs" />
     <Compile Include="Eventing\ServiceModel\Bus\IEventBusFactory.cs" />
     <Compile Include="Eventing\ServiceModel\Bus\IEventHandler.cs" />

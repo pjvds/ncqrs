@@ -33,5 +33,19 @@ namespace Ncqrs.Specs.Eventing
             var mock = MockRepository.GenerateStub<EventBase>();
             mock.EventIdentifier.Should().Be(identiefier);
         }
+
+        [Test]
+        public void Constructing_a_new_event_base_it_should_set_the_event_time_stap_to_the_time_given_by_the_IClock_from_the_NcqrsEnvironment()
+        {
+            var theTimeStamp = new DateTime(2000, 1, 1, 1, 1, 1, 1, DateTimeKind.Utc);
+
+            var clock = MockRepository.GenerateStrictMock<IClock>();
+            clock.Stub(c => c.UtcNow()).Return(theTimeStamp);
+
+            NcqrsEnvironment.SetDefault<IClock>(clock);
+
+            var eventBase = MockRepository.GenerateStub<EventBase>();
+            eventBase.EventTimeStamp.Should().Be(theTimeStamp);
+        }
     }
 }
