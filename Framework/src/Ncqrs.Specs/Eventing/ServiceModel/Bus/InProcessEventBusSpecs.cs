@@ -12,7 +12,7 @@ namespace Ncqrs.Specs.Eventing.ServiceModel.Bus
     {
         public class ADomainEvent : DomainEvent
         {
-            
+
         }
 
         public class AEvent : EventBase
@@ -30,7 +30,64 @@ namespace Ncqrs.Specs.Eventing.ServiceModel.Bus
             bus.Publish(new ADomainEvent());
             bus.Publish(new AEvent());
 
-            catchAllEventHandler.AssertWasCalled(h=>h.Handle(null), options => options.IgnoreArguments().Repeat.Twice());
+            catchAllEventHandler.AssertWasCalled(h => h.Handle(null), options => options.IgnoreArguments().Repeat.Twice());
+        }
+
+        [Test]
+        public void When_multiple_messages_are_published_at_once_they_all_should_be_published()
+        {
+
+            var catchAllEventHandler = MockRepository.GenerateMock<IEventHandler>();
+            var bus = new InProcessEventBus();
+            bus.RegisterHandler(catchAllEventHandler);
+
+            var events = new[]
+                             {
+                                 new AEvent(), new AEvent(), new AEvent(), new AEvent(), new AEvent(), new AEvent(),
+                                 new AEvent(), new AEvent(), new AEvent(), new AEvent(), new AEvent(), new AEvent()
+                             };
+
+            bus.Publish(events);
+
+            catchAllEventHandler.AssertWasCalled(h => h.Handle(null), options => options.IgnoreArguments().Repeat.Times(events.Length));
+        }
+
+        [Test]
+        public void Registering_handler_via_generic_overload_should_also_add_the_handler()
+        {
+            var aDomainEventHandler = MockRepository.GenerateMock<IEventHandler>();
+            var bus = new InProcessEventBus();
+
+            bus.RegisterHandler<ADomainEvent>(aDomainEventHandler);
+
+            var events = new IEvent[]
+                             {
+                                 new AEvent(), new ADomainEvent(), new ADomainEvent(), new AEvent(), new ADomainEvent(), new AEvent(),
+                                 new AEvent(), new ADomainEvent(), new ADomainEvent(), new AEvent(), new ADomainEvent(), new AEvent()
+                             };
+
+            bus.Publish(events);
+
+            aDomainEventHandler.AssertWasCalled(h => h.Handle(null), options => options.IgnoreArguments().Repeat.Times(6));
+        }
+
+
+        [Test]
+        public void When_multiple_messages_are_published_and_a_specific_handler_is_register_oply_the_matching_events_should_be_received_at_the_handler()
+        {
+            var aDomainEventHandler = MockRepository.GenerateMock<IEventHandler>();
+            var bus = new InProcessEventBus();
+            bus.RegisterHandler(typeof(ADomainEvent), aDomainEventHandler);
+
+            var events = new IEvent[]
+                             {
+                                 new AEvent(), new ADomainEvent(), new ADomainEvent(), new AEvent(), new ADomainEvent(), new AEvent(),
+                                 new AEvent(), new ADomainEvent(), new ADomainEvent(), new AEvent(), new ADomainEvent(), new AEvent()
+                             };
+
+            bus.Publish(events);
+
+            aDomainEventHandler.AssertWasCalled(h => h.Handle(null), options => options.IgnoreArguments().Repeat.Times(6));
         }
 
         [Test]
