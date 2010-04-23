@@ -119,7 +119,11 @@ namespace Ncqrs.Domain
             HandleEvent(evnt);
 
             if(!historical)
+            {
+                // TODO: Validate id.
+                evnt.AggregateRootId = this.Id;
                 _uncommittedEvent.Push(evnt);
+            }
 
             OnEventApplied(evnt);
         }
@@ -128,7 +132,7 @@ namespace Ncqrs.Domain
         {
             Contract.Ensures(Contract.Result<IEnumerable<DomainEvent>>() != null, "The result of this method should never be null.");
 
-            return _uncommittedEvent;
+            return _uncommittedEvent.ToArray();
         }
 
         IEnumerable<IEventSourcedEvent> IEventSource.GetUncommittedEvents()

@@ -53,6 +53,8 @@
     <Compile Include="Config\NcqrsEnvironmentSpecs.cs" />
     <Compile Include="DateTimeBasedClockSpecs.cs" />
     <Compile Include="Domain\TypeThresholdedActionBasedInternalEventHandlerSpecs.cs" />
+    <Compile Include="Eventing\EventBaseSpecs.cs" />
+    <Compile Include="Eventing\Storage\InMemoryEventStoreSpecs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -9,11 +9,11 @@ namespace Ncqrs.Eventing.Storage
     /// </summary>
     public class InMemoryEventStore : IEventStore
     {
-        private readonly Dictionary<Guid, LinkedList<IEvent>> _events = new Dictionary<Guid, LinkedList<IEvent>>();
+        private readonly Dictionary<Guid, Queue<IEvent>> _events = new Dictionary<Guid, Queue<IEvent>>();
 
         public IEnumerable<IEvent> GetAllEventsForEventSource(Guid id)
         {
-            LinkedList<IEvent> events;
+            Queue<IEvent> events;
 
             if (_events.TryGetValue(id, out events))
             {
@@ -26,18 +26,18 @@ namespace Ncqrs.Eventing.Storage
 
         public IEnumerable<IEvent> Save(IEventSource source)
         {
-            LinkedList<IEvent> events;
+            Queue<IEvent> events;
             var eventsToCommit = source.GetUncommittedEvents();
 
             if (!_events.TryGetValue(source.Id, out events))
             {
-                events = new LinkedList<IEvent>();
+                events = new Queue<IEvent>();
                 _events.Add(source.Id, events);
             }
 
             foreach (var evnt in eventsToCommit)
             {
-                events.AddLast(evnt);
+                events.Enqueue(evnt);
             }
 
             return eventsToCommit;

@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Diagnostics.Contracts;
 using log4net;
 using Ncqrs.Config;
+using Ncqrs.Domain;
 using Ncqrs.Eventing.ServiceModel.Bus;
 using Ncqrs.Eventing.Storage;
 
@@ -24,6 +25,7 @@ namespace Ncqrs
             SetDefault<IUniqueIdentifierGenerator>(new BasicGuidGenerator());
             SetDefault<IEventBus>(new InProcessEventBus());
             SetDefault<IEventStore>(new InMemoryEventStore());
+            SetDefault<IUnitOfWorkFactory>(new ThreadBasedUnitOfWorkFactory(Get<IEventStore>(), Get<IEventBus>()));
             //TODO: Added IDomainRepository default..
         }
 
