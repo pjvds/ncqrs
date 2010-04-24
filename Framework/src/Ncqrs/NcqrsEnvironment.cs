@@ -45,7 +45,7 @@ namespace Ncqrs
         private static IEnvironmentConfiguration _instance;
 
         /// <summary>
-        /// Gets or create the requested instance specified by yhe parameter <i>T</i>.
+        /// Gets or create the requested instance specified by the parameter <i>T</i>.
         /// </summary>
         /// <typeparam name="T">The type of the instance that is requested.</typeparam>
         /// <returns>The instance of the requested type specified by <i>T</i>.</returns>

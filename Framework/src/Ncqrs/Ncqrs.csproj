@@ -112,7 +112,7 @@
     <Compile Include="Domain\DomainEvent.cs" />
     <Compile Include="Eventing\EventBase.cs" />
     <Compile Include="Eventing\IEventSource.cs" />
-    <Compile Include="Eventing\IEventSourcedEvent.cs" />
+    <Compile Include="Eventing\ISourcedEvent.cs" />
     <Compile Include="IClock.cs" />
     <Compile Include="InternalExtensions.cs" />
     <Compile Include="NamespaceDoc.cs" />
@@ -148,7 +148,6 @@
     <Compile Include="Domain\UnitOfWork.cs" />
     <Compile Include="BasicGuidGenerator.cs" />
     <Compile Include="Eventing\ServiceModel\Bus\IEventBus.cs" />
-    <Compile Include="Eventing\ServiceModel\Bus\IEventBusFactory.cs" />
     <Compile Include="Eventing\ServiceModel\Bus\IEventHandler.cs" />
     <Compile Include="Eventing\ServiceModel\Bus\InProcessEventBus.cs" />
     <Compile Include="Eventing\IEvent.cs" />

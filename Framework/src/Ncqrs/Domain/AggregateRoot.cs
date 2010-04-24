@@ -154,7 +154,7 @@ namespace Ncqrs.Domain
             return _uncommittedEvent.ToArray();
         }
 
-        IEnumerable<IEventSourcedEvent> IEventSource.GetUncommittedEvents()
+        IEnumerable<ISourcedEvent> IEventSource.GetUncommittedEvents()
         {
             return GetUncommitedEvents();
         }

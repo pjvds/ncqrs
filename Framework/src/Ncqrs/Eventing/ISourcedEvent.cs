@@ -2,7 +2,7 @@
 
 namespace Ncqrs.Eventing
 {
-    public interface IEventSourcedEvent : IEvent
+    public interface ISourcedEvent : IEvent
     {
         Guid EventSourceId
         { 
