@@ -56,11 +56,9 @@
     <Reference Include="log4net">
       <HintPath>..\..\bin\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="MongoDB.Driver">
-      <HintPath>..\..\bin\MongoDB.Driver.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json.Net20">
-      <HintPath>..\..\bin\Newtonsoft.Json.Net20.dll</HintPath>
+    <Reference Include="MongoDB.Driver, Version=1.0.3728.40257, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\mongodb-net\MongoDB.Driver.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
