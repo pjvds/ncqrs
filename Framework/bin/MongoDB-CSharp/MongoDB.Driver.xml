@@ -1,0 +1,1794 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>/Users/samus/Documents/Projects/mongodb-csharp/Release/MongoDB.Driver</name>
+    </assembly>
+    <members>
+        <member name="F:MongoDB.Driver.Bson.BsonDataType.String">
+            <summary>
+            int32
+            cstring The int32 is the # bytes following (# of bytes in string + 1 for terminating NULL)
+            </summary>
+        </member>
+        <member name="F:MongoDB.Driver.Bson.BsonDataType.Obj">
+            <summary>
+            bson object
+            </summary>
+        </member>
+        <member name="F:MongoDB.Driver.Bson.BsonDataType.Array">
+            <summary>
+            bson object
+            </summary>
+        </member>
+        <member name="F:MongoDB.Driver.Bson.BsonDataType.Binary">
+            <summary>
+            int32 byte byte[]
+            The first int32 is the # of bytes following the byte subtype
+            </summary>
+        </member>
+        <member name="F:MongoDB.Driver.Bson.BsonDataType.Undefined">
+            <summary>
+            VOID
+            Conceptually equiValent to Javascript undefined.  Deprecated.
+            </summary>
+        </member>
+        <member name="F:MongoDB.Driver.Bson.BsonDataType.Oid">
+            <summary>
+            byte[12]
+            12 byte object id.
+            </summary>
+        </member>
+        <member name="F:MongoDB.Driver.Bson.BsonDataType.Boolean">
+            <summary>
+            byte
+            legal values: 0x00 -&gt; false, 0x01 -&gt; true
+            </summary>
+        </member>
+        <member name="F:MongoDB.Driver.Bson.BsonDataType.Date">
+            <summary>
+            int64
+            milliseconds since epoch (e.g. new Date.getTime())
+            </summary>
+        </member>
+        <member name="F:MongoDB.Driver.Bson.BsonDataType.Null">
+            <summary>
+            VOID
+            Mapped to Null in programming languages which have a Null value or type.  Conceptually equivalent to Javascript null.
+            </summary>
+        </member>
+        <member name="F:MongoDB.Driver.Bson.BsonDataType.Regex">
+            <summary>
+            cstring cstring
+            first ctring is regex expression, second cstring are regex options
+            </summary>
+        </member>
+        <member name="F:MongoDB.Driver.Bson.BsonDataType.Reference">
+            <summary>
+            int32 cstring byte[12]
+            Deprecated.  Please use a subobject instead
+            The int32 is the length in bytes of the cstring.
+            The cstring is the Namespace: full collection name.
+            The byte array is a 12 byte object id. See note on data_oid.
+            </summary>
+        </member>
+        <member name="F:MongoDB.Driver.Bson.BsonDataType.Code">
+            <summary>
+            Int32 cstring
+            The int32 is the # bytes following (# of bytes in string + 1
+            for terminating NULL) and then the code as cstring. data_code should
+            be supported in BSON encoders/decoders, but has been deprecated in
+            favor of data_code_w_scope
+            </summary>
+        </member>
+        <member name="F:MongoDB.Driver.Bson.BsonDataType.Symbol">
+            <summary>
+            String
+            </summary>
+        </member>
+        <member name="F:MongoDB.Driver.Bson.BsonDataType.CodeWScope">
+            <summary>
+            int32
+            int32 cstring bson_object  The first int32 is the total # of
+            bytes (size of cstring + size of bson_object + 8 for the two int32s).
+            The second int 32 is the size of the cstring (# of bytes in string + 1 for
+            terminating NULL). The cstring is the code. The bson_object is an object
+            mapping identifiers to values, representing the scope in which the code
+            should be evaluated.
+            </summary>
+        </member>
+        <member name="F:MongoDB.Driver.Bson.BsonDataType.Integer">
+            <summary>
+            Int32
+            </summary>
+        </member>
+        <member name="F:MongoDB.Driver.Bson.BsonDataType.Timestamp">
+            <summary>
+            Int64 - first 4 byte are a timestamp, next 4 byte are an incremented field
+            </summary>
+        </member>
+        <member name="F:MongoDB.Driver.Bson.BsonDataType.Long">
+            <summary>
+            Int64 - 64 bit integer
+            </summary>
+        </member>
+        <member name="F:MongoDB.Driver.Bson.BsonDataType.MinKey">
+            <summary>
+            VOID - Special type that compares lower than all other types.
+            </summary>
+        </member>
+        <member name="F:MongoDB.Driver.Bson.BsonDataType.MaxKey">
+            <summary>
+            VOID - Special type that compares higher than all other types.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.Bson.BsonInfo.#ctor">
+            <summary>
+            Initializes the <see cref="T:MongoDB.Driver.Bson.BsonInfo" /> class.
+            </summary>
+        </member>
+        <member name="P:MongoDB.Driver.Bson.BsonInfo.Epoch">
+            <summary>
+            Gets or sets the epoch.
+            </summary>
+            <value>The epoch.</value>
+        </member>
+        <member name="P:MongoDB.Driver.Bson.BsonInfo.MaxDocumentSize">
+            <summary>
+            The maximum size a document can be.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.Collection.FindOne(MongoDB.Driver.Document)">
+            <summary>
+            Finds and returns the first document in a query.
+            </summary>
+            <param name="spec">
+            A <see cref="T:MongoDB.Driver.Document" /> representing the query.
+            </param>
+            <returns>
+            A <see cref="T:MongoDB.Driver.Document" /> from the collection.
+            </returns>
+        </member>
+        <member name="M:MongoDB.Driver.Collection.FindAndModify(MongoDB.Driver.Document,MongoDB.Driver.Document)">
+            <summary>
+            Finds, modifies and returns a document based on query, spec and sorting
+            </summary>
+            <returns>
+            A <see cref="T:MongoDB.Driver.Document" /></returns>
+        </member>
+        <member name="M:MongoDB.Driver.Collection.MapReduce">
+            <summary>
+            Entrypoint into executing a map/reduce query against the collection.
+            </summary>
+            <returns>
+            A <see cref="T:MongoDB.Driver.MapReduce" /></returns>
+        </member>
+        <member name="M:MongoDB.Driver.Collection.Count">
+            <summary>
+            Count all items in the collection.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.Collection.Count(MongoDB.Driver.Document)">
+            <summary>
+            Count all items in a collection that match the query spec.
+            </summary>
+            <remarks>
+            It will return 0 if the collection doesn't exist yet.
+            </remarks>
+        </member>
+        <member name="M:MongoDB.Driver.Collection.Insert(MongoDB.Driver.Document,System.Boolean)">
+            <summary>
+            Inserts the Document into the collection.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.Collection.Delete(MongoDB.Driver.Document,System.Boolean)">
+            <summary>
+            Deletes documents from the collection according to the spec.
+            </summary>
+            <remarks>An empty document will match all documents in the collection and effectively truncate it.
+            </remarks>
+        </member>
+        <member name="M:MongoDB.Driver.Collection.Delete(MongoDB.Driver.Document)">
+            <summary>
+            Deletes documents from the collection according to the spec.
+            </summary>
+            <remarks>An empty document will match all documents in the collection and effectively truncate it.
+            </remarks>
+        </member>
+        <member name="M:MongoDB.Driver.Collection.Save(MongoDB.Driver.Document)">
+            <summary>
+            Saves a document to the database using an upsert.
+            </summary>
+            <remarks>
+            The document will contain the _id that is saved to the database.  This is really just an alias
+            to Update(Document) to maintain consistency between drivers.
+            </remarks>
+        </member>
+        <member name="M:MongoDB.Driver.Collection.Update(MongoDB.Driver.Document)">
+            <summary>
+            Updates a document with the data in doc as found by the selector.
+            </summary>
+            <remarks>
+            _id will be used in the document to create a selector.  If it isn't in
+            the document then it is assumed that the document is new and an upsert is sent to the database
+            instead.
+            </remarks>
+        </member>
+        <member name="M:MongoDB.Driver.Collection.Update(MongoDB.Driver.Document,MongoDB.Driver.Document)">
+            <summary>
+            Updates a document with the data in doc as found by the selector.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.Collection.Update(MongoDB.Driver.Document,MongoDB.Driver.Document,MongoDB.Driver.UpdateFlags)">
+            <summary>
+            Updates a document with the data in doc as found by the selector.
+            </summary>
+            <param name="doc">The <see cref="T:MongoDB.Driver.Document" /> to update with
+            </param>
+            <param name="selector">
+            The query spec to find the document to update.
+            </param>
+            <param name="flags">
+                <see cref="T:MongoDB.Driver.UpdateFlags" />
+            </param>
+        </member>
+        <member name="M:MongoDB.Driver.Collection.UpdateAll(MongoDB.Driver.Document,MongoDB.Driver.Document)">
+            <summary>
+            Runs a multiple update query against the database.  It will wrap any
+            doc with $set if the passed in doc doesn't contain any '$' ops.
+            </summary>
+            <param name="doc">
+            </param>
+            <param name="selector">
+            </param>
+        </member>
+        <member name="T:MongoDB.Driver.CollectionMetaData">
+            <summary>
+            Lazily loaded meta data on the collection.
+            </summary>
+        </member>
+        <member name="T:MongoDB.Driver.Connections.Connection">
+            <summary>
+            Connection is a managment unit which uses a RawConnection from connection pool
+            to comunicate with the server.
+            <remarks>
+            If an connection error occure, the RawConnection is transparently replaced
+            by a new fresh connection.
+            </remarks></summary>
+        </member>
+        <member name="M:MongoDB.Driver.Connections.Connection.#ctor(MongoDB.Driver.Connections.IConnectionFactory)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MongoDB.Driver.Connections.Connection" /> class.
+            </summary>
+            <param name="factory">The pool.</param>
+        </member>
+        <member name="P:MongoDB.Driver.Connections.Connection.IsAuthenticated">
+            <summary>
+            Gets or sets a value indicating whether this instance is authenticated.
+            </summary>
+            <value>
+                <c>true</c> if this instance is authenticated; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:MongoDB.Driver.Connections.Connection.ConnectionString">
+            <summary>
+            Gets the connection string.
+            </summary>
+            <value>The connection string.</value>
+        </member>
+        <member name="P:MongoDB.Driver.Connections.Connection.State">
+            <summary>
+            Gets the state.
+            </summary>
+            <value>The state.</value>
+        </member>
+        <member name="M:MongoDB.Driver.Connections.Connection.Finalize">
+            <summary>
+            Releases unmanaged resources and performs other cleanup operations before the
+            <see cref="T:MongoDB.Driver.Connections.Connection" /> is reclaimed by garbage collection.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.Connections.Connection.MaskAuthenticated">
+            <summary>
+            Masks as authenticated.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.Connections.Connection.SendTwoWayMessage(MongoDB.Driver.Protocol.IRequestMessage)">
+            <summary>
+            Used for sending a message that gets a reply such as a query.
+            </summary>
+            <param name="msg">
+            </param>
+            <returns>
+            </returns>
+            <exception cref="T:System.IO.IOException">A reconnect will be issued but it is up to the caller to handle the error.</exception>
+        </member>
+        <member name="M:MongoDB.Driver.Connections.Connection.SendMessage(MongoDB.Driver.Protocol.IRequestMessage)">
+            <summary>
+            Used for sending a message that gets no reply such as insert or update.
+            </summary>
+            <param name="msg">
+            </param>
+            <returns>
+            </returns>
+            <exception cref="T:System.IO.IOException">A reconnect will be issued but it is up to the caller to handle the error.</exception>
+        </member>
+        <member name="M:MongoDB.Driver.Connections.Connection.SendMsgMessage(System.String)">
+            <summary>
+            Just sends a simple message string to the database.
+            </summary>
+            <param name="message">
+            A <see cref="T:System.String" /></param>
+        </member>
+        <member name="M:MongoDB.Driver.Connections.Connection.Open">
+            <summary>
+            Opens this instance.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.Connections.Connection.Close">
+            <summary>
+            Closes this instance.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.Connections.Connection.ReplaceInvalidConnection">
+            <summary>
+            Replaces the invalid connection.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.Connections.Connection.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.Connections.ConnectionFactory.#ctor">
+            <summary>
+            Initializes the <see cref="T:MongoDB.Driver.Connections.ConnectionFactory" /> class.
+            </summary>
+        </member>
+        <member name="P:MongoDB.Driver.Connections.ConnectionFactory.PoolCount">
+            <summary>
+            Gets the pool count.
+            </summary>
+            <value>The pool count.</value>
+        </member>
+        <member name="M:MongoDB.Driver.Connections.ConnectionFactory.Shutdown">
+            <summary>
+            Shutdowns this instance.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.Connections.ConnectionFactory.GetConnection(System.String)">
+            <summary>
+            Gets the connection.
+            </summary>
+            <param name="connectionString">The connection string.</param>
+            <returns>
+            </returns>
+        </member>
+        <member name="M:MongoDB.Driver.Connections.ConnectionFactory.CreateFactory(System.String)">
+            <summary>
+            Creates the factory.
+            </summary>
+            <param name="connectionString">The connection string.</param>
+            <returns>
+            </returns>
+        </member>
+        <member name="M:MongoDB.Driver.Connections.ConnectionFactory.OnMaintenaceWakeup">
+            <summary>
+            Called when [maintenace wakeup].
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.Connections.ConnectionFactoryBase.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MongoDB.Driver.Connections.ConnectionFactoryBase" /> class.
+            </summary>
+            <param name="connectionString">The connection string.</param>
+        </member>
+        <member name="P:MongoDB.Driver.Connections.ConnectionFactoryBase.Builder">
+            <summary>
+            Gets or sets the builder.
+            </summary>
+            <value>The builder.</value>
+        </member>
+        <member name="P:MongoDB.Driver.Connections.ConnectionFactoryBase.ConnectionString">
+            <summary>
+            Gets or sets the connection string.
+            </summary>
+            <value>The connection string.</value>
+        </member>
+        <member name="M:MongoDB.Driver.Connections.ConnectionFactoryBase.Open">
+            <summary>
+            Opens a connection.
+            </summary>
+            <returns>
+            </returns>
+        </member>
+        <member name="M:MongoDB.Driver.Connections.ConnectionFactoryBase.Close(MongoDB.Driver.Connections.RawConnection)">
+            <summary>
+            Closes the specified connection.
+            </summary>
+            <param name="connection">The connection.</param>
+        </member>
+        <member name="M:MongoDB.Driver.Connections.ConnectionFactoryBase.Cleanup">
+            <summary>
+            Cleanups this instance.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.Connections.ConnectionFactoryBase.CreateRawConnection">
+            <summary>
+            Creates the raw connection.
+            </summary>
+            <returns>
+            </returns>
+        </member>
+        <member name="M:MongoDB.Driver.Connections.ConnectionFactoryBase.GetNextEndPoint">
+            <summary>
+            Gets the next end point.
+            </summary>
+            <remarks>
+            Currently is only cyles to the server list.
+            </remarks>
+            <returns>
+            </returns>
+        </member>
+        <member name="M:MongoDB.Driver.Connections.ConnectionFactoryBase.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+        </member>
+        <member name="P:MongoDB.Driver.Connections.IConnectionFactory.ConnectionString">
+            <summary>
+            Gets the connection string.
+            </summary>
+            <value>The connection string.</value>
+        </member>
+        <member name="M:MongoDB.Driver.Connections.IConnectionFactory.Open">
+            <summary>
+            Opens a connection.
+            </summary>
+            <returns>
+            </returns>
+        </member>
+        <member name="M:MongoDB.Driver.Connections.IConnectionFactory.Close(MongoDB.Driver.Connections.RawConnection)">
+            <summary>
+            Closes the specified connection.
+            </summary>
+            <param name="connection">The connection.</param>
+        </member>
+        <member name="M:MongoDB.Driver.Connections.IConnectionFactory.Cleanup">
+            <summary>
+            Cleanups this instance.
+            </summary>
+        </member>
+        <member name="T:MongoDB.Driver.Connections.PooledConnectionFactory">
+            <summary>
+            Connection pool implementation based on this document:
+            http://msdn.microsoft.com/en-us/library/8xx3tyca%28VS.100%29.aspx
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.Connections.PooledConnectionFactory.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the
+            <see cref="T:MongoDB.Driver.Connections.PooledConnectionFactory" />
+            class.
+            </summary>
+            <param name="connectionString">The connection string.</param>
+        </member>
+        <member name="P:MongoDB.Driver.Connections.PooledConnectionFactory.PoolSize">
+            <summary>
+            Gets the size of the pool.
+            </summary>
+            <value>The size of the pool.</value>
+        </member>
+        <member name="M:MongoDB.Driver.Connections.PooledConnectionFactory.Cleanup">
+            <summary>
+            Cleanups the connections.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.Connections.PooledConnectionFactory.CheckFreeConnectionsAlive">
+            <summary>
+            Checks the free connections alive.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.Connections.PooledConnectionFactory.DisposeInvalidConnections">
+            <summary>
+            Disposes the invalid connections.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.Connections.PooledConnectionFactory.IsAlive(MongoDB.Driver.Connections.RawConnection)">
+            <summary>
+            Determines whether the specified connection is alive.
+            </summary>
+            <param name="connection">The connection.</param>
+            <returns>
+                <c>true</c> if the specified connection is alive; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:MongoDB.Driver.Connections.PooledConnectionFactory.Open">
+            <summary>
+            Borrows the connection.
+            </summary>
+            <returns>
+            </returns>
+        </member>
+        <member name="M:MongoDB.Driver.Connections.PooledConnectionFactory.Close(MongoDB.Driver.Connections.RawConnection)">
+            <summary>
+            Returns the connection.
+            </summary>
+            <param name="connection">The connection.</param>
+        </member>
+        <member name="M:MongoDB.Driver.Connections.PooledConnectionFactory.EnsureMinimalPoolSize">
+            <summary>
+            Ensures the size of the minimal pool.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.Connections.PooledConnectionFactory.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+        </member>
+        <member name="T:MongoDB.Driver.Connections.RawConnection">
+            <summary>
+            Represents a raw connection on the wire which is managed by the
+            connection pool.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.Connections.RawConnection.#ctor(MongoDB.Driver.MongoServerEndPoint,System.TimeSpan)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MongoDB.Driver.Connections.RawConnection" /> class.
+            </summary>
+            <param name="endPoint">The end point.</param>
+            <param name="connectionTimeout">The connection timeout.</param>
+        </member>
+        <member name="P:MongoDB.Driver.Connections.RawConnection.IsInvalid">
+            <summary>
+            Gets or sets a value indicating whether this instance is invalid.
+            </summary>
+            <value>
+                <c>true</c> if this instance is invalid; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:MongoDB.Driver.Connections.RawConnection.IsConnected">
+            <summary>
+            Gets a value indicating whether this instance is connected.
+            </summary>
+            <value>
+                <c>true</c> if this instance is connected; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:MongoDB.Driver.Connections.RawConnection.CreationTime">
+            <summary>
+            Gets or sets the creation time.
+            </summary>
+            <value>The creation time.</value>
+        </member>
+        <member name="P:MongoDB.Driver.Connections.RawConnection.EndPoint">
+            <summary>
+            Gets or sets the end point.
+            </summary>
+            <value>The end point.</value>
+        </member>
+        <member name="P:MongoDB.Driver.Connections.RawConnection.IsAuthenticated">
+            <summary>
+            Gets or sets a value indicating whether this instance is authenticated.
+            </summary>
+            <value>
+                <c>true</c> if this instance is authenticated; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="M:MongoDB.Driver.Connections.RawConnection.Finalize">
+            <summary>
+            Releases unmanaged resources and performs other cleanup operations before the
+            <see cref="T:MongoDB.Driver.Connections.RawConnection" /> is reclaimed by garbage collection.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.Connections.RawConnection.GetStream">
+            <summary>
+            Gets the stream.
+            </summary>
+            <returns>
+            </returns>
+        </member>
+        <member name="M:MongoDB.Driver.Connections.RawConnection.MarkAuthenticated">
+            <summary>
+            Marks as authenticated.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.Connections.RawConnection.MarkAsInvalid">
+            <summary>
+            Marks as invalid.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.Connections.RawConnection.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+        </member>
+        <member name="T:MongoDB.Driver.Connections.SimpleConnectionFactory">
+            <summary>
+            Simple connection factory which only creates and closes connections.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.Connections.SimpleConnectionFactory.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MongoDB.Driver.Connections.SimpleConnectionFactory" /> class.
+            </summary>
+            <param name="connectionString">The connection string.</param>
+        </member>
+        <member name="M:MongoDB.Driver.Connections.SimpleConnectionFactory.Open">
+            <summary>
+            Opens a connection.
+            </summary>
+            <returns>
+            </returns>
+        </member>
+        <member name="M:MongoDB.Driver.Connections.SimpleConnectionFactory.Close(MongoDB.Driver.Connections.RawConnection)">
+            <summary>
+            Closes the specified connection.
+            </summary>
+            <param name="connection">The connection.</param>
+        </member>
+        <member name="M:MongoDB.Driver.Database.FollowReference(MongoDB.Driver.DBRef)">
+            <summary>
+            Gets the document that a reference is pointing to.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.Database.GetLastError">
+            <summary>
+            Most operations do not have a return code in order to save the client from having to wait for results.
+            GetLastError can be called to retrieve the return code if clients want one.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.Database.GetLastErrorAndFSync">
+            <summary>
+            Retrieves the last error and forces the database to fsync all files before returning.
+            </summary>
+            <remarks>Server version 1.3+</remarks>
+        </member>
+        <member name="M:MongoDB.Driver.Database.GetPreviousError">
+            <summary>
+            Call after sending a bulk operation to the database.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.Database.GetSisterDatabase(System.String)">
+            <summary>
+            Gets the sister database on the same Mongo connection with the given name.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.Database.ResetError">
+            <summary>
+            Resets last error.  This is good to call before a bulk operation.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.Database.AuthenticateIfRequired">
+            <summary>
+            Authenticates the on first request.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.Database.Hash(System.String)">
+            <summary>
+            Hashes the specified text.
+            </summary>
+            <param name="text">The text.</param>
+            <returns>
+            </returns>
+        </member>
+        <member name="T:MongoDB.Driver.Bson.BsonWriter">
+            <summary>
+            Class that knows how to format a native object into bson bits.
+            </summary>
+        </member>
+        <member name="T:MongoDB.Driver.DatabaseMetaData">
+            <summary>
+            Administration of metadata for a database.
+            </summary>
+        </member>
+        <member name="T:MongoDB.Driver.DBRef">
+            <summary>
+            Native type that maps to a database reference.  Use Database.FollowReference(DBRef) to retrieve the document
+            that it refers to.
+            </summary>
+            <remarks>DBRefs are just a specification for a specially formatted Document.  At this time the database
+            does no special handling of them. Any referential integrity must be maintained by the application
+            not the database.
+            </remarks>
+        </member>
+        <member name="M:MongoDB.Driver.DBRef.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:MongoDB.Driver.DBRef" /> class.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.DBRef.#ctor(MongoDB.Driver.Document)">
+            <summary>
+            Constructs a DBRef from a document that matches the DBref specification.
+            </summary>
+        </member>
+        <member name="P:MongoDB.Driver.DBRef.CollectionName">
+            <summary>
+            The name of the collection the referenced document is in.
+            </summary>
+        </member>
+        <member name="P:MongoDB.Driver.DBRef.Id">
+            <summary>
+            Object value of the id.  It isn't an Oid because document ids are not required to be oids.
+            </summary>
+        </member>
+        <member name="P:MongoDB.Driver.DBRef.MetaData">
+            <summary>
+            An extension to the spec that allows storing of arbitrary data about a reference.
+            </summary>
+            <remarks>This is a non-standard feature.
+            </remarks>
+        </member>
+        <member name="M:MongoDB.Driver.DBRef.FromDocument(MongoDB.Driver.Document)">
+            <summary>
+            Deprecated.  Use the new DBRef(Document) constructor instead.
+            </summary>
+        </member>
+        <member name="T:MongoDB.Driver.Document">
+            <summary>
+            Description of Document.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.Document.Insert(System.String,System.Object,System.Int32)">
+            <summary>
+            Adds an item to the Document at the specified position
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.Document.CopyTo(MongoDB.Driver.Document)">
+            <summary>
+            TODO Fix any accidental reordering issues.
+            </summary>
+            <param name="dest">
+            </param>
+        </member>
+        <member name="T:MongoDB.Driver.MongoCommandException">
+            <summary>
+            Raised when a command returns a failure message.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.MongoCommandException.#ctor(System.String,MongoDB.Driver.Document,MongoDB.Driver.Document)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MongoDB.Driver.MongoCommandException" /> class.
+            </summary>
+            <param name="message">The message.</param>
+            <param name="error">The error.</param>
+            <param name="command">The command.</param>
+        </member>
+        <member name="M:MongoDB.Driver.MongoCommandException.#ctor(System.String,MongoDB.Driver.Document,MongoDB.Driver.Document,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MongoDB.Driver.MongoCommandException" /> class.
+            </summary>
+            <param name="message">The message.</param>
+            <param name="error">The error.</param>
+            <param name="command">The command.</param>
+            <param name="e">The e.</param>
+        </member>
+        <member name="P:MongoDB.Driver.MongoCommandException.Error">
+            <summary>
+            Gets or sets the error.
+            </summary>
+            <value>The error.</value>
+        </member>
+        <member name="P:MongoDB.Driver.MongoCommandException.Command">
+            <summary>
+            Gets or sets the command.
+            </summary>
+            <value>The command.</value>
+        </member>
+        <member name="T:MongoDB.Driver.MongoCommException">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.MongoCommException.#ctor(System.String,MongoDB.Driver.Connections.Connection)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MongoDB.Driver.MongoCommException" /> class.
+            </summary>
+            <param name="message">The message.</param>
+            <param name="connection">The connection.</param>
+        </member>
+        <member name="M:MongoDB.Driver.MongoCommException.#ctor(System.String,MongoDB.Driver.Connections.Connection,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MongoDB.Driver.MongoCommException" /> class.
+            </summary>
+            <param name="message">The message.</param>
+            <param name="connection">The connection.</param>
+            <param name="inner">The inner.</param>
+        </member>
+        <member name="P:MongoDB.Driver.MongoCommException.ConnectionString">
+            <summary>
+            Gets or sets the connection string.
+            </summary>
+            <value>The connection string.</value>
+        </member>
+        <member name="T:MongoDB.Driver.MongoDuplicateKeyException">
+            <summary>
+            Raised when an action causes a unique constraint violation in an index.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.MongoDuplicateKeyException.#ctor(System.String,MongoDB.Driver.Document)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MongoDB.Driver.MongoDuplicateKeyException" /> class.
+            </summary>
+            <param name="message">The message.</param>
+            <param name="error">The error.</param>
+        </member>
+        <member name="M:MongoDB.Driver.MongoDuplicateKeyException.#ctor(System.String,MongoDB.Driver.Document,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MongoDB.Driver.MongoDuplicateKeyException" /> class.
+            </summary>
+            <param name="message">The message.</param>
+            <param name="error">The error.</param>
+            <param name="e">The e.</param>
+        </member>
+        <member name="T:MongoDB.Driver.MongoDuplicateKeyUpdateException">
+            <summary>
+            Raised when an update action causes a unique constraint violation in an index.
+            </summary>
+            <remarks>
+            It is only another class because Mongo makes a distinction and it may be helpful.
+            </remarks>
+        </member>
+        <member name="M:MongoDB.Driver.MongoDuplicateKeyUpdateException.#ctor(System.String,MongoDB.Driver.Document)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MongoDB.Driver.MongoDuplicateKeyUpdateException" /> class.
+            </summary>
+            <param name="message">The message.</param>
+            <param name="error">The error.</param>
+        </member>
+        <member name="M:MongoDB.Driver.MongoDuplicateKeyUpdateException.#ctor(System.String,MongoDB.Driver.Document,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MongoDB.Driver.MongoDuplicateKeyUpdateException" /> class.
+            </summary>
+            <param name="message">The message.</param>
+            <param name="error">The error.</param>
+            <param name="e">The e.</param>
+        </member>
+        <member name="T:MongoDB.Driver.MongoException">
+            <summary>
+            Base class for all Mongo Exceptions
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.MongoException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MongoDB.Driver.MongoException" /> class.
+            </summary>
+            <param name="message">The message.</param>
+            <param name="inner">The inner.</param>
+        </member>
+        <member name="M:MongoDB.Driver.MongoException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MongoDB.Driver.MongoException" /> class.
+            </summary>
+            <param name="message">The message.</param>
+        </member>
+        <member name="T:MongoDB.Driver.MongoMapReduceException">
+            <summary>
+            Raised when a map reduce call fails.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.MongoMapReduceException.#ctor(MongoDB.Driver.MongoCommandException,MongoDB.Driver.MapReduce)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MongoDB.Driver.MongoMapReduceException" /> class.
+            </summary>
+            <param name="exception">The exception.</param>
+            <param name="mapReduce">The map reduce.</param>
+        </member>
+        <member name="P:MongoDB.Driver.MongoMapReduceException.MapReduceResult">
+            <summary>
+            Gets or sets the map reduce result.
+            </summary>
+            <value>The map reduce result.</value>
+        </member>
+        <member name="M:MongoDB.Driver.MongoOperationException.#ctor(System.String,MongoDB.Driver.Document)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MongoDB.Driver.MongoOperationException" /> class.
+            </summary>
+            <param name="message">The message.</param>
+            <param name="error">The error.</param>
+        </member>
+        <member name="M:MongoDB.Driver.MongoOperationException.#ctor(System.String,MongoDB.Driver.Document,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MongoDB.Driver.MongoOperationException" /> class.
+            </summary>
+            <param name="message">The message.</param>
+            <param name="error">The error.</param>
+            <param name="e">The e.</param>
+        </member>
+        <member name="P:MongoDB.Driver.MongoOperationException.Error">
+            <summary>
+            Gets or sets the error.
+            </summary>
+            <value>The error.</value>
+        </member>
+        <member name="P:MongoDB.Driver.IMongo.Item(System.String)">
+            <summary>
+            Gets the <see cref="T:MongoDB.Driver.Database"></see> with the specified name.
+            </summary>
+            <value>
+            </value>
+        </member>
+        <member name="P:MongoDB.Driver.IMongo.ConnectionString">
+            <summary>
+            Gets the connection string.
+            </summary>
+            <value>The connection string.</value>
+        </member>
+        <member name="M:MongoDB.Driver.IMongo.GetDatabase(System.String)">
+            <summary>
+            Gets the named database.
+            </summary>
+            <param name="name">The name.</param>
+            <returns>
+            </returns>
+        </member>
+        <member name="M:MongoDB.Driver.IMongo.Connect">
+            <summary>
+            Connects this instance.
+            </summary>
+            <returns>
+            </returns>
+        </member>
+        <member name="M:MongoDB.Driver.IMongo.Disconnect">
+            <summary>
+            Disconnects this instance.
+            </summary>
+            <returns>
+            </returns>
+        </member>
+        <member name="T:MongoDB.Driver.Mongo">
+            <summary>
+            Description of Mongo.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.Mongo.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:MongoDB.Driver.Mongo" /> class.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.Mongo.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MongoDB.Driver.Mongo" /> class.
+            </summary>
+            <param name="connectionString">The connection string.</param>
+        </member>
+        <member name="P:MongoDB.Driver.Mongo.Item(System.String)">
+            <summary>
+            Gets the <see cref="T:MongoDB.Driver.Database" /> with the specified name.
+            </summary>
+            <value>
+            </value>
+        </member>
+        <member name="P:MongoDB.Driver.Mongo.ConnectionString">
+            <summary>
+            Gets the connection string.
+            </summary>
+            <value>The connection string.</value>
+        </member>
+        <member name="M:MongoDB.Driver.Mongo.GetDatabase(System.String)">
+            <summary>
+            Gets the named database.
+            </summary>
+            <param name="name">The name.</param>
+            <returns>
+            </returns>
+        </member>
+        <member name="M:MongoDB.Driver.Mongo.Connect">
+            <summary>
+            Connects this instance.
+            </summary>
+            <returns>
+            </returns>
+        </member>
+        <member name="M:MongoDB.Driver.Mongo.Disconnect">
+            <summary>
+            Disconnects this instance.
+            </summary>
+            <returns>
+            </returns>
+        </member>
+        <member name="M:MongoDB.Driver.Mongo.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+        </member>
+        <member name="T:MongoDB.Driver.Bson.BsonReader">
+            <summary>
+            Reads binary streams containing BSON data and converts them to native types.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.MongoConnectionStringBuilder.#ctor">
+            <summary>
+            Initializes a new instance of the
+            <see cref="T:MongoDB.Driver.MongoConnectionStringBuilder" />
+            class. Uses the default server connection when
+            no server is added.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.MongoConnectionStringBuilder.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the
+            <see cref="T:MongoDB.Driver.MongoConnectionStringBuilder" />
+            class. Uses the default server connection when
+            no server is added.
+            </summary>
+            <param name="connectionString">The connection string.</param>
+        </member>
+        <member name="P:MongoDB.Driver.MongoConnectionStringBuilder.Servers">
+            <summary>
+            Gets the servers.
+            </summary>
+            <value>The servers.</value>
+        </member>
+        <member name="P:MongoDB.Driver.MongoConnectionStringBuilder.Password">
+            <summary>
+            Gets or sets the password.
+            </summary>
+            <value>The password.</value>
+        </member>
+        <member name="P:MongoDB.Driver.MongoConnectionStringBuilder.Username">
+            <summary>
+            Gets or sets the username.
+            </summary>
+            <value>The username.</value>
+        </member>
+        <member name="P:MongoDB.Driver.MongoConnectionStringBuilder.MaximumPoolSize">
+            <summary>
+            Gets or sets the maximum size of the connection pool.
+            </summary>
+            <value>The maximum size of the pool.</value>
+        </member>
+        <member name="P:MongoDB.Driver.MongoConnectionStringBuilder.MinimumPoolSize">
+            <summary>
+            Gets or sets the size of the minimum connection pool.
+            </summary>
+            <value>The size of the minimal pool.</value>
+        </member>
+        <member name="P:MongoDB.Driver.MongoConnectionStringBuilder.ConnectionLifetime">
+            <summary>
+            Gets or sets the connection lifetime in connection pool.
+            </summary>
+            <value>The connection lifetime.</value>
+        </member>
+        <member name="P:MongoDB.Driver.MongoConnectionStringBuilder.ConnectionTimeout">
+            <summary>
+            Gets or sets the connection timeout.
+            </summary>
+            <value>The connection timeout.</value>
+        </member>
+        <member name="P:MongoDB.Driver.MongoConnectionStringBuilder.Pooled">
+            <summary>
+            Gets or sets a value indicating whether connection is pooled.
+            </summary>
+            <value>
+                <c>true</c> if pooled; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="M:MongoDB.Driver.MongoConnectionStringBuilder.Parse(System.String)">
+            <summary>
+            Parses the specified connection string.
+            </summary>
+            <param name="connectionString">The connection string.</param>
+        </member>
+        <member name="M:MongoDB.Driver.MongoConnectionStringBuilder.AddServer(MongoDB.Driver.MongoServerEndPoint)">
+            <summary>
+            Adds the server.
+            </summary>
+            <param name="endPoint">The end point.</param>
+        </member>
+        <member name="M:MongoDB.Driver.MongoConnectionStringBuilder.ClearServers">
+            <summary>
+            Clears the servers.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.MongoConnectionStringBuilder.AddServer(System.String)">
+            <summary>
+            Adds the server with the given host and default port.
+            </summary>
+            <param name="host">The host.</param>
+        </member>
+        <member name="M:MongoDB.Driver.MongoConnectionStringBuilder.AddServer(System.String,System.Int32)">
+            <summary>
+            Adds the server with the given host and port.
+            </summary>
+            <param name="host">The host.</param>
+            <param name="port">The port.</param>
+        </member>
+        <member name="M:MongoDB.Driver.MongoConnectionStringBuilder.ToString">
+            <summary>
+            Returns a
+            <see cref="T:System.String" />
+            that represents this instance.
+            </summary>
+            <returns>A
+            <see cref="T:System.String" />
+            that represents this instance.</returns>
+        </member>
+        <member name="T:MongoDB.Driver.MongoMaxKey">
+            <summary>
+            Class representing the MaxKey Bson type.  It will always compare higher than any other type.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.MongoMaxKey.#ctor">
+            <summary>
+            Initializes the <see cref="T:MongoDB.Driver.MongoMaxKey" /> class.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.MongoMaxKey.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:MongoDB.Driver.MongoMaxKey" /> class.
+            </summary>
+        </member>
+        <member name="P:MongoDB.Driver.MongoMaxKey.Value">
+            <summary>
+            Gets the value.
+            </summary>
+            <value>The value.</value>
+        </member>
+        <member name="M:MongoDB.Driver.MongoMaxKey.ToString">
+            <summary>
+            Returns a <see cref="T:System.String" /> that represents this instance.
+            </summary>
+            <returns>
+            A <see cref="T:System.String" /> that represents this instance.
+            </returns>
+        </member>
+        <member name="T:MongoDB.Driver.MongoMinKey">
+            <summary>
+            Class representing the MinKey Bson type.  It will always compare lower than any other type.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.MongoMinKey.#ctor">
+            <summary>
+            Initializes the <see cref="T:MongoDB.Driver.MongoMinKey" /> class.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.MongoMinKey.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:MongoDB.Driver.MongoMinKey" /> class.
+            </summary>
+        </member>
+        <member name="P:MongoDB.Driver.MongoMinKey.Value">
+            <summary>
+            Gets or sets the value.
+            </summary>
+            <value>The value.</value>
+        </member>
+        <member name="M:MongoDB.Driver.MongoMinKey.ToString">
+            <summary>
+            Returns a <see cref="T:System.String" /> that represents this instance.
+            </summary>
+            <returns>
+            A <see cref="T:System.String" /> that represents this instance.
+            </returns>
+        </member>
+        <member name="T:MongoDB.Driver.MongoServerEndPoint">
+            <summary>
+            Represents a mongodb server with host and port.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.MongoServerEndPoint.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:MongoDB.Driver.MongoServerEndPoint" /> class.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.MongoServerEndPoint.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MongoDB.Driver.MongoServerEndPoint" /> class.
+            </summary>
+            <param name="host">The host.</param>
+        </member>
+        <member name="M:MongoDB.Driver.MongoServerEndPoint.#ctor(System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MongoDB.Driver.MongoServerEndPoint" /> class.
+            </summary>
+            <param name="port">The port.</param>
+        </member>
+        <member name="M:MongoDB.Driver.MongoServerEndPoint.#ctor(System.String,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MongoDB.Driver.MongoServerEndPoint" /> class.
+            </summary>
+            <param name="host">The host.</param>
+            <param name="port">The port.</param>
+        </member>
+        <member name="F:MongoDB.Driver.MongoServerEndPoint.Default">
+            <summary>
+            The default MongoServerEndPoint.
+            </summary>
+        </member>
+        <member name="P:MongoDB.Driver.MongoServerEndPoint.Host">
+            <summary>
+            Gets or sets the host.
+            </summary>
+            <value>The host.</value>
+        </member>
+        <member name="P:MongoDB.Driver.MongoServerEndPoint.Port">
+            <summary>
+            Gets or sets the port.
+            </summary>
+            <value>The port.</value>
+        </member>
+        <member name="T:MongoDB.Driver.Oid">
+            <summary>
+            Oid is an immutable object that represents a Mongo ObjectId.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.Oid.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MongoDB.Driver.Oid" /> class.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:MongoDB.Driver.Oid.#ctor(System.Byte[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:MongoDB.Driver.Oid" /> class.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="P:MongoDB.Driver.Oid.Created">
+            <summary>
+            Gets the created.
+            </summary>
+            <value>The created.</value>
+        </member>
+        <member name="M:MongoDB.Driver.Oid.Equals(System.Object)">
+            <summary>
+            Determines whether the specified <see cref="T:System.Object" /> is equal to this instance.
+            </summary>
+            <param name="obj">The <see cref="T:System.Object" /> to compare with this instance.</param>
+            <returns>
+                <c>true</c> if the specified <see cref="T:System.Object" /> is equal to this instance; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:MongoDB.Driver.Oid.GetHashCode">
+            <summary>
+            Returns a hash code for this instance.
+            </summary>
+            <returns>
+            A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.
+            </returns>
+        </member>
+        <member name="M:MongoDB.Driver.Oid.ToString">
+            <summary>
+            Returns a <see cref="T:System.String" /> that represents this instance.
+            </summary>
+            <returns>
+            A <see cref="T:System.String" /> that represents this instance.
+            </returns>
+        </member>
+        <member name="M:MongoDB.Driver.Oid.ToByteArray">
+            <summary>
+            Converts the Oid to a byte array.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.Oid.NewOid">
+            <summary>
+            Generates an Oid using OidGenerator.
+            </summary>
+            <returns>
+            A <see cref="T:MongoDB.Driver.Oid" /></returns>
+        </member>
+        <member name="M:MongoDB.Driver.Oid.ValidateHex(System.String)">
+            <summary>
+            Validates the hex.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:MongoDB.Driver.Oid.DecodeHex(System.String)">
+            <summary>
+            Decodes the hex.
+            </summary>
+            <param name="value">The value.</param>
+            <returns>
+            </returns>
+        </member>
+        <member name="M:MongoDB.Driver.MongoRegex.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:MongoDB.Driver.MongoRegex" /> class.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.MongoRegex.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MongoDB.Driver.MongoRegex" /> class.
+            </summary>
+            <param name="expression">The expression.</param>
+        </member>
+        <member name="M:MongoDB.Driver.MongoRegex.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MongoDB.Driver.MongoRegex" /> class.
+            </summary>
+            <param name="expression">The expression.</param>
+            <param name="options">The options.</param>
+        </member>
+        <member name="P:MongoDB.Driver.MongoRegex.Expression">
+            <summary>
+            A valid regex string including the enclosing / characters.
+            </summary>
+        </member>
+        <member name="P:MongoDB.Driver.MongoRegex.Options">
+            <summary>
+            A string that may contain only the characters 'g', 'i', and 'm'.
+            Because the JS and TenGen representations support a limited range of options,
+            any nonconforming options will be dropped when converting to this representation
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.MongoRegex.ToString">
+            <summary>
+            Returns a <see cref="T:System.String" /> that represents this instance.
+            </summary>
+            <returns>
+            A <see cref="T:System.String" /> that represents this instance.
+            </returns>
+        </member>
+        <member name="M:MongoDB.Driver.OidGenerator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:MongoDB.Driver.OidGenerator" /> class.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.OidGenerator.Generate">
+            <summary>
+            Generates this instance.
+            </summary>
+            <returns>
+            </returns>
+        </member>
+        <member name="M:MongoDB.Driver.OidGenerator.GenerateTime">
+            <summary>
+            Generates the time.
+            </summary>
+            <returns>
+            </returns>
+        </member>
+        <member name="M:MongoDB.Driver.OidGenerator.GenerateInc">
+            <summary>
+            Generates the inc.
+            </summary>
+            <returns>
+            </returns>
+        </member>
+        <member name="M:MongoDB.Driver.OidGenerator.GenerateConstants">
+            <summary>
+            Generates the constants.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.OidGenerator.GenerateHostHash">
+            <summary>
+            Generates the host hash.
+            </summary>
+            <returns>
+            </returns>
+        </member>
+        <member name="M:MongoDB.Driver.OidGenerator.GenerateProcId">
+            <summary>
+            Generates the proc id.
+            </summary>
+            <returns>
+            </returns>
+        </member>
+        <member name="T:MongoDB.Driver.DatabaseJS">
+            <summary>
+            Encapsulates and provides access to the serverside javascript stored in db.system.js.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.DatabaseJS.GetFunction(System.String)">
+            <summary>
+            Gets the document representing the function in the database.
+            </summary>
+            <param name="name">
+            A <see cref="T:System.String" /></param>
+            <returns>
+            A <see cref="T:MongoDB.Driver.Document" /></returns>
+        </member>
+        <member name="M:MongoDB.Driver.DatabaseJS.GetFunctionNames">
+            <summary>
+            Returns a listing of the names of all the functions in the database
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.DatabaseJS.Add(System.String,MongoDB.Driver.Code,System.Single)">
+            <summary>
+            Store a function in the database with an extended attribute called version.
+            </summary>
+            <remarks>Version attributes are an extension to the spec.  Function names must be unique
+            to the database so only one version can be stored at a time.  This is most useful for libraries
+            that store function in the database to make sure that the function they are using is the most
+            up to date.
+            </remarks>
+        </member>
+        <member name="M:MongoDB.Driver.DatabaseJS.Add(MongoDB.Driver.Document)">
+            <summary>
+            Stores a function in the database.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.DatabaseJS.Clear">
+            <summary>
+            Removes every function in the database.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.DatabaseJS.Contains(System.String)">
+            <summary>
+            Checks to see if a function named name is stored in the database.
+            </summary>
+            <param name="name">
+            A <see cref="T:System.String" /></param>
+            <returns>
+            A <see cref="T:System.Boolean" /></returns>
+        </member>
+        <member name="M:MongoDB.Driver.DatabaseJS.CopyTo(MongoDB.Driver.Document[],System.Int32)">
+            <summary>
+            Copies the functions from the database ordered by _id (name) to the array starting at the index.
+            </summary>
+            <param name="array">
+            A <see cref="T:MongoDB.Driver.Document[]" /> array to coppy to
+            </param>
+            <param name="arrayIndex">
+            A <see cref="T:System.Int32" /></param>
+        </member>
+        <member name="T:MongoDB.Driver.MapReduce">
+            <summary>
+            A fluent interface for executing a Map/Reduce call against a collection.
+            </summary>
+        </member>
+        <member name="P:MongoDB.Driver.MapReduce.Result">
+            <summary>
+            Holds the resulting value of the execution.
+            </summary>
+        </member>
+        <member name="P:MongoDB.Driver.MapReduce.Map">
+            <summary>The map function references the variable this to inspect the current object under consideration.
+            A map function must call emit(key,value) at least once, but may be invoked any number of times,
+            as may be appropriate.
+            </summary>
+        </member>
+        <member name="P:MongoDB.Driver.MapReduce.Reduce">
+            <summary>
+            The reduce function receives a key and an array of values. To use, reduce the received values,
+            and return a result.
+            </summary>
+            <remarks>The MapReduce engine may invoke reduce functions iteratively; thus, these functions
+            must be idempotent. If you need to perform an operation only once, use a finalize function.</remarks>
+        </member>
+        <member name="P:MongoDB.Driver.MapReduce.Sort">
+            <summary>
+            Sort the query.  Useful for optimization
+            </summary>
+        </member>
+        <member name="P:MongoDB.Driver.MapReduce.Limit">
+            <summary>
+            Number of objects to return from collection
+            </summary>
+        </member>
+        <member name="P:MongoDB.Driver.MapReduce.Out">
+            <summary>
+            Name of the final collection the results should be stored in.
+            </summary>
+            <remarks>A temporary collection is still used and then renamed to the target name atomically.
+            </remarks>
+        </member>
+        <member name="P:MongoDB.Driver.MapReduce.KeepTemp">
+            <summary>
+            When true the generated collection is not treated as temporary.  Specifying out automatically makes
+            the collection permanent
+            </summary>
+        </member>
+        <member name="P:MongoDB.Driver.MapReduce.Verbose">
+            <summary>
+            Provides statistics on job execution time.
+            </summary>
+        </member>
+        <member name="P:MongoDB.Driver.MapReduce.Finalize">
+            <summary>
+            Function to apply to all the results when finished.
+            </summary>
+        </member>
+        <member name="P:MongoDB.Driver.MapReduce.Scope">
+            <summary>
+            Document where fields go into javascript global scope
+            </summary>
+        </member>
+        <member name="T:MongoDB.Driver.MapReduceBuilder">
+            <summary>
+            Provides a Fluent interface to build and execute Map/Reduce calls.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.MapReduceBuilder.Map(System.String)">
+            <summary>The map function references the variable this to inspect the current object under consideration.
+            A map function must call emit(key,value) at least once, but may be invoked any number of times,
+            as may be appropriate.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.MapReduceBuilder.Map(MongoDB.Driver.Code)">
+            <summary>The map function references the variable this to inspect the current object under consideration.
+            A map function must call emit(key,value) at least once, but may be invoked any number of times,
+            as may be appropriate.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.MapReduceBuilder.Reduce(System.String)">
+            <summary>
+            The reduce function receives a key and an array of values. To use, reduce the received values,
+            and return a result.
+            </summary>
+            <remarks>The MapReduce engine may invoke reduce functions iteratively; thus, these functions
+            must be idempotent. If you need to perform an operation only once, use a finalize function.</remarks>
+        </member>
+        <member name="M:MongoDB.Driver.MapReduceBuilder.Reduce(MongoDB.Driver.Code)">
+            <summary>
+            The reduce function receives a key and an array of values. To use, reduce the received values,
+            and return a result.
+            </summary>
+            <remarks>The MapReduce engine may invoke reduce functions iteratively; thus, these functions
+            must be idempotent. If you need to perform an operation only once, use a finalize function.</remarks>
+        </member>
+        <member name="M:MongoDB.Driver.MapReduceBuilder.Query(MongoDB.Driver.Document)">
+            <summary>
+            Query filter object
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.MapReduceBuilder.Sort(MongoDB.Driver.Document)">
+            <summary>
+            Sort the query.  Useful for optimization
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.MapReduceBuilder.Limit(System.Int64)">
+            <summary>
+            Number of objects to return from collection
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.MapReduceBuilder.Out(System.String)">
+            <summary>
+            Name of the final collection the results should be stored in.
+            </summary>
+            <remarks>A temporary collection is still used and then renamed to the target name atomically.
+            </remarks>
+        </member>
+        <member name="M:MongoDB.Driver.MapReduceBuilder.KeepTemp(System.Boolean)">
+            <summary>
+            When true the generated collection is not treated as temporary.  Specifying out automatically makes
+            the collection permanent
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.MapReduceBuilder.Verbose(System.Boolean)">
+            <summary>
+            Provides statistics on job execution time.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.MapReduceBuilder.Finalize(MongoDB.Driver.Code)">
+            <summary>
+            Function to apply to all the results when finished.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.MapReduceBuilder.Scope(MongoDB.Driver.Document)">
+            <summary>
+            Document where fields go into javascript global scope
+            </summary>
+        </member>
+        <member name="T:MongoDB.Driver.Protocol.DeleteMessage">
+            <summary>
+            </summary>
+            <remarks>
+            struct {
+            MsgHeader header;                 // standard message header
+            int32     ZERO;                   // 0 - reserved for future use
+            cstring   fullCollectionName;     // "dbname.collectionname"
+            int32     ZERO;                   // 0 - reserved for future use
+            BSON      selector;               // query object.  See below for details.
+            }
+            </remarks>
+        </member>
+        <member name="T:MongoDB.Driver.Protocol.GetMoreMessage">
+            <summary>
+            Description of GetMoreMessage.
+            </summary>
+            <remarks>
+            struct {
+            MsgHeader header;                 // standard message header
+            int32     ZERO;                   // 0 - reserved for future use
+            cstring   fullCollectionName;     // "dbname.collectionname"
+            int32     numberToReturn;         // number of documents to return
+            int64     cursorID;               // cursorID from the OP_REPLY
+            }
+            </remarks>
+        </member>
+        <member name="T:MongoDB.Driver.Protocol.InsertMessage">
+            <summary>
+            Description of InsertMessage.
+            </summary>
+            <remarks>
+            MsgHeader header;             // standard message header
+            int32     ZERO;               // 0 - reserved for future use
+            cstring   fullCollectionName; // "dbname.collectionname"
+            BSON[]    documents;          // one or more documents to insert into the collection
+            </remarks>
+        </member>
+        <member name="M:MongoDB.Driver.Protocol.InsertMessage.ChunkMessage(MongoDB.Driver.Bson.BsonWriter)">
+            <summary>
+            Breaks down an insert message that may be too large into managable sizes.
+            When inserting only one document there will be only one chunk.  However chances
+            are that when inserting thousands of documents at once there will be many.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.Protocol.InsertMessage.CalculateBaseSize(MongoDB.Driver.Bson.BsonWriter)">
+            <summary>
+            The base size that all chunks will have.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.Protocol.InsertMessage.WriteChunk(System.IO.Stream,MongoDB.Driver.Protocol.InsertMessage.MessageChunk)">
+            <summary>
+            Writes out a header and the chunk of documents.
+            </summary>
+            <param name="stream">
+            </param>
+            <param name="chunk">
+            </param>
+        </member>
+        <member name="T:MongoDB.Driver.Protocol.IRequestMessage">
+            <summary>
+            A Message that is to be written to the database.
+            </summary>
+        </member>
+        <member name="T:MongoDB.Driver.Protocol.KillCursorsMessage">
+            <summary>
+            Description of KillCursorsMessage.
+            </summary>
+            <remarks>
+            struct {
+            MsgHeader header;                 // standard message header
+            int32     ZERO;                   // 0 - reserved for future use
+            int32     numberOfCursorIDs;      // number of cursorIDs in message
+            int64[]   cursorIDs;                // array of cursorIDs to close
+            }
+            </remarks>
+        </member>
+        <member name="T:MongoDB.Driver.Protocol.MessageBase">
+            <summary>
+            Base class for all raw messages
+            </summary>
+        </member>
+        <member name="T:MongoDB.Driver.Protocol.MessageHeader">
+            <summary>
+            In general, each Message consists of a standard message header followed by request-specific data.
+            </summary>
+        </member>
+        <member name="T:MongoDB.Driver.Protocol.MsgMessage">
+            <summary>
+            </summary>
+            <remarks>
+            struct {
+            MsgHeader header;    // standard message header
+            cstring   message;   // message for the database
+            }
+            </remarks>
+        </member>
+        <member name="T:MongoDB.Driver.Protocol.QueryMessage">
+            <summary>
+            Description of QueryMessage.
+            </summary>
+            <remarks>
+            MsgHeader header;                 // standard message header
+            int32     opts;                   // query options.  See QueryOptions for values
+            cstring   fullCollectionName;     // "dbname.collectionname"
+            int32     numberToSkip;           // number of documents to skip when returning results
+            int32     numberToReturn;         // number of documents to return in the first OP_REPLY
+            BSON      query ;                 // query object.  See below for details.
+            [ BSON      returnFieldSelector; ]  // OPTIONAL : selector indicating the fields to return.  See below for details.
+            </remarks>
+        </member>
+        <member name="T:MongoDB.Driver.Protocol.RequestMessageBase">
+            <summary>
+            Description of Message.
+            </summary>
+        </member>
+        <member name="T:MongoDB.Driver.Protocol.UpdateMessage">
+            <summary>
+            </summary>
+            <remarks>
+            struct {
+            MsgHeader header;             // standard message header
+            int32     ZERO;               // 0 - reserved for future use
+            cstring   fullCollectionName; // "dbname.collectionname"
+            int32     flags;              // value 0 for upsert 1 for multiupdate operation
+            BSON      selector;           // the query to select the document
+            BSON      document;           // the document data to update with or insert
+            }
+            </remarks>
+        </member>
+        <member name="T:MongoDB.Driver.ErrorTranslator">
+            <summary>
+            Translates an error returned from Mongo into the proper exception.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.ErrorTranslator.Translate(MongoDB.Driver.Document)">
+            <summary>
+            Translates the specified error.
+            </summary>
+            <param name="error">The error.</param>
+            <returns>
+            </returns>
+        </member>
+        <member name="M:MongoDB.Driver.ErrorTranslator.IsError(MongoDB.Driver.Document)">
+            <summary>
+            Determines whether the specified document is error.
+            </summary>
+            <param name="document">The document.</param>
+            <returns>
+                <c>true</c> if the specified document is error; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:MongoDB.Driver.ErrorTranslator.GetErrorNumber(System.String)">
+            <summary>
+            Gets the error number.
+            </summary>
+            <param name="message">The message.</param>
+            <returns>
+            </returns>
+        </member>
+        <member name="M:MongoDB.Driver.ErrorTranslator.BuildException(System.String,System.String,MongoDB.Driver.Document)">
+            <summary>
+            Builds the exception.
+            </summary>
+            <param name="errorNumber">The error number.</param>
+            <param name="message">The message.</param>
+            <param name="error">The error.</param>
+            <returns>
+            </returns>
+        </member>
+        <member name="T:MongoDB.Driver.JsonFormatter">
+            <summary>
+            Lightweight routines to handle basic json serializing.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.JsonFormatter.Serialize(MongoDB.Driver.Document)">
+            <summary>
+            Serializes the specified doc.
+            </summary>
+            <param name="doc">The doc.</param>
+            <returns>
+            </returns>
+        </member>
+        <member name="M:MongoDB.Driver.JsonFormatter.SerializeType(System.Object,System.Text.StringBuilder)">
+            <summary>
+            Serializes the type.
+            </summary>
+            <param name="value">The value.</param>
+            <param name="json">The json.</param>
+        </member>
+        <member name="M:MongoDB.Driver.JsonFormatter.Escape(System.String)">
+            <summary>
+            Escapes any characters that are special to javascript.
+            </summary>
+        </member>
+        <member name="T:MongoDB.Driver.MongoSymbol">
+            <summary>
+            Type to hold an interned string that maps to the bson symbol type.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.IMongoDatabase.FollowReference(MongoDB.Driver.DBRef)">
+            <summary>
+            Gets the document that a reference is pointing to.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.IMongoDatabase.GetLastError">
+            <summary>
+            Most operations do not have a return code in order to save the client from having to wait for results.
+            GetLastError can be called to retrieve the return code if clients want one.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.IMongoDatabase.GetLastErrorAndFSync">
+            <summary>
+            Retrieves the last error and forces the database to fsync all files before returning.
+            </summary>
+            <remarks>Server version 1.3+</remarks>
+        </member>
+        <member name="M:MongoDB.Driver.IMongoDatabase.GetPreviousError">
+            <summary>
+            Call after sending a bulk operation to the database.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.IMongoDatabase.GetSisterDatabase(System.String)">
+            <summary>
+            Gets the sister database on the same Mongo connection with the given name.
+            </summary>
+        </member>
+        <member name="M:MongoDB.Driver.IMongoDatabase.ResetError">
+            <summary>
+            Resets last error.  This is good to call before a bulk operation.
+            </summary>
+        </member>
+    </members>
+</doc>

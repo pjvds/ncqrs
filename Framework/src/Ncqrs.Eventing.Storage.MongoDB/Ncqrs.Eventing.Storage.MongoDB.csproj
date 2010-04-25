@@ -54,7 +54,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="log4net">
-      <HintPath>..\..\bin\log4net.dll</HintPath>
+      <HintPath>..\..\bin\log4net\log4net.dll</HintPath>
     </Reference>
     <Reference Include="MongoDB.Driver, Version=1.0.3728.40257, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

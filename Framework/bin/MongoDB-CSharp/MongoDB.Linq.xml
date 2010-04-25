@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>/Users/samus/Documents/Projects/mongodb-csharp/Release/MongoDB.Linq</name>
+    </assembly>
+    <members>
+        <member name="T:MongoDB.Linq.MongoDocumentQuery">
+            <summary>
+            This class is a construct for writing strongly typed query expressions for Document fields.
+            It is not meant to be used outside of expressions, since most functions and operators return
+            fake data and are only used to extract parameter information from expressions.
+            </summary>
+        </member>
+    </members>
+</doc>

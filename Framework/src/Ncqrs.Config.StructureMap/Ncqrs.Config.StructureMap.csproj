@@ -63,7 +63,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="StructureMap">
-      <HintPath>..\..\bin\StructureMap.dll</HintPath>
+      <HintPath>..\..\bin\StructureMap\StructureMap.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
