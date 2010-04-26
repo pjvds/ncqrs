@@ -32,13 +32,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="MongoDB.Driver">
-      <HintPath>..\..\bin\MongoDB.Driver.dll</HintPath>
+      <HintPath>..\..\bin\MongoDB-CSharp\MongoDB.Driver.dll</HintPath>
     </Reference>
     <Reference Include="MongoDB.Emitter">
-      <HintPath>..\..\bin\MongoDB.Emitter.dll</HintPath>
+      <HintPath>..\..\bin\MongoDB.Emitter\MongoDB.Emitter.dll</HintPath>
     </Reference>
     <Reference Include="Ncqrs">
-      <HintPath>..\..\bin\Ncqrs.dll</HintPath>
+      <HintPath>..\..\bin\Ncqrs\Ncqrs.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

@@ -2,7 +2,6 @@
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
-using MongoDB.Driver;
 using Ncqrs;
 using Ncqrs.Commanding.CommandExecution;
 using Ncqrs.Commanding.CommandExecution.Mapping;
@@ -79,7 +78,7 @@ namespace Sample.UI
 
         private IEventStore InitializeEventStore()
         {
-            var eventStore = new MongoDBEventStore(new Mongo());
+            var eventStore = new MongoDBEventStore();
             return eventStore;
         }
 

@@ -12,7 +12,7 @@ namespace Ncqrs.Commanding.CommandExecution
         /// <summary>
         /// The logger to use to log messages.
         /// </summary>
-        private static readonly ILog Logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
         /// Execute a <see cref="ICommand"/> by giving it to the registered <see cref="ICommandExecutor"/>.
@@ -24,7 +24,7 @@ namespace Ncqrs.Commanding.CommandExecution
         {
             Type commandType = command.GetType();
 
-            Logger.InfoFormat("Received {0} command and will now start processing it.", commandType.FullName);
+            Log.InfoFormat("Received {0} command and will now start processing it.", commandType.FullName);
 
             ICommandExecutor executor = GetCommandExecutorForCommand(commandType);
 
@@ -33,11 +33,11 @@ namespace Ncqrs.Commanding.CommandExecution
                 throw new CommandExecutorNotFoundException(commandType);
             }
 
-            Logger.DebugFormat("Found command executor {0} to execute the {1} command. Will start executing it now.", executor.GetType().FullName, commandType.FullName);
+            Log.DebugFormat("Found command executor {0} to execute the {1} command. Will start executing it now.", executor.GetType().FullName, commandType.FullName);
 
             executor.Execute(command);
 
-            Logger.DebugFormat("Execution complete.");
+            Log.DebugFormat("Execution complete.");
         }
 
         /// <summary>

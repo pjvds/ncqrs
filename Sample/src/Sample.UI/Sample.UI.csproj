@@ -33,31 +33,27 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Externals\Log4Net\log4net.dll</HintPath>
+    <Reference Include="log4net">
+      <HintPath>..\..\bin\log4net\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="MongoDB.Driver, Version=1.0.3728.40257, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\bin\MongoDB.Driver.dll</HintPath>
+    <Reference Include="MongoDB.Emitter, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\bin\MongoDB.Emitter\MongoDB.Emitter.dll</HintPath>
     </Reference>
-    <Reference Include="MongoDB.Emitter, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
-    <Reference Include="Ncqrs, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\bin\Ncqrs.dll</HintPath>
+    <Reference Include="Ncqrs">
+      <HintPath>..\..\bin\Ncqrs\Ncqrs.dll</HintPath>
     </Reference>
     <Reference Include="Ncqrs.Config.StructureMap">
-      <HintPath>..\..\bin\Ncqrs.Config.StructureMap.dll</HintPath>
+      <HintPath>..\..\bin\Ncqrs\Ncqrs.Config.StructureMap.dll</HintPath>
     </Reference>
     <Reference Include="Ncqrs.Eventing.Storage.MongoDB">
-      <HintPath>..\..\bin\Ncqrs.Eventing.Storage.MongoDB.dll</HintPath>
+      <HintPath>..\..\bin\Ncqrs\Ncqrs.Eventing.Storage.MongoDB.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json.Net20">
-      <HintPath>..\..\bin\Newtonsoft.Json.Net20.dll</HintPath>
+      <HintPath>..\..\bin\Json.NET\Newtonsoft.Json.Net20.dll</HintPath>
     </Reference>
     <Reference Include="StructureMap">
-      <HintPath>..\..\bin\StructureMap.dll</HintPath>
+      <HintPath>..\..\bin\StructureMap\StructureMap.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
