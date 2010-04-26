@@ -10,6 +10,10 @@ namespace Ncqrs.Eventing.Storage.MongoDB
     public class MongoDBEventStore : IEventStore
     {
         protected static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
+        /// <summary>
+        /// The default data uri that points to a local Mongo DB.
+        /// </summary>
         protected const string DEFAULT_DATABASE_URI = "mongo://127.0.0.1:27017/EventStore";
 
         protected readonly IDatabase database;
@@ -28,7 +32,7 @@ namespace Ncqrs.Eventing.Storage.MongoDB
         {
             IDBCollection aggregates = database.GetCollection("Events");
 
-            IDocument aggregate = aggregates.FindOne(new DBQuery("AggregateId", id.ToString()));
+            IDocument aggregate = aggregates.FindOne(new DBQuery("SourceId", id.ToString()));
 
             if (aggregate == null) return new IEvent[] { };
 
@@ -71,7 +75,7 @@ namespace Ncqrs.Eventing.Storage.MongoDB
             var arrayOfEventsAsIdbObjects = GetArrayOfEventsAsIDBObjects(source, eventsToSave);
             var doc = new Document
                           {
-                              {"AggregateId", source.Id.ToString()},
+                              {"SourceId", source.Id.ToString()},
                               {"Events", arrayOfEventsAsIdbObjects},
                               {"Version", arrayOfEventsAsIdbObjects.Length} 
                           };
@@ -84,7 +88,7 @@ namespace Ncqrs.Eventing.Storage.MongoDB
             var arrayOfEventsAsIdbObjects = GetArrayOfEventsAsIDBObjects(source, eventsToSave);
             aggregates.Update(new DBQuery()
                                   {
-                                      {"AggregateId", source.Id.ToString()},
+                                      {"SourceId", source.Id.ToString()},
                                       {"Version", source.Version}
                                   }
                               , Do.AddEachToSet("Events", arrayOfEventsAsIdbObjects
@@ -119,7 +123,7 @@ namespace Ncqrs.Eventing.Storage.MongoDB
             PropertyInfo[] properties = @event.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public);
 
             var dbObject = new DBObject();
-            dbObject["EventSourceId"] = eventSource.Id.ToString();
+            dbObject["SourceId"] = eventSource.Id.ToString();
             dbObject["TimeStamp"] = DateTime.UtcNow;
             dbObject["AssemblyQualifiedEventTypeName"] = @event.GetType().AssemblyQualifiedName;
 
@@ -138,7 +142,7 @@ namespace Ncqrs.Eventing.Storage.MongoDB
         {
             Type eventType = Type.GetType((string)dbObject["AssemblyQualifiedEventTypeName"]);
 
-            var aggId = Guid.Parse(dbObject["EventSourceId"].ToString());
+            var aggId = Guid.Parse(dbObject["SourceId"].ToString());
 
             var deserializedEvent = Activator.CreateInstance(eventType, aggId) as IEvent;
 

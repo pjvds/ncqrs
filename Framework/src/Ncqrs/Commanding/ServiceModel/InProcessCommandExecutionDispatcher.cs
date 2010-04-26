@@ -7,8 +7,8 @@ using Ncqrs.Commanding.CommandExecution;
 namespace Ncqrs.Commanding.ServiceModel
 {
     /// <summary>
-    /// A dispatcher that dispatch command objects to their appropriate command executor. Command executors can subscribe and
-    /// unsubscribe to specific command types. Only a single executor may be subscribed for a single type of command at any time.
+    /// A dispatcher that dispatch command objects to their appropriate command executor. Command executors can register and
+    /// unregister to specific command types. Only a single executor may be subscribed for a single type of command at any time.
     /// </summary>
     public class InProcessCommandExecutionDispatcher : CommandExecutionDispatcher
     {
