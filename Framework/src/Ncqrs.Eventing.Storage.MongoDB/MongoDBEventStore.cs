@@ -32,7 +32,7 @@ namespace Ncqrs.Eventing.Storage.MongoDB
         {
             IDBCollection aggregates = database.GetCollection("Events");
 
-            IDocument aggregate = aggregates.FindOne(new DBQuery("SourceId", id.ToString()));
+            IDocument aggregate = aggregates.FindOne(new DBQuery("_SourceId", id.ToString()));
 
             if (aggregate == null) return new IEvent[] { };
 
@@ -75,9 +75,9 @@ namespace Ncqrs.Eventing.Storage.MongoDB
             var arrayOfEventsAsIdbObjects = GetArrayOfEventsAsIDBObjects(source, eventsToSave);
             var doc = new Document
                           {
-                              {"SourceId", source.Id.ToString()},
-                              {"Events", arrayOfEventsAsIdbObjects},
-                              {"Version", arrayOfEventsAsIdbObjects.Length} 
+                              {"_SourceId", source.Id.ToString()},
+                              {"_Events", arrayOfEventsAsIdbObjects},
+                              {"_Version", arrayOfEventsAsIdbObjects.Length} 
                           };
 
             aggregates.Insert(doc);
@@ -88,11 +88,11 @@ namespace Ncqrs.Eventing.Storage.MongoDB
             var arrayOfEventsAsIdbObjects = GetArrayOfEventsAsIDBObjects(source, eventsToSave);
             aggregates.Update(new DBQuery()
                                   {
-                                      {"SourceId", source.Id.ToString()},
-                                      {"Version", source.Version}
+                                      {"_SourceId", source.Id.ToString()},
+                                      {"_Version", source.Version}
                                   }
                               , Do.AddEachToSet("Events", arrayOfEventsAsIdbObjects
-                                    ).Inc("Version", arrayOfEventsAsIdbObjects.Length));
+                                    ).Inc("_Version", arrayOfEventsAsIdbObjects.Length));
         }
 
         protected void VerifyUpdateSuccessful(IEventSource source)
@@ -123,9 +123,9 @@ namespace Ncqrs.Eventing.Storage.MongoDB
             PropertyInfo[] properties = @event.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public);
 
             var dbObject = new DBObject();
-            dbObject["SourceId"] = eventSource.Id.ToString();
-            dbObject["TimeStamp"] = DateTime.UtcNow;
-            dbObject["AssemblyQualifiedEventTypeName"] = @event.GetType().AssemblyQualifiedName;
+            dbObject["_SourceId"] = eventSource.Id.ToString();
+            dbObject["_TimeStamp"] = DateTime.UtcNow;
+            dbObject["_AssemblyQualifiedEventTypeName"] = @event.GetType().AssemblyQualifiedName;
 
             foreach (PropertyInfo prop in properties)
             {
@@ -140,9 +140,9 @@ namespace Ncqrs.Eventing.Storage.MongoDB
 
         protected static IEvent DeserializeToEventIDBObject(IDBObject dbObject)
         {
-            Type eventType = Type.GetType((string)dbObject["AssemblyQualifiedEventTypeName"]);
+            Type eventType = Type.GetType((string)dbObject["_AssemblyQualifiedEventTypeName"]);
 
-            var aggId = Guid.Parse(dbObject["SourceId"].ToString());
+            var aggId = Guid.Parse(dbObject["_SourceId"].ToString());
 
             var deserializedEvent = Activator.CreateInstance(eventType, aggId) as IEvent;
 
