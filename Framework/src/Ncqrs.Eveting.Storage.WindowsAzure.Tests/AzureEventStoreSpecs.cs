@@ -8,12 +8,56 @@ using Ncqrs.Domain;
 namespace Ncqrs.Eventing.Storage.WindowsAzure.Tests
 {
     [Serializable]
-    public class FooEvent : DomainEvent
-    {}
+    public class FooEvent : ISourcedEvent
+    {
+        /// <summary>
+        /// Gets the unique identifier for this event.
+        /// </summary>
+        public Guid EventIdentifier { get; private set; }
+
+        /// <summary>
+        /// Gets the time stamp for this event.
+        /// </summary>
+        /// <value>a <see cref="DateTime"/> UTC value that represents the point
+        /// in time where this event occurred.</value>
+        public DateTime EventTimeStamp { get; private set; }
+        public Guid EventSourceId { get; private set; }
+        public long EventSequence { get; private set; }
+
+        public FooEvent(Guid eventSourceId, long eventSequence)
+        {
+            EventIdentifier = Guid.NewGuid();
+            EventTimeStamp = DateTime.UtcNow;
+            EventSourceId = eventSourceId;
+            EventSequence = eventSequence;
+        }
+    }
 
     [Serializable]
-    public class BarEvent : DomainEvent
-    {}
+    public class BarEvent : ISourcedEvent
+    {
+        /// <summary>
+        /// Gets the unique identifier for this event.
+        /// </summary>
+        public Guid EventIdentifier { get; private set; }
+
+        /// <summary>
+        /// Gets the time stamp for this event.
+        /// </summary>
+        /// <value>a <see cref="DateTime"/> UTC value that represents the point
+        /// in time where this event occurred.</value>
+        public DateTime EventTimeStamp { get; private set; }
+        public Guid EventSourceId { get; private set; }
+        public long EventSequence { get; private set; }
+
+        public BarEvent(Guid eventSourceId, long eventSequence)
+        {
+            EventIdentifier = Guid.NewGuid();
+            EventTimeStamp = DateTime.UtcNow;
+            EventSourceId = eventSourceId;
+            EventSequence = eventSequence;
+        }
+    }
 
     [TestFixture]
     public class AzureEventStoreSpecs
@@ -24,8 +68,8 @@ namespace Ncqrs.Eventing.Storage.WindowsAzure.Tests
             try
             {
                 var mock = MockRepository.GenerateMock<IEventSource>();
-                mock.Stub(m => mock.Id).Return(Guid.NewGuid());
-                mock.Stub(m => mock.GetUncommittedEvents()).Return(new ISourcedEvent[] { new FooEvent(), new BarEvent() });
+                mock.Stub(m => mock.Id).Return(Guid.NewGuid()).Repeat.Any();
+                mock.Stub(m => mock.GetUncommittedEvents()).Return(new ISourcedEvent[] { new FooEvent(mock.Id, 1), new BarEvent(mock.Id, 2) });
 
                 var theEventStore = new AzureEventStore();
                 theEventStore.Save(mock);
@@ -45,14 +89,14 @@ namespace Ncqrs.Eventing.Storage.WindowsAzure.Tests
             try
             {
                 var mock = MockRepository.GenerateMock<IEventSource>();
-                mock.Stub(m => mock.Id).Return(Guid.NewGuid());
-                mock.Stub(m => mock.GetUncommittedEvents()).Return(new ISourcedEvent[] { new FooEvent(), new BarEvent() });
+                mock.Stub(m => mock.Id).Return(Guid.NewGuid()).Repeat.Any();
+                mock.Stub(m => mock.GetUncommittedEvents()).Return(new ISourcedEvent[] { new FooEvent(mock.Id, 1), new BarEvent(mock.Id, 2) });
 
                 var theEventStore = new AzureEventStore();
                 theEventStore.Save(mock);
 
                 mock.Stub(m => mock.Version).Return(2);
-                mock.Stub(m => mock.GetUncommittedEvents()).Return(new ISourcedEvent[] { new FooEvent(), new BarEvent() });
+                mock.Stub(m => mock.GetUncommittedEvents()).Return(new ISourcedEvent[] { new FooEvent(mock.Id, 3), new BarEvent(mock.Id, 4) });
                 theEventStore.Save(mock);
 
 
