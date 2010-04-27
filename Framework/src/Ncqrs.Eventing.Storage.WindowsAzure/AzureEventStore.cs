@@ -157,8 +157,6 @@ namespace Ncqrs.Eventing.Storage.WindowsAzure
 
                     var blob = rootContainer.GetBlobReference(eventEntity.RowKey);
 
-                    blob.Metadata["sourceid"] = eventSourceId.ToString();
-
                     formatter.Serialize(buffer, eventToPush);
                     buffer.Seek(0, SeekOrigin.Begin);
 

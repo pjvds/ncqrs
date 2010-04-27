@@ -7,61 +7,43 @@ using Ncqrs.Domain;
 
 namespace Ncqrs.Eventing.Storage.WindowsAzure.Tests
 {
-    [Serializable]
-    public class FooEvent : ISourcedEvent
-    {
-        /// <summary>
-        /// Gets the unique identifier for this event.
-        /// </summary>
-        public Guid EventIdentifier { get; private set; }
-
-        /// <summary>
-        /// Gets the time stamp for this event.
-        /// </summary>
-        /// <value>a <see cref="DateTime"/> UTC value that represents the point
-        /// in time where this event occurred.</value>
-        public DateTime EventTimeStamp { get; private set; }
-        public Guid EventSourceId { get; private set; }
-        public long EventSequence { get; private set; }
-
-        public FooEvent(Guid eventSourceId, long eventSequence)
-        {
-            EventIdentifier = Guid.NewGuid();
-            EventTimeStamp = DateTime.UtcNow;
-            EventSourceId = eventSourceId;
-            EventSequence = eventSequence;
-        }
-    }
-
-    [Serializable]
-    public class BarEvent : ISourcedEvent
-    {
-        /// <summary>
-        /// Gets the unique identifier for this event.
-        /// </summary>
-        public Guid EventIdentifier { get; private set; }
-
-        /// <summary>
-        /// Gets the time stamp for this event.
-        /// </summary>
-        /// <value>a <see cref="DateTime"/> UTC value that represents the point
-        /// in time where this event occurred.</value>
-        public DateTime EventTimeStamp { get; private set; }
-        public Guid EventSourceId { get; private set; }
-        public long EventSequence { get; private set; }
-
-        public BarEvent(Guid eventSourceId, long eventSequence)
-        {
-            EventIdentifier = Guid.NewGuid();
-            EventTimeStamp = DateTime.UtcNow;
-            EventSourceId = eventSourceId;
-            EventSequence = eventSequence;
-        }
-    }
-
     [TestFixture]
     public class AzureEventStoreSpecs
     {
+        [Serializable]
+        public class FooEvent : ISourcedEvent
+        {
+            public Guid EventIdentifier { get; private set; }
+            public DateTime EventTimeStamp { get; private set; }
+            public Guid EventSourceId { get; private set; }
+            public long EventSequence { get; private set; }
+
+            public FooEvent(Guid eventSourceId, long eventSequence)
+            {
+                EventIdentifier = Guid.NewGuid();
+                EventTimeStamp = DateTime.UtcNow;
+                EventSourceId = eventSourceId;
+                EventSequence = eventSequence;
+            }
+        }
+
+        [Serializable]
+        public class BarEvent : ISourcedEvent
+        {
+            public Guid EventIdentifier { get; private set; }
+            public DateTime EventTimeStamp { get; private set; }
+            public Guid EventSourceId { get; private set; }
+            public long EventSequence { get; private set; }
+
+            public BarEvent(Guid eventSourceId, long eventSequence)
+            {
+                EventIdentifier = Guid.NewGuid();
+                EventTimeStamp = DateTime.UtcNow;
+                EventSourceId = eventSourceId;
+                EventSequence = eventSequence;
+            }
+        }
+
         [TearDown]
         public void TearDown()
         {
