@@ -88,9 +88,9 @@ namespace Ncqrs.Eventing.Storage.WindowsAzure.Tests
         {
             try
             {
-                var mock = MockRepository.GenerateMock<IEventSource>();
+                var mock = MockRepository.GenerateStub<IEventSource>();
                 mock.Stub(m => mock.Id).Return(Guid.NewGuid()).Repeat.Any();
-                mock.Stub(m => mock.GetUncommittedEvents()).Return(new ISourcedEvent[] { new FooEvent(mock.Id, 1), new BarEvent(mock.Id, 2) });
+                mock.Stub(m => mock.GetUncommittedEvents()).Return(new ISourcedEvent[] { new FooEvent(mock.Id, 1), new BarEvent(mock.Id, 2) }).Repeat.Once();
 
                 var theEventStore = new AzureEventStore();
                 theEventStore.Save(mock);
