@@ -11,6 +11,11 @@ namespace Ncqrs.Domain
             get; internal set;
         }
 
+        public long EventSequence
+        {
+            get; internal set;
+        }
+
         Guid ISourcedEvent.EventSourceId
         {
             get

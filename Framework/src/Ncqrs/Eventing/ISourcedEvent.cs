@@ -8,5 +8,10 @@ namespace Ncqrs.Eventing
         { 
             get;
         }
+
+        long EventSequence
+        { 
+            get;
+        }
     }
 }

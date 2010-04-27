@@ -138,6 +138,7 @@ namespace Ncqrs.Domain
 
                 // TODO: Validate id.
                 evnt.AggregateRootId = this.Id;
+                evnt.EventSequence = Version + _uncommittedEvent.Count + 1;
                 _uncommittedEvent.Push(evnt);
             }
 

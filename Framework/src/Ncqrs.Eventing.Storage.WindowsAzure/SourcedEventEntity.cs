@@ -6,7 +6,7 @@ namespace Ncqrs.Eventing.Storage.WindowsAzure
 {
     internal class SourcedEventEntity : TableServiceEntity
     {
-        public int Sequence
+        public long Sequence
         {
             get;
             set;
@@ -23,7 +23,7 @@ namespace Ncqrs.Eventing.Storage.WindowsAzure
 
             return new SourcedEventEntity
             {
-                RowKey = evnt.EventIdentifier.ToString(), PartitionKey = evnt.EventSourceId.ToString()
+                RowKey = evnt.EventIdentifier.ToString(), PartitionKey = evnt.EventSourceId.ToString(), Sequence = evnt.EventSequence
             };
         }
     }

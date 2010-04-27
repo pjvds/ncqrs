@@ -120,10 +120,7 @@ namespace Ncqrs.Eventing.Storage.WindowsAzure
 
         private EventSourceEntity InsertNewEventSource(TableServiceContext context, IEventSource source)
         {
-            var sourceEntity = new EventSourceEntity();
-            sourceEntity.RowKey = source.Id.ToString();
-            sourceEntity.PartitionKey = source.GetType().FullName;
-            sourceEntity.Version = source.GetUncommittedEvents().Count();
+            var sourceEntity = EventSourceEntity.CreateFromEventSource(source);
 
             context.AddObject(PROVIDERS_TABLE_NAME, sourceEntity);
 
@@ -144,18 +141,11 @@ namespace Ncqrs.Eventing.Storage.WindowsAzure
             var formatter = new BinaryFormatter();
             var blobClient = _account.CreateCloudBlobClient();
 
-            var sequenceNumber = 1;
-
             foreach (var eventToPush in events)
             {
                 using (var buffer = new MemoryStream())
                 {
-                    var eventEntity = new SourcedEventEntity();
-                    eventEntity.RowKey = Guid.NewGuid().ToString();
-                    eventEntity.PartitionKey = eventSourceId.ToString();
-
-                    eventEntity.Sequence = sequenceNumber;
-                    sequenceNumber++;
+                    var eventEntity = SourcedEventEntity.FromEventSource(eventToPush);
 
                     var rootContainer = blobClient.GetContainerReference("events");
                     rootContainer.CreateIfNotExist();
