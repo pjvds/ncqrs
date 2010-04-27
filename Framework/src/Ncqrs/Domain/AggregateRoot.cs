@@ -115,9 +115,6 @@ namespace Ncqrs.Domain
 
             if (!handled)
                 throw new EventNotHandledException(evnt);
-
-            // TODO: Add validation to make sure this ID isn't already set.
-            evnt.AggregateRootId = this.Id;
         }
 
         protected void ApplyEvent(DomainEvent evnt)
@@ -156,7 +153,8 @@ namespace Ncqrs.Domain
 
         IEnumerable<ISourcedEvent> IEventSource.GetUncommittedEvents()
         {
-            return GetUncommitedEvents();
+            // TODO: .net 4.0 co/con
+            return GetUncommitedEvents().Cast<ISourcedEvent>();
         }
 
         public void CommitEvents()

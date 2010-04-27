@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Diagnostics.Contracts;
 
@@ -89,7 +90,8 @@ namespace Ncqrs.Eventing.Storage.SQL
         public IEnumerable<IEvent> Save(IEventSource eventSource)
         {
             // Get all events.
-            IEnumerable<IEvent> events = eventSource.GetUncommittedEvents();
+            // TODO: .net 4.0 co/con
+            IEnumerable<IEvent> events = eventSource.GetUncommittedEvents().Cast<IEvent>();
 
             // Create new connection.
             using (var connection = new SqlConnection(_connectionString))

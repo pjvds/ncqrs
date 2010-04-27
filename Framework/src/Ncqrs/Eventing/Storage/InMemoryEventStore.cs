@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Ncqrs.Eventing.Storage
 {
@@ -40,7 +41,8 @@ namespace Ncqrs.Eventing.Storage
                 events.Enqueue(evnt);
             }
 
-            return eventsToCommit;
+            // TODO: .net 4.0 co/con
+            return eventsToCommit.Cast<IEvent>();
         }
     }
 }
