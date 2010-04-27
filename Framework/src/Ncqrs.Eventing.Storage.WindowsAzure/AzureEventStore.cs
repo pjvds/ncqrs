@@ -30,6 +30,11 @@ namespace Ncqrs.Eventing.Storage.WindowsAzure
             _account = storageAccount;
             _tableClient = _account.CreateCloudTableClient();
 
+            InitializeStorage();
+        }
+
+        private void InitializeStorage()
+        {
             _tableClient.CreateTableIfNotExist(PROVIDERS_TABLE_NAME);
             _tableClient.CreateTableIfNotExist(EVENTS_TABLE_NAME);
         }
@@ -90,11 +95,11 @@ namespace Ncqrs.Eventing.Storage.WindowsAzure
         {
             var context = _tableClient.GetDataServiceContext();
             var sourceInStore = GetSourceFromStore(context, source.Id);
+            var uncommitedEvents = source.GetUncommittedEvents();
 
             if (sourceInStore == null)
             {
-                InsertNewEventSource(context, source);
-                context.SaveChanges(SaveChangesOptions.Batch); // TODO: Validate response.
+                sourceInStore = InsertNewEventSource(context, source);
             }
             else
             {
@@ -102,13 +107,18 @@ namespace Ncqrs.Eventing.Storage.WindowsAzure
                     throw new ConcurrencyException(source.Id, source.Version, sourceInStore.Version);
             }
 
-            PushEventToStore(context, source.Id, source.GetUncommittedEvents());
+            // Update version.
+            sourceInStore.Version = source.Version + uncommitedEvents.Count(); // TODO: We can do this better.
+            context.UpdateObject(sourceInStore);
+            context.SaveChanges(SaveChangesOptions.Batch); // TODO: Validate response.
+
+            PushEventToStore(context, source.Id, uncommitedEvents);
 
             // TODO: Validate response.
             var response = context.SaveChanges(SaveChangesOptions.Batch);
         }
 
-        private void InsertNewEventSource(TableServiceContext context, IEventSource source)
+        private EventSourceEntity InsertNewEventSource(TableServiceContext context, IEventSource source)
         {
             var sourceEntity = new EventSourceEntity();
             sourceEntity.RowKey = source.Id.ToString();
@@ -116,6 +126,8 @@ namespace Ncqrs.Eventing.Storage.WindowsAzure
             sourceEntity.Version = source.GetUncommittedEvents().Count();
 
             context.AddObject(PROVIDERS_TABLE_NAME, sourceEntity);
+
+            return sourceEntity;
         }
 
         private EventSourceEntity GetSourceFromStore(TableServiceContext context, Guid eventSourceId)
@@ -165,6 +177,22 @@ namespace Ncqrs.Eventing.Storage.WindowsAzure
                     context.AddObject(EVENTS_TABLE_NAME, eventEntity);
                 }
             }
+        }
+
+        private void UpdateVersion(TableServiceContext context, IEventSource source, long newVersion)
+        {
+            var query = from s in context.CreateQuery<EventSourceEntity>("PROVIDERS_TABLE_NAME")
+                        where s.RowKey == source.Id.ToString()
+                        select s;
+
+            var sourceInStore = query.ToList().SingleOrDefault();
+
+            if(sourceInStore == null) throw new InvalidOperationException("Could not update event source version since the source has not been found in the store.");
+
+            if(sourceInStore.Version != source.Version) throw new ConcurrencyException(source.Id, source.Version, sourceInStore.Version);
+
+            sourceInStore.Version = newVersion;
+            context.UpdateObject(sourceInStore);
         }
     }
 }
