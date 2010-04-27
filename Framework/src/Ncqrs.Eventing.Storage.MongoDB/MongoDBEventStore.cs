@@ -163,7 +163,7 @@ namespace Ncqrs.Eventing.Storage.MongoDB
 
                 if (propertyOnEventIsGuidAndDbObjectPropertyIsString)
                 {
-                    var parsedGuid = Guid.Parse(dbObject[key].ToString());
+                    var parsedGuid = new Guid(dbObject[key].ToString());
                     propertyOnEvent.SetValue(deserializedEvent, parsedGuid, new object[] { });
                 }
             }
