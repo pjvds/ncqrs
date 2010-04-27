@@ -138,7 +138,7 @@ namespace Ncqrs.Eventing.Storage.MongoDB
         {
             Type eventType = Type.GetType((string)dbObject["_AssemblyQualifiedEventTypeName"]);
 
-            var sourceId = Guid.Parse(dbObject["_SourceId"].ToString());
+            var sourceId = new Guid(dbObject["_SourceId"].ToString();
 
             var deserializedEvent = Activator.CreateInstance(eventType, sourceId) as ISourcedEvent;
 
