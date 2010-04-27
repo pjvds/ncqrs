@@ -168,5 +168,11 @@ namespace Ncqrs.Eventing.Storage.WindowsAzure
                 }
             }
         }
+
+        public void ClearStore()
+        {
+            _tableClient.DeleteTableIfExist(PROVIDERS_TABLE_NAME);
+            _tableClient.DeleteTableIfExist(EVENTS_TABLE_NAME);
+        }
     }
 }
