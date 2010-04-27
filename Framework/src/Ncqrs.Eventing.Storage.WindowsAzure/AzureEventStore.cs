@@ -41,10 +41,10 @@ namespace Ncqrs.Eventing.Storage.WindowsAzure
         /// <returns>
         /// All the events from the event source.
         /// </returns>
-        public IEnumerable<IEvent> GetAllEventsForEventSource(Guid eventSourceId)
+        public IEnumerable<ISourcedEvent> GetAllEventsForEventSource(Guid eventSourceId)
         {
             var context = _tableClient.GetDataServiceContext();
-            var result = new List<IEvent>();
+            var result = new List<ISourcedEvent>();
 
             var eventsFromSource =
                 context.CreateQuery<SourcedEventEntity>(EVENTS_TABLE_NAME).Where(
@@ -59,7 +59,7 @@ namespace Ncqrs.Eventing.Storage.WindowsAzure
             return result;
         }
 
-        private IEvent DeserializeEventEntity(SourcedEventEntity sourcedEventEntity)
+        private ISourcedEvent DeserializeEventEntity(SourcedEventEntity sourcedEventEntity)
         {
             // Create formatter that can deserialize our events.
             var formatter = new BinaryFormatter();
@@ -73,7 +73,7 @@ namespace Ncqrs.Eventing.Storage.WindowsAzure
             using (var dataStream = new MemoryStream(rawData))
             {
                 // Deserialize event and return it.
-                return (IEvent)formatter.Deserialize(dataStream);
+                return (ISourcedEvent)formatter.Deserialize(dataStream);
             }
         }
 
@@ -86,7 +86,7 @@ namespace Ncqrs.Eventing.Storage.WindowsAzure
         /// Save all events from a specific event provider.
         /// </summary>
         /// <exception cref="T:Ncqrs.Eventing.Storage.ConcurrencyException">Occurs when there is already a newer version of the event provider stored in the event store.</exception><param name="source">The source that should be saved.</param><requires description="source cannot be null." exception="T:System.ArgumentNullException">source != null</requires><exception cref="T:System.ArgumentNullException">source == null</exception><ensures description="Return should never be null.">Contract.Result&lt;IEnumerable&lt;IEvent&gt;&gt;() != null</ensures>
-        public IEnumerable<IEvent> Save(IEventSource source)
+        public void Save(IEventSource source)
         {
             var context = _tableClient.GetDataServiceContext();
             var sourceInStore = GetSourceFromStore(context, source.Id);
@@ -106,9 +106,6 @@ namespace Ncqrs.Eventing.Storage.WindowsAzure
 
             // TODO: Validate response.
             var response = context.SaveChanges(SaveChangesOptions.Batch);
-
-            // TODO: Remove return.)
-            return source.GetUncommittedEvents().Cast<IEvent>();
         }
 
         private void InsertNewEventSource(TableServiceContext context, IEventSource source)

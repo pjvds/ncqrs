@@ -10,11 +10,11 @@ namespace Ncqrs.Eventing.Storage
     /// </summary>
     public class InMemoryEventStore : IEventStore
     {
-        private readonly Dictionary<Guid, Queue<IEvent>> _events = new Dictionary<Guid, Queue<IEvent>>();
+        private readonly Dictionary<Guid, Queue<ISourcedEvent>> _events = new Dictionary<Guid, Queue<ISourcedEvent>>();
 
-        public IEnumerable<IEvent> GetAllEventsForEventSource(Guid id)
+        public IEnumerable<ISourcedEvent> GetAllEventsForEventSource(Guid id)
         {
-            Queue<IEvent> events;
+            Queue<ISourcedEvent> events;
 
             if (_events.TryGetValue(id, out events))
             {
@@ -25,14 +25,14 @@ namespace Ncqrs.Eventing.Storage
             }
         }
 
-        public IEnumerable<IEvent> Save(IEventSource source)
+        public void Save(IEventSource source)
         {
-            Queue<IEvent> events;
+            Queue<ISourcedEvent> events;
             var eventsToCommit = source.GetUncommittedEvents();
 
             if (!_events.TryGetValue(source.Id, out events))
             {
-                events = new Queue<IEvent>();
+                events = new Queue<ISourcedEvent>();
                 _events.Add(source.Id, events);
             }
 
@@ -40,9 +40,6 @@ namespace Ncqrs.Eventing.Storage
             {
                 events.Enqueue(evnt);
             }
-
-            // TODO: .net 4.0 co/con
-            return eventsToCommit.Cast<IEvent>();
         }
     }
 }

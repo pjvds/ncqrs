@@ -48,7 +48,7 @@ namespace Ncqrs.Eventing.Storage.SQL
         /// </summary>
         /// <param name="id">The id of the event provider.</param>
         /// <returns>All events for the specified event provider.</returns>
-        public IEnumerable<IEvent> GetAllEventsForEventSource(Guid id)
+        public IEnumerable<ISourcedEvent> GetAllEventsForEventSource(Guid id)
         {
             // Create connection and command.
             using (var connection = new SqlConnection(_connectionString))
@@ -72,7 +72,7 @@ namespace Ncqrs.Eventing.Storage.SQL
                         using (var dataStream = new MemoryStream(rawData))
                         {
                             // Deserialize event and yield it.
-                            yield return (IEvent)formatter.Deserialize(dataStream);
+                            yield return (ISourcedEvent)formatter.Deserialize(dataStream);
                         }
                     }
 
@@ -86,8 +86,7 @@ namespace Ncqrs.Eventing.Storage.SQL
         /// Saves all events from an event provider.
         /// </summary>
         /// <param name="provider">The eventsource.</param>
-        /// <returns>The events that are saved.</returns>
-        public IEnumerable<IEvent> Save(IEventSource eventSource)
+        public void Save(IEventSource eventSource)
         {
             // Get all events.
             // TODO: .net 4.0 co/con
@@ -133,8 +132,6 @@ namespace Ncqrs.Eventing.Storage.SQL
                     }
                 }
             }
-
-            return events;
         }
 
         public IEnumerable<Guid> GetAllIdsForType(Type eventProviderType)

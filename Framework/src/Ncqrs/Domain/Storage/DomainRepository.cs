@@ -56,11 +56,14 @@ namespace Ncqrs.Domain.Storage
 
         public void Save(AggregateRoot aggregateRoot)
         {
+            var events = aggregateRoot.GetUncommitedEvents();
+
             // Save the events to the event store.
-            IEnumerable<IEvent> events = _store.Save(aggregateRoot);
+            _store.Save(aggregateRoot);
 
             // Send all events to the bus.
-            _eventBus.Publish(events);
+            // TODO: Remove cast co/con
+            _eventBus.Publish(events.Cast<IEvent>());
 
             // Accept the changes.
             aggregateRoot.CommitEvents();

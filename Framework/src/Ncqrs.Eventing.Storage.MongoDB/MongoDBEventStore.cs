@@ -28,18 +28,18 @@ namespace Ncqrs.Eventing.Storage.MongoDB
             database = Mongo.GetDatabase(databaseUri);
         }
 
-        public virtual IEnumerable<IEvent> GetAllEventsForEventSource(Guid id)
+        public virtual IEnumerable<ISourcedEvent> GetAllEventsForEventSource(Guid id)
         {
             IDBCollection eventSources = database.GetCollection("Events");
 
             IDocument source = eventSources.FindOne(new DBQuery("_SourceId", id.ToString()));
 
-            if (source == null) return new IEvent[] { };
+            if (source == null) return new ISourcedEvent[] { };
 
             var eventsAsDbObjects = ((DBObjectArray)source["Events"]).Values.Cast<IDBObject>();
 
             //no benefit yield now we have single doc - might confused people due to lazy style invocation - esp if exception thrown
-            var events = new List<IEvent>();
+            var events = new List<ISourcedEvent>();
 
             foreach (var eventDbObject in eventsAsDbObjects)
             {
@@ -49,11 +49,9 @@ namespace Ncqrs.Eventing.Storage.MongoDB
             return events;
         }
 
-        public virtual IEnumerable<IEvent> Save(IEventSource source)
+        public virtual void Save(IEventSource source)
         {
             IEnumerable<ISourcedEvent> eventsToSave = source.GetUncommittedEvents();
-
-            if (eventsToSave.Count() == 0) return new IEvent[] { };
 
             IDBCollection sources = database.GetCollection("Events");
 
@@ -66,8 +64,6 @@ namespace Ncqrs.Eventing.Storage.MongoDB
                 PushOptimisticUpdate(source, eventsToSave, sources);
                 VerifyUpdateSuccessful(source);
             }
-
-            return eventsToSave;
         }
 
         private void InsertNewEventSource(IEventSource source, IEnumerable<ISourcedEvent> eventsToSave, IDBCollection sources)
@@ -138,13 +134,13 @@ namespace Ncqrs.Eventing.Storage.MongoDB
             return dbObject;
         }
 
-        protected static IEvent DeserializeToEventIDBObject(IDBObject dbObject)
+        protected static ISourcedEvent DeserializeToEventIDBObject(IDBObject dbObject)
         {
             Type eventType = Type.GetType((string)dbObject["_AssemblyQualifiedEventTypeName"]);
 
             var sourceId = Guid.Parse(dbObject["_SourceId"].ToString());
 
-            var deserializedEvent = Activator.CreateInstance(eventType, sourceId) as IEvent;
+            var deserializedEvent = Activator.CreateInstance(eventType, sourceId) as ISourcedEvent;
 
             foreach (string key in dbObject.Keys)
             {
