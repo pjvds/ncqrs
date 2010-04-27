@@ -8,8 +8,8 @@
     <ProjectGuid>{50E98525-806C-41E3-9366-D36B1CD936D0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Ncqrs.Specs</RootNamespace>
-    <AssemblyName>Ncqrs.Specs</AssemblyName>
+    <RootNamespace>Ncqrs.Tests</RootNamespace>
+    <AssemblyName>Ncqrs.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <CodeContractsAssemblyMode>0</CodeContractsAssemblyMode>

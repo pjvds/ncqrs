@@ -13,7 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extentions", "Extentions", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Specs", "Specs", "{A6B0E1C8-2401-4907-8793-4FE968214ADC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Specs", "src\Ncqrs.Specs\Ncqrs.Specs.csproj", "{50E98525-806C-41E3-9366-D36B1CD936D0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Tests", "src\Ncqrs.Specs\Ncqrs.Tests.csproj", "{50E98525-806C-41E3-9366-D36B1CD936D0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Eventing.Storage.WindowsAzure", "src\Ncqrs.Eventing.Storage.WindowsAzure\Ncqrs.Eventing.Storage.WindowsAzure.csproj", "{F08BF370-18B8-4FDD-A169-C4F084A9F98D}"
 EndProject
