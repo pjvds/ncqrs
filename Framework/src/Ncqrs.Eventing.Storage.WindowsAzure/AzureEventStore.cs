@@ -178,21 +178,5 @@ namespace Ncqrs.Eventing.Storage.WindowsAzure
                 }
             }
         }
-
-        private void UpdateVersion(TableServiceContext context, IEventSource source, long newVersion)
-        {
-            var query = from s in context.CreateQuery<EventSourceEntity>("PROVIDERS_TABLE_NAME")
-                        where s.RowKey == source.Id.ToString()
-                        select s;
-
-            var sourceInStore = query.ToList().SingleOrDefault();
-
-            if(sourceInStore == null) throw new InvalidOperationException("Could not update event source version since the source has not been found in the store.");
-
-            if(sourceInStore.Version != source.Version) throw new ConcurrencyException(source.Id, source.Version, sourceInStore.Version);
-
-            sourceInStore.Version = newVersion;
-            context.UpdateObject(sourceInStore);
-        }
     }
 }
