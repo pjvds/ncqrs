@@ -111,6 +111,7 @@
     <Compile Include="Config\InstanceNotFoundInEnvironment.cs" />
     <Compile Include="DateTimeBasedClock.cs" />
     <Compile Include="Domain\DomainEvent.cs" />
+    <Compile Include="Domain\NoUnitOfWorkAvailableInThisContextException.cs" />
     <Compile Include="Eventing\EventBase.cs" />
     <Compile Include="Eventing\IEventSource.cs" />
     <Compile Include="Eventing\ISourcedEvent.cs" />

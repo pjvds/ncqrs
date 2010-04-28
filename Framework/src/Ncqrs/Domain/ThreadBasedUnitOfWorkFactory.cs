@@ -1,4 +1,6 @@
-﻿using Ncqrs.Domain.Storage;
+﻿using System;
+using System.Runtime.Serialization;
+using Ncqrs.Domain.Storage;
 using Ncqrs.Eventing.ServiceModel.Bus;
 using Ncqrs.Eventing.Storage;
 
@@ -20,6 +22,9 @@ namespace Ncqrs.Domain
 
         public IUnitOfWork GetUnitOfWorkInCurrentContext()
         {
+            if (UnitOfWork.Current == null)
+                throw new NoUnitOfWorkAvailableInThisContextException();
+
             return UnitOfWork.Current;
         }
     }
