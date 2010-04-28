@@ -127,7 +127,6 @@
     <Compile Include="Domain\AggregateRootMappedByConvention.cs" />
     <Compile Include="Domain\AggregateRootMappedWithAttributes.cs" />
     <Compile Include="Domain\EventNotHandledException.cs" />
-    <Compile Include="Domain\ExactDomainEventHandler.cs" />
     <Compile Include="Domain\IDomainEventHandler.cs" />
     <Compile Include="Domain\DomainEventHandler.cs" />
     <Compile Include="Domain\IUnitOfWork.cs" />
