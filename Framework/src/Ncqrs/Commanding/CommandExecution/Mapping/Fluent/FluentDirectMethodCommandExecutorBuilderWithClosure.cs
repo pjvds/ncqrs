@@ -14,9 +14,9 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Fluent
             _aggregateRootSource = aggregateRootSource;
         }
 
-        public Tuple<Type, ICommandExecutor> Execute(Action<TCommand, TAggregateRoot> action)
+        public ICommandExecutor Execute(Action<TCommand, TAggregateRoot> action)
         {
-            return new Tuple<Type,ICommandExecutor>(typeof(TCommand), new DirectActionOnAggregateRootCommandExecutor<TCommand, TAggregateRoot>(_aggregateRootSource, action));
+            return new DirectActionOnAggregateRootCommandExecutor<TCommand, TAggregateRoot>(_aggregateRootSource, action);
         }
     }
 }

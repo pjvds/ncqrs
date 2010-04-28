@@ -158,7 +158,6 @@
     <Compile Include="Eventing\Storage\InMemoryEventStore.cs" />
     <Compile Include="Eventing\Storage\SQL\SimpleSqlEventStore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tuple.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
