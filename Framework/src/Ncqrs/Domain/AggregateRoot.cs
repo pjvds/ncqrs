@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
-using Ncqrs.Domain.Mapping;
 using Ncqrs.Eventing;
 
 namespace Ncqrs.Domain
@@ -55,9 +54,6 @@ namespace Ncqrs.Domain
         /// <summary>
         /// Initializes a new instance of the <see cref="AggregateRoot"/> class.
         /// </summary>
-        /// <remarks>
-        /// This instance will be initialized with the <see cref="BasicGuidGenerator"/>.
-        /// </remarks>
         protected AggregateRoot()
         {
             Version = 0;
@@ -83,7 +79,8 @@ namespace Ncqrs.Domain
         /// <param name="history">The history.</param>
         protected virtual void InitializeFromHistory(IEnumerable<DomainEvent> history)
         {
-            if (history == null) throw new ArgumentNullException("history");
+            if (history == null) 
+                throw new ArgumentNullException("history");
             if (history.Count() == 0)
                 throw new ArgumentException("The provided history does not contain any historical event.", "history");
             if (Version != 0 || _uncommittedEvent.Count > 0)
@@ -136,13 +133,12 @@ namespace Ncqrs.Domain
                     throw new InvalidOperationException(message);
                 }
 
-                // TODO: Validate id.
                 evnt.AggregateRootId = this.Id;
                 evnt.EventSequence = Version + _uncommittedEvent.Count + 1;
                 _uncommittedEvent.Push(evnt);
-            }
 
-            OnEventApplied(evnt);
+                RegisterCurrentInstanceAsDirty();
+            }
         }
 
         public IEnumerable<DomainEvent> GetUncommitedEvents()
@@ -164,8 +160,7 @@ namespace Ncqrs.Domain
             _uncommittedEvent.Clear();
         }
 
-        [NoEventHandler]
-        protected void OnEventApplied(DomainEvent evnt)
+        protected void RegisterCurrentInstanceAsDirty()
         {
             // Register this instance as a dirty one.
             var unitOfWorkFactory = NcqrsEnvironment.Get<IUnitOfWorkFactory>();
