@@ -56,7 +56,7 @@ namespace Ncqrs.Domain.Storage
 
         public void Save(AggregateRoot aggregateRoot)
         {
-            var events = aggregateRoot.GetUncommitedEvents();
+            var events = aggregateRoot.GetUncommittedEvents();
 
             // Save the events to the event store.
             _store.Save(aggregateRoot);

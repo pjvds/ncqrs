@@ -141,7 +141,7 @@ namespace Ncqrs.Domain
             }
         }
 
-        public IEnumerable<DomainEvent> GetUncommitedEvents()
+        public IEnumerable<DomainEvent> GetUncommittedEvents()
         {
             Contract.Ensures(Contract.Result<IEnumerable<DomainEvent>>() != null, "The result of this method should never be null.");
 
@@ -151,7 +151,7 @@ namespace Ncqrs.Domain
         IEnumerable<ISourcedEvent> IEventSource.GetUncommittedEvents()
         {
             // TODO: .net 4.0 co/con
-            return GetUncommitedEvents().Cast<ISourcedEvent>();
+            return GetUncommittedEvents().Cast<ISourcedEvent>();
         }
 
         public void CommitEvents()

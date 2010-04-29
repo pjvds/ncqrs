@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using Ncqrs.Domain;
+using Ncqrs.Eventing;
 using Rhino.Mocks;
 using NUnit.Framework;
 
@@ -17,9 +19,18 @@ namespace Ncqrs.Tests.Domain
 
         public class MyAggregateRoot : AggregateRoot
         {
+            public int FooEventHandlerInvokeCount = 0;
+
             public MyAggregateRoot()
             {
                 RegisterHandler(new TypeThresholdedActionBasedDomainEventHandler(OnFoo, typeof(HandledEvent), false));
+            }
+
+            public MyAggregateRoot(IEnumerable<DomainEvent> history)
+            {
+                RegisterHandler(new TypeThresholdedActionBasedDomainEventHandler(OnFoo, typeof(HandledEvent), false));
+
+                InitializeFromHistory(history);
             }
 
             public void MethodThatCausesAnEventThatHasAHandler()
@@ -36,6 +47,7 @@ namespace Ncqrs.Tests.Domain
 
             private void OnFoo(DomainEvent e)
             {
+                FooEventHandlerInvokeCount++;
             }
         }
 
@@ -55,7 +67,7 @@ namespace Ncqrs.Tests.Domain
         {
             var theAggregate = new MyAggregateRoot();
 
-            theAggregate.GetUncommitedEvents().Count().Should().Be(0);
+            theAggregate.GetUncommittedEvents().Count().Should().Be(0);
         }
 
         [Test]
@@ -75,11 +87,11 @@ namespace Ncqrs.Tests.Domain
 
                 theAggregate.MethodThatCausesAnEventThatHasAHandler();
 
-                theAggregate.GetUncommitedEvents().Count().Should().Be(1);
+                theAggregate.GetUncommittedEvents().Count().Should().Be(1);
 
                 theAggregate.MethodThatCausesAnEventThatHasAHandler();
 
-                theAggregate.GetUncommitedEvents().Count().Should().Be(2);
+                theAggregate.GetUncommittedEvents().Count().Should().Be(2);
             }
         }
 
@@ -114,6 +126,32 @@ namespace Ncqrs.Tests.Domain
             Action act = theAggregate.MethodThatCausesAnEventThatDoesNotConaintAHandler;
 
             act.ShouldThrow<EventNotHandledException>();
+        }
+
+        [Test]
+        public void Loading_it_from_history_should_apply_all_events()
+        {
+            var history = new[] {new HandledEvent(), new HandledEvent(), new HandledEvent()};
+
+            var theAggregate = new MyAggregateRoot(history);
+
+            theAggregate.FooEventHandlerInvokeCount.Should().Be(3);
+        }
+
+        [Test]
+        public void Getting_the_uncommitted_via_the_IEventSource_interface_should_return_the_same_as_directly()
+        {
+            using (NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork())
+            {
+                var theAggregate = new MyAggregateRoot();
+
+                theAggregate.MethodThatCausesAnEventThatHasAHandler();
+                theAggregate.MethodThatCausesAnEventThatHasAHandler();
+
+                var directResult = theAggregate.GetUncommittedEvents();
+                var viaInterfaceResult = ((IEventSource)theAggregate).GetUncommittedEvents();
+                directResult.Should().BeEquivalentTo(viaInterfaceResult);
+            }
         }
     }
 }
