@@ -12,7 +12,13 @@ namespace Ncqrs.Tests.Domain
     public class AggregateRootTests
     {
         public class HandledEvent : DomainEvent
-        {}
+        {
+            public void OverrideAggregateRootId(Guid id)
+            {
+                this.GetType().GetProperty("AggregateRootId").SetValue(this, id, null);
+                
+            }
+        }
 
         public class UnhandledEvent : DomainEvent
         {}
@@ -33,6 +39,11 @@ namespace Ncqrs.Tests.Domain
                 InitializeFromHistory(history);
             }
 
+            public new void InitializeFromHistory(IEnumerable<DomainEvent> history)
+            {
+                base.InitializeFromHistory(history);
+            }
+
             public void MethodThatCausesAnEventThatHasAHandler()
             {
                 var e = new HandledEvent();
@@ -43,6 +54,11 @@ namespace Ncqrs.Tests.Domain
             {
                 var e = new UnhandledEvent();
                 ApplyEvent(e);
+            }
+
+            public new void ApplyEvent(DomainEvent e)
+            {
+                base.ApplyEvent(e);
             }
 
             private void OnFoo(DomainEvent e)
@@ -151,6 +167,76 @@ namespace Ncqrs.Tests.Domain
                 var directResult = theAggregate.GetUncommittedEvents();
                 var viaInterfaceResult = ((IEventSource)theAggregate).GetUncommittedEvents();
                 directResult.Should().BeEquivalentTo(viaInterfaceResult);
+            }
+        }
+
+        [Test]
+        public void Committing_the_events_should_clear_the_uncommitted_events()
+        {
+            using (NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork())
+            {
+                var theAggregate = new MyAggregateRoot();
+
+                theAggregate.MethodThatCausesAnEventThatHasAHandler();
+                theAggregate.MethodThatCausesAnEventThatHasAHandler();
+                theAggregate.MethodThatCausesAnEventThatHasAHandler();
+                theAggregate.MethodThatCausesAnEventThatHasAHandler();
+                theAggregate.MethodThatCausesAnEventThatHasAHandler();
+
+                theAggregate.CommitEvents();
+
+                theAggregate.GetUncommittedEvents().Should().BeEmpty();
+            }
+        }
+
+        [Test]
+        public void Initializing_from_history_should_throw_an_exception_when_the_history_was_null()
+        {
+            IEnumerable<DomainEvent> nullHistory = null;
+            var theAggregate = new MyAggregateRoot();
+
+            Action act = () => theAggregate.InitializeFromHistory(nullHistory);
+
+            act.ShouldThrow<ArgumentNullException>();
+        }
+
+        [Test]
+        public void Initializing_from_history_should_throw_an_exception_when_the_history_was_empty()
+        {
+            IEnumerable<DomainEvent> emptyHistory = new DomainEvent[0];
+            var theAggregate = new MyAggregateRoot();
+
+            Action act = () => theAggregate.InitializeFromHistory(emptyHistory);
+
+            act.ShouldThrow<ArgumentException>();
+        }
+
+        [Test]
+        public void Applying_an_event_that_is_already_owned_by_another_source_should_cause_an_exception()
+        {
+            var theEvent = new HandledEvent();
+            theEvent.OverrideAggregateRootId(Guid.NewGuid());
+            var theAggregate = new MyAggregateRoot();
+
+            Action act = () => theAggregate.ApplyEvent(theEvent);
+
+            act.ShouldThrow<InvalidOperationException>();
+        }
+
+        [Test]
+        public void It_could_not_be_loaded_from_history_when_it_already_contains_uncommitted_events()
+        {
+            using (NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork())
+            {
+                var theAggregate = new MyAggregateRoot();
+
+                theAggregate.MethodThatCausesAnEventThatHasAHandler();
+                theAggregate.MethodThatCausesAnEventThatHasAHandler();
+
+                var history = new[] {new HandledEvent(), new HandledEvent()};
+                Action act = () => theAggregate.InitializeFromHistory(history);
+
+                act.ShouldThrow<InvalidOperationException>();
             }
         }
     }
