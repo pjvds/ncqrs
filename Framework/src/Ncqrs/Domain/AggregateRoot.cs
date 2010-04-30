@@ -77,7 +77,7 @@ namespace Ncqrs.Domain
         /// Initializes from history.
         /// </summary>
         /// <param name="history">The history.</param>
-        protected virtual void InitializeFromHistory(IEnumerable<DomainEvent> history)
+        protected internal virtual void InitializeFromHistory(IEnumerable<DomainEvent> history)
         {
             if (history == null) 
                 throw new ArgumentNullException("history");

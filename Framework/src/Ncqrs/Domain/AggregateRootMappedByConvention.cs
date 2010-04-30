@@ -9,9 +9,5 @@ namespace Ncqrs.Domain
             : base(new ConventionBasedDomainEventHandlerMappingStrategy())
         {
         }
-
-        protected AggregateRootMappedByConvention(IEnumerable<DomainEvent> history) : base(new ConventionBasedDomainEventHandlerMappingStrategy(), history)
-        {
-        }
     }
 }

@@ -10,10 +10,5 @@ namespace Ncqrs.Domain
             : base(new AttributeBasedDomainEventHandlerMappingStrategy())
         {
         }
-
-        protected AggregateRootMappedWithAttributes(IEnumerable<DomainEvent> history)
-            : base(new AttributeBasedDomainEventHandlerMappingStrategy(), history)
-        {
-        }
     }
 }

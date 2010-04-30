@@ -15,16 +15,6 @@ namespace Ncqrs.Domain.Mapping
             InitializeHandlers();
         }
 
-        protected MappedAggregateRoot(IDomainEventHandlerMappingStrategy strategy, IEnumerable<DomainEvent> history)
-        {
-            Contract.Requires<ArgumentNullException>(strategy != null, "The strategy cannot be null.");
-
-            _mappingStrategy = strategy;
-
-            InitializeHandlers();
-            base.InitializeFromHistory(history);
-        }
-
         private void InitializeHandlers()
         {
             foreach (var handler in _mappingStrategy.GetEventHandlersFromAggregateRoot(this))
