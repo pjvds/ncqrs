@@ -74,6 +74,7 @@
     <Compile Include="BasicGuidGeneratorSpecs.cs" />
     <Compile Include="Config\InstanceNotFoundInEnvironmentConfigurationExceptionTests.cs" />
     <Compile Include="Domain\AggregateRootMappedByConventionTests.cs" />
+    <Compile Include="Domain\AggregateRootMappedWithAttributesTests.cs" />
     <Compile Include="Domain\AggregateRootTests.cs" />
     <Compile Include="Domain\DomainEventTests.cs" />
     <Compile Include="Eventing\Storage\ConcurrencyExceptionSpecs.cs" />
