@@ -1,6 +1,5 @@
 ﻿using System;
 using Ncqrs.Domain.Storage;
-using Ncqrs.Eventing;
 
 namespace Ncqrs.Domain
 {
@@ -23,11 +22,18 @@ namespace Ncqrs.Domain
     /// </summary>
     public interface IUnitOfWork : IDisposable
     {
+        /// <summary>
+        /// Gets the domain repository that can be use to obtain aggregate
+        /// roots. 
+        /// </summary>
         IDomainRepository Repository
         {
             get;
         }
 
+        /// <summary>
+        /// Accept all the work that has been done in this context.
+        /// </summary>
         void Accept();
 
         // TODO: Remove this from the public interface.
