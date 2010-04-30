@@ -35,8 +35,5 @@ namespace Ncqrs.Domain
         /// Accept all the work that has been done in this context.
         /// </summary>
         void Accept();
-
-        // TODO: Remove this from the public interface.
-        void RegisterDirtyInstance(AggregateRoot dirtyAggregateRoot);
     }
 }

@@ -157,11 +157,8 @@ namespace Ncqrs.Domain
 
         protected void RegisterCurrentInstanceAsDirty()
         {
-            // Register this instance as a dirty one.
-            var unitOfWorkFactory = NcqrsEnvironment.Get<IUnitOfWorkFactory>();
-            var currentUnitOfWork = unitOfWorkFactory.GetUnitOfWorkInCurrentContext();
-
-            currentUnitOfWork.RegisterDirtyInstance(this);
+            // TODO: Decouple
+            UnitOfWork.Current.RegisterDirtyInstance(this);
         }
     }
 }
