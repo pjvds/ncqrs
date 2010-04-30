@@ -3,7 +3,6 @@ using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
 using Rhino.Mocks;
-using Ncqrs.Domain;
 
 namespace Ncqrs.Eventing.Storage.WindowsAzure.Tests
 {
