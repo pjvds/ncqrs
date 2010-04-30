@@ -62,11 +62,6 @@ namespace Ncqrs.Domain
             Id = idGenerator.GenerateNewId();
         }
 
-        protected AggregateRoot(IEnumerable<DomainEvent> history)
-        {
-            InitializeFromHistory(history);
-        }
-
         [ContractInvariantMethod]
         private void ContractInvariants()
         {

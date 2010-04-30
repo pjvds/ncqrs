@@ -76,7 +76,10 @@
     <Compile Include="Domain\AggregateRootMappedByConventionTests.cs" />
     <Compile Include="Domain\AggregateRootMappedWithAttributesTests.cs" />
     <Compile Include="Domain\AggregateRootTests.cs" />
+    <Compile Include="Domain\DomainEventHandlerTests.cs" />
     <Compile Include="Domain\DomainEventTests.cs" />
+    <Compile Include="Domain\EventNotHandledExceptionTests.cs" />
+    <Compile Include="Domain\NoUnitOfWorkAvailableInThisContextExceptionTests.cs" />
     <Compile Include="Eventing\Storage\ConcurrencyExceptionSpecs.cs" />
     <Compile Include="NcqrsEnvironmentConfigurationExceptionSpecs.cs" />
     <Compile Include="NcqrsEnvironmentSpecs.cs" />
