@@ -1,6 +1,6 @@
 ﻿using System;
-using log4net;
 using System.Reflection;
+using log4net;
 
 namespace Ncqrs.Commanding.CommandExecution
 {

@@ -1,4 +1,5 @@
-﻿using Ncqrs.Eventing.ServiceModel.Bus;
+﻿using System;
+using Ncqrs.Eventing.ServiceModel.Bus;
 
 namespace Ncqrs.Eventing.Denormalization
 {

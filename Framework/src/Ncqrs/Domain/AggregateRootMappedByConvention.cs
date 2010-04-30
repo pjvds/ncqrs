@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using Ncqrs.Domain.Mapping;
 
 namespace Ncqrs.Domain

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
 namespace Ncqrs.Domain.Mapping
 {
@@ -8,8 +9,8 @@ namespace Ncqrs.Domain.Mapping
         public InvalidEventHandlerMappingException(string message) : base(message) { }
         public InvalidEventHandlerMappingException(string message, Exception inner) : base(message, inner) { }
         protected InvalidEventHandlerMappingException(
-          System.Runtime.Serialization.SerializationInfo info,
-          System.Runtime.Serialization.StreamingContext context)
+          SerializationInfo info,
+          StreamingContext context)
             : base(info, context) { }
     }
 }

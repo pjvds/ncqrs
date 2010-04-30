@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
-using Ncqrs.Eventing;
 
 namespace Ncqrs.Domain
 {

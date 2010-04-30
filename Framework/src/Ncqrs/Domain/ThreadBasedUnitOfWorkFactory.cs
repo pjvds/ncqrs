@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.Serialization;
 using Ncqrs.Domain.Storage;
 using Ncqrs.Eventing.ServiceModel.Bus;
 using Ncqrs.Eventing.Storage;

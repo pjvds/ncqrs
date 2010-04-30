@@ -1,4 +1,6 @@
-﻿namespace Ncqrs.Eventing.ServiceModel.Bus
+﻿using System;
+
+namespace Ncqrs.Eventing.ServiceModel.Bus
 {
     public interface IEventHandler
     {

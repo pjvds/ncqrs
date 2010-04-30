@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
 namespace Ncqrs.Domain.Storage
 {
@@ -8,8 +9,8 @@ namespace Ncqrs.Domain.Storage
         public AggregateLoaderException(string message) : base(message) { }
         public AggregateLoaderException(string message, Exception inner) : base(message, inner) { }
         protected AggregateLoaderException(
-          System.Runtime.Serialization.SerializationInfo info,
-          System.Runtime.Serialization.StreamingContext context)
+          SerializationInfo info,
+          StreamingContext context)
             : base(info, context) { }
     }
 }

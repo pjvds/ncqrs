@@ -1,6 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using Ncqrs.Domain.Mapping;
-using Ncqrs.Eventing;
 
 namespace Ncqrs.Domain
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Diagnostics.Contracts;
+using System.Reflection;
 using log4net;
 using Ncqrs.Config;
 using Ncqrs.Domain;

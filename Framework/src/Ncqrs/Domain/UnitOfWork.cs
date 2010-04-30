@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using Ncqrs.Domain.Storage;
-using Ncqrs.Eventing;
 
 namespace Ncqrs.Domain
 {
