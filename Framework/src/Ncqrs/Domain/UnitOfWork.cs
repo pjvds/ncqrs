@@ -6,20 +6,6 @@ using Ncqrs.Eventing;
 
 namespace Ncqrs.Domain
 {
-    /// <summary>
-    /// A context from within domain object can be changed.
-    /// <example>
-    /// using (var work = new UnitOfWork(repository))
-    /// {
-    ///     // Create the new customer.
-    ///     Customer newCustomer = new Customer();
-    ///     newCustomer.Name = "Pieter Joost van de Sande";
-    ///     
-    ///     // Accept the work that has been done in the context.
-    ///     work.Accept();
-    /// }
-    /// </example>
-    /// </summary>
     internal sealed class UnitOfWork : IUnitOfWork
     {
         /// <summary>
