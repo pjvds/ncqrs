@@ -7,7 +7,7 @@ using Rhino.Mocks;
 namespace Ncqrs.Eventing.Storage.WindowsAzure.Tests
 {
     [TestFixture]
-    public class AzureEventStoreSpecs
+    public class AzureEventStoreTests
     {
         [Serializable]
         public class FooEvent : ISourcedEvent
