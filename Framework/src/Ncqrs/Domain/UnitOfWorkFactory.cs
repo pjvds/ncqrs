@@ -5,11 +5,11 @@ using Ncqrs.Eventing.Storage;
 
 namespace Ncqrs.Domain
 {
-    public class ThreadBasedUnitOfWorkFactory : IUnitOfWorkFactory
+    public class UnitOfWorkFactory : IUnitOfWorkFactory
     {
         private IDomainRepository _repository;
 
-        public ThreadBasedUnitOfWorkFactory(IEventStore eventStore, IEventBus eventBus)
+        public UnitOfWorkFactory(IEventStore eventStore, IEventBus eventBus)
         {
             _repository = new DomainRepository(eventStore, eventBus);
         }
@@ -17,14 +17,6 @@ namespace Ncqrs.Domain
         public IUnitOfWork CreateUnitOfWork()
         {
             return new UnitOfWork(_repository);
-        }
-
-        public IUnitOfWork GetUnitOfWorkInCurrentContext()
-        {
-            if (UnitOfWork.Current == null)
-                throw new NoUnitOfWorkAvailableInThisContextException();
-
-            return UnitOfWork.Current;
         }
     }
 }

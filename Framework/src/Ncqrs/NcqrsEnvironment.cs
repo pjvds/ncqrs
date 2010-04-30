@@ -25,7 +25,7 @@ namespace Ncqrs
             SetDefault<IUniqueIdentifierGenerator>(new BasicGuidGenerator());
             SetDefault<IEventBus>(new InProcessEventBus());
             SetDefault<IEventStore>(new InMemoryEventStore());
-            SetDefault<IUnitOfWorkFactory>(new ThreadBasedUnitOfWorkFactory(Get<IEventStore>(), Get<IEventBus>()));
+            SetDefault<IUnitOfWorkFactory>(new UnitOfWorkFactory(Get<IEventStore>(), Get<IEventBus>()));
             //TODO: Added IDomainRepository default..
         }
 

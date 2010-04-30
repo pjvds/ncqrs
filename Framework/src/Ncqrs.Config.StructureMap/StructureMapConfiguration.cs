@@ -14,7 +14,7 @@ namespace Ncqrs.Config.StructureMap
     /// var eventStore = InitializeEventStore();
     /// x.For{IEventBus}().Use(eventBus);
     /// x.For{IEventStore}().Use(eventStore);
-    /// x.For{IUnitOfWorkFactory}().Use{ThreadBasedUnitOfWorkFactory}();
+    /// x.For{IUnitOfWorkFactory}().Use{UnitOfWorkFactory}();
     /// });
     /// NcqrsEnvironment.Configure(config);
     /// </code>

@@ -157,6 +157,9 @@ namespace Ncqrs.Domain
 
         protected void RegisterCurrentInstanceAsDirty()
         {
+            if(UnitOfWork.Current == null)
+                throw new NoUnitOfWorkAvailableInThisContextException();
+
             // TODO: Decouple
             UnitOfWork.Current.RegisterDirtyInstance(this);
         }
