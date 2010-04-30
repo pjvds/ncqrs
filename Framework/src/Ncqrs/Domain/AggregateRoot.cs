@@ -155,12 +155,11 @@ namespace Ncqrs.Domain
             _uncommittedEvent.Clear();
         }
 
-        protected void RegisterCurrentInstanceAsDirty()
+        private void RegisterCurrentInstanceAsDirty()
         {
             if(UnitOfWork.Current == null)
                 throw new NoUnitOfWorkAvailableInThisContextException();
 
-            // TODO: Decouple
             UnitOfWork.Current.RegisterDirtyInstance(this);
         }
     }
