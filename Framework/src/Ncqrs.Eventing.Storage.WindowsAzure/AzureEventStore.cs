@@ -104,7 +104,7 @@ namespace Ncqrs.Eventing.Storage.WindowsAzure
             else
             {
                 if (source.Version != sourceInStore.Version)
-                    throw new ConcurrencyException(source.Id, source.Version, sourceInStore.Version);
+                    throw new ConcurrencyException(source.Id, source.Version);
             }
 
             // Update version.

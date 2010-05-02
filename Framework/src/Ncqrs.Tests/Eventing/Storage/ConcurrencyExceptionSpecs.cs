@@ -15,19 +15,17 @@ namespace Ncqrs.Tests.Eventing.Storage
         {
             Guid eventSourceId = Guid.NewGuid();
             long eventSourceVersion = 15;
-            long versionInStore = 17;
 
-            var ex = new ConcurrencyException(eventSourceId, eventSourceVersion, versionInStore);
+            var ex = new ConcurrencyException(eventSourceId, eventSourceVersion);
 
             ex.EventSourceId.Should().Be(eventSourceId);
             ex.EventSourceVersion.Should().Be(eventSourceVersion);
-            ex.VersionInStore.Should().Be(versionInStore);
         }
 
         [Test]
         public void It_should_be_serializable()
         {
-            var theException = new ConcurrencyException(Guid.NewGuid(), 15, 17);
+            var theException = new ConcurrencyException(Guid.NewGuid(), 15);
             ConcurrencyException deserializedException = null;
 
             using (var buffer = new MemoryStream())

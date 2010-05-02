@@ -97,8 +97,7 @@ namespace Ncqrs.Eventing.Storage.MongoDB
             var isUpdated = (bool)(lastErrorData["updatedExisting"]);
             if (!isUpdated)
             {
-                //TODO: Optimistic concurrency check does not pull out the version in store number by design. Change exception.
-                throw new ConcurrencyException(source.Id, source.Version, -1);
+                throw new ConcurrencyException(source.Id, source.Version);
             }
         }
 

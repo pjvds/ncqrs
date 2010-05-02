@@ -112,7 +112,7 @@ namespace Ncqrs.Eventing.Storage.SQL
                         }
                         else if (currentVersion.Value != eventSource.Version)
                         {
-                            throw new ConcurrencyException(eventSource.Id, eventSource.Version, currentVersion.Value);
+                            throw new ConcurrencyException(eventSource.Id, eventSource.Version);
                         }
 
                         // Save all events to the store.

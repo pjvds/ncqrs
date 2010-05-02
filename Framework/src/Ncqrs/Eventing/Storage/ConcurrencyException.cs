@@ -15,12 +15,11 @@ namespace Ncqrs.Eventing.Storage
         /// <param name="eventSourceId">The id of the event source.</param>
         /// <param name="providerVersion">The event source version.</param>
         /// <param name="versionInStore">The version in store.</param>
-        public ConcurrencyException(Guid eventSourceId, long eventSourceVersion, long versionInStore)
-            : base(String.Format("There is a newer version of the event source with id {0} stored in the event store.", eventSourceId))
+        public ConcurrencyException(Guid eventSourceId, long eventSourceVersion)
+            : base(String.Format("There is a newer version of the event source with id {0} stored in the event store."))
         {
             EventSourceId = eventSourceId;
             EventSourceVersion = eventSourceVersion;
-            VersionInStore = versionInStore;
         }
 
         /// <summary>
@@ -38,12 +37,6 @@ namespace Ncqrs.Eventing.Storage
         /// </summary>
         /// <value>The event source version.</value>
         public long EventSourceVersion { get; private set; }
-
-        /// <summary>
-        /// Gets the version of the provider in the event store.
-        /// </summary>
-        /// <value>The version in store.</value>
-        public long VersionInStore { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConcurrencyException"/> class.

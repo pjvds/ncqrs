@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Reflection;
-using log4net;
 using Ncqrs.Config;
 using Ncqrs.Domain;
 using Ncqrs.Eventing.ServiceModel.Bus;
@@ -26,7 +25,6 @@ namespace Ncqrs
             SetDefault<IEventStore>(new InMemoryEventStore());
             SetDefault<IDomainRepository>(new DomainRepository(Get<IEventStore>(), Get<IEventBus>()));
             SetDefault<IUnitOfWorkFactory>(new UnitOfWorkFactory());
-            //TODO: Added IDomainRepository default..
         }
 
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -45,10 +43,17 @@ namespace Ncqrs
         private static IEnvironmentConfiguration _instance;
 
         /// <summary>
-        /// Gets or create the requested instance specified by the parameter <i>T</i>.
+        /// Gets or create the requested instance specified by the parameter <typeparamref name="T"/>.
         /// </summary>
-        /// <typeparam name="T">The type of the instance that is requested.</typeparam>
-        /// <returns>The instance of the requested type specified by <i>T</i>.</returns>
+        /// <remarks>This</remarks>
+        /// <typeparam name="T">The type of the instance that is requested.
+        /// </typeparam>
+        /// <returns>If the type specified by <typeparamref name="T"/> is
+        /// registered, it returns an instance that is, is a super class of, or
+        /// implements the type specified by <typeparamref name="T"/>. Otherwise
+        /// a <see cref="InstanceNotFoundInEnvironmentConfigurationException"/>
+        /// occurs.
+        /// </returns>
         public static T Get<T>() where T : class
         {
             Log.DebugFormat("Requesting instance {0} from the environment.", typeof(T).FullName);
