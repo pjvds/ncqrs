@@ -9,7 +9,7 @@ namespace Ncqrs.Commanding.ServiceModel
     /// A dispatcher that dispatch command objects to their appropriate command executor. Command executors can register and
     /// unregister to specific command types. Only a single executor may be subscribed for a single type of command at any time.
     /// </summary>
-    public class InProcessCommandExecutionDispatcher : CommandExecutionDispatcher
+    public class InProcessCommandService : CommandExecutionDispatcher, ICommandService
     {
         private readonly Dictionary<Type, ICommandExecutor> _executors = new Dictionary<Type, ICommandExecutor>();
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
