@@ -17,29 +17,29 @@ namespace Ncqrs.Eventing.ServiceModel.Bus
 
             Log.InfoFormat("Started publishing event {0}.", eventMessageType.FullName);
 
-            using (var transaction = new TransactionScope())
-            {
-                IEnumerable<IEventHandler> handlers = GetHandlersForEvent(eventMessage);
+            IEnumerable<IEventHandler> handlers = GetHandlersForEvent(eventMessage);
 
-                if(handlers.Count() == 0)
-                {
-                    Log.WarnFormat("Did not found any handlers for event {0}.", eventMessageType.FullName);
-                }
-                else
+            if (handlers.Count() == 0)
+            {
+                Log.WarnFormat("Did not found any handlers for event {0}.", eventMessageType.FullName);
+            }
+            else
+            {
+                using (var transaction = new TransactionScope())
                 {
                     Log.DebugFormat("Found {0} handlers for event {1}.", handlers.Count(), eventMessageType.FullName);
 
                     foreach (var handler in handlers)
                     {
-                        Log.DebugFormat("Calling handler {0} for event {1}.", handler.GetType().FullName, eventMessageType.FullName);
+                        Log.DebugFormat("Calling handler {0} for event {1}.", handler.GetType().FullName,
+                                        eventMessageType.FullName);
 
                         handler.Handle(eventMessage);
 
                         Log.DebugFormat("Call finished.");
                     }
+                    transaction.Complete();
                 }
-
-                transaction.Complete();
             }
         }
 
