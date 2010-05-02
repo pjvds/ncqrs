@@ -57,7 +57,7 @@
     <Reference Include="log4net">
       <HintPath>..\..\bin\log4net\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="MongoDB.Driver, Version=1.0.3728.40257, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="MongoDB.Driver, Version=0.1.302.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\mongodb-net\MongoDB.Driver.dll</HintPath>
     </Reference>
