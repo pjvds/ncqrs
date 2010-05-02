@@ -5,7 +5,7 @@ using Ncqrs.Domain.Storage;
 
 namespace Ncqrs.Domain
 {
-    internal sealed class UnitOfWork : IUnitOfWork
+    internal sealed class UnitOfWork : IUnitOfWorkContext
     {
         /// <summary>
         /// The <see cref="UnitOfWork"/> that is associated with the current thread.
@@ -127,7 +127,7 @@ namespace Ncqrs.Domain
         /// Registers the dirty.
         /// </summary>
         /// <param name="dirtyInstance">The dirty instance.</param>
-        public void RegisterDirtyInstance(AggregateRoot dirtyInstance)
+        internal void RegisterDirtyInstance(AggregateRoot dirtyInstance)
         {
             Contract.Requires<ArgumentNullException>(dirtyInstance != null, "dirtyInstance could not be null.");
 

@@ -111,6 +111,7 @@
     <Compile Include="Config\InstanceNotFoundInEnvironment.cs" />
     <Compile Include="DateTimeBasedClock.cs" />
     <Compile Include="Domain\DomainEvent.cs" />
+    <Compile Include="Domain\IUnitOfWorkContext.cs" />
     <Compile Include="Domain\NoUnitOfWorkAvailableInThisContextException.cs" />
     <Compile Include="Eventing\EventBase.cs" />
     <Compile Include="Eventing\IEventSource.cs" />
@@ -130,7 +131,6 @@
     <Compile Include="Domain\EventNotHandledException.cs" />
     <Compile Include="Domain\IDomainEventHandler.cs" />
     <Compile Include="Domain\DomainEventHandler.cs" />
-    <Compile Include="Domain\IUnitOfWork.cs" />
     <Compile Include="Domain\IUnitOfWorkFactory.cs" />
     <Compile Include="Domain\Mapping\AttributeBasedDomainEventHandlerMappingStrategy.cs" />
     <Compile Include="Domain\Mapping\ConventionBasedDomainEventHandlerMappingStrategy.cs" />
