@@ -7,15 +7,14 @@ using Ncqrs.Config;
 using Ncqrs.Domain;
 using Ncqrs.Eventing.ServiceModel.Bus;
 using Ncqrs.Eventing.Storage;
+using Ncqrs.Domain.Storage;
 
 namespace Ncqrs
 {
-    /// <summary>
-    /// The Ncqrs environment. This class gives access to other components registered in this environment.
+    /// <summary>The Ncqrs environment. This class gives access to other components registered in this environment.
     /// <remarks>
     /// Make sure to call the <see cref="Configure"/> method before doing anything else with this class.
-    /// </remarks>
-    /// </summary>
+    /// </remarks></summary>
     public static class NcqrsEnvironment
     {
         static NcqrsEnvironment()
@@ -25,7 +24,8 @@ namespace Ncqrs
             SetDefault<IUniqueIdentifierGenerator>(new BasicGuidGenerator());
             SetDefault<IEventBus>(new InProcessEventBus());
             SetDefault<IEventStore>(new InMemoryEventStore());
-            SetDefault<IUnitOfWorkFactory>(new UnitOfWorkFactory(Get<IEventStore>(), Get<IEventBus>()));
+            SetDefault<IDomainRepository>(new DomainRepository(Get<IEventStore>(), Get<IEventBus>()));
+            SetDefault<IUnitOfWorkFactory>(new UnitOfWorkFactory());
             //TODO: Added IDomainRepository default..
         }
 
