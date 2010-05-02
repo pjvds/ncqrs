@@ -40,6 +40,8 @@ namespace Ncqrs.Domain.Mapping
             Contract.Requires<ArgumentNullException>(aggregateRoot != null, "The aggregateRoot cannot be null.");
 
             var targetType = aggregateRoot.GetType();
+            var handlers = new List<IDomainEventHandler>();
+
             foreach (var method in targetType.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static))
             {
                 EventHandlerAttribute attribute;
@@ -62,9 +64,12 @@ namespace Ncqrs.Domain.Mapping
                         throw new InvalidEventHandlerMappingException(message);
                     }
 
-                    yield return CreateHandlerForMethod(aggregateRoot, method, attribute);
+                    var handler = CreateHandlerForMethod(aggregateRoot, method, attribute);
+                    handlers.Add(handler);
                 }
             }
+
+            return handlers;
         }
 
         private static IDomainEventHandler CreateHandlerForMethod(AggregateRoot aggregateRoot, MethodInfo method, EventHandlerAttribute attribute)
