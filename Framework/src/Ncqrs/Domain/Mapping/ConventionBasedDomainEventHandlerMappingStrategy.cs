@@ -7,7 +7,6 @@ using System.Text.RegularExpressions;
 
 namespace Ncqrs.Domain.Mapping
 {
-    // TODO: Add detailed description.
     /// <summary>
     /// A internal event handler mapping strategy that maps methods as an event handler based on method name and parameter type.
     /// <remarks>

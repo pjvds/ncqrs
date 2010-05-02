@@ -10,6 +10,7 @@ namespace Ncqrs.Domain.Mapping
         protected MappedAggregateRoot(IDomainEventHandlerMappingStrategy strategy)
         {
             Contract.Requires<ArgumentNullException>(strategy != null, "The strategy cannot be null.");
+
             _mappingStrategy = strategy;
             InitializeHandlers();
         }
