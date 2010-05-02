@@ -15,14 +15,16 @@ namespace Ncqrs.Config
         /// <value>The type of the requested instance.</value>
         public Type RequestedType
         {
-            get; private set;
+            get;
+            private set;
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InstanceNotFoundInEnvironmentConfigurationException"/> class.
         /// </summary>
         /// <param name="requestedType">Type of the requested instance.</param>
-        public InstanceNotFoundInEnvironmentConfigurationException(Type requestedType) : this(requestedType, requestedType != null ? String.Format("Could not find requested type {0} in the Ncqrs environment configuration.", requestedType.FullName) : null)
+        public InstanceNotFoundInEnvironmentConfigurationException(Type requestedType)
+            : this(requestedType, requestedType != null ? BuildDefaultMessage(requestedType) : null)
         {
         }
 
@@ -31,7 +33,8 @@ namespace Ncqrs.Config
         /// </summary>
         /// <param name="requestedType">Type of the requested instance.</param>
         /// <param name="message">The message.</param>
-        public InstanceNotFoundInEnvironmentConfigurationException(Type requestedType, string message) : this(requestedType, message, null)
+        public InstanceNotFoundInEnvironmentConfigurationException(Type requestedType, string message)
+            : this(requestedType, message, null)
         {
         }
 
@@ -56,8 +59,15 @@ namespace Ncqrs.Config
         /// <exception cref="T:System.Runtime.Serialization.SerializationException">The class name is null or <see cref="P:System.Exception.HResult"/> is zero (0). </exception>
         protected InstanceNotFoundInEnvironmentConfigurationException(
             SerializationInfo info,
-            StreamingContext context) : base(info, context)
+            StreamingContext context)
+            : base(info, context)
         {
+        }
+
+        private static string BuildDefaultMessage(Type requestedType)
+        {
+            return String.Format("Could not find requested type {0} in the NcqrsEnvironment configuration. Make sure that " +
+                                 "the NcqrsEnvironment is configured correctly or that defaults are correctly set.", requestedType.FullName);
         }
     }
 }
