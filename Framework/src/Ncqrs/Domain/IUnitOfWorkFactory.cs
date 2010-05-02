@@ -4,6 +4,6 @@ namespace Ncqrs.Domain
 {
     public interface IUnitOfWorkFactory
     {
-        IUnitOfWork CreateUnitOfWork();
+        IUnitOfWorkContext CreateUnitOfWork();
     }
 }

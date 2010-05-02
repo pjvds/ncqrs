@@ -4,7 +4,6 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using log4net;
 
 namespace Ncqrs.Domain.Mapping
 {

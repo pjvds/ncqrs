@@ -27,7 +27,7 @@ namespace Ncqrs.Commanding.CommandExecution
         /// <remarks>Make sure you call <see cref="IUnitOfWork.Accept"/> to accept the changes that has been made in the context.</remarks>
         /// </summary>
         /// <param name="work">The work.</param>
-        protected abstract void ExecuteWithingUnitOfWorkContext(IUnitOfWork work);
+        protected abstract void ExecuteWithingUnitOfWorkContext(IUnitOfWorkContext work);
 
         /// <summary>
         /// Executes the command.

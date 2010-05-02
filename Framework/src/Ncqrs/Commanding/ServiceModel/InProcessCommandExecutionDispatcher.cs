@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using log4net;
 using Ncqrs.Commanding.CommandExecution;
 
 namespace Ncqrs.Commanding.ServiceModel
