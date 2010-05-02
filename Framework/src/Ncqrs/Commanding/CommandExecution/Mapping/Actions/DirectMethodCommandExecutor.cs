@@ -9,7 +9,7 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Actions
     /// <summary>
     /// An auto mapped action that executes a method on an aggregate root based on the mapping specified on the command.
     /// </summary>
-    public class DirectMethodAction : ICommandExecutor
+    public class DirectMethodCommandExecutor : ICommandExecutor
     {
         /// <summary>
         /// Executes this method on the aggregate root based on the mapping of the command given a construction time.

@@ -23,12 +23,12 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping
 
             if (IsCommandMappedToObjectCreation(command))
             {
-                return new ObjectCreationAction();
+                return new ObjectCreationCommandExecutor();
             }
 
             if (IsCommandMappedToADirectMethod(command))
             {
-                return new DirectMethodAction();
+                return new DirectMethodCommandExecutor();
             }
 
             var message = String.Format("No mapping attributes found on {0} command.", command.GetType().Name);

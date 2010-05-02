@@ -81,9 +81,9 @@
     <Compile Include="Commanding\CommandBase.cs" />
     <Compile Include="Commanding\CommandExecution\DirectActionOnAggregateRootCommandExecutor.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\ActionFactory.cs" />
-    <Compile Include="Commanding\CommandExecution\Mapping\Actions\DirectMethodAction.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\Actions\DirectMethodCommandExecutor.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Actions\DirectMethodCommandInfo.cs" />
-    <Compile Include="Commanding\CommandExecution\Mapping\Actions\ObjectCreationAction.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\Actions\ObjectCreationCommandExecutor.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Actions\ObjectCreationCommandInfo.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\AutoMapperConfiguration.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\AutoMappingCommandExecutor.cs" />

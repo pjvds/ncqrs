@@ -9,7 +9,7 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Actions
     /// <summary>
     /// An auto mapped action for a command. It created the object as specified by the mapping.
     /// </summary>
-    public class ObjectCreationAction : ICommandExecutor
+    public class ObjectCreationCommandExecutor : ICommandExecutor
     {
         /// <summary>
         /// Executes this action.
