@@ -62,6 +62,7 @@ namespace Ncqrs.Domain.Storage
 
             // Send all events to the bus.
             // TODO: Remove cast co/con
+            // TODO: Remove eventbus, the repository should only push to store.
             _eventBus.Publish(events.Cast<IEvent>());
 
             // Accept the changes.
