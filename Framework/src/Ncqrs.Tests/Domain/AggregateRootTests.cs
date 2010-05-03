@@ -171,7 +171,7 @@ namespace Ncqrs.Tests.Domain
         }
 
         [Test]
-        public void Committing_the_events_should_clear_the_uncommitted_events()
+        public void Accepting_the_changes_should_clear_the_uncommitted_events()
         {
             using (NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork())
             {
@@ -183,14 +183,14 @@ namespace Ncqrs.Tests.Domain
                 theAggregate.MethodThatCausesAnEventThatHasAHandler();
                 theAggregate.MethodThatCausesAnEventThatHasAHandler();
 
-                theAggregate.CommitEvents();
+                theAggregate.AcceptChanges();
 
                 theAggregate.GetUncommittedEvents().Should().BeEmpty();
             }
         }
 
         [Test]
-        public void Committing_the_events_higher_the_version()
+        public void Accepting_the_changes_should_set_the_initial_version_to_the_new_version()
         {
             using (NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork())
             {
@@ -202,9 +202,43 @@ namespace Ncqrs.Tests.Domain
                 theAggregate.MethodThatCausesAnEventThatHasAHandler();
                 theAggregate.MethodThatCausesAnEventThatHasAHandler();
 
-                theAggregate.CommitEvents();
+                theAggregate.InitialVersion.Should().Be(0);
 
-                theAggregate.Version.Should().Be(5);
+                theAggregate.AcceptChanges();
+
+                theAggregate.InitialVersion.Should().Be(5);
+            }
+        }
+
+        [Test]
+        public void Applying_an_event_should_not_effect_the_initial_version()
+        {
+            using (NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork())
+            {
+                var theAggregate = new MyAggregateRoot();
+
+                theAggregate.InitialVersion.Should().Be(0);
+                theAggregate.MethodThatCausesAnEventThatHasAHandler();
+                theAggregate.InitialVersion.Should().Be(0);
+                theAggregate.MethodThatCausesAnEventThatHasAHandler();
+                theAggregate.InitialVersion.Should().Be(0);
+                theAggregate.MethodThatCausesAnEventThatHasAHandler();
+            }
+        }
+
+        [Test]
+        public void Applying_an_event_should_higher_the_version()
+        {
+            using (NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork())
+            {
+                var theAggregate = new MyAggregateRoot();
+
+                theAggregate.Version.Should().Be(0);
+                theAggregate.MethodThatCausesAnEventThatHasAHandler();
+                theAggregate.Version.Should().Be(1);
+                theAggregate.MethodThatCausesAnEventThatHasAHandler();
+                theAggregate.Version.Should().Be(2);
+                theAggregate.MethodThatCausesAnEventThatHasAHandler();
             }
         }
 

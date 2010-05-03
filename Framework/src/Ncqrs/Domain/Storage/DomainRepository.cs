@@ -55,7 +55,7 @@ namespace Ncqrs.Domain.Storage
             _eventBus.Publish(events.Cast<IEvent>());
 
             // Accept the changes.
-            aggregateRoot.CommitEvents();
+            aggregateRoot.AcceptChanges();
         }
     }
 }

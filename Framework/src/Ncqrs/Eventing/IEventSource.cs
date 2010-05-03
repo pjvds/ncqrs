@@ -30,6 +30,6 @@ namespace Ncqrs.Eventing
         /// <summary>
         /// Commits the events.
         /// </summary>
-        void CommitEvents();
+        void AcceptChanges();
     }
 }

@@ -37,13 +37,33 @@ namespace Ncqrs.Domain
         private readonly Stack<DomainEvent> _uncommittedEvent = new Stack<DomainEvent>(0);
 
         /// <summary>
-        /// Gets the current version.
+        /// Gets the current version of the aggregate root as it is known in the event store.
         /// </summary>
+        /// <remarks>
+        /// <para>
+        /// This represents the committed version of this instance. When this instance was retrieved
+        /// via history, it contains the version as it was at that time. For new instances this value is always 0.
+        /// </para>
+        /// <para>
+        /// The version does not change until changes are accepted via the <see cref="AcceptChanges"/> method.
+        /// </para>
+        /// </remarks>
         /// <value>An <see cref="int"/> representing the current version of this aggregate root.</value>
         public long Version
         {
-            get;
-            private set;
+            get
+            {
+                return InitialVersion + _uncommittedEvent.Count;                
+            }
+        }
+
+        /// <summary>
+        /// Gets the initial version.
+        /// </summary>
+        /// <value>The initial version.</value>
+        public long InitialVersion
+        {
+            get; private set;
         }
 
         /// <summary>
@@ -56,7 +76,7 @@ namespace Ncqrs.Domain
         /// </summary>
         protected AggregateRoot()
         {
-            Version = 0;
+            InitialVersion = 0;
 
             var idGenerator = NcqrsEnvironment.Get<IUniqueIdentifierGenerator>();
             Id = idGenerator.GenerateNewId();
@@ -84,7 +104,7 @@ namespace Ncqrs.Domain
             foreach (var historicalEvent in history)
             {
                 ApplyEvent(historicalEvent, true);
-                Version++;
+                InitialVersion++; // TODO: Thought... couldn't we get this from the event?
             }
         }
 
@@ -149,9 +169,10 @@ namespace Ncqrs.Domain
             return GetUncommittedEvents().Cast<ISourcedEvent>();
         }
 
-        public void CommitEvents()
+        public void AcceptChanges()
         {
-            this.Version += _uncommittedEvent.Count();
+            // Update the initial version.
+            this.InitialVersion = Version;
 
             // Clear the unaccepted event list.
             _uncommittedEvent.Clear();

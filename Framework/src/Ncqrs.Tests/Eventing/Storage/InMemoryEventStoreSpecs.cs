@@ -34,7 +34,7 @@ namespace Ncqrs.Tests.Eventing.Storage
             /// <summary>
             /// Commits the events.
             /// </summary>
-            public void CommitEvents()
+            public void AcceptChanges()
             {
             }
         }
