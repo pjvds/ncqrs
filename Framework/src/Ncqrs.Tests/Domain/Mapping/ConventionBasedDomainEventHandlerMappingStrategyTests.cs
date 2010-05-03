@@ -121,7 +121,7 @@ namespace Ncqrs.Tests.Domain.Mapping
 
             var handlers = mapping.GetEventHandlersFromAggregateRoot(aggregate);
 
-            handlers.Count().Should().Be(5);
+            handlers.Count().Should().Be(4);
             handlers.Should().OnlyHaveUniqueItems();
         }
 
