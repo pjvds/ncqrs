@@ -41,6 +41,8 @@ namespace Ncqrs.Domain.Mapping
             Contract.Ensures(Contract.Result<IEnumerable<IDomainEventHandler>>() != null, "The result should never be null.");
 
             var targetType = aggregateRoot.GetType();
+            var handlers = new List<IDomainEventHandler>();
+
             Logger.DebugFormat("Trying to get all event handlers based by convention for {0}.", targetType);
 
             var methodsToMatch = targetType.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
@@ -66,12 +68,15 @@ namespace Ncqrs.Domain.Mapping
                 var methodCopy = method.MethodInfo;
                 Type firstParameterType = methodCopy.GetParameters().First().ParameterType;
 
-                Action<DomainEvent> invokeAction = (e) => methodCopy.Invoke(aggregateRoot, new object[] {e});
+                Action<DomainEvent> invokeAction = (e) => methodCopy.Invoke(aggregateRoot, new object[] { e });
 
                 Logger.DebugFormat("Created event handler for method {0} based on convention.", methodCopy.Name);
 
-                yield return new TypeThresholdedActionBasedDomainEventHandler(invokeAction, firstParameterType, true);
+                var handler = new TypeThresholdedActionBasedDomainEventHandler(invokeAction, firstParameterType, true);
+                handlers.Add(handler);
             }
+
+            return handlers;
         }
     }
 }
