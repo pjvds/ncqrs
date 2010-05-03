@@ -16,7 +16,7 @@ namespace Ncqrs.Eventing.Storage
         /// <param name="providerVersion">The event source version.</param>
         /// <param name="versionInStore">The version in store.</param>
         public ConcurrencyException(Guid eventSourceId, long eventSourceVersion)
-            : base(String.Format("There is a newer version of the event source with id {0} stored in the event store."))
+            : base(String.Format("There is a newer version of the event source with id {0} stored in the event store.", eventSourceId))
         {
             EventSourceId = eventSourceId;
             EventSourceVersion = eventSourceVersion;
