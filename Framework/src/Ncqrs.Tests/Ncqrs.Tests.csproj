@@ -73,6 +73,7 @@
   <ItemGroup>
     <Compile Include="BasicGuidGeneratorSpecs.cs" />
     <Compile Include="Commanding\CommandBasedTests.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\MappingForCommandNotFoundExceptionTests.cs" />
     <Compile Include="Commanding\TransactionalCommandExecutorWrapperTests.cs" />
     <Compile Include="Config\InstanceNotFoundInEnvironmentConfigurationExceptionTests.cs" />
     <Compile Include="Domain\AggregateRootMappedByConventionTests.cs" />

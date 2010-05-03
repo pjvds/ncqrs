@@ -76,8 +76,8 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Actions
             }
             catch (Exception e)
             {
-                var message = String.Format("Couldn't determ aggregate root type from typename '{0}'.", mappingAttribute.TypeName);
-                throw new AutoMappingException(message, e);
+                var message = String.Format("Couldn't determine aggregate root type from typename '{0}'.", mappingAttribute.TypeName);
+                throw new CommandMappingException(message, e);
             }
         }
 

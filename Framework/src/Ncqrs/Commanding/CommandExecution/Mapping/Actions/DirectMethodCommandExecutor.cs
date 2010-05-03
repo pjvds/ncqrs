@@ -23,7 +23,7 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Actions
             {
                 var targetMethod = GetTargetMethodBasedOnCommandTypeName(info, command);
 
-                var parameterValues = CommandAutoMappingConfiguration.GetParameterValues(command, targetMethod.GetParameters());
+                var parameterValues = CommandMappingConfiguration.GetParameterValues(command, targetMethod.GetParameters());
                 var targetAggregateRoot = work.Repository.GetById(info.AggregateType, info.AggregateRootIdValue);
 
                 targetMethod.Invoke(targetAggregateRoot, parameterValues);
@@ -35,7 +35,7 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Actions
         private MethodInfo GetTargetMethodBasedOnCommandTypeName(DirectMethodCommandInfo info, ICommand command)
         {
             var aggregateType = info.AggregateType;
-            var propertiesToMap = CommandAutoMappingConfiguration.GetCommandProperties(command);
+            var propertiesToMap = CommandMappingConfiguration.GetCommandProperties(command);
             var ctorQuery = from method in aggregateType.GetMethods()
                             where method.Name == info.MethodName
                             where method.GetParameters().Length == propertiesToMap.Count()

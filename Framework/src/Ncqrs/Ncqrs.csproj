@@ -84,9 +84,8 @@
     <Compile Include="Commanding\CommandExecution\Mapping\Actions\DirectMethodCommandInfo.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Actions\ObjectCreationCommandExecutor.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Actions\ObjectCreationCommandInfo.cs" />
-    <Compile Include="Commanding\CommandExecution\Mapping\AutoMapperConfiguration.cs" />
-    <Compile Include="Commanding\CommandExecution\Mapping\AutoMappingCommandExecutor.cs" />
-    <Compile Include="Commanding\CommandExecution\Mapping\AutoMappingException.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\CommandMappingConfiguration.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\MappedCommandExecutor.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\CommandMappingException.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Fluent\FluentAndWord.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Fluent\FluentCommandExecutorBuilderThatMapsTo.cs" />

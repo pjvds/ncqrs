@@ -7,7 +7,7 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping
     /// Occurs when there is no auto mapping found for a <see cref="ICommand"/>.
     /// </summary>
     [Serializable]
-    public class MappingForCommandNotFoundException : AutoMappingException
+    public class MappingForCommandNotFoundException : CommandMappingException
     {
         /// <summary>
         /// Gets the command.
@@ -25,7 +25,11 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping
         /// <param name="message">The message.</param>
         /// <param name="command">The command.</param>
         public MappingForCommandNotFoundException(string message, ICommand command)
-            : base(message)
+            : this(message, command, null)
+        {
+        }
+
+        public MappingForCommandNotFoundException(string message, ICommand command, Exception inner) : base(message, inner)
         {
             Command = command;
         }

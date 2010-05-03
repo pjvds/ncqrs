@@ -9,7 +9,7 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping
     /// <summary>
     /// Helper methods to get properties and parameter values from commands.
     /// </summary>
-    public static class CommandAutoMappingConfiguration
+    public static class CommandMappingConfiguration
     {
         /// <summary>
         /// Gets all the values for the parameters filled with the values from the command.

@@ -6,7 +6,7 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping
     /// <summary>
     /// A command handler that execute an action based on the mapping of a command.
     /// </summary>
-    public class AutoMappingCommandExecutor : ICommandExecutor
+    public class MappedCommandExecutor : ICommandExecutor
     {
         /// <summary>
         /// Executes the command.

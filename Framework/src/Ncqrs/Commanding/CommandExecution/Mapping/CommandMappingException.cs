@@ -7,7 +7,7 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping
     /// Occurs when the mapping of a command is invalid.
     /// </summary>
     [Serializable]
-    internal class CommandMappingException : Exception
+    public class CommandMappingException : Exception
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandMappingException"/> class with a specified error message.

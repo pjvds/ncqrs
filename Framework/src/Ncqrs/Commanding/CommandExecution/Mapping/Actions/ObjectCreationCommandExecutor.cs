@@ -22,7 +22,7 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Actions
             {
                 var targetCtor = GetConstructorBasedOnCommand(commandInfo, command);
 
-                var parameterValues = CommandAutoMappingConfiguration.GetParameterValues(command, targetCtor.GetParameters());
+                var parameterValues = CommandMappingConfiguration.GetParameterValues(command, targetCtor.GetParameters());
                 targetCtor.Invoke(parameterValues);
 
                 work.Accept();
@@ -32,7 +32,7 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Actions
         private ConstructorInfo GetConstructorBasedOnCommand(ObjectCreationCommandInfo commandInfo, ICommand command)
         {
             var aggregateType = commandInfo.AggregateType;
-            var propertiesToMap = CommandAutoMappingConfiguration.GetCommandProperties(command);
+            var propertiesToMap = CommandMappingConfiguration.GetCommandProperties(command);
             var ctorQuery = from ctor in aggregateType.GetConstructors()
                             where ctor.GetParameters().Length == propertiesToMap.Count()
                             where ParametersDoMatchPropertiesToMap(ctor.GetParameters(), propertiesToMap)
