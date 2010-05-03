@@ -12,6 +12,7 @@ namespace Ncqrs.Eventing
         /// <summary>
         /// Gets the unique identifier for this event.
         /// </summary>
+        /// <value>A <see cref="Guid"/> that represents the unique identifier of this event.</value>
         Guid EventIdentifier
         { 
             get;

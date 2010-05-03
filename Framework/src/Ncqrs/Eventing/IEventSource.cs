@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace Ncqrs.Eventing
 {
+    /// <summary>
+    /// An object that represents all his state changes via a sequence of events.
+    /// </summary>
     public interface IEventSource
     {
         /// <summary>
