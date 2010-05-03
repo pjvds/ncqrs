@@ -83,7 +83,7 @@ namespace Ncqrs.Domain.Mapping
 
         private static Boolean IsMarkedAsEventHandler(MethodInfo target, out EventHandlerAttribute attribute)
         {
-            if (target == null) throw new ArgumentNullException("target");
+            Contract.Requires<ArgumentNullException>(target != null, "The target cannot be null.");
 
             var attributeType = typeof(EventHandlerAttribute);
             var attributes = target.GetCustomAttributes(attributeType, false);
@@ -99,14 +99,14 @@ namespace Ncqrs.Domain.Mapping
 
         private static int NumberOfParameters(MethodInfo target)
         {
-            if (target == null) throw new ArgumentNullException("target");
+            Contract.Requires<ArgumentNullException>(target != null, "The target cannot be null.");
 
             return target.GetParameters().Count();
         }
 
         private static Type FirstParameterType(MethodInfo target)
         {
-            if (target == null) throw new ArgumentNullException("target");
+            Contract.Requires<ArgumentNullException>(target != null, "The target cannot be null.");
             if (NumberOfParameters(target) < 1) throw new ArgumentException("target does not contain parameters.");
 
             return target.GetParameters().First().ParameterType;
