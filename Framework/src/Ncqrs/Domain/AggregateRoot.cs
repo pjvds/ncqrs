@@ -151,6 +151,8 @@ namespace Ncqrs.Domain
 
         public void CommitEvents()
         {
+            this.Version += _uncommittedEvent.Count();
+
             // Clear the unaccepted event list.
             _uncommittedEvent.Clear();
         }

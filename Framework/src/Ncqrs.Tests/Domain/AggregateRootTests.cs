@@ -190,6 +190,25 @@ namespace Ncqrs.Tests.Domain
         }
 
         [Test]
+        public void Committing_the_events_higher_the_version()
+        {
+            using (NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork())
+            {
+                var theAggregate = new MyAggregateRoot();
+
+                theAggregate.MethodThatCausesAnEventThatHasAHandler();
+                theAggregate.MethodThatCausesAnEventThatHasAHandler();
+                theAggregate.MethodThatCausesAnEventThatHasAHandler();
+                theAggregate.MethodThatCausesAnEventThatHasAHandler();
+                theAggregate.MethodThatCausesAnEventThatHasAHandler();
+
+                theAggregate.CommitEvents();
+
+                theAggregate.Version.Should().Be(5);
+            }
+        }
+
+        [Test]
         public void Initializing_from_history_should_throw_an_exception_when_the_history_was_null()
         {
             IEnumerable<DomainEvent> nullHistory = null;
