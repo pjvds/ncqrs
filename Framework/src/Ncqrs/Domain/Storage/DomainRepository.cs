@@ -33,18 +33,7 @@ namespace Ncqrs.Domain.Storage
         public AggregateRoot GetById(Type aggregateRootType, Guid id)
         {
             var events = _store.GetAllEventsForEventSource(id).Cast<DomainEvent>();
-            AggregateRoot aggregate = null;
-
-            try
-            {
-                aggregate = _loader.LoadAggregateRootFromEvents(aggregateRootType, events);
-            }
-            catch (MissingMethodException)
-            {
-                // TODO: Retrow exception with better details that there is no public ctor found that takes a IEnumerable<HistoricalEvent>.
-                throw;
-            }
-
+            AggregateRoot aggregate = _loader.LoadAggregateRootFromEvents(aggregateRootType, events);
             return aggregate;
         }
 
