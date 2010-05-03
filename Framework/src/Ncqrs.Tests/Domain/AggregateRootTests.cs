@@ -112,21 +112,6 @@ namespace Ncqrs.Tests.Domain
         }
 
         [Test]
-        public void Applying_an_event_should_not_effect_the_version()
-        {
-            using (NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork())
-            {
-                var theAggregate = new MyAggregateRoot();
-                var versionBeforeAnyOperation = theAggregate.Version;
-
-                theAggregate.MethodThatCausesAnEventThatHasAHandler();
-                var versionAfterFooOperation = theAggregate.Version;
-
-                versionAfterFooOperation.Should().Be(versionBeforeAnyOperation);
-            }
-        }
-
-        [Test]
         public void Applying_an_event_when_there_is_no_unit_of_work_should_cause_an_exception()
         {
             var theAggregate = new MyAggregateRoot();
