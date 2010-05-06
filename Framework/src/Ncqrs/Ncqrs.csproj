@@ -94,11 +94,13 @@
     <Compile Include="Commanding\CommandExecution\Mapping\Fluent\FluentWhereWord.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Fluent\Mapping.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\MappingForCommandNotFoundException.cs" />
-    <Compile Include="Commanding\CommandExecution\CommandExecutionDispatcher.cs" />
     <Compile Include="Commanding\CommandExecution\CommandExecutorBase.cs" />
     <Compile Include="Commanding\CommandExecution\CommandExecutorNotFoundException.cs" />
     <Compile Include="Commanding\CommandExecution\ICommandExecutor.cs" />
+    <Compile Include="Commanding\ServiceModel\CommandContext.cs" />
+    <Compile Include="Commanding\ServiceModel\CommandServiceBase.cs" />
     <Compile Include="Commanding\ServiceModel\ICommandService.cs" />
+    <Compile Include="Commanding\ServiceModel\ICommandServiceInterceptor.cs" />
     <Compile Include="Commanding\ServiceModel\InProcessCommandService.cs" />
     <Compile Include="Commanding\CommandExecution\TransactionalCommandExecutorWrapper.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Attributes\AggregateRootIdAttribute.cs" />
