@@ -1,11 +1,12 @@
-glob:bin
-glob:obj
-glob:src/Ncqrs.suo
-glob:src/*ReSharper.user
+# Visual Studio 
+glob:*.user
 glob:*.suo
-glob:src/**.user
-glob:src/_ReSharper**
-glob:Framework/Ncqrs.5.0.ReSharper.user
-glob:Framework/_ReSharper.Ncqrs/**
-glob:Sample/Sample.5.0.ReSharper.user
-glob:Sample/_ReSharper**
+glob:*.cache
+glob:_ReSharper.*/
+relre:/obj/
+relre:/bin/
+
+# Misc
+glob:Thumbs.db
+glob:*.bak
+glob:*.log
