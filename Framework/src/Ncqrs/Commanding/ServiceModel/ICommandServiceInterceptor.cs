@@ -3,12 +3,12 @@
 namespace Ncqrs.Commanding.ServiceModel
 {
     /// <summary>
-    ///   Allows users to intercept commands before or after they has been
-    ///   executed in a command service. This allows them to add additional
-    ///   behavior before or after the execution of commands. The 
-    ///   <see cref = "OnBeforeExecution" /> method will be called before every
-    ///   command execution and <see cref = "OnAfterExecution" /> will be called
-    ///   after every command execution.
+    /// Allows users to intercept commands before or after they has been
+    /// executed in a command service. This allows them to add additional
+    /// behavior before or after the execution of commands. The 
+    /// <see cref = "OnBeforeExecution" /> method will be called before every
+    /// command execution and <see cref = "OnAfterExecution" /> will be called
+    /// after every command execution.
     /// </summary>
     /// <example>
     /// The following code explains the different things that could happen in
@@ -68,21 +68,31 @@ namespace Ncqrs.Commanding.ServiceModel
     public interface ICommandServiceInterceptor
     {
         /// <summary>
-        ///   Intercepts a command execution before the command will be executed,
-        ///   but after the handler is resolved.
+        /// Intercepts a command execution before the command executor is
+        /// resolved.
+        /// <para>In this method the interceptor may override the command by
+        /// setting the <see cref="CommandContext.TheCommand"/> property.</para>
+        /// </summary>
+        /// <param name="context">The context of the current command execution.
+        /// </param>
+        void OnBeforeBeforeExecutorResolving(CommandContext context);
+
+        /// <summary>
+        /// Intercepts a command execution before the command will be executed,
+        /// but after the executor has been resolved.
         /// </summary>
         /// <param name = "context">The context of the current command execution.
         /// </param>
         void OnBeforeExecution(CommandContext context);
 
         /// <summary>
-        ///   Intercepts a command execution when a exception has been occurred
-        ///   or after the command has been executed. See the 
-        ///   <see cref = "CommandContext.IsExecuted" /> to determine whether
-        ///   the command has been executed.
+        /// Intercepts a command execution when a exception has been occurred or
+        /// after the command has been executed. See the 
+        /// <see cref = "CommandContext.IsExecuted" /> to determine whether the
+        /// command has been executed.
         /// </summary>
         /// <param name = "context">The context of the current command
-        ///   execution.
+        /// execution.
         /// </param>
         void OnAfterExecution(CommandContext context);
     }

@@ -10,7 +10,7 @@ namespace Ncqrs.Commanding.ServiceModel
     /// interception.</summary>
     public class CommandContext
     {
-        private readonly ICommand _theCommand;
+        private ICommand _theCommand;
 
         /// <summary>
         /// <para>Gets the exception that has occurred while handling the event.
@@ -22,12 +22,16 @@ namespace Ncqrs.Commanding.ServiceModel
         /// has not.</value>
         public Exception Exception
         {
-            get; internal set;
+            get;
+            internal set;
         }
 
         /// <summary>
         /// Gets the command that will be or is executed.
         /// </summary>
+        /// <exception cref="InvalidOperationException">Occurs when this
+        /// property is set while the <see cref="TheCommandExecutor"/> property
+        /// has already been set.</exception>
         /// <value>This value is never <c>null</c>.</value>
         public ICommand TheCommand
         {
@@ -36,6 +40,11 @@ namespace Ncqrs.Commanding.ServiceModel
                 Contract.Ensures(Contract.Result<ICommand>() != null, "The result cannot be null.");
 
                 return _theCommand;
+            }
+            set
+            {
+                Contract.Requires<InvalidOperationException>(TheCommandExecutor == null, "Cannot override command when command executor is already resolved.");
+                _theCommand = value;
             }
         }
 
@@ -59,7 +68,8 @@ namespace Ncqrs.Commanding.ServiceModel
         /// executor found for the command.</value>
         public ICommandExecutor TheCommandExecutor
         {
-            get; internal set;
+            get;
+            internal set;
         }
 
         /// <summary>
@@ -73,7 +83,8 @@ namespace Ncqrs.Commanding.ServiceModel
         /// </value>
         public bool IsExecuted
         {
-            get; internal set;
+            get;
+            internal set;
         }
 
         /// <summary>
