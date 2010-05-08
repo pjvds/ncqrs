@@ -22,5 +22,15 @@ namespace Ncqrs.Commanding.ServiceModel
         {
             base.UnregisterExecutor(commandType, executor);
         }
+
+        public void AddInterceptor(ICommandServiceInterceptor interceptor)
+        {
+            base.AddInterceptor(interceptor);
+        }
+
+        public void RemoveInterceptor(ICommandServiceInterceptor interceptor)
+        {
+            base.RemoveInterceptor(interceptor);
+        }
     }
 }
