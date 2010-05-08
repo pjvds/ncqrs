@@ -19,6 +19,7 @@ namespace Ncqrs.Eventing.Conversion
             Contract.Ensures(Contract.Result<ISourcedEvent>().EventSourceId == eventToConvert.EventSourceId, "The EventSourceId should not be changed after conversion.");
             Contract.Ensures(Contract.Result<ISourcedEvent>().EventSequence == eventToConvert.EventSequence, "The EventSequence should not be changed after conversion.");
             Contract.Ensures(Contract.Result<ISourcedEvent>().EventIdentifier == eventToConvert.EventIdentifier, "The EventIdentifier should not be changed after conversion.");
+            Contract.Ensures(Contract.Result<ISourcedEvent>().GetType() != eventToConvert.GetType());
 
             return default(ISourcedEvent);
         }
