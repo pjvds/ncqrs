@@ -116,6 +116,15 @@ namespace Ncqrs.Commanding.ServiceModel
             return result;
         }
 
+        /// <summary>
+        /// Adds the interceptor. The interceptor will be called on every
+        /// command execution.
+        /// </summary>
+        /// <remarks>
+        /// When the interceptor was already added to this command service, it
+        /// is skipped. That means that it is not added twice.
+        /// </remarks>
+        /// <param name="interceptor">The interceptor to add.</param>
         protected virtual void AddInterceptor(ICommandServiceInterceptor interceptor)
         {
             if (!_interceptors.Contains(interceptor))
@@ -124,6 +133,10 @@ namespace Ncqrs.Commanding.ServiceModel
             }
         }
 
+        /// <summary>
+        /// Removes the interceptor. The interceptor will not be called anymore.
+        /// </summary>
+        /// <param name="interceptor">The interceptor to remove.</param>
         protected virtual void RemoveInterceptor(ICommandServiceInterceptor interceptor)
         {
             _interceptors.Remove(interceptor);
