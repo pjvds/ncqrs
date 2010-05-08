@@ -21,7 +21,7 @@ namespace Ncqrs.Commanding.ServiceModel
         public virtual void Execute(ICommand command)
         {
             Type commandType = command.GetType();
-            var context = new CommandServiceExecutionContext(command);
+            var context = new CommandContext(command);
 
             try
             {
