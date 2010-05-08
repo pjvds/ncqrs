@@ -6,6 +6,11 @@ namespace Ncqrs.Eventing.Conversion
     [ContractClass(typeof(IEventConverterContracts))]
     public interface IEventConverter
     {
+        /// <summary>
+        /// Converts an event to another event.
+        /// </summary>
+        /// <param name="eventToConvert">The event to convert.</param>
+        /// <returns>A new event based on the <paramref name="eventToConvert"/>. This is a different type that the type of the <see cref="eventToConvert"/>.</returns>
         ISourcedEvent Convert(ISourcedEvent eventToConvert);
     }
 
