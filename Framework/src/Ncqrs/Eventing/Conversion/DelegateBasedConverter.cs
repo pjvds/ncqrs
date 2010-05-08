@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 
-namespace Ncqrs.Eventing.Convertion
+namespace Ncqrs.Eventing.Conversion
 {
     public class DelegateBasedConverter<TIn, TOut> : IEventConverter
         where TIn : ISourcedEvent

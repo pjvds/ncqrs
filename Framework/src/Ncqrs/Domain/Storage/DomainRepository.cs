@@ -2,7 +2,7 @@
 using System.Diagnostics.Contracts;
 using System.Linq;
 using Ncqrs.Eventing;
-using Ncqrs.Eventing.Convertion;
+using Ncqrs.Eventing.Conversion;
 using Ncqrs.Eventing.ServiceModel.Bus;
 using Ncqrs.Eventing.Storage;
 using System.Collections.Generic;

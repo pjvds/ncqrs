@@ -114,10 +114,10 @@
     <Compile Include="Domain\DomainEvent.cs" />
     <Compile Include="Domain\IUnitOfWorkContext.cs" />
     <Compile Include="Domain\NoUnitOfWorkAvailableInThisContextException.cs" />
-    <Compile Include="Eventing\Convertion\DelegateBasedConverter.cs" />
+    <Compile Include="Eventing\Conversion\DelegateBasedConverter.cs" />
     <Compile Include="Eventing\EventBase.cs" />
-    <Compile Include="Eventing\Convertion\EventConverter.cs" />
-    <Compile Include="Eventing\Convertion\IEventConverter.cs" />
+    <Compile Include="Eventing\Conversion\EventConverter.cs" />
+    <Compile Include="Eventing\Conversion\IEventConverter.cs" />
     <Compile Include="Eventing\IEventSource.cs" />
     <Compile Include="Eventing\ISourcedEvent.cs" />
     <Compile Include="IClock.cs" />

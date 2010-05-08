@@ -1,7 +1,7 @@
 ﻿using System;
 using FluentAssertions;
 using Ncqrs.Eventing;
-using Ncqrs.Eventing.Convertion;
+using Ncqrs.Eventing.Conversion;
 using NUnit.Framework;
 using Ncqrs.Domain.Storage;
 using Rhino.Mocks;
