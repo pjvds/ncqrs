@@ -12,6 +12,7 @@ namespace Ncqrs.Domain.Storage
         private readonly IEventBus _eventBus;
         private readonly IEventStore _store;
         private readonly IAggregateRootLoader _loader;
+        private readonly IEventConverter _converter;
 
         public DomainRepository(IEventStore store, IEventBus eventBus) : this(store, eventBus, new DefaultAggregateRootLoader())
         {
@@ -19,7 +20,7 @@ namespace Ncqrs.Domain.Storage
             Contract.Requires<ArgumentNullException>(eventBus != null, "store cannot be null.");
         }
 
-        public DomainRepository(IEventStore store, IEventBus eventBus, IAggregateRootLoader loader)
+        public DomainRepository(IEventStore store, IEventBus eventBus, IAggregateRootLoader loader, IEventConverter converter)
         {
             Contract.Requires<ArgumentNullException>(store != null);
             Contract.Requires<ArgumentNullException>(eventBus != null);
@@ -28,11 +29,13 @@ namespace Ncqrs.Domain.Storage
             _store = store;
             _eventBus = eventBus;
             _loader = loader;
+            _converter = converter;
         }
 
         public AggregateRoot GetById(Type aggregateRootType, Guid id)
         {
             var events = _store.GetAllEventsForEventSource(id).Cast<DomainEvent>();
+
             AggregateRoot aggregate = _loader.LoadAggregateRootFromEvents(aggregateRootType, events);
             return aggregate;
         }
