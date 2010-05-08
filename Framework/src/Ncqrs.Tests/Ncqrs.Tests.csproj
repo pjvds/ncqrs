@@ -91,6 +91,7 @@
     <Compile Include="Domain\Storage\DefaultAggregateRootLoaderTests.cs" />
     <Compile Include="Domain\Storage\DomainRepositoryTests.cs" />
     <Compile Include="Domain\UnitOfWorkTests.cs" />
+    <Compile Include="Eventing\Conversion\EventConverterTests.cs" />
     <Compile Include="Eventing\Storage\ConcurrencyExceptionSpecs.cs" />
     <Compile Include="NcqrsEnvironmentConfigurationExceptionSpecs.cs" />
     <Compile Include="NcqrsEnvironmentSpecs.cs" />
@@ -107,9 +108,7 @@
       <Name>Ncqrs</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Eventing\Conversion\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -28,7 +28,8 @@ namespace Ncqrs.Eventing.Conversion
 
             if(_converters.TryGetValue(eventType, out converter))
             {
-                convertedEvent = converter.Convert(eventToConvert);    
+                var e = converter.Convert(eventToConvert);
+                convertedEvent = Convert(e);
             }
 
             return convertedEvent;
