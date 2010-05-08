@@ -38,11 +38,11 @@ namespace Ncqrs.Commanding.ServiceModel
                     throw new CommandExecutorNotFoundException(commandType);
                 }
 
-                // Execute the command.
-                executor.Execute(command);
-
                 // Set mark that the command is executed.
                 context.IsExecuted = true;
+
+                // Execute the command.
+                executor.Execute(command);
             }
             catch(Exception caught)
             {
