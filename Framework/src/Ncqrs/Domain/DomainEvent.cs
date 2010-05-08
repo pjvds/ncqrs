@@ -75,5 +75,20 @@ namespace Ncqrs.Domain
             EventTimeStamp = clock.UtcNow();
             EventIdentifier = idGenerator.GenerateNewId();
         }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DomainEvent"/> class.
+        /// </summary>
+        /// <param name="eventIdentifier">The event identifier.</param>
+        /// <param name="aggregateRootId">The aggregate root id.</param>
+        /// <param name="eventSequence">The event sequence.</param>
+        /// <param name="eventTimeStamp">The event time stamp.</param>
+        protected DomainEvent(Guid eventIdentifier, Guid aggregateRootId, long eventSequence, DateTime eventTimeStamp)
+        {
+            EventIdentifier = eventIdentifier;
+            AggregateRootId = aggregateRootId;
+            EventSequence = eventSequence;
+            EventTimeStamp = eventTimeStamp;
+        }
     }
 }
