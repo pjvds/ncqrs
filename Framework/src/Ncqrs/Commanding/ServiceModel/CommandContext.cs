@@ -1,5 +1,6 @@
 ﻿using System;
 using Ncqrs.Commanding.CommandExecution;
+using System.Diagnostics.Contracts;
 
 namespace Ncqrs.Commanding.ServiceModel
 {
@@ -9,6 +10,8 @@ namespace Ncqrs.Commanding.ServiceModel
     /// interception.</summary>
     public class CommandContext
     {
+        private readonly ICommand _theCommand;
+
         /// <summary>
         /// <para>Gets the exception that has occurred while handling the event.
         /// Use the <see cref="IsExecuted"></see> property to determine whether
@@ -28,7 +31,24 @@ namespace Ncqrs.Commanding.ServiceModel
         /// <value>This value is never <c>null</c>.</value>
         public ICommand TheCommand
         {
-            get; internal set;
+            get
+            {
+                Contract.Ensures(Contract.Result<ICommand>() != null, "The result cannot be null.");
+
+                return _theCommand;
+            }
+        }
+
+        /// <summary>
+        /// Gets the type of the command.
+        /// </summary>
+        /// <value>The type of the command.</value>
+        public Type TheCommandType
+        {
+            get
+            {
+                return TheCommand.GetType();
+            }
         }
 
         /// <summary>
@@ -62,7 +82,9 @@ namespace Ncqrs.Commanding.ServiceModel
         /// <param name="theCommand">The command that will be executed.</param>
         public CommandContext(ICommand theCommand)
         {
-            TheCommand = theCommand;
+            Contract.Requires<ArgumentNullException>(theCommand != null, "The theCommand cannot be null.");
+
+            _theCommand = theCommand;
         }
     }
 }
