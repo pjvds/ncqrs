@@ -16,6 +16,16 @@ namespace Ncqrs.Commanding.ServiceModel
     /// <code lang="c#">
     /// public class SampleInterceptor : ICommandServiceInterceptor
     /// {
+    ///     public void OnBeforeBeforeExecutorResolving(CommandContext context)
+    ///     {
+    ///         if(context.TheCommandType == typeof(MyCommand))
+    ///         {
+    ///             // Convert the command to MyCommandV2.
+    ///             MyCommand cmd = (MyCommand)context.TheCommand;
+    ///             context.TheCommandType = MyCommandV2.CreateFrom(cmd);
+    ///         }
+    ///     }
+    /// 
     ///     public void OnBeforeExecution(CommandContext context)
     ///     {
     ///         // Null when no executor was found for the command; otherwise, it hold
