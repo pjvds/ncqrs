@@ -85,8 +85,7 @@ namespace Ncqrs.Eventing.Storage.SQL
         public void Save(IEventSource eventSource)
         {
             // Get all events.
-            // TODO: .net 4.0 co/con
-            IEnumerable<ISourcedEvent> events = eventSource.GetUncommittedEvents().Cast<ISourcedEvent>();
+            IEnumerable<ISourcedEvent> events = eventSource.GetUncommittedEvents();
 
             // Create new connection.
             using (var connection = new SqlConnection(_connectionString))
@@ -266,8 +265,8 @@ namespace Ncqrs.Eventing.Storage.SQL
         /// <returns>Queries that contain the <i>create table</i> statements.</returns>
         public static IEnumerable<String> GetTableCreationQueries()
         {
-            yield return @"CREATE TABLE [dbo].[Events]([EventSourceId] [uniqueidentifier] NOT NULL, [Sequence] [bigint], [TimeStamp] [datetime] NOT NULL, [Data] [varbinary](max) NOT NULL, [Name] [varchar](max) NOT NULL) ON [PRIMARY]";
-            yield return @"CREATE TABLE [dbo].[EventSources]([Id] [uniqueidentifier] NOT NULL, [Type] [nvarchar](255) NOT NULL, [Version] [int] NOT NULL) ON [PRIMARY]";
+            yield return "CREATE TABLE [dbo].[Events]([EventSourceId] [uniqueidentifier] NOT NULL, [Sequence] [bigint], [TimeStamp] [datetime] NOT NULL, [Data] [varbinary](max) NOT NULL, [Name] [varchar](max) NOT NULL) ON [PRIMARY]";
+            yield return "CREATE TABLE [dbo].[EventSources]([Id] [uniqueidentifier] NOT NULL, [Type] [nvarchar](255) NOT NULL, [Version] [int] NOT NULL) ON [PRIMARY]";
         }
     }
 }
