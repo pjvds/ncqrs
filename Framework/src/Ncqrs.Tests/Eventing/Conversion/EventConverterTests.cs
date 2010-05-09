@@ -123,5 +123,14 @@ namespace Ncqrs.Tests.Eventing.Conversion
 
             converter.Convert(new FooEventV1()).Should().BeOfType<FooEventV3>();
         }
+
+        [Test]
+        public void Converting_should_stop_when_a_converter_converted_to_same_type()
+        {
+            var converter = new EventConverter();
+            converter.AddConverter((BarEventV1 e) => e);
+
+            converter.Convert(new BarEventV1());
+        }
     }
 }

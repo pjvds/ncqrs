@@ -66,25 +66,17 @@ namespace Ncqrs.Tests.Domain.Storage
             var store = MockRepository.GenerateMock<IEventStore>();
             var bus = MockRepository.GenerateMock<IEventBus>();
             var loader = MockRepository.GenerateMock<IAggregateRootLoader>();
-            
-            var fooConverter = MockRepository.GenerateMock<IEventConverter>();
-            var barConverter = MockRepository.GenerateMock<IEventConverter>();
-
-            var converter = new EventConverter()
-                .AddConverter(typeof(FooEvent), fooConverter)
-                .AddConverter(typeof(BarEvent), barConverter);
+            var converter = MockRepository.GenerateMock<IEventConverter>();
 
             var aggId = Guid.NewGuid();
             var eventsInTheStore = new DomainEvent[] { new FooEvent(), new BarEvent() };
             store.Expect(s => s.GetAllEventsForEventSource(aggId)).Return(eventsInTheStore);
-            fooConverter.Expect(c => c.Convert(null)).IgnoreArguments().Return(eventsInTheStore[0]);
-            barConverter.Expect(c => c.Convert(null)).IgnoreArguments().Return(eventsInTheStore[1]);
 
             var repository = new DomainRepository(store, bus, converter, loader);
+
             repository.GetById<MyAggregateRoot>(aggId);
 
-            fooConverter.VerifyAllExpectations();
-            barConverter.VerifyAllExpectations();
+            converter.AssertWasCalled(c => c.Convert(null),options => options.IgnoreArguments().Repeat.Twice());
         }
 
         [Test]
