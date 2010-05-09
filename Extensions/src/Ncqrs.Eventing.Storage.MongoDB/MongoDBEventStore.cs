@@ -84,10 +84,10 @@ namespace Ncqrs.Eventing.Storage.MongoDB
             sources.Update(new DBQuery()
                                {
                                    {"_SourceId", source.Id.ToString()},
-                                   {"_Version", source.Version}
+                                   {"_Version", source.InitialVersion}
                                }
                            , Do.AddEachToSet("Events", arrayOfEventsAsIdbObjects
-                                 ).Inc("_Version", arrayOfEventsAsIdbObjects.Length));
+                                 ).Set("_Version", source.Version));
         }
 
         protected void VerifyUpdateSuccessful(IEventSource source)
