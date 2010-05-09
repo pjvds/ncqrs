@@ -35,7 +35,7 @@ namespace Ncqrs.Eventing.Storage.MongoDB
 
             if (source == null) return new ISourcedEvent[] { };
 
-            var eventsAsDbObjects = ((DBObjectArray)source["Events"]).Values.Cast<IDBObject>();
+            var eventsAsDbObjects = ((DBObjectArray)source["_Events"]).Values.Cast<IDBObject>();
 
             //no benefit yield now we have single doc - might confused people due to lazy style invocation - esp if exception thrown
             var events = new List<ISourcedEvent>();
@@ -45,7 +45,8 @@ namespace Ncqrs.Eventing.Storage.MongoDB
                 events.Add(DeserializeToEventIDBObject(eventDbObject));
             }
 
-            return events;
+            // todo: Add order to the query for optimization.
+            return events.OrderBy(evnt => evnt.EventSequence);
         }
 
         public virtual void Save(IEventSource source)
@@ -57,6 +58,7 @@ namespace Ncqrs.Eventing.Storage.MongoDB
             if (IsNewEventSource(source))
             {
                 InsertNewEventSource(source, eventsToSave, sources);
+                VerifyInsertSuccessful(source);
             }
             else
             {
@@ -96,7 +98,7 @@ namespace Ncqrs.Eventing.Storage.MongoDB
         {
             var lastError = database.GetLastError();
             var errorMessage = lastError.ErrorMessage;
-            bool isInserted = !String.IsNullOrEmpty(errorMessage);
+            bool isInserted = String.IsNullOrEmpty(errorMessage);
 
             if(!isInserted)
             {
