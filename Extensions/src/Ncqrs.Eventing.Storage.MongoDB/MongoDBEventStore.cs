@@ -108,7 +108,7 @@ namespace Ncqrs.Eventing.Storage.MongoDB
 
         private bool IsNewEventSource(IEventSource source)
         {
-            return source.Version == 0;
+            return source.InitialVersion == 0;
         }
 
         protected static IDBObject ConvertEventToIDBObject(IEventSource eventSource, IEvent @event)

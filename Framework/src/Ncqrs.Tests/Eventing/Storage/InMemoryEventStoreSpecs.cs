@@ -37,6 +37,11 @@ namespace Ncqrs.Tests.Eventing.Storage
             public void AcceptChanges()
             {
             }
+
+            public long InitialVersion
+            {
+                get; set;
+            }
         }
 
         public class SomethingDoneEvent : DomainEvent

@@ -37,28 +37,28 @@ namespace Ncqrs.Domain
         private readonly Stack<DomainEvent> _uncommittedEvent = new Stack<DomainEvent>(0);
 
         /// <summary>
-        /// Gets the current version of the aggregate root as it is known in the event store.
+        /// Gets the current version of the instance as it is known in the event store.
         /// </summary>
-        /// <remarks>
-        /// <para>
-        /// This represents the committed version of this instance. When this instance was retrieved
-        /// via history, it contains the version as it was at that time. For new instances this value is always 0.
-        /// </para>
-        /// <para>
-        /// The version does not change until changes are accepted via the <see cref="AcceptChanges"/> method.
-        /// </para>
-        /// </remarks>
-        /// <value>An <see cref="int"/> representing the current version of this aggregate root.</value>
+        /// <value>
+        /// An <see cref="long"/> representing the current version of this aggregate root.
+        /// </value>
         public long Version
         {
             get
             {
-                return InitialVersion + _uncommittedEvent.Count;                
+                return InitialVersion + _uncommittedEvent.Count;
             }
         }
 
         /// <summary>
         /// Gets the initial version.
+        /// <para>
+        /// This represents the current version of this instance. When this instance was retrieved
+        /// via history, it contains the version as it was at that time. For new instances this value is always 0.
+        /// </para>
+        /// 	<para>
+        /// The version does not change until changes are accepted via the <see cref="AcceptChanges"/> method.
+        /// </para>
         /// </summary>
         /// <value>The initial version.</value>
         public long InitialVersion

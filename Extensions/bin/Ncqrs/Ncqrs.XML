@@ -61,6 +61,16 @@
             <code lang="c#">
             public class SampleInterceptor : ICommandServiceInterceptor
             {
+                public void OnBeforeBeforeExecutorResolving(CommandContext context)
+                {
+                    if(context.TheCommandType == typeof(MyCommand))
+                    {
+                        // Convert the command to MyCommandV2.
+                        MyCommand cmd = (MyCommand)context.TheCommand;
+                        context.TheCommandType = MyCommandV2.CreateFrom(cmd);
+                    }
+                }
+            
                 public void OnBeforeExecution(CommandContext context)
                 {
                     // Null when no executor was found for the command; otherwise, it hold
@@ -315,8 +325,20 @@
     </member>
     <member name="P:Ncqrs.Eventing.IEventSource.Version">
       <summary>
-            Gets the version of this source.
+            Gets the current version of the instance as it is known in the event store.
             </summary>
+      <value>An <see cref="T:System.Int64" /> representing the current version of this aggregate root.</value>
+    </member>
+    <member name="P:Ncqrs.Eventing.IEventSource.InitialVersion">
+      <summary>
+            Gets the initial version.
+            <para>
+            This represents the current version of this instance. When this instance was retrieved
+            via history, it contains the version as it was at that time. For new instances this value is always 0.
+            </para><para>
+            The version does not change until changes are accepted via the <see cref="M:Ncqrs.Eventing.IEventSource.AcceptChanges" /> method.
+            </para></summary>
+      <value>The initial version.</value>
     </member>
     <member name="F:Ncqrs.Domain.AggregateRoot._uncommittedEvent">
       <summary>
@@ -355,23 +377,21 @@
     </member>
     <member name="P:Ncqrs.Domain.AggregateRoot.Version">
       <summary>
-            Gets the current version of the aggregate root as it is known in the event store.
+            Gets the current version of the instance as it is known in the event store.
             </summary>
-      <remarks>
-        <para>
-            This represents the committed version of this instance. When this instance was retrieved
-            via history, it contains the version as it was at that time. For new instances this value is always 0.
-            </para>
-        <para>
-            The version does not change until changes are accepted via the <see cref="M:Ncqrs.Domain.AggregateRoot.AcceptChanges" /> method.
-            </para>
-      </remarks>
-      <value>An <see cref="T:System.Int32" /> representing the current version of this aggregate root.</value>
+      <value>
+            An <see cref="T:System.Int64" /> representing the current version of this aggregate root.
+            </value>
     </member>
     <member name="P:Ncqrs.Domain.AggregateRoot.InitialVersion">
       <summary>
             Gets the initial version.
-            </summary>
+            <para>
+            This represents the current version of this instance. When this instance was retrieved
+            via history, it contains the version as it was at that time. For new instances this value is always 0.
+            </para><para>
+            The version does not change until changes are accepted via the <see cref="M:Ncqrs.Domain.AggregateRoot.AcceptChanges" /> method.
+            </para></summary>
       <value>The initial version.</value>
     </member>
     <member name="T:Ncqrs.Domain.Mapping.ConventionBasedDomainEventHandlerMappingStrategy">
@@ -561,6 +581,15 @@
             <see cref="P:Ncqrs.Domain.DomainEvent.EventTimeStamp" /> with the value from the 
             <see cref="T:Ncqrs.IClock" /> that is gotten from the 
             <see cref="T:Ncqrs.NcqrsEnvironment" />.</remarks>
+    </member>
+    <member name="M:Ncqrs.Domain.DomainEvent.#ctor(System.Guid,System.Guid,System.Int64,System.DateTime)">
+      <summary>
+            Initializes a new instance of the <see cref="T:Ncqrs.Domain.DomainEvent" /> class.
+            </summary>
+      <param name="eventIdentifier">The event identifier.</param>
+      <param name="aggregateRootId">The aggregate root id.</param>
+      <param name="eventSequence">The event sequence.</param>
+      <param name="eventTimeStamp">The event time stamp.</param>
     </member>
     <member name="P:Ncqrs.Domain.DomainEvent.EventIdentifier">
       <summary>
@@ -1008,6 +1037,82 @@
       <exception cref="T:System.ArgumentNullException">Thrown when <i>command</i> is null.</exception>
       <returns>A result set containing all properties that should be used in the auto mapping process.</returns>
     </member>
+    <member name="T:Ncqrs.Eventing.Conversion.EventConverter">
+      <summary>
+            A dispatcher that dispatch event conversion to the converters that have been added based on event type.
+            When an event should be converted it resolved the corresponding converter and uses that one to convert the event. When there
+            is also a converter that can convert the result of that conversion that one is called.
+            </summary>
+    </member>
+    <member name="T:Ncqrs.Eventing.Conversion.IEventConverter">
+      <summary>
+            Converts an event into another event.
+            <para>
+            This can be used to handle changes in events. Instead of changing an
+            existing event by for example adding a new property to it you should
+            introduce a new event. When you have done this you should create a
+            converter that can convert all the old to events to the new introduced
+            event.
+            </para></summary>
+    </member>
+    <member name="M:Ncqrs.Eventing.Conversion.IEventConverter.Convert(Ncqrs.Eventing.ISourcedEvent)">
+      <summary>
+            Converts an event. It return a new transformed event based on the 
+            <paramref name="eventToConvert" />. The 
+            <see cref="P:Ncqrs.Eventing.ISourcedEvent.EventSourceId" />, 
+            <see cref="P:Ncqrs.Eventing.ISourcedEvent.EventSequence" />, 
+            <see cref="!:ISourcedEvent.EventIdentifier" /> and the 
+            <see cref="!:ISourcedEvent.EventTimeStamp" /> should stay the same.
+            </summary>
+      <param name="eventToConvert">The event to convert.</param>
+      <returns>A new event based on the <paramref name="eventToConvert" />.
+            </returns>
+      <requires description="The eventToConvert cannot be null." exception="T:System.ArgumentNullException">eventToConvert != null</requires>
+      <exception cref="T:System.ArgumentNullException">eventToConvert == null</exception>
+      <ensures description="The EventSourceId should not be changed after conversion.">Contract.Result&lt;ISourcedEvent&gt;().EventSourceId == eventToConvert.EventSourceId</ensures>
+      <ensures description="The EventSequence should not be changed after conversion.">Contract.Result&lt;ISourcedEvent&gt;().EventSequence == eventToConvert.EventSequence</ensures>
+      <ensures description="The EventIdentifier should not be changed after conversion.">Contract.Result&lt;ISourcedEvent&gt;().EventIdentifier == eventToConvert.EventIdentifier</ensures>
+      <ensures description="The EventTimeStamp should not be changed after conversion.">Contract.Result&lt;ISourcedEvent&gt;().EventTimeStamp == eventToConvert.EventTimeStamp</ensures>
+    </member>
+    <member name="M:Ncqrs.Eventing.Conversion.EventConverter.AddConverter``2(System.Converter{``0,``1})">
+      <summary>
+            Adds the converter for a specific event type.
+            </summary>
+      <typeparam name="TFrom">The type of the event that will be converted.</typeparam>
+      <typeparam name="TTo">The type of the result of the conversion.</typeparam>
+      <param name="converter">The converter method that does the conversion.</param>
+      <returns>The current <see cref="T:Ncqrs.Eventing.Conversion.EventConverter" /> that can be used to chain method calls.</returns>
+      <requires description="The converter cannot be null." exception="T:System.ArgumentNullException">converter != null</requires>
+      <exception cref="T:System.ArgumentNullException">converter == null</exception>
+    </member>
+    <member name="M:Ncqrs.Eventing.Conversion.EventConverter.AddConverter(System.Type,Ncqrs.Eventing.Conversion.IEventConverter)">
+      <summary>
+            Adds the converter for a specific event type.
+            </summary>
+      <param name="eventSourceType">The type of the event that will be converted.</param>
+      <param name="converter">The converter method that does the conversion.</param>
+      <returns>The current <see cref="T:Ncqrs.Eventing.Conversion.EventConverter" /> that can be used to chain method calls.</returns>
+      <requires description="The eventSourceType cannot be null." exception="T:System.ArgumentNullException">eventSourceType != null</requires>
+      <exception cref="T:System.ArgumentNullException">eventSourceType == null</exception>
+      <requires description="The converter cannot be null." exception="T:System.ArgumentNullException">converter != null</requires>
+      <exception cref="T:System.ArgumentNullException">converter == null</exception>
+    </member>
+    <member name="M:Ncqrs.Eventing.Conversion.EventConverter.Convert(Ncqrs.Eventing.ISourcedEvent)">
+      <summary>
+            Converts an event. It uses all converters available to convert the given event. That means that when an event of Evnt_V1 is given and there are converters
+            that can convert Evnt_V1 intro Evnt_V2 and Evnt_V2 in Evnt_V3, the result of this method is a conversion from Evnt_V1 to Evnt_V3.
+            </summary>
+      <param name="eventToConvert">The event to convert.</param>
+      <returns>
+            A new event based on the <paramref name="eventToConvert" />.
+            </returns>
+      <requires description="The eventToConvert cannot be null." inheritedFrom="M:Ncqrs.Eventing.Conversion.IEventConverter.Convert(Ncqrs.Eventing.ISourcedEvent)" inheritedFromTypeName="IEventConverter" exception="T:System.ArgumentNullException">eventToConvert != null</requires>
+      <exception cref="T:System.ArgumentNullException">eventToConvert == null</exception>
+      <ensures description="The EventSourceId should not be changed after conversion." inheritedFrom="M:Ncqrs.Eventing.Conversion.IEventConverter.Convert(Ncqrs.Eventing.ISourcedEvent)" inheritedFromTypeName="IEventConverter">Contract.Result&lt;ISourcedEvent&gt;().EventSourceId == eventToConvert.EventSourceId</ensures>
+      <ensures description="The EventSequence should not be changed after conversion." inheritedFrom="M:Ncqrs.Eventing.Conversion.IEventConverter.Convert(Ncqrs.Eventing.ISourcedEvent)" inheritedFromTypeName="IEventConverter">Contract.Result&lt;ISourcedEvent&gt;().EventSequence == eventToConvert.EventSequence</ensures>
+      <ensures description="The EventIdentifier should not be changed after conversion." inheritedFrom="M:Ncqrs.Eventing.Conversion.IEventConverter.Convert(Ncqrs.Eventing.ISourcedEvent)" inheritedFromTypeName="IEventConverter">Contract.Result&lt;ISourcedEvent&gt;().EventIdentifier == eventToConvert.EventIdentifier</ensures>
+      <ensures description="The EventTimeStamp should not be changed after conversion." inheritedFrom="M:Ncqrs.Eventing.Conversion.IEventConverter.Convert(Ncqrs.Eventing.ISourcedEvent)" inheritedFromTypeName="IEventConverter">Contract.Result&lt;ISourcedEvent&gt;().EventTimeStamp == eventToConvert.EventTimeStamp</ensures>
+    </member>
     <member name="T:Ncqrs.DateTimeBasedClock">
       <summary>
             A clock that is based on the <see cref="T:System.DateTime" /> class from the .NET framework.
@@ -1454,6 +1559,47 @@
             Initializes a new instance of the <see cref="T:Ncqrs.Domain.AggregateRootMappedByConvention" /> class.
             </summary>
     </member>
+    <member name="T:Ncqrs.Eventing.Conversion.DelegateBasedConverter`2">
+      <summary>
+            A converter that uses a <see cref="T:System.Converter`2" /> delegate to execute the actual conversion.
+            <para>
+            The
+            <see cref="P:Ncqrs.Eventing.ISourcedEvent.EventSourceId" />,
+            <see cref="P:Ncqrs.Eventing.ISourcedEvent.EventSequence" />,
+            <see cref="!:ISourcedEvent.EventIdentifier" /> and the
+            <see cref="!:ISourcedEvent.EventTimeStamp" /> should stay the same.
+            </para></summary>
+      <typeparam name="TFrom">The type of the event that will be converted.</typeparam>
+      <typeparam name="TTo">The type of the result of the conversion.</typeparam>
+    </member>
+    <member name="M:Ncqrs.Eventing.Conversion.DelegateBasedConverter`2.#ctor(System.Converter{`0,`1})">
+      <summary>
+            Initializes a new instance of the <see cref="T:Ncqrs.Eventing.Conversion.DelegateBasedConverter`2" /> class.
+            </summary>
+      <param name="converter">The converter that will do the actual conversion.</param>
+      <requires description="The converter cannot be null." exception="T:System.ArgumentNullException">converter != null</requires>
+      <exception cref="T:System.ArgumentNullException">converter == null</exception>
+    </member>
+    <member name="M:Ncqrs.Eventing.Conversion.DelegateBasedConverter`2.Convert(Ncqrs.Eventing.ISourcedEvent)">
+      <summary>
+            Converts an event. It return a new transformed event based on the
+            <paramref name="eventToConvert" />. The
+            <see cref="P:Ncqrs.Eventing.ISourcedEvent.EventSourceId" />,
+            <see cref="P:Ncqrs.Eventing.ISourcedEvent.EventSequence" />,
+            <see cref="!:ISourcedEvent.EventIdentifier" /> and the
+            <see cref="!:ISourcedEvent.EventTimeStamp" /> should stay the same.
+            </summary>
+      <param name="eventToConvert">The event to convert.</param>
+      <returns>
+            A new event based on the <paramref name="eventToConvert" />.
+            </returns>
+      <requires description="The eventToConvert cannot be null." inheritedFrom="M:Ncqrs.Eventing.Conversion.IEventConverter.Convert(Ncqrs.Eventing.ISourcedEvent)" inheritedFromTypeName="IEventConverter" exception="T:System.ArgumentNullException">eventToConvert != null</requires>
+      <exception cref="T:System.ArgumentNullException">eventToConvert == null</exception>
+      <ensures description="The EventSourceId should not be changed after conversion." inheritedFrom="M:Ncqrs.Eventing.Conversion.IEventConverter.Convert(Ncqrs.Eventing.ISourcedEvent)" inheritedFromTypeName="IEventConverter">Contract.Result&lt;ISourcedEvent&gt;().EventSourceId == eventToConvert.EventSourceId</ensures>
+      <ensures description="The EventSequence should not be changed after conversion." inheritedFrom="M:Ncqrs.Eventing.Conversion.IEventConverter.Convert(Ncqrs.Eventing.ISourcedEvent)" inheritedFromTypeName="IEventConverter">Contract.Result&lt;ISourcedEvent&gt;().EventSequence == eventToConvert.EventSequence</ensures>
+      <ensures description="The EventIdentifier should not be changed after conversion." inheritedFrom="M:Ncqrs.Eventing.Conversion.IEventConverter.Convert(Ncqrs.Eventing.ISourcedEvent)" inheritedFromTypeName="IEventConverter">Contract.Result&lt;ISourcedEvent&gt;().EventIdentifier == eventToConvert.EventIdentifier</ensures>
+      <ensures description="The EventTimeStamp should not be changed after conversion." inheritedFrom="M:Ncqrs.Eventing.Conversion.IEventConverter.Convert(Ncqrs.Eventing.ISourcedEvent)" inheritedFromTypeName="IEventConverter">Contract.Result&lt;ISourcedEvent&gt;().EventTimeStamp == eventToConvert.EventTimeStamp</ensures>
+    </member>
     <member name="T:Ncqrs.Domain.NoUnitOfWorkAvailableInThisContextException">
       <summary>
             Thrown when a <see cref="!:IUnitOfWork" /> is requested but was not available in the context.
@@ -1556,6 +1702,14 @@
       <requires inheritedFrom="M:Ncqrs.Domain.Storage.IDomainRepository.GetById(System.Type,System.Guid)" inheritedFromTypeName="IDomainRepository" exception="T:System.ArgumentNullException">aggregateRootType != null</requires>
       <exception cref="T:System.ArgumentNullException">aggregateRootType == null</exception>
     </member>
+    <member name="M:Ncqrs.Domain.Storage.DomainRepository.#ctor(Ncqrs.Eventing.Storage.IEventStore,Ncqrs.Eventing.ServiceModel.Bus.IEventBus,Ncqrs.Eventing.Conversion.IEventConverter,Ncqrs.Domain.Storage.IAggregateRootLoader)">
+      <requires exception="T:System.ArgumentNullException">store != null</requires>
+      <exception cref="T:System.ArgumentNullException">store == null</exception>
+      <requires exception="T:System.ArgumentNullException">eventBus != null</requires>
+      <exception cref="T:System.ArgumentNullException">eventBus == null</exception>
+      <requires exception="T:System.ArgumentNullException">loader != null</requires>
+      <exception cref="T:System.ArgumentNullException">loader == null</exception>
+    </member>
     <member name="M:Ncqrs.Domain.Storage.DomainRepository.#ctor(Ncqrs.Eventing.Storage.IEventStore,Ncqrs.Eventing.ServiceModel.Bus.IEventBus)">
       <requires description="store cannot be null." exception="T:System.ArgumentNullException">store != null</requires>
       <exception cref="T:System.ArgumentNullException">store == null</exception>
@@ -1566,17 +1720,29 @@
       <requires inheritedFrom="M:Ncqrs.Domain.Storage.IDomainRepository.Save(Ncqrs.Domain.AggregateRoot)" inheritedFromTypeName="IDomainRepository" exception="T:System.ArgumentNullException">aggregateRootToSave != null</requires>
       <exception cref="T:System.ArgumentNullException">aggregateRootToSave == null</exception>
     </member>
-    <member name="M:Ncqrs.Domain.Storage.DomainRepository.#ctor(Ncqrs.Eventing.Storage.IEventStore,Ncqrs.Eventing.ServiceModel.Bus.IEventBus,Ncqrs.Domain.Storage.IAggregateRootLoader)">
-      <requires exception="T:System.ArgumentNullException">store != null</requires>
-      <exception cref="T:System.ArgumentNullException">store == null</exception>
-      <requires exception="T:System.ArgumentNullException">eventBus != null</requires>
-      <exception cref="T:System.ArgumentNullException">eventBus == null</exception>
-      <requires exception="T:System.ArgumentNullException">loader != null</requires>
-      <exception cref="T:System.ArgumentNullException">loader == null</exception>
+    <member name="M:Ncqrs.Domain.AggregateRoot.GetUncommittedEvents">
+      <ensures description="The result of this method should never be null.">Contract.Result&lt;IEnumerable&lt;DomainEvent&gt;&gt;() != null</ensures>
     </member>
-    <member name="M:Ncqrs.Domain.DomainEventHandler`1.Ncqrs#Domain#IDomainEventHandler#HandleEvent(Ncqrs.Domain.DomainEvent)">
-      <requires description="The evnt cannot be null." inheritedFrom="M:Ncqrs.Domain.IDomainEventHandler.HandleEvent(Ncqrs.Domain.DomainEvent)" inheritedFromTypeName="IDomainEventHandler" exception="T:System.ArgumentNullException">evnt != null</requires>
+    <member name="M:Ncqrs.Domain.AggregateRoot.RegisterHandler(Ncqrs.Domain.IDomainEventHandler)">
+      <requires description="The handler cannot be null." exception="T:System.ArgumentNullException">handler != null</requires>
+      <exception cref="T:System.ArgumentNullException">handler == null</exception>
+    </member>
+    <member name="M:Ncqrs.Domain.AggregateRoot.HandleEvent(Ncqrs.Domain.DomainEvent)">
+      <requires description="The evnt cannot be null." exception="T:System.ArgumentNullException">evnt != null</requires>
       <exception cref="T:System.ArgumentNullException">evnt == null</exception>
+    </member>
+    <member name="M:Ncqrs.Domain.Mapping.MappedAggregateRoot.#ctor(Ncqrs.Domain.Mapping.IDomainEventHandlerMappingStrategy)">
+      <requires description="The strategy cannot be null." exception="T:System.ArgumentNullException">strategy != null</requires>
+      <exception cref="T:System.ArgumentNullException">strategy == null</exception>
+    </member>
+    <member name="M:Ncqrs.Domain.Mapping.ConventionBasedDomainEventHandlerMappingStrategy.GetEventHandlersFromAggregateRoot(Ncqrs.Domain.AggregateRoot)">
+      <requires description="The aggregateRoot cannot be null." exception="T:System.ArgumentNullException">aggregateRoot != null</requires>
+      <exception cref="T:System.ArgumentNullException">aggregateRoot == null</exception>
+      <ensures description="The result should never be null.">Contract.Result&lt;IEnumerable&lt;IDomainEventHandler&gt;&gt;() != null</ensures>
+    </member>
+    <member name="M:Ncqrs.Domain.Mapping.AttributeBasedDomainEventHandlerMappingStrategy.FirstParameterType(System.Reflection.MethodInfo)">
+      <requires description="The target cannot be null." exception="T:System.ArgumentNullException">target != null</requires>
+      <exception cref="T:System.ArgumentNullException">target == null</exception>
     </member>
     <member name="M:Ncqrs.Domain.Mapping.AttributeBasedDomainEventHandlerMappingStrategy.IsMarkedAsEventHandler(System.Reflection.MethodInfo,Ncqrs.Domain.Mapping.EventHandlerAttribute@)">
       <requires description="The target cannot be null." exception="T:System.ArgumentNullException">target != null</requires>
@@ -1586,29 +1752,9 @@
       <requires description="The target cannot be null." exception="T:System.ArgumentNullException">target != null</requires>
       <exception cref="T:System.ArgumentNullException">target == null</exception>
     </member>
-    <member name="M:Ncqrs.Domain.Mapping.AttributeBasedDomainEventHandlerMappingStrategy.FirstParameterType(System.Reflection.MethodInfo)">
-      <requires description="The target cannot be null." exception="T:System.ArgumentNullException">target != null</requires>
-      <exception cref="T:System.ArgumentNullException">target == null</exception>
-    </member>
-    <member name="M:Ncqrs.Domain.Mapping.ConventionBasedDomainEventHandlerMappingStrategy.GetEventHandlersFromAggregateRoot(Ncqrs.Domain.AggregateRoot)">
-      <requires description="The aggregateRoot cannot be null." exception="T:System.ArgumentNullException">aggregateRoot != null</requires>
-      <exception cref="T:System.ArgumentNullException">aggregateRoot == null</exception>
-      <ensures description="The result should never be null.">Contract.Result&lt;IEnumerable&lt;IDomainEventHandler&gt;&gt;() != null</ensures>
-    </member>
-    <member name="M:Ncqrs.Domain.Mapping.MappedAggregateRoot.#ctor(Ncqrs.Domain.Mapping.IDomainEventHandlerMappingStrategy)">
-      <requires description="The strategy cannot be null." exception="T:System.ArgumentNullException">strategy != null</requires>
-      <exception cref="T:System.ArgumentNullException">strategy == null</exception>
-    </member>
-    <member name="M:Ncqrs.Domain.AggregateRoot.GetUncommittedEvents">
-      <ensures description="The result of this method should never be null.">Contract.Result&lt;IEnumerable&lt;DomainEvent&gt;&gt;() != null</ensures>
-    </member>
-    <member name="M:Ncqrs.Domain.AggregateRoot.HandleEvent(Ncqrs.Domain.DomainEvent)">
-      <requires description="The evnt cannot be null." exception="T:System.ArgumentNullException">evnt != null</requires>
+    <member name="M:Ncqrs.Domain.DomainEventHandler`1.Ncqrs#Domain#IDomainEventHandler#HandleEvent(Ncqrs.Domain.DomainEvent)">
+      <requires description="The evnt cannot be null." inheritedFrom="M:Ncqrs.Domain.IDomainEventHandler.HandleEvent(Ncqrs.Domain.DomainEvent)" inheritedFromTypeName="IDomainEventHandler" exception="T:System.ArgumentNullException">evnt != null</requires>
       <exception cref="T:System.ArgumentNullException">evnt == null</exception>
-    </member>
-    <member name="M:Ncqrs.Domain.AggregateRoot.RegisterHandler(Ncqrs.Domain.IDomainEventHandler)">
-      <requires description="The handler cannot be null." exception="T:System.ArgumentNullException">handler != null</requires>
-      <exception cref="T:System.ArgumentNullException">handler == null</exception>
     </member>
     <member name="M:Ncqrs.Eventing.Storage.InMemoryEventStore.GetAllEventsForEventSource(System.Guid)">
       <ensures description="Result should never be null." inheritedFrom="M:Ncqrs.Eventing.Storage.IEventStore.GetAllEventsForEventSource(System.Guid)" inheritedFromTypeName="IEventStore">Contract.Result&lt;IEnumerable&lt;ISourcedEvent&gt;&gt;() != null</ensures>
