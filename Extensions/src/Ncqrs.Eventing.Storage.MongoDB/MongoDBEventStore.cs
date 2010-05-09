@@ -75,7 +75,9 @@ namespace Ncqrs.Eventing.Storage.MongoDB
                               {"_Version", arrayOfEventsAsIdbObjects.Length} 
                           };
 
+            // TODO: Add thread safe check. But, the driver should support checks on insert.
             sources.Insert(doc);
+            VerifyInsertSuccessful(source);
         }
 
         private void PushOptimisticUpdate(IEventSource source, IEnumerable<ISourcedEvent> eventsToSave, IDBCollection sources)
@@ -88,6 +90,18 @@ namespace Ncqrs.Eventing.Storage.MongoDB
                                }
                            , Do.AddEachToSet("Events", arrayOfEventsAsIdbObjects
                                  ).Set("_Version", source.Version));
+        }
+
+        protected void VerifyInsertSuccessful(IEventSource source)
+        {
+            var lastError = database.GetLastError();
+            var errorMessage = lastError.ErrorMessage;
+            bool isInserted = !String.IsNullOrEmpty(errorMessage);
+
+            if(!isInserted)
+            {
+                throw new MongoException(errorMessage);
+            }
         }
 
         protected void VerifyUpdateSuccessful(IEventSource source)
