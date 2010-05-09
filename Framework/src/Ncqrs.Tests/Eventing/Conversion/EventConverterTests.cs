@@ -131,6 +131,8 @@ namespace Ncqrs.Tests.Eventing.Conversion
             converter.AddConverter((BarEventV1 e) => e);
 
             converter.Convert(new BarEventV1());
+
+            // If we do not get a infinitive loop, this test succeeds.
         }
     }
 }

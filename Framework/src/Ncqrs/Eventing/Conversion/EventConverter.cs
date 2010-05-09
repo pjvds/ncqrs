@@ -13,6 +13,13 @@ namespace Ncqrs.Eventing.Conversion
     {
         private Dictionary<Type, IEventConverter> _converters = new Dictionary<Type, IEventConverter>();
 
+        /// <summary>
+        /// Adds the converter for a specific event type.
+        /// </summary>
+        /// <typeparam name="TFrom">The type of the event that will be converted.</typeparam>
+        /// <typeparam name="TTo">The type of the result of the conversion.</typeparam>
+        /// <param name="converter">The converter method that does the conversion.</param>
+        /// <returns>The current <see cref="EventConverter"/> that can be used to chain method calls.</returns>
         public EventConverter AddConverter<TFrom, TTo>(Converter<TFrom, TTo> converter) where TFrom : ISourcedEvent where TTo : ISourcedEvent
         {
             Contract.Requires<ArgumentNullException>(converter != null, "The converter cannot be null.");
@@ -21,6 +28,12 @@ namespace Ncqrs.Eventing.Conversion
             return AddConverter(typeof (TFrom), converterToAdd);
         }
 
+        /// <summary>
+        /// Adds the converter for a specific event type.
+        /// </summary>
+        /// <param name="eventSourceType">The type of the event that will be converted.</param>
+        /// <param name="converter">The converter method that does the conversion.</param>
+        /// <returns>The current <see cref="EventConverter"/> that can be used to chain method calls.</returns>
         public EventConverter AddConverter(Type eventSourceType, IEventConverter converter)
         {
             Contract.Requires<ArgumentNullException>(eventSourceType != null, "The eventSourceType cannot be null.");
@@ -45,10 +58,18 @@ namespace Ncqrs.Eventing.Conversion
 
             IEventConverter converter = null;
 
+            // If we have a converter, convert it.
             if(_converters.TryGetValue(eventType, out converter))
             {
+                // Convert the event.
                 var e = converter.Convert(eventToConvert);
 
+                // When the result of the convertion has a
+                // different type that the source, try
+                // to convert the result to.
+                // Otherwise, we assume that the event was
+                // not converted. So it doesn't need another
+                // conversion.
                 if (e.GetType() != eventToConvert.GetType())
                 {
                     convertedEvent = Convert(e);
