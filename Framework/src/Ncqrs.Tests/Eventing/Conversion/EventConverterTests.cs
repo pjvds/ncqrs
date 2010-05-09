@@ -3,11 +3,28 @@ using FluentAssertions;
 using Ncqrs.Domain;
 using Ncqrs.Eventing.Conversion;
 using NUnit.Framework;
+using System.Reflection;
 
 namespace Ncqrs.Tests.Eventing.Conversion
 {
     public class EventConverterTests
     {
+        public class FooEventV1Converter : IEventConverter<FooEventV1, FooEventV2>
+        {
+            public FooEventV2 Convert(FooEventV1 e)
+            {
+                return new FooEventV2(e.EventIdentifier, e.AggregateRootId, e.EventSequence, e.EventTimeStamp, e.Name, "");
+            }
+        }
+
+        public class FooEventV2Converter : IEventConverter<FooEventV2, FooEventV3>
+        {
+            public FooEventV3 Convert(FooEventV2 e)
+            {
+                return new FooEventV3(e.EventIdentifier, e.AggregateRootId, e.EventSequence, e.EventTimeStamp, e.Name, e.LastName, "");
+            }
+        }
+
         public class FooEventV1 : DomainEvent
         {
             public string Name
@@ -133,6 +150,18 @@ namespace Ncqrs.Tests.Eventing.Conversion
             converter.Convert(new BarEventV1());
 
             // If we do not get a infinitive loop, this test succeeds.
+        }
+
+        [Test]
+        public void Adding_converters_from_assembly_should_find_all_converters()
+        {
+            var converter = new EventConverter();
+            converter.AddConverters(typeof(EventConverterTests).Assembly);
+
+            var eventToConvert = new FooEventV1();
+            var conversionResult = converter.Convert(eventToConvert);
+
+            conversionResult.Should().BeOfType<FooEventV3>();
         }
     }
 }

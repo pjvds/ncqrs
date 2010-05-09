@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.Linq;
+using System.Reflection;
 
 namespace Ncqrs.Eventing.Conversion
 {
@@ -39,6 +41,35 @@ namespace Ncqrs.Eventing.Conversion
             Contract.Requires<ArgumentNullException>(converter != null, "The converter cannot be null.");
 
             _converters.Add(typeof(TFrom), (x) => converter.Convert((TFrom)x));
+            return this;
+        }
+
+        public EventConverter AddConverters(Assembly assembly)
+        {
+            var converterTypeQuery = from t in assembly.GetTypes()
+                                     let convercionInterfaces = from i in t.GetInterfaces()
+                                                                where
+                                                                    i.IsGenericType &&
+                                                                    i.GetGenericTypeDefinition() == typeof(IEventConverter<,>)
+                                                                select i
+                                     where convercionInterfaces.Count() > 0
+                                     select new { Type = t, ConversionInterfaces = convercionInterfaces };
+
+            foreach(var c in converterTypeQuery)
+            {
+                var converter = Activator.CreateInstance(c.Type, Type.EmptyTypes);
+
+                foreach (var ci in c.ConversionInterfaces)
+                {
+                    var convertMethod = ci.GetMethod("Convert");
+                    var fromType = ci.GetGenericArguments().First();
+
+                    Converter<ISourcedEvent, ISourcedEvent> convertClosure =
+                        (x => (ISourcedEvent) convertMethod.Invoke(converter, new object[] {x}));
+                    _converters.Add(fromType, convertClosure);
+                }
+            }
+
             return this;
         }
 
