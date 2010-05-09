@@ -14,29 +14,26 @@ namespace Ncqrs.Eventing.Storage.SQL
     public class SimpleMicrosoftSqlServerEventStore : IEventStore
     {
         #region Queries
-        private const String DeleteUnusedProviders =
-            @"DELETE FROM [EventSources] WHERE (SELECT Count(EventSourceId) FROM [Events] WHERE [EventSourceId]=[EventSources].[Id]) = 0";
+        private const String DeleteUnusedProviders = "DELETE FROM [EventSources] WHERE (SELECT Count(EventSourceId) FROM [Events] WHERE [EventSourceId]=[EventSources].[Id]) = 0";
 
         private const String InsertNewEventQuery = "INSERT INTO [Events]([EventSourceId], [Name], [Data], [Sequence], [TimeStamp]) VALUES (@Id, @Name, @Data, @Sequence, getDate())";
 
-        private const String InsertNewProviderQuery =
-            @"INSERT INTO [EventSources](Id, Type, Version) VALUES (@Id, @Type, @Version)";
+        private const String InsertNewProviderQuery = "INSERT INTO [EventSources](Id, Type, Version) VALUES (@Id, @Type, @Version)";
 
         private const String SelectAllEventsQuery = "SELECT [TimeStamp], [Data], [Sequence] FROM [Events] WHERE [EventSourceId] = @EventSourceId ORDER BY [Sequence]";
 
-        private const String SelectAllIdsForTypeQuery = @"SELECT [Id] FROM [EventSources] WHERE [Type] = @Type";
+        private const String SelectAllIdsForTypeQuery = "SELECT [Id] FROM [EventSources] WHERE [Type] = @Type";
 
-        private const String SelectVersionQuery = @"SELECT [Version] FROM [EventSources] WHERE [Id] = @id";
+        private const String SelectVersionQuery = "SELECT [Version] FROM [EventSources] WHERE [Id] = @id";
 
-        private const String UpdateEventSourceVersionQuery =
-            @"UPDATE [EventSources] SET [Version] = (SELECT Count(*) FROM [Events] WHERE [EventSourceId] = @Id) WHERE [Id] = @id";
+        private const String UpdateEventSourceVersionQuery = "UPDATE [EventSources] SET [Version] = (SELECT Count(*) FROM [Events] WHERE [EventSourceId] = @Id) WHERE [Id] = @id";
         #endregion
 
         private readonly String _connectionString;
 
         public SimpleMicrosoftSqlServerEventStore(String connectionString)
         {
-            if(String.IsNullOrEmpty(connectionString)) throw new ArgumentNullException("connectionString");
+            if (String.IsNullOrEmpty(connectionString)) throw new ArgumentNullException("connectionString");
 
             _connectionString = connectionString;
         }
@@ -48,6 +45,8 @@ namespace Ncqrs.Eventing.Storage.SQL
         /// <returns>All events for the specified event provider.</returns>
         public IEnumerable<ISourcedEvent> GetAllEventsForEventSource(Guid id)
         {
+            var result = new List<ISourcedEvent>();
+
             // Create connection and command.
             using (var connection = new SqlConnection(_connectionString))
             using (var command = new SqlCommand(SelectAllEventsQuery, connection))
@@ -69,15 +68,14 @@ namespace Ncqrs.Eventing.Storage.SQL
 
                         using (var dataStream = new MemoryStream(rawData))
                         {
-                            // Deserialize event and yield it.
-                            yield return (ISourcedEvent)formatter.Deserialize(dataStream);
+                            var evnt = (ISourcedEvent)formatter.Deserialize(dataStream);
+                            result.Add(evnt);
                         }
                     }
-
-                    // Break the yield.
-                    yield break;
                 }
             }
+
+            return result;
         }
 
         /// <summary>
