@@ -66,7 +66,7 @@ namespace Ncqrs.Tests.Domain.Storage
             var store = MockRepository.GenerateMock<IEventStore>();
             var bus = MockRepository.GenerateMock<IEventBus>();
             var loader = MockRepository.GenerateMock<IAggregateRootLoader>();
-            var converter = MockRepository.GenerateMock<IEventConverter>();
+            var converter = MockRepository.GenerateMock<IEventConverter<DomainEvent, DomainEvent>>();
 
             var aggId = Guid.NewGuid();
             var eventsInTheStore = new DomainEvent[] { new FooEvent(), new BarEvent() };

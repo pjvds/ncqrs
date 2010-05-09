@@ -15,7 +15,7 @@ namespace Ncqrs.Eventing.Conversion
     /// </summary>
     /// <typeparam name="TFrom">The type of the event that will be converted.</typeparam>
     /// <typeparam name="TTo">The type of the result of the conversion.</typeparam>
-    public class DelegateBasedConverter<TFrom, TTo> : IEventConverter
+    public class DelegateBasedConverter<TFrom, TTo> : IEventConverter<TFrom, TTo>
         where TFrom : ISourcedEvent
         where TTo : ISourcedEvent
     {
@@ -44,12 +44,9 @@ namespace Ncqrs.Eventing.Conversion
         /// <returns>
         /// A new event based on the <paramref name="eventToConvert"/>.
         /// </returns>
-        public ISourcedEvent Convert(ISourcedEvent eventToConvert)
+        public TTo Convert(TFrom eventToConvert)
         {
-            TFrom input = (TFrom)eventToConvert;
-            TTo output = _converter(input);
-
-            return output;
+            return _converter(eventToConvert);
         }
     }
 }

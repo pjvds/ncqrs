@@ -14,7 +14,7 @@ namespace Ncqrs.Domain.Storage
         private readonly IEventBus _eventBus;
         private readonly IEventStore _store;
         private readonly IAggregateRootLoader _loader;
-        private readonly IEventConverter _converter;
+        private readonly IEventConverter<DomainEvent, DomainEvent> _converter;
 
         public DomainRepository(IEventStore store, IEventBus eventBus)
             : this(store, eventBus, null, new DefaultAggregateRootLoader())
@@ -23,7 +23,7 @@ namespace Ncqrs.Domain.Storage
             Contract.Requires<ArgumentNullException>(eventBus != null, "store cannot be null.");
         }
 
-        public DomainRepository(IEventStore store, IEventBus eventBus, IEventConverter converter, IAggregateRootLoader loader)
+        public DomainRepository(IEventStore store, IEventBus eventBus, IEventConverter<DomainEvent, DomainEvent> converter, IAggregateRootLoader loader)
         {
             Contract.Requires<ArgumentNullException>(store != null);
             Contract.Requires<ArgumentNullException>(eventBus != null);

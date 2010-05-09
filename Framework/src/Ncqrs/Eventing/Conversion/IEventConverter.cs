@@ -13,8 +13,10 @@ namespace Ncqrs.Eventing.Conversion
     /// event.
     /// </para>
     /// </summary>
-    [ContractClass(typeof(IEventConverterContracts))]
-    public interface IEventConverter
+    [ContractClass(typeof(IEventConverterContracts<,>))]
+    public interface IEventConverter<TFrom, TTo>
+        where TFrom : ISourcedEvent
+        where TTo : ISourcedEvent
     {
         /// <summary>
         /// Converts an event. It return a new transformed event based on the 
@@ -27,22 +29,24 @@ namespace Ncqrs.Eventing.Conversion
         /// <param name="eventToConvert">The event to convert.</param>
         /// <returns>A new event based on the <paramref name="eventToConvert"/>.
         /// </returns>
-        ISourcedEvent Convert(ISourcedEvent eventToConvert);
+        TTo Convert(TFrom eventToConvert);
     }
 
-    [ContractClassFor(typeof(IEventConverter))]
-    internal sealed class IEventConverterContracts : IEventConverter
+    [ContractClassFor(typeof(IEventConverter<,>))]
+    internal sealed class IEventConverterContracts<TFrom, TTo> : IEventConverter<TFrom, TTo>
+        where TFrom : ISourcedEvent
+        where TTo : ISourcedEvent
     {
-        public ISourcedEvent Convert(ISourcedEvent eventToConvert)
+        public TTo Convert(TFrom eventToConvert)
         {
             Contract.Requires<ArgumentNullException>(eventToConvert != null, "The eventToConvert cannot be null.");
 
-            Contract.Ensures(Contract.Result<ISourcedEvent>().EventSourceId == eventToConvert.EventSourceId, "The EventSourceId should not be changed after conversion.");
-            Contract.Ensures(Contract.Result<ISourcedEvent>().EventSequence == eventToConvert.EventSequence, "The EventSequence should not be changed after conversion.");
-            Contract.Ensures(Contract.Result<ISourcedEvent>().EventIdentifier == eventToConvert.EventIdentifier, "The EventIdentifier should not be changed after conversion.");
-            Contract.Ensures(Contract.Result<ISourcedEvent>().EventTimeStamp == eventToConvert.EventTimeStamp, "The EventTimeStamp should not be changed after conversion.");
+            Contract.Ensures(Contract.Result<TTo>().EventSourceId == eventToConvert.EventSourceId, "The EventSourceId should not be changed after conversion.");
+            Contract.Ensures(Contract.Result<TTo>().EventSequence == eventToConvert.EventSequence, "The EventSequence should not be changed after conversion.");
+            Contract.Ensures(Contract.Result<TTo>().EventIdentifier == eventToConvert.EventIdentifier, "The EventIdentifier should not be changed after conversion.");
+            Contract.Ensures(Contract.Result<TTo>().EventTimeStamp == eventToConvert.EventTimeStamp, "The EventTimeStamp should not be changed after conversion.");
 
-            return default(ISourcedEvent);
+            return default(TTo);
         }
     }
 }
