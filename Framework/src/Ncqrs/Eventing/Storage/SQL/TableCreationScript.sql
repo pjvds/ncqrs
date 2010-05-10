@@ -1,0 +1,2 @@
+﻿CREATE TABLE [dbo].[Events]([EventSourceId] [uniqueidentifier] NOT NULL, [Sequence] [bigint], [TimeStamp] [datetime] NOT NULL, [Data] [varbinary](max) NOT NULL, [Name] [varchar](max) NOT NULL) ON [PRIMARY];
+CREATE TABLE [dbo].[EventSources]([Id] [uniqueidentifier] NOT NULL, [Type] [nvarchar](255) NOT NULL, [Version] [int] NOT NULL) ON [PRIMARY];

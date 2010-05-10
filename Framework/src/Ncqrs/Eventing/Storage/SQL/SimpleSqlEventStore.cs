@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Diagnostics.Contracts;
 using System.IO;
-using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Reflection;
 
 namespace Ncqrs.Eventing.Storage.SQL
 {
@@ -265,8 +265,21 @@ namespace Ncqrs.Eventing.Storage.SQL
         /// <returns>Queries that contain the <i>create table</i> statements.</returns>
         public static IEnumerable<String> GetTableCreationQueries()
         {
-            yield return "CREATE TABLE [dbo].[Events]([EventSourceId] [uniqueidentifier] NOT NULL, [Sequence] [bigint], [TimeStamp] [datetime] NOT NULL, [Data] [varbinary](max) NOT NULL, [Name] [varchar](max) NOT NULL) ON [PRIMARY]";
-            yield return "CREATE TABLE [dbo].[EventSources]([Id] [uniqueidentifier] NOT NULL, [Type] [nvarchar](255) NOT NULL, [Version] [int] NOT NULL) ON [PRIMARY]";
+            var currentAsm = Assembly.GetExecutingAssembly();
+
+            var resource = currentAsm.GetManifestResourceStream("Ncqrs.Eventing.Storage.SQL.TableCreationScript.sql");
+            var result = new List<string>();
+            
+            using(var reader = new StreamReader(resource))
+            {
+                string line = null;
+                while((line = reader.ReadLine()) != null)
+                {
+                    result.Add(line);
+                }
+            }
+
+            return result;
         }
     }
 }

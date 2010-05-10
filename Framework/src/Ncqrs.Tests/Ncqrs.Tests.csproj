@@ -93,6 +93,7 @@
     <Compile Include="Domain\UnitOfWorkTests.cs" />
     <Compile Include="Eventing\Conversion\EventConverterTests.cs" />
     <Compile Include="Eventing\Storage\ConcurrencyExceptionSpecs.cs" />
+    <Compile Include="Eventing\Storage\SQL\SimpleMicrosoftSqlServerEventStoreTests.cs" />
     <Compile Include="NcqrsEnvironmentConfigurationExceptionSpecs.cs" />
     <Compile Include="NcqrsEnvironmentSpecs.cs" />
     <Compile Include="DateTimeBasedClockSpecs.cs" />
