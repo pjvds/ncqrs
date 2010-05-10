@@ -262,12 +262,17 @@ namespace Ncqrs.Eventing.Storage.SQL
         /// Gets the table creation queries that can be used to create the tables that are needed
         /// for a database that is used as an event store.
         /// </summary>
+        /// <remarks>This returns the content of the TableCreationScript.sql that is embedded as resource.</remarks>
         /// <returns>Queries that contain the <i>create table</i> statements.</returns>
         public static IEnumerable<String> GetTableCreationQueries()
         {
             var currentAsm = Assembly.GetExecutingAssembly();
 
-            var resource = currentAsm.GetManifestResourceStream("Ncqrs.Eventing.Storage.SQL.TableCreationScript.sql");
+            const string resourcename = "Ncqrs.Eventing.Storage.SQL.TableCreationScript.sql";
+            var resource = currentAsm.GetManifestResourceStream(resourcename);
+
+            if (resource == null) throw new ApplicationException("Could not find the resource " + resourcename + " in assembly " + currentAsm.FullName);
+
             var result = new List<string>();
             
             using(var reader = new StreamReader(resource))
