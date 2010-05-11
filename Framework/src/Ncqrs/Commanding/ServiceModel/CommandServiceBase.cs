@@ -26,10 +26,11 @@ namespace Ncqrs.Commanding.ServiceModel
             try
             {
                 // Call OnBeforeExecution on every interceptor.
-                _interceptors.ForEach(i => i.OnBeforeExecution(context));
+                _interceptors.ForEach(i => i.OnBeforeBeforeExecutorResolving(context));
 
                 // Get executor for the command.
                 var executor = GetCommandExecutorForCommand(commandType);
+                context.ExecutorResolved = executor != null;
 
                 // Call OnBeforeExecution on every interceptor.
                 _interceptors.ForEach(i => i.OnBeforeExecution(context));
