@@ -7,6 +7,11 @@ namespace Ncqrs
     {
         private readonly log4net.ILog _log;
 
+        public Log4NetLogger(Type type)
+        {
+            _log = log4net.LogManager.GetLogger(type);
+        }
+
         public Log4NetLogger(log4net.ILog log)
         {
             if(log == null) throw new ArgumentNullException("log");
