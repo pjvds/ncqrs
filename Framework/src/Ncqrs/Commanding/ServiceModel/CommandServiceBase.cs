@@ -9,7 +9,7 @@ namespace Ncqrs.Commanding.ServiceModel
     {
         protected readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly Dictionary<Type, ICommandExecutor> _executors = new Dictionary<Type, ICommandExecutor>();
+        private readonly Dictionary<Type, Action<ICommand>> _executors = new Dictionary<Type, Action<ICommand>>();
         private readonly List<ICommandServiceInterceptor> _interceptors = new List<ICommandServiceInterceptor>(0);
 
         /// <summary>
@@ -26,11 +26,11 @@ namespace Ncqrs.Commanding.ServiceModel
             try
             {
                 // Call OnBeforeExecution on every interceptor.
-                _interceptors.ForEach(i => i.OnBeforeExecution(context));
+                _interceptors.ForEach(i => i.OnBeforeBeforeExecutorResolving(context));
 
                 // Get executor for the command.
-                ICommandExecutor executor = GetCommandExecutorForCommand(commandType);
-                context.TheCommandExecutor = executor;
+                var executor = GetCommandExecutorForCommand(commandType);
+                context.ExecutorResolved = executor != null;
 
                 // Call OnBeforeExecution on every interceptor.
                 _interceptors.ForEach(i => i.OnBeforeExecution(context));
@@ -45,7 +45,7 @@ namespace Ncqrs.Commanding.ServiceModel
                 context.IsExecuted = true;
 
                 // Execute the command.
-                executor.Execute(command);
+                executor(command);
             }
             catch(Exception caught)
             {
@@ -67,41 +67,21 @@ namespace Ncqrs.Commanding.ServiceModel
         /// <typeparam name="TCommand">The type of the command.</typeparam>
         /// <param name="executor">The executor that will be called for every command of the specified type.</param>
         /// <exception cref="ArgumentNullException">Occurs when the <i>commandType</i> or <i>executor</i> was a <c>null</c> dereference.</exception>
-        protected virtual void RegisterExecutor<TCommand>(ICommandExecutor executor) where TCommand : ICommand
+        protected virtual void RegisterExecutor<TCommand>(ICommandExecutor<TCommand> executor) where TCommand : ICommand
         {
-            RegisterExecutor(typeof(TCommand), executor);
+            Action<ICommand> action = (cmd) => executor.Execute((TCommand) cmd);
+            _executors.Add(typeof(TCommand), action);
         }
-
-        /// <summary>
-        /// Registers the executor for the specified command type. The executor will be called for every command of the specified type.
-        /// </summary>
-        /// <param name="commandType">Type of the command.</param>
-        /// <param name="executor">The executor that will be called for every command of the specified type.</param>
-        /// <exception cref="ArgumentNullException">Occurs when the <i>commandType</i> or <i>executor</i> was a <c>null</c> dereference.</exception>
-        protected virtual void RegisterExecutor(Type commandType, ICommandExecutor executor)
-        {
-            _executors.Add(commandType, executor);
-        }
-
 
         /// <summary>
         /// Unregisters the executor of the specified command type. The executor will not be called any more.
         /// </summary>
-        /// <param name="commandType">Type of the command.</param>
         /// <param name="executor">The executor to unregister.</param>
         /// <exception cref="ArgumentNullException">Occurs when the <i>commandType</i> or <i>executor</i> was a <c>null</c> dereference.</exception>
         /// <exception cref="InvalidOperationException">Occurs when the <i>executor</i> is not the same as the registered executor for the specified command type.</exception>
-        protected virtual void UnregisterExecutor(Type commandType, ICommandExecutor executor)
+        protected virtual void UnregisterExecutor<TCommand>() where TCommand : ICommand
         {
-            ICommandExecutor registeredExecutor = null;
-
-            if (_executors.TryGetValue(commandType, out registeredExecutor))
-            {
-                if (executor != registeredExecutor)
-                    throw new InvalidOperationException("The specified executor does not match with the registered executor for command type " + commandType.FullName + ".");
-
-                _executors.Remove(commandType);
-            }
+            _executors.Remove(typeof (TCommand));
         }
 
         /// <summary>
@@ -111,9 +91,9 @@ namespace Ncqrs.Commanding.ServiceModel
         /// <returns>
         /// A command executor to use to execute the command or <c>null</c> if not found.
         /// </returns>
-        protected virtual ICommandExecutor GetCommandExecutorForCommand(Type commandType)
+        protected virtual Action<ICommand> GetCommandExecutorForCommand(Type commandType)
         {
-            ICommandExecutor result;
+            Action<ICommand> result;
             _executors.TryGetValue(commandType, out result);
 
             return result;

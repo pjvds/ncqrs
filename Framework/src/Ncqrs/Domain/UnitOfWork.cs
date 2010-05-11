@@ -123,6 +123,16 @@ namespace Ncqrs.Domain
             }
         }
 
+        public TAggregateRoot GetById<TAggregateRoot>(Guid id) where TAggregateRoot : AggregateRoot
+        {
+            return _repository.GetById<TAggregateRoot>(id);
+        }
+
+        public AggregateRoot GetById(Type aggregateRootType, Guid id)
+        {
+            return _repository.GetById(aggregateRootType, id);
+        }
+
         /// <summary>
         /// Registers the dirty.
         /// </summary>

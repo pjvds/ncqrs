@@ -8,19 +8,14 @@ namespace Ncqrs.Commanding.ServiceModel
     /// </summary>
     public class InProcessCommandService : CommandServiceBase
     {
-        public void RegisterExecutor<TCommand>(ICommandExecutor executor) where TCommand : ICommand
+        public void RegisterExecutor<TCommand>(ICommandExecutor<TCommand> executor) where TCommand : ICommand
         {
-            base.RegisterExecutor<TCommand>(executor);
+            base.RegisterExecutor(executor);
         }
 
-        public void RegisterExecutor(Type commandType, ICommandExecutor executor)
+        public void UnregisterExecutor<TCommand>(ICommandExecutor<TCommand> executor) where TCommand : ICommand
         {
-            base.RegisterExecutor(commandType, executor);
-        }
-
-        public void UnregisterExecutor(Type commandType, ICommandExecutor executor)
-        {
-            base.UnregisterExecutor(commandType, executor);
+            base.UnregisterExecutor<TCommand>();
         }
 
         public void AddInterceptor(ICommandServiceInterceptor interceptor)

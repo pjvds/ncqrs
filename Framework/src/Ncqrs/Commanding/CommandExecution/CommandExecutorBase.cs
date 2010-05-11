@@ -7,7 +7,7 @@ namespace Ncqrs.Commanding.CommandExecution
     /// Represents a command executor.
     /// </summary>
     /// <typeparam name="TCommand">The type of the commands to execute.</typeparam>
-    public abstract class CommandExecutorBase<TCommand> : ICommandExecutor where TCommand : ICommand
+    public abstract class CommandExecutorBase<TCommand> : ICommandExecutor<TCommand> where TCommand : ICommand
     {
         /// <summary>
         /// Executes the command.
@@ -28,16 +28,5 @@ namespace Ncqrs.Commanding.CommandExecution
         /// </summary>
         /// <param name="work">The work.</param>
         protected abstract void ExecuteWithingUnitOfWorkContext(IUnitOfWorkContext work);
-
-        /// <summary>
-        /// Executes the command.
-        /// </summary>
-        /// <param name="command">The command to execute. This should not be null.</param>
-        /// <exception cref="ArgumentNullException">Occurs when <i>command</i> is null.</exception>
-        /// <exception cref="InvalidCastException">Occurs when the <i>command</i> could not be casted to <c>TCommand</c>.</exception>
-        void ICommandExecutor.Execute(ICommand command)
-        {
-            this.Execute((TCommand)command);
-        }
     }
 }

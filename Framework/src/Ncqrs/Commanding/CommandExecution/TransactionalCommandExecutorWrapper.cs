@@ -10,18 +10,18 @@ namespace Ncqrs.Commanding.CommandExecution
     /// <remarks>
     /// The transaction logic uses <c>TransactionScope</c> of the .NET framework.
     /// </remarks>
-    public class TransactionalCommandExecutorWrapper : ICommandExecutor
+    public class TransactionalCommandExecutorWrapper<TCommand> : ICommandExecutor<TCommand> where TCommand : ICommand
     {
         /// <summary>
         /// The executor to use to execute the command.
         /// </summary>
-        private readonly ICommandExecutor _executor;
+        private readonly ICommandExecutor<TCommand> _executor;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TransactionalCommandExecutorWrapper"/> class.
         /// </summary>
         /// <param name="executor">The executor to use to execute the command.</param>
-        public TransactionalCommandExecutorWrapper(ICommandExecutor executor)
+        public TransactionalCommandExecutorWrapper(ICommandExecutor<TCommand> executor)
         {
             Contract.Requires<ArgumentNullException>(executor != null, "The executor cannot be null.");
 
@@ -33,7 +33,7 @@ namespace Ncqrs.Commanding.CommandExecution
         /// </summary>
         /// <param name="command">The command to execute. This should not be null.</param>
         /// <exception cref="ArgumentNullException">Occurs when <i>command</i> is null.</exception>
-        public void Execute(ICommand command)
+        public void Execute(TCommand command)
         {
             using (var transaction = new TransactionScope())
             {

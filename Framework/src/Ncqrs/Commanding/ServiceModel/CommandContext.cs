@@ -27,12 +27,23 @@ namespace Ncqrs.Commanding.ServiceModel
         }
 
         /// <summary>
+        /// Gets a value indicating whether an executor has been resolved.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if an executor has been resolved for this command; otherwise, <c>false</c>.
+        /// </value>
+        public Boolean ExecutorResolved
+        {
+            get; internal set;
+        }
+
+        /// <summary>
         /// Gets the command that will be or is executed.
         /// </summary>
         /// <exception cref="InvalidOperationException">Occurs when this
-        /// property is set while the <see cref="TheCommandExecutor"/> property
-        /// has already been set.</exception>
-        /// <value>This value is never <c>null</c>.</value>
+        /// property is set while the <see cref="ExecutorResolved"/> property
+        /// return true indicating that a executor has been resolved for the command.</exception>
+        /// <value>The command that will or has been executed. This value is never <c>null</c>.</value>
         public ICommand TheCommand
         {
             get
@@ -43,7 +54,7 @@ namespace Ncqrs.Commanding.ServiceModel
             }
             set
             {
-                Contract.Requires<InvalidOperationException>(TheCommandExecutor == null, "Cannot override command when command executor is already resolved.");
+                Contract.Requires<InvalidOperationException>(!ExecutorResolved, "Cannot override command when a command executor has already been resolved.");
                 _theCommand = value;
             }
         }
@@ -58,18 +69,6 @@ namespace Ncqrs.Commanding.ServiceModel
             {
                 return TheCommand.GetType();
             }
-        }
-
-        /// <summary>
-        /// Gets the command executor that will be or is used to execute the
-        /// command.
-        /// </summary>
-        /// <value>When this value is <c>null</c>, it means that there was no
-        /// executor found for the command.</value>
-        public ICommandExecutor TheCommandExecutor
-        {
-            get;
-            internal set;
         }
 
         /// <summary>

@@ -7,21 +7,21 @@ namespace Ncqrs.Commanding.CommandExecution
     /// Executes a command. This means that the handles 
     /// executes the correct action based on the command.
     /// </summary>
-    [ContractClass(typeof(ICommandExecutorContracts))]
-    public interface ICommandExecutor
+    [ContractClass(typeof(ICommandExecutorContracts<>))]
+    public interface ICommandExecutor<TCommand> where TCommand : ICommand
     {
         /// <summary>
         /// Executes the command.
         /// </summary>
         /// <param name="command">The command to execute. This should not be null.</param>
         /// <exception cref="ArgumentNullException">Occurs when <i>command</i> is null.</exception>
-        void Execute(ICommand command);
+        void Execute(TCommand command);
     }
 
-    [ContractClassFor(typeof(ICommandExecutor))]
-    internal class ICommandExecutorContracts : ICommandExecutor
+    [ContractClassFor(typeof(ICommandExecutor<>))]
+    internal class ICommandExecutorContracts<TCommand> : ICommandExecutor<TCommand> where TCommand : ICommand
     {
-        public void Execute(ICommand command)
+        public void Execute(TCommand command)
         {
             Contract.Requires<ArgumentNullException>(command != null, "The command cannot be null.");
         }

@@ -17,18 +17,18 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping
         /// <exception cref="ArgumentNullException">Occurs when <i>command</i> was <c>null</c>.</exception>
         /// <exception cref="MappingForCommandNotFoundException">Occurs when there was an error in the mapping of the command.</exception>
         /// <returns>A <see cref="ICommandExecutor"/> created based on the mapping of the command.</returns>
-        public ICommandExecutor CreateExecutorForCommand(ICommand command)
+        public ICommandExecutor<TCommand> CreateExecutorForCommand<TCommand>(TCommand command) where TCommand : ICommand
         {
             Contract.Requires<ArgumentNullException>(command != null);
 
             if (IsCommandMappedToObjectCreation(command))
             {
-                return new ObjectCreationCommandExecutor();
+                return new ObjectCreationCommandExecutor<TCommand>();
             }
 
             if (IsCommandMappedToADirectMethod(command))
             {
-                return new DirectMethodCommandExecutor();
+                return new DirectMethodCommandExecutor<TCommand>();
             }
 
             var message = String.Format("No mapping attributes found on {0} command.", command.GetType().Name);

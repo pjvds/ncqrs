@@ -9,12 +9,12 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Actions
     /// <summary>
     /// An auto mapped action that executes a method on an aggregate root based on the mapping specified on the command.
     /// </summary>
-    public class DirectMethodCommandExecutor : ICommandExecutor
+    public class DirectMethodCommandExecutor<TCommand> : ICommandExecutor<TCommand> where TCommand : ICommand
     {
         /// <summary>
         /// Executes this method on the aggregate root based on the mapping of the command given a construction time.
         /// </summary>
-        public void Execute(ICommand command)
+        public void Execute(TCommand command)
         {
             var info = DirectMethodCommandInfo.CreateFromDirectMethodCommand(command);
 
@@ -24,7 +24,7 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Actions
                 var targetMethod = GetTargetMethodBasedOnCommandTypeName(info, command);
 
                 var parameterValues = CommandMappingConfiguration.GetParameterValues(command, targetMethod.GetParameters());
-                var targetAggregateRoot = work.Repository.GetById(info.AggregateType, info.AggregateRootIdValue);
+                var targetAggregateRoot = work.GetById(info.AggregateType, info.AggregateRootIdValue);
 
                 targetMethod.Invoke(targetAggregateRoot, parameterValues);
 
