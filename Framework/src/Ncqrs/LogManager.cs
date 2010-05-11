@@ -6,9 +6,12 @@ using System.Threading;
 
 namespace Ncqrs
 {
-    public class LogManager
+    /// <summary>
+    /// A manager class to use to get a logger for a certain type.
+    /// </summary>
+    public static class LogManager
     {
-        private static readonly ReaderWriterLockSlim _cacheLocker = new ReaderWriterLockSlim(LockRecursionPolicy);
+        private static readonly ReaderWriterLockSlim _cacheLocker = new ReaderWriterLockSlim();
 
         private static bool _isLog4NetAvailable = false;
         private static Dictionary<Type, ILog> _loggerCache = new Dictionary<Type, ILog>();
