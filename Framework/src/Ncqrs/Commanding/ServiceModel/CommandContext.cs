@@ -26,6 +26,11 @@ namespace Ncqrs.Commanding.ServiceModel
             internal set;
         }
 
+        public Boolean ExecutorResolved
+        {
+            get; internal set;
+        }
+
         /// <summary>
         /// Gets the command that will be or is executed.
         /// </summary>
@@ -43,7 +48,7 @@ namespace Ncqrs.Commanding.ServiceModel
             }
             set
             {
-                Contract.Requires<InvalidOperationException>(TheCommandExecutor == null, "Cannot override command when command executor is already resolved.");
+                Contract.Requires<InvalidOperationException>(!ExecutorResolved, "Cannot override command when command executor is already resolved.");
                 _theCommand = value;
             }
         }
@@ -58,18 +63,6 @@ namespace Ncqrs.Commanding.ServiceModel
             {
                 return TheCommand.GetType();
             }
-        }
-
-        /// <summary>
-        /// Gets the command executor that will be or is used to execute the
-        /// command.
-        /// </summary>
-        /// <value>When this value is <c>null</c>, it means that there was no
-        /// executor found for the command.</value>
-        public ICommandExecutor TheCommandExecutor
-        {
-            get;
-            internal set;
         }
 
         /// <summary>

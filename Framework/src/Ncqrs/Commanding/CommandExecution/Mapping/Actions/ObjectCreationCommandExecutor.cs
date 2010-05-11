@@ -9,12 +9,12 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Actions
     /// <summary>
     /// An auto mapped action for a command. It created the object as specified by the mapping.
     /// </summary>
-    public class ObjectCreationCommandExecutor : ICommandExecutor
+    public class ObjectCreationCommandExecutor<TCommand> : ICommandExecutor<TCommand> where TCommand : ICommand
     {
         /// <summary>
         /// Executes this action.
         /// </summary>
-        public void Execute(ICommand command)
+        public void Execute(TCommand command)
         {
             var commandInfo = ObjectCreationCommandInfo.CreateFromDirectMethodCommand(command);
 

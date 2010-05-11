@@ -14,7 +14,7 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Fluent
             _aggregateRootSource = aggregateRootSource;
         }
 
-        public ICommandExecutor Execute(Action<TCommand, TAggregateRoot> action)
+        public ICommandExecutor<TCommand> Execute(Action<TCommand, TAggregateRoot> action)
         {
             return new DirectActionOnAggregateRootCommandExecutor<TCommand, TAggregateRoot>(_aggregateRootSource, action);
         }

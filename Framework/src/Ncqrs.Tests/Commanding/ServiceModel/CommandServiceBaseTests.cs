@@ -24,11 +24,11 @@ namespace Ncqrs.Tests.Commanding.ServiceModel
             get; set;
         }
 
-        private ICommandExecutor ExecutorForCommandWithExecutor
+        private ICommandExecutor<CommandWithExecutor> ExecutorForCommandWithExecutor
         { get; set;
         }
 
-        private ICommandExecutor ExecutorForCommandWithExecutorThatThrowsException
+        private ICommandExecutor<CommandWithExecutorThatThrowsException> ExecutorForCommandWithExecutorThatThrowsException
         { get; set; }
 
         private ICommandServiceInterceptor Interceptor1
@@ -43,16 +43,16 @@ namespace Ncqrs.Tests.Commanding.ServiceModel
         public void Setup()
         {
             var service = new InProcessCommandService();
-            ExecutorForCommandWithExecutor = MockRepository.GenerateMock<ICommandExecutor>();
-            ExecutorForCommandWithExecutorThatThrowsException = MockRepository.GenerateMock<ICommandExecutor>();
+            ExecutorForCommandWithExecutor = MockRepository.GenerateMock<ICommandExecutor<CommandWithExecutor>>();
+            ExecutorForCommandWithExecutorThatThrowsException = MockRepository.GenerateMock<ICommandExecutor<CommandWithExecutorThatThrowsException>>();
 
             Interceptor1 = MockRepository.GenerateMock<ICommandServiceInterceptor>();
             Interceptor2 = MockRepository.GenerateMock<ICommandServiceInterceptor>();
 
             ExecutorForCommandWithExecutorThatThrowsException.Stub(e=>e.Execute(null)).IgnoreArguments().Throw(new Exception());
 
-            service.RegisterExecutor(typeof(CommandWithExecutor), ExecutorForCommandWithExecutor);
-            service.RegisterExecutor(typeof(CommandWithExecutorThatThrowsException), ExecutorForCommandWithExecutorThatThrowsException);
+            service.RegisterExecutor(ExecutorForCommandWithExecutor);
+            service.RegisterExecutor(ExecutorForCommandWithExecutorThatThrowsException);
 
             service.AddInterceptor(Interceptor1);
             service.AddInterceptor(Interceptor2);
