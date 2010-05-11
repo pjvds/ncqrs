@@ -2,11 +2,14 @@
 using System.IO;
 using System.Reflection;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace Ncqrs
 {
     public class LogManager
     {
+        private static readonly ReaderWriterLockSlim _cacheLocker = new ReaderWriterLockSlim(LockRecursionPolicy);
+
         private static bool _isLog4NetAvailable = false;
         private static Dictionary<Type, ILog> _loggerCache = new Dictionary<Type, ILog>();
 
@@ -25,15 +28,38 @@ namespace Ncqrs
 
         public static ILog GetLogger(Type type)
         {
-            ILog logger = null;
+            ILog logger;
+            _cacheLocker.EnterReadLock();
 
-            if(!_loggerCache.TryGetValue(type, out logger))
+            try
             {
+                if (_loggerCache.TryGetValue(type, out logger))
+                {
+                    return logger;
+                }
+            }
+            finally
+            {
+                _cacheLocker.ExitReadLock();
+            }
+            
+            _cacheLocker.EnterWriteLock();
+            try
+            {
+                // double check, as while the read-lock was released, the dictionary could have been modified
+                if (_loggerCache.TryGetValue(type, out logger))
+                {
+                    return logger;
+                }
+
                 logger = CreateLoggerForType(type);
                 _loggerCache.Add(type, logger);
+                return logger;
             }
-
-            return logger;
+            finally
+            {
+                _cacheLocker.ExitWriteLock();
+            }
         }
 
         private static ILog CreateLoggerForType(Type type)
