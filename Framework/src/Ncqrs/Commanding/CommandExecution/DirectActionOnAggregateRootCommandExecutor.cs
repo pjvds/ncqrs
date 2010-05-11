@@ -3,7 +3,7 @@ using Ncqrs.Domain;
 
 namespace Ncqrs.Commanding.CommandExecution
 {
-    public class DirectActionOnAggregateRootCommandExecutor<TCommand, TAggregateRoot> : ICommandExecutor
+    public class DirectActionOnAggregateRootCommandExecutor<TCommand, TAggregateRoot> : ICommandExecutor<TCommand>
         where TCommand : ICommand
         where TAggregateRoot : AggregateRoot
     {
@@ -16,17 +16,15 @@ namespace Ncqrs.Commanding.CommandExecution
             _action = action;
         }
 
-        public void Execute(ICommand command)
+        public void Execute(TCommand command)
         {
-            TCommand tCommand = (TCommand)command;
-
             var unitOfWorkFactory = NcqrsEnvironment.Get<IUnitOfWorkFactory>();
             using (var work = unitOfWorkFactory.CreateUnitOfWork())
             {
-                var id = _aggregateRootIdOnCommandLocator.Invoke(tCommand);
+                var id = _aggregateRootIdOnCommandLocator.Invoke(command);
                 var targetAggregateRoot = work.Repository.GetById<TAggregateRoot>(id);
 
-                _action.Invoke(tCommand, targetAggregateRoot);
+                _action.Invoke(command, targetAggregateRoot);
 
                 work.Accept();
             }
