@@ -1,14 +1,11 @@
 ﻿using System;
-using Ncqrs.Domain.Storage;
 
 namespace Ncqrs.Domain
 {
     public interface IUnitOfWorkContext : IDisposable
     {
-        IDomainRepository Repository
-        {
-            get;
-        }
+        TAggregateRoot GetById<TAggregateRoot>(Guid id) where TAggregateRoot : AggregateRoot;
+        AggregateRoot GetById(Type aggregateRootType, Guid id);
 
         void Accept();
     }

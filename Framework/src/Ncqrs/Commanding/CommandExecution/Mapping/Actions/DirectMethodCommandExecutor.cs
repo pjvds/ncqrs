@@ -24,7 +24,7 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Actions
                 var targetMethod = GetTargetMethodBasedOnCommandTypeName(info, command);
 
                 var parameterValues = CommandMappingConfiguration.GetParameterValues(command, targetMethod.GetParameters());
-                var targetAggregateRoot = work.Repository.GetById(info.AggregateType, info.AggregateRootIdValue);
+                var targetAggregateRoot = work.GetById(info.AggregateType, info.AggregateRootIdValue);
 
                 targetMethod.Invoke(targetAggregateRoot, parameterValues);
 

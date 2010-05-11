@@ -22,7 +22,7 @@ namespace Ncqrs.Commanding.CommandExecution
             using (var work = unitOfWorkFactory.CreateUnitOfWork())
             {
                 var id = _aggregateRootIdOnCommandLocator.Invoke(command);
-                var targetAggregateRoot = work.Repository.GetById<TAggregateRoot>(id);
+                var targetAggregateRoot = work.GetById<TAggregateRoot>(id);
 
                 _action.Invoke(command, targetAggregateRoot);
 

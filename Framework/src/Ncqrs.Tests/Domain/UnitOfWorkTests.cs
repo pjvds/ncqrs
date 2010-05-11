@@ -101,7 +101,7 @@ namespace Ncqrs.Tests.Domain
         }
 
         [Test]
-        public void The_repository_should_be_that_same_as_set_in_the_environment()
+        public void Getting_an_aggregate_root_shold_redirect_call_to_repository()
         {
             var theRepository = MockRepository.GenerateMock<IDomainRepository>();
             NcqrsEnvironment.SetDefault<IDomainRepository>(theRepository);
@@ -109,8 +109,15 @@ namespace Ncqrs.Tests.Domain
             var factory = NcqrsEnvironment.Get<IUnitOfWorkFactory>();
             using (var work = factory.CreateUnitOfWork())
             {
-                work.Repository.Should().Be(theRepository);
+                var theAggregate = new MyAggregateRoot();
+                var aId = Guid.NewGuid();
+
+                theRepository.Expect(r => r.GetById<MyAggregateRoot>(aId)).Return(theAggregate);
+
+                work.GetById<MyAggregateRoot>(aId).Should().Be(theAggregate);
             }
+
+            theRepository.VerifyAllExpectations();
         }
     }
 }
