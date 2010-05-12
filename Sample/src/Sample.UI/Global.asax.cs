@@ -14,16 +14,18 @@ using Ncqrs.Eventing.Storage.MongoDB;
 using Sample.Commands;
 using Ncqrs.Domain;
 using Sample.ReadModel.Denormalizers.EditMessageModel;
+using Ncqrs.Eventing.Storage.SQL;
+using Ncqrs.Domain.Storage;
 
 namespace Sample.UI
 {
     public class MvcApplication : HttpApplication
     {
-        public static ICommandExecutor CommandExecutor
+        public static ICommandService CommandExecutor
         {
             get
             {
-                return (ICommandExecutor)HttpContext.Current.Application["CommandExecutor"];
+                return (ICommandService)HttpContext.Current.Application["CommandExecutor"];
             }
             private set
             {
@@ -50,11 +52,11 @@ namespace Sample.UI
             this.Response.Redirect("/Home/Error");
         }
 
-        private ICommandExecutor InitializeCommandService()
+        private ICommandService InitializeCommandService()
         {
-            var commandService = new InProcessCommandExecutionDispatcher();
-            commandService.RegisterExecutor<AddNewMessageCommand>(new AutoMappingCommandExecutor());
-            commandService.RegisterExecutor<UpdateMessageTextCommand>(new AutoMappingCommandExecutor());
+            var commandService = new InProcessCommandService();
+            commandService.RegisterExecutor(new MappedCommandExecutor<AddNewMessageCommand>());
+            commandService.RegisterExecutor(new MappedCommandExecutor<UpdateMessageTextCommand>());
 
             CommandExecutor = commandService;
 
@@ -78,8 +80,7 @@ namespace Sample.UI
 
         private IEventStore InitializeEventStore()
         {
-            var eventStore = new MongoDBEventStore();
-            return eventStore;
+            return new SimpleMicrosoftSqlServerEventStore(@"Data Source=PCZWO_006\SQLEXPRESS_2008;Initial Catalog=ncqrs;User Id=sa;Password=sigma;");
         }
 
         public static void RegisterRoutes(RouteCollection routes)
@@ -104,7 +105,8 @@ namespace Sample.UI
 
                 x.For<IEventBus>().Use(eventBus);
                 x.For<IEventStore>().Use(eventStore);
-                x.For<IUnitOfWorkFactory>().Use<ThreadBasedUnitOfWorkFactory>();
+                x.For<IDomainRepository>().Use(new DomainRepository(eventStore, eventBus));
+                x.For<IUnitOfWorkFactory>().Use<UnitOfWorkFactory>();
             });
 
             NcqrsEnvironment.Configure(config);
