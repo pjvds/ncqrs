@@ -6,6 +6,22 @@ namespace Ncqrs.Commanding.CommandExecution
     /// <summary>
     /// Represents a command executor.
     /// </summary>
+    /// <code lang="c#">
+    /// public class AddProductToShoppingCartExecutor : CommandExecutorBase
+    /// {
+    ///     protected override void ExecuteInContext(IUnitOfWorkContext context, AddProductToShoppingCart command)
+    ///     {
+    ///         // Get the shopping cart.
+    ///         var shoppingCart = context.GetById(command.ShoppingCartId);
+    /// 
+    ///         // Add the product to the shopping cart.
+    ///         shoppingCart.AddProduct(command.ProductId, command.Amount);
+    ///
+    ///         // Accept all the work we just did.
+    ///         context.Accept();
+    ///     }
+    /// }
+    /// </code>
     /// <typeparam name="TCommand">The type of the commands to execute.</typeparam>
     public abstract class CommandExecutorBase<TCommand> : ICommandExecutor<TCommand> where TCommand : ICommand
     {
@@ -18,15 +34,34 @@ namespace Ncqrs.Commanding.CommandExecution
         {
             using (var work = NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork())
             {
-                ExecuteWithingUnitOfWorkContext(work);
+                ExecuteInContext(work, command);
             }
         }
 
         /// <summary>
         /// Executes the command withing an unit of work context.
-        /// <remarks>Make sure you call <see cref="IUnitOfWork.Accept"/> to accept the changes that has been made in the context.</remarks>
+        /// <remarks>Make sure you call <see cref="IUnitOfWorkContext.Accept"/> to accept the changes that has been made in the context.</remarks>
         /// </summary>
-        /// <param name="work">The work.</param>
-        protected abstract void ExecuteWithingUnitOfWorkContext(IUnitOfWorkContext work);
+        /// <example>
+        /// <code lang="c#">
+        /// public class AddProductToShoppingCartExecutor : CommandExecutorBase
+        /// {
+        ///     protected override void ExecuteInContext(IUnitOfWorkContext context, AddProductToShoppingCart command)
+        ///     {
+        ///         // Get the shopping cart.
+        ///         var shoppingCart = context.GetById(command.ShoppingCartId);
+        /// 
+        ///         // Add the product to the shopping cart.
+        ///         shoppingCart.AddProduct(command.ProductId, command.Amount);
+        ///
+        ///         // Accept all the work we just did.
+        ///         context.Accept();
+        ///     }
+        /// }
+        /// </code>
+        /// </example>
+        /// <param name="context">The work context.</param>
+        /// <param name="command">The command to execute.</param>
+        protected abstract void ExecuteInContext(IUnitOfWorkContext context, TCommand command);
     }
 }
