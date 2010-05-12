@@ -3,11 +3,11 @@ using System.Diagnostics.Contracts;
 
 namespace Ncqrs.Domain.Mapping
 {
-    public abstract class MappedAggregateRoot : AggregateRoot
+    public abstract class MappedAggregateRoot<T> : AggregateRoot where T : AggregateRoot
     {
-        private readonly IDomainEventHandlerMappingStrategy _mappingStrategy;
+        private readonly IDomainEventHandlerMappingStrategy<T> _mappingStrategy;
 
-        protected MappedAggregateRoot(IDomainEventHandlerMappingStrategy strategy)
+        protected MappedAggregateRoot(IDomainEventHandlerMappingStrategy<T> strategy)
         {
             Contract.Requires<ArgumentNullException>(strategy != null, "The strategy cannot be null.");
 
@@ -15,12 +15,12 @@ namespace Ncqrs.Domain.Mapping
             InitializeHandlers();
         }
 
+        // TODO: "(T)(AggregateRoot)this)" is ugly bigtime but need the specific type in implementations of the aggregate mapper
+        // so ill first work out my expression mapper and w'll continue work on this later
         private void InitializeHandlers()
         {
-            foreach (var handler in _mappingStrategy.GetEventHandlersFromAggregateRoot(this))
-            {
+            foreach (var handler in _mappingStrategy.GetEventHandlersFromAggregateRoot((T)(AggregateRoot)this))
                 RegisterHandler(handler);
-            }
         }
     }
 }

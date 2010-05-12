@@ -93,7 +93,6 @@ namespace Sample.UI
                 "{controller}/{action}/{id}",                           // URL with parameters
                 new { controller = "Home", action = "Welcome", id = "" }  // Parameter defaults
             );
-
         }
 
         protected void Application_Start()

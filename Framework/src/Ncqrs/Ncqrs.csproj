@@ -111,8 +111,10 @@
     <Compile Include="Commanding\ICommand.cs" />
     <Compile Include="Config\InstanceNotFoundInEnvironment.cs" />
     <Compile Include="DateTimeBasedClock.cs" />
+    <Compile Include="Domain\AggregateRootMappedWithExpressions.cs" />
     <Compile Include="Domain\DomainEvent.cs" />
     <Compile Include="Domain\IUnitOfWorkContext.cs" />
+    <Compile Include="Domain\Mapping\ExpressionBasedDomainEventHandlerMappingStrategy.cs" />
     <Compile Include="Domain\NoUnitOfWorkAvailableInThisContextException.cs" />
     <Compile Include="Eventing\Conversion\DelegateBasedConverter.cs" />
     <Compile Include="Eventing\EventBase.cs" />
