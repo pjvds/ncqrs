@@ -119,12 +119,13 @@
     <Compile Include="Eventing\Conversion\EventConverter.cs" />
     <Compile Include="Eventing\Conversion\IEventConverter.cs" />
     <Compile Include="Eventing\IEventSource.cs" />
+    <Compile Include="Eventing\IMemento.cs" />
+    <Compile Include="Eventing\IMementoable.cs" />
     <Compile Include="Eventing\ISnapshot.cs" />
     <Compile Include="Eventing\ISourcedEvent.cs" />
     <EmbeddedResource Include="Eventing\Storage\SQL\TableCreationScript.sql">
       <CustomToolNamespace>Ncqrs.Eventing.Storage.SQL.SimpleMicrosoftSqlServerEventStore</CustomToolNamespace>
     </EmbeddedResource>
-    <Compile Include="Eventing\Storage\ISnapshotStore.cs" />
     <Compile Include="IClock.cs" />
     <Compile Include="ILog.cs" />
     <Compile Include="InternalExtensions.cs" />

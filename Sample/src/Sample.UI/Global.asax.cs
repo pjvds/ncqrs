@@ -4,8 +4,6 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using Ncqrs;
 using Ncqrs.Commanding.CommandExecution;
-using Ncqrs.Commanding.CommandExecution.Mapping;
-using Ncqrs.Commanding.ServiceModel;
 using Ncqrs.Config.StructureMap;
 using Ncqrs.Eventing.Denormalization;
 using Ncqrs.Eventing.ServiceModel.Bus;
