@@ -94,12 +94,8 @@ namespace Ncqrs.Domain
         /// <param name="history">The history.</param>
         protected internal virtual void InitializeFromHistory(IEnumerable<DomainEvent> history)
         {
-            if (history == null) 
-                throw new ArgumentNullException("history");
-            if (history.Count() == 0)
-                throw new ArgumentException("The provided history does not contain any historical event.", "history");
-            if (Version != 0 || _uncommittedEvent.Count > 0)
-                throw new InvalidOperationException("Cannot load from history when a event source is already loaded.");
+            Contract.Requires<ArgumentNullException>(history != null, "The history cannot be null.");
+            if (_uncommittedEvent.Count > 0) throw new InvalidOperationException("Cannot apply history when instance has uncommitted changes.");
 
             foreach (var historicalEvent in history)
             {
@@ -136,6 +132,17 @@ namespace Ncqrs.Domain
 
         private void ApplyEvent(DomainEvent evnt, Boolean historical)
         {
+            if(historical)
+            {
+                if(evnt.EventSequence != InitialVersion+1)
+                {
+                    var message = "Cannot apply event with sequence {0}. Since the initial version of the " +
+                                  "aggregate root is {1}. Only an event with sequence number {2} can be applied."
+                                      .FormatWith(evnt.EventSequence, InitialVersion, InitialVersion + 1);
+                    throw new InvalidOperationException(message);
+                }
+            }
+
             HandleEvent(evnt);
 
             if (!historical)
