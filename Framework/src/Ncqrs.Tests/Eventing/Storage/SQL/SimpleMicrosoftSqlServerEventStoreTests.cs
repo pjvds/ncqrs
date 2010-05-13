@@ -164,7 +164,7 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
 
             targetStore.Save(eventSource);
 
-            var result = targetStore.GetAllEventsForEventSource(id);
+            var result = targetStore.GetAllEvents(id);
             result.Count().Should().Be(events.Length);
             result.First().EventIdentifier.Should().Be(events.First().EventIdentifier);
         }

@@ -59,7 +59,7 @@ namespace Ncqrs.Tests.Eventing.Storage
             var eventSourceId = Guid.NewGuid();
             var store = new InMemoryEventStore();
 
-            var events = store.GetAllEventsForEventSource(eventSourceId);
+            var events = store.GetAllEvents(eventSourceId);
 
             events.Should().NotBeNull();
             events.Should().BeEmpty();
@@ -89,7 +89,7 @@ namespace Ncqrs.Tests.Eventing.Storage
             mock.GetUncommittedEventsStub = () => events2;
             store.Save(mock);
 
-            var events = store.GetAllEventsForEventSource(eventSourceId);
+            var events = store.GetAllEvents(eventSourceId);
             var unionOfStoredEvents = events1.Union(events2);
 
             events.Count().Should().Be(unionOfStoredEvents.Count());

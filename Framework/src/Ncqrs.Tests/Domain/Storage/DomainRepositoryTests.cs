@@ -70,7 +70,7 @@ namespace Ncqrs.Tests.Domain.Storage
 
             var aggId = Guid.NewGuid();
             var eventsInTheStore = new DomainEvent[] { new FooEvent(), new BarEvent() };
-            store.Expect(s => s.GetAllEventsForEventSource(aggId)).Return(eventsInTheStore);
+            store.Expect(s => s.GetAllEvents(aggId)).Return(eventsInTheStore);
 
             var repository = new DomainRepository(store, bus, converter, loader);
 
@@ -90,7 +90,7 @@ namespace Ncqrs.Tests.Domain.Storage
             var eventsInTheStore = new DomainEvent[] { new FooEvent(), new BarEvent() };
             var loadedAggregate = new MyAggregateRoot();
 
-            store.Expect(s => s.GetAllEventsForEventSource(aggId)).Return(eventsInTheStore);
+            store.Expect(s => s.GetAllEvents(aggId)).Return(eventsInTheStore);
             loader.Expect(l => l.LoadAggregateRootFromEvents(typeof (MyAggregateRoot), eventsInTheStore)).Return(loadedAggregate);
 
             var repository = new DomainRepository(store, bus, null, loader);

@@ -43,7 +43,7 @@ namespace Ncqrs.Eventing.Storage.SQL
         /// </summary>
         /// <param name="id">The id of the event provider.</param>
         /// <returns>All events for the specified event provider.</returns>
-        public IEnumerable<ISourcedEvent> GetAllEventsForEventSource(Guid id)
+        public IEnumerable<ISourcedEvent> GetAllEvents(Guid id)
         {
             var result = new List<ISourcedEvent>();
 

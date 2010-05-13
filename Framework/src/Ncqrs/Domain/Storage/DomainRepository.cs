@@ -37,7 +37,7 @@ namespace Ncqrs.Domain.Storage
 
         public AggregateRoot GetById(Type aggregateRootType, Guid id)
         {
-            var events = _store.GetAllEventsForEventSource(id).Cast<DomainEvent>();
+            var events = _store.GetAllEvents(id).Cast<DomainEvent>();
 
             events = ConvertEvents(events);
 

@@ -4,7 +4,19 @@ namespace Ncqrs.Eventing
 {
     public interface ISnapshot
     {
-        Guid EventSourceId { get; }
-        long EventSourceVersion { get; }
+        IMemento Memento
+        {
+            get;
+        }
+
+        Guid EventSourceId
+        {
+            get;
+        }
+
+        long EventSourceVersion
+        {
+            get;
+        }
     }
 }
