@@ -20,7 +20,7 @@ namespace Ncqrs.Eventing.Storage.SQL
 
         private const String InsertNewProviderQuery = "INSERT INTO [EventSources](Id, Type, Version) VALUES (@Id, @Type, @Version)";
 
-        private const String SelectAllEventsQuery = "SELECT [TimeStamp], [Data], [Sequence] FROM [Events] WHERE [EventSourceId] = @EventSourceId ORDER BY [Sequence]";
+        private const String SelectAllEventsQuery = "SELECT [TimeStamp], [Data], [Sequence] FROM [Events] WHERE [EventSourceId] = @EventSourceId AND [Sequence] > @EventSourceVersion ORDER BY [Sequence]";
 
         private const String SelectAllIdsForTypeQuery = "SELECT [Id] FROM [EventSources] WHERE [Type] = @Type";
 
@@ -45,6 +45,16 @@ namespace Ncqrs.Eventing.Storage.SQL
         /// <returns>All events for the specified event provider.</returns>
         public IEnumerable<ISourcedEvent> GetAllEvents(Guid id)
         {
+            return GetAllEventsSinceVersion(id, 0);
+        }
+
+        /// <summary>
+        /// Get all events provided by an specified event source.
+        /// </summary>
+        /// <param name="eventSourceId">The id of the event source that owns the events.</param>
+        /// <returns>All the events from the event source.</returns>
+        public IEnumerable<ISourcedEvent> GetAllEventsSinceVersion(Guid id, long version)
+        {
             var result = new List<ISourcedEvent>();
 
             // Create connection and command.
@@ -53,6 +63,7 @@ namespace Ncqrs.Eventing.Storage.SQL
             {
                 // Add EventSourceId parameter and open connection.
                 command.Parameters.AddWithValue("EventSourceId", id);
+                command.Parameters.AddWithValue("EventSourceVersion", version);
                 connection.Open();
 
                 // Execute query and create reader.
@@ -127,6 +138,22 @@ namespace Ncqrs.Eventing.Storage.SQL
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Saves a snapshot of the specified event source.
+        /// </summary>
+        public void SaveShapshot(ISnapshot source)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Gets a snapshot of a particular event source, if one exists. Otherwise, returns <c>null</c>.
+        /// </summary>
+        public ISnapshot GetSnapshot(Guid eventSourceId)
+        {
+            throw new NotImplementedException();
         }
 
         public IEnumerable<Guid> GetAllIdsForType(Type eventProviderType)

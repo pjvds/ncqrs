@@ -11,6 +11,8 @@ namespace Ncqrs.Domain.Storage
 {
     public class DomainRepository : IDomainRepository
     {
+        private const int SnapshotIntervalInEvents = 15;
+
         private readonly IEventBus _eventBus;
         private readonly IEventStore _store;
         private readonly IAggregateRootLoader _loader;
@@ -35,6 +37,11 @@ namespace Ncqrs.Domain.Storage
             _converter = converter;
         }
 
+        private static bool ShouldCreateSnapshot(AggregateRoot aggregateRoot)
+        {
+            return (aggregateRoot.Version % SnapshotIntervalInEvents) == 0;
+        }
+
         public AggregateRoot GetById(Type aggregateRootType, Guid id)
         {
             var events = _store.GetAllEvents(id).Cast<DomainEvent>();
@@ -51,7 +58,7 @@ namespace Ncqrs.Domain.Storage
 
             var result = new List<DomainEvent>(events.Count());
 
-            foreach(var evnt in events)
+            foreach (var evnt in events)
             {
                 var convertedEvent = (DomainEvent)_converter.Convert(evnt);
                 result.Add(convertedEvent);
@@ -69,16 +76,44 @@ namespace Ncqrs.Domain.Storage
         {
             var events = aggregateRoot.GetUncommittedEvents();
 
-            // Save the events to the event store.
             _store.Save(aggregateRoot);
 
-            // Send all events to the bus.
-            // TODO: Remove cast co/con
-            // TODO: Remove eventbus, the repository should only push to store.
+            if(ShouldCreateSnapshot(aggregateRoot))
+            {
+
+            }
+
             _eventBus.Publish(events.Cast<IEvent>());
 
             // Accept the changes.
             aggregateRoot.AcceptChanges();
+        }
+
+        private ISnapshot GetSnapshot(AggregateRoot aggregateRoot)
+        {
+            Type aggType = aggregateRoot.GetType();
+
+            var mementoables = from i in aggType.GetInterfaces()
+                                        where i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IMementoable<>)
+                                        select i;
+
+            if (mementoables.Count() == 0)
+            {
+                // Aggregate does not implement any IMementoable interface.
+                return null;
+            }
+            if (mementoables.Count() > 0)
+            {
+                // Aggregate does implement multiple IMementoable interfaces.
+                return null;
+            }
+
+            var mementoable = mementoables.First();
+            var createMethod = mementoable.GetMethod("CreateMemento");
+
+            IMemento memento = (IMemento) createMethod.Invoke(aggregateRoot, new object[0]);
+
+            return new Snapshot(memento, aggregateRoot.Id, aggregateRoot.Version);
         }
     }
 }

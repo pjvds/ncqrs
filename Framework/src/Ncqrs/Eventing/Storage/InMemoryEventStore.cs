@@ -66,7 +66,7 @@ namespace Ncqrs.Eventing.Storage
         /// <summary>
         /// Saves a snapshot of the specified event source.
         /// </summary>
-        public void SaveShapShot(ISnapshot snapshot)
+        public void SaveShapshot(ISnapshot snapshot)
         {
             _snapshots[snapshot.EventSourceId] = snapshot;
         }
@@ -74,9 +74,9 @@ namespace Ncqrs.Eventing.Storage
         /// <summary>
         /// Gets a snapshot of a particular event source, if one exists. Otherwise, returns <c>null</c>.
         /// </summary>
-        public ISnapshot GetSnapShot(Guid eventSourceId)
+        public ISnapshot GetSnapshot(Guid eventSourceId)
         {
-            throw new NotImplementedException();
+            return _snapshots[eventSourceId];
         }
     }
 }

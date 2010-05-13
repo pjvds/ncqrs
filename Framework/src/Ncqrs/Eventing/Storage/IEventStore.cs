@@ -34,12 +34,12 @@ namespace Ncqrs.Eventing.Storage
         /// <summary>
         /// Saves a snapshot of the specified event source.
         /// </summary>
-        void SaveShapShot(IEventSource source);
+        void SaveShapshot(ISnapshot source);
 
         /// <summary>
         /// Gets a snapshot of a particular event source, if one exists. Otherwise, returns <c>null</c>.
         /// </summary>
-        ISnapshot GetSnapShot(Guid eventSourceId);
+        ISnapshot GetSnapshot(Guid eventSourceId);
     }
 
     [ContractClassFor(typeof(IEventStore))]
@@ -52,9 +52,19 @@ namespace Ncqrs.Eventing.Storage
             return default(IEnumerable<ISourcedEvent>);
         }
 
+        public IEnumerable<ISourcedEvent> GetAllEventsSinceVersion(Guid id, long version)
+        {
+            Contract.Ensures(Contract.ForAll(Contract.Result<IEnumerable<ISourcedEvent>>(), e => e.EventSequence > version));
+            return default(IEnumerable<ISourcedEvent>);
+        }
+
         public void Save(IEventSource source)
         {
             Contract.Requires<ArgumentNullException>(source != null, "source cannot be null.");
+        }
+
+        public void SaveShapshot(ISnapshot source)
+        {
         }
 
         public IEnumerable<ISourcedEvent> GetAllEventsSinceVersion(Guid id)
@@ -62,12 +72,14 @@ namespace Ncqrs.Eventing.Storage
             return default(IEnumerable<ISourcedEvent>);
         }
 
-        public void SaveShapShot(IEventSource source)
+        public void SaveshapShot(ISnapshot source)
         {
         }
 
-        public ISnapshot GetSnapShot(Guid eventSourceId)
+        public ISnapshot GetSnapshot(Guid eventSourceId)
         {
+            Contract.Ensures(Contract.Result<ISnapshot>() != null ? Contract.Result<ISnapshot>().EventSourceId == eventSourceId : true);
+
             return default(ISnapshot);
         }
     }
