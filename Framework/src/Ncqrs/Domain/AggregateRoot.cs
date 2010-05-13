@@ -136,9 +136,9 @@ namespace Ncqrs.Domain
             {
                 if(evnt.EventSequence != InitialVersion+1)
                 {
-                    var message = "Cannot apply event with sequence {0}. Since the initial version of the " +
-                                  "aggregate root is {1}. Only an event with sequence number {2} can be applied."
-                                      .FormatWith(evnt.EventSequence, InitialVersion, InitialVersion + 1);
+                    var message = String.Format("Cannot apply event with sequence {0}. Since the initial version of the " +
+                                                "aggregate root is {1}. Only an event with sequence number {2} can be applied.",
+                                                evnt.EventSequence, InitialVersion, InitialVersion + 1);
                     throw new InvalidOperationException(message);
                 }
             }
@@ -149,9 +149,9 @@ namespace Ncqrs.Domain
             {
                 if (evnt.AggregateRootId != Guid.Empty)
                 {
-                    var message = "The {0} event cannot be applied to aggregate root {1} with id {2} "
-                                  + "since it was already owned by event aggregate root with id {3}."
-                                  .FormatWith(evnt.GetType().FullName, this.GetType().FullName, Id, evnt.AggregateRootId);
+                    var message = String.Format("The {0} event cannot be applied to aggregate root {1} with id {2} " +
+                                                "since it was already owned by event aggregate root with id {3}.",
+                                                evnt.GetType().FullName, this.GetType().FullName, Id, evnt.AggregateRootId);
                     throw new InvalidOperationException(message);
                 }
 
