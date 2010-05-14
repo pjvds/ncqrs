@@ -140,7 +140,8 @@ namespace Ncqrs.Tests.Domain
         [Test]
         public void Loading_it_from_history_should_apply_all_events()
         {
-            var history = new[] {new HandledEvent(), new HandledEvent(), new HandledEvent()};
+            var aggId = Guid.NewGuid();
+            var history = new[] { new HandledEvent(Guid.NewGuid(), aggId, 1, DateTime.UtcNow), new HandledEvent(Guid.NewGuid(), aggId, 2, DateTime.UtcNow), new HandledEvent(Guid.NewGuid(), aggId, 3, DateTime.UtcNow) };
 
             var theAggregate = new MyAggregateRoot(history);
 

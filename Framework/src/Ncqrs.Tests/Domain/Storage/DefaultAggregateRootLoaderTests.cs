@@ -10,10 +10,31 @@ namespace Ncqrs.Tests.Domain.Storage
     public class DefaultAggregateRootLoaderTests
     {
         public class FooEvent : DomainEvent
-        { }
+        {
+            public FooEvent()
+            {
+                
+            }
+
+            public FooEvent(Guid aggId, long sequence) : base(Guid.NewGuid(), aggId, sequence, DateTime.UtcNow)
+            {
+                
+            }
+        }
 
         public class BarEvent : DomainEvent
-        { }
+        {
+            public BarEvent()
+            {
+                
+            }
+
+            public BarEvent(Guid aggId, long sequence)
+                : base(Guid.NewGuid(), aggId, sequence, DateTime.UtcNow)
+            {
+                
+            }
+        }
 
         public class MyAggregateRoot : AggregateRootMappedByConvention
         {
@@ -67,11 +88,13 @@ namespace Ncqrs.Tests.Domain.Storage
         [Test]
         public void Load_from_events_should_call_apply_event_for_all_events()
         {
+            Guid aggId = Guid.NewGuid();
+
             Type aggregateRootType = typeof(MyAggregateRoot);
-            IEnumerable<DomainEvent> events = new DomainEvent[] { new FooEvent(), new BarEvent(), 
-                                                                  new BarEvent(), new BarEvent(), 
-                                                                  new FooEvent(), new BarEvent(), 
-                                                                  new FooEvent(), new FooEvent() };
+            IEnumerable<DomainEvent> events = new DomainEvent[] { new FooEvent(aggId, 1), new BarEvent(aggId, 2), 
+                                                                  new BarEvent(aggId, 3), new BarEvent(aggId, 4), 
+                                                                  new FooEvent(aggId, 5), new BarEvent(aggId, 6), 
+                                                                  new FooEvent(aggId, 7), new FooEvent(aggId, 8) };
 
             var loader = new DefaultAggregateRootLoader();
 
