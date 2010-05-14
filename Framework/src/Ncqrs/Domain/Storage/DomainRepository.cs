@@ -60,7 +60,7 @@ namespace Ncqrs.Domain.Storage
 
             foreach (var evnt in events)
             {
-                var convertedEvent = (DomainEvent)_converter.Convert(evnt);
+                var convertedEvent = _converter.Convert(evnt);
                 result.Add(convertedEvent);
             }
 
@@ -80,7 +80,9 @@ namespace Ncqrs.Domain.Storage
 
             if(ShouldCreateSnapshot(aggregateRoot))
             {
+                var snapshot = GetSnapshot(aggregateRoot);
 
+                if(snapshot != null) _store.SaveShapshot(snapshot);
             }
 
             _eventBus.Publish(events.Cast<IEvent>());
@@ -93,18 +95,21 @@ namespace Ncqrs.Domain.Storage
         {
             Type aggType = aggregateRoot.GetType();
 
-            var mementoables = from i in aggType.GetInterfaces()
-                                        where i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IMementoable<>)
-                                        select i;
 
+            // Query all IMementoable interfaces. We only allow
+            // one IMementoable interface per aggregate root type.
+            var mementoables = from i in aggType.GetInterfaces()
+                               where i.IsGenericType && i.GetGenericTypeDefinition() == typeof (IMementoable<>)
+                               select i;
+
+            // Aggregate does not implement any IMementoable interface.
             if (mementoables.Count() == 0)
             {
-                // Aggregate does not implement any IMementoable interface.
                 return null;
             }
+            // Aggregate does implement multiple IMementoable interfaces.
             if (mementoables.Count() > 0)
             {
-                // Aggregate does implement multiple IMementoable interfaces.
                 return null;
             }
 
@@ -112,7 +117,6 @@ namespace Ncqrs.Domain.Storage
             var createMethod = mementoable.GetMethod("CreateMemento");
 
             IMemento memento = (IMemento) createMethod.Invoke(aggregateRoot, new object[0]);
-
             return new Snapshot(memento, aggregateRoot.Id, aggregateRoot.Version);
         }
     }
