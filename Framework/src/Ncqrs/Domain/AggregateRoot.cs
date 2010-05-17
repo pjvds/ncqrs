@@ -142,9 +142,9 @@ namespace Ncqrs.Domain
             {
                 if (evnt.AggregateRootId != Guid.Empty)
                 {
-                    var message = "The {0} event cannot be applied to aggregate root {1} with id {2} "
-                                  + "since it was already owned by event aggregate root with id {3}."
-                                  .FormatWith(evnt.GetType().FullName, this.GetType().FullName, Id, evnt.AggregateRootId);
+                    var message = String.Format("The {0} event cannot be applied to aggregate root {1} with id {2} "
+                                  + "since it was already owned by event aggregate root with id {3}.",
+                                  evnt.GetType().FullName, this.GetType().FullName, Id, evnt.AggregateRootId);
                     throw new InvalidOperationException(message);
                 }
 
