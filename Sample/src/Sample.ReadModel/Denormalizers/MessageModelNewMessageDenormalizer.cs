@@ -1,22 +1,24 @@
 ﻿using System;
 using Ncqrs.Eventing.Denormalization;
 using Sample.Events;
+using Sample.ReadModel.Properties;
+using System.Linq;
 
-namespace Sample.ReadModel.Denormalizers.MessageModel
+namespace Sample.ReadModel.Denormalizers
 {
     public class MessageModelNewMessageDenormalizer : Denormalizer<NewMessageAdded>
     {
         public override void DenormalizeEvent(NewMessageAdded evnt)
         {
-            using (var repository = new ReadRepository<IMessageModel>())
+            using(var context = new ReadModelDataContext(Settings.Default.ReadModelConnection))
             {
-                var newModel = repository.New();
-
+                var newModel = new MessageModel();
                 newModel.Id = evnt.MessageId;
                 newModel.Text = evnt.Text;
                 newModel.CreationDate = evnt.CreationDate;
 
-                repository.Insert(newModel);
+                context.MessageModels.InsertOnSubmit(newModel);
+                context.SubmitChanges();
             }
         }
     }

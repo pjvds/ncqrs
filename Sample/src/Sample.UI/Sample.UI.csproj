@@ -34,29 +34,21 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="log4net">
-      <HintPath>..\..\bin\log4net\log4net.dll</HintPath>
+      <HintPath>..\..\bin\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="MongoDB.Emitter, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\bin\MongoDB.Emitter\MongoDB.Emitter.dll</HintPath>
-    </Reference>
     <Reference Include="Ncqrs">
-      <HintPath>..\..\bin\Ncqrs\Ncqrs.dll</HintPath>
+      <HintPath>..\..\bin\Ncqrs.dll</HintPath>
     </Reference>
     <Reference Include="Ncqrs.Config.StructureMap">
-      <HintPath>..\..\bin\Ncqrs\Ncqrs.Config.StructureMap.dll</HintPath>
-    </Reference>
-    <Reference Include="Ncqrs.Eventing.Storage.MongoDB">
-      <HintPath>..\..\bin\Ncqrs\Ncqrs.Eventing.Storage.MongoDB.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json.Net20">
-      <HintPath>..\..\bin\Json.NET\Newtonsoft.Json.Net20.dll</HintPath>
+      <HintPath>..\..\bin\Ncqrs.Config.StructureMap.dll</HintPath>
     </Reference>
     <Reference Include="StructureMap">
-      <HintPath>..\..\bin\StructureMap\StructureMap.dll</HintPath>
+      <HintPath>..\..\bin\StructureMap.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.Linq" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
