@@ -127,6 +127,7 @@
       <CustomToolNamespace>Ncqrs.Eventing.Storage.SQL.SimpleMicrosoftSqlServerEventStore</CustomToolNamespace>
     </EmbeddedResource>
     <Compile Include="Eventing\Snapshot.cs" />
+    <Compile Include="Eventing\Storage\ISnapshotStore.cs" />
     <Compile Include="IClock.cs" />
     <Compile Include="ILog.cs" />
     <Compile Include="InternalExtensions.cs" />

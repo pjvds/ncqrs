@@ -15,6 +15,7 @@ namespace Ncqrs.Domain.Storage
 
         private readonly IEventBus _eventBus;
         private readonly IEventStore _store;
+        private readonly ISnapshotStore _snapshotStore;
         private readonly IAggregateRootLoader _loader;
         private readonly IEventConverter<DomainEvent, DomainEvent> _converter;
 
@@ -37,9 +38,9 @@ namespace Ncqrs.Domain.Storage
             _converter = converter;
         }
 
-        private static bool ShouldCreateSnapshot(AggregateRoot aggregateRoot)
+        private bool ShouldCreateSnapshot(AggregateRoot aggregateRoot)
         {
-            return (aggregateRoot.Version % SnapshotIntervalInEvents) == 0;
+            return (_snapshotStore != null )&&(aggregateRoot.Version % SnapshotIntervalInEvents) == 0;
         }
 
         public AggregateRoot GetById(Type aggregateRootType, Guid id)
@@ -82,7 +83,7 @@ namespace Ncqrs.Domain.Storage
             {
                 var snapshot = GetSnapshot(aggregateRoot);
 
-                if(snapshot != null) _store.SaveShapshot(snapshot);
+                if(snapshot != null) _snapshotStore.SaveShapshot(snapshot);
             }
 
             _eventBus.Publish(events.Cast<IEvent>());
