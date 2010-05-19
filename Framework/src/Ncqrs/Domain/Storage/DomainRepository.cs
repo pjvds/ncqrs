@@ -118,7 +118,7 @@ namespace Ncqrs.Domain.Storage
             var createMethod = mementoable.GetMethod("CreateMemento");
 
             IMemento memento = (IMemento) createMethod.Invoke(aggregateRoot, new object[0]);
-            return new Snapshot(memento, aggregateRoot.Id, aggregateRoot.Version);
+            return new Snapshot(aggregateRoot.Id, aggregateRoot.Version, memento);
         }
     }
 }

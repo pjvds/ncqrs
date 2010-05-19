@@ -19,11 +19,11 @@ namespace Ncqrs.Eventing
             get; private set;
         }
 
-        public Snapshot(IMemento memento, Guid eventSourceId, long eventSourceVersion)
+        public Snapshot(Guid eventSourceId, long eventSourceVersion, IMemento memento)
         {
-            Memento = memento;
             EventSourceId = eventSourceId;
             EventSourceVersion = eventSourceVersion;
+            Memento = memento;
         }
     }
 }

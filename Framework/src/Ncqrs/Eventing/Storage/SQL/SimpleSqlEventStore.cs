@@ -30,7 +30,7 @@ namespace Ncqrs.Eventing.Storage.SQL
 
         private const String InsertSnapshot = "INSERT INTO [Snapshots]([EventSourceId], [Version], [MementoType], [MementoData]) VALUES (@EventSourceId, @Version, @MementoType, @MementoData)";
 
-        private const String SelectLatestSnapshot = "SELECT TOP 1 FROM [Snapshots] WHERE [EventSourceId]=@EventSourceId ORDER BY Version DESC";
+        private const String SelectLatestSnapshot = "SELECT TOP 1 * FROM [Snapshots] WHERE [EventSourceId]=@EventSourceId ORDER BY Version DESC";
         #endregion
 
         private readonly String _connectionString;
@@ -164,7 +164,7 @@ namespace Ncqrs.Eventing.Storage.SQL
                             formatter.Serialize(dataStream, snapshot.Memento);
                             byte[] data = dataStream.ToArray();
 
-                            using (var command = new SqlCommand(InsertNewEventQuery, transaction.Connection))
+                            using (var command = new SqlCommand(InsertSnapshot, transaction.Connection))
                             {
                                 command.Transaction = transaction;
                                 command.Parameters.AddWithValue("EventSourceId", snapshot.EventSourceId);
@@ -202,18 +202,22 @@ namespace Ncqrs.Eventing.Storage.SQL
                 connection.Open();
 
                 using (var command = new SqlCommand(SelectLatestSnapshot, connection))
-                using (var reader = command.ExecuteReader())
                 {
-                    if (reader.Read())
-                    {
-                        var version = (long) reader["Version"];
-                        var mementoData = (byte[]) reader["MementoData"];
-                        using (var buffer = new MemoryStream(mementoData))
-                        {
-                            var formatter = new BinaryFormatter();
-                            IMemento memento = (IMemento) formatter.Deserialize(buffer);
+                    command.Parameters.AddWithValue("@EventSourceId", eventSourceId);
 
-                            theSnapshot = new Snapshot(memento, eventSourceId, version);
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            var version = (long) reader["Version"];
+                            var mementoData = (byte[]) reader["MementoData"];
+                            using (var buffer = new MemoryStream(mementoData))
+                            {
+                                var formatter = new BinaryFormatter();
+                                IMemento memento = (IMemento) formatter.Deserialize(buffer);
+
+                                theSnapshot = new Snapshot(eventSourceId, version, memento);
+                            }
                         }
                     }
                 }
