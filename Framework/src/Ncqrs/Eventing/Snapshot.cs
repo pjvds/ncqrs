@@ -2,22 +2,16 @@
 
 namespace Ncqrs.Eventing
 {
-    public abstract class SnapshotBase : ISnapshot
+    public abstract class Snapshot : ISnapshot
     {
         public Guid EventSourceId
         {
-            get; private set;
+            get; set;
         }
 
         public long EventSourceVersion
         {
-            get; private set;
-        }
-
-        public SnapshotBase(Guid eventSourceId, long eventSourceVersion)
-        {
-            EventSourceId = eventSourceId;
-            EventSourceVersion = eventSourceVersion;
+            get; set;
         }
     }
 }
