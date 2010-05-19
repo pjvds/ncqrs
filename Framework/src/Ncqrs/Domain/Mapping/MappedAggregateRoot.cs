@@ -3,7 +3,7 @@ using System.Diagnostics.Contracts;
 
 namespace Ncqrs.Domain.Mapping
 {
-    public abstract class MappedAggregateRoot<T> : AggregateRoot where T : AggregateRoot
+    public abstract class MappedAggregateRoot<T> : AggregateRoot where T : MappedAggregateRoot<T>
     {
         private readonly IDomainEventHandlerMappingStrategy<T> _mappingStrategy;
 
@@ -19,7 +19,7 @@ namespace Ncqrs.Domain.Mapping
         // so ill first work out my expression mapper and w'll continue work on this later
         private void InitializeHandlers()
         {
-            foreach (var handler in _mappingStrategy.GetEventHandlersFromAggregateRoot((T)(AggregateRoot)this))
+            foreach (var handler in _mappingStrategy.GetEventHandlersFromAggregateRoot((T)this))
                 RegisterHandler(handler);
         }
     }
