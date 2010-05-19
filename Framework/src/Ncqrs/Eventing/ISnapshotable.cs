@@ -1,0 +1,63 @@
+﻿using System;
+using System.Collections.Generic;
+using Ncqrs.Domain;
+using System.Diagnostics.Contracts;
+
+namespace Ncqrs.Eventing
+{
+    /// <summary>
+    /// This interface flags an object beeing <i>mementoable</i>. This means that the
+    /// state of the object could be saved to an <see cref="IMemento"/> object
+    /// and restored from a the from the same class.
+    /// This is used to prevent building <see cref="AggregateRoot"/>'s from the ground up.
+    /// </summary>
+    [ContractClass(typeof(SnapshotableContracts<>))]
+    public interface ISnapshotable<TSnapshot> : IEventSource where TSnapshot : ISnapshot
+    {
+        void RestoreFromSnapshot(TSnapshot snapshot);
+        TSnapshot CreateSnapshot();
+    }
+
+    [ContractClassFor(typeof(ISnapshotable<>))]
+    public class SnapshotableContracts<TSnapshot> : ISnapshotable<TSnapshot> where TSnapshot : ISnapshot
+    {
+        public void RestoreFromSnapshot(TSnapshot snapshot)
+        {
+            Contract.Ensures(Id == snapshot.EventSourceId, "Restoring from snapshot should initialize the Id.");
+            Contract.Ensures(InitialVersion == snapshot.EventSourceVersion, "Restoring from snapshot should initialize the initial version.");
+        }
+
+        public TSnapshot CreateSnapshot()
+        {
+            Contract.Ensures(Contract.Result<TSnapshot>().EventSourceId == Id, "The EventSourceId of the snapshot should be initialized with the Id value of the event source.");
+            Contract.Ensures(Contract.Result<TSnapshot>().EventSourceVersion == Version, "The EventSourceVersion of the snapshot should be initialized with the Version value of the event source.");
+
+            return default(TSnapshot);
+        }
+
+        public Guid Id
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public long Version
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public long InitialVersion
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public IEnumerable<ISourcedEvent> GetUncommittedEvents()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AcceptChanges()
+        {
+            throw new NotImplementedException();
+        }
+    }
+}

@@ -2,13 +2,8 @@
 
 namespace Ncqrs.Eventing
 {
-    public class Snapshot : ISnapshot
+    public abstract class SnapshotBase : ISnapshot
     {
-        public IMemento Memento
-        { 
-            get; private set;
-        }
-
         public Guid EventSourceId
         {
             get; private set;
@@ -19,9 +14,8 @@ namespace Ncqrs.Eventing
             get; private set;
         }
 
-        public Snapshot(IMemento memento, Guid eventSourceId, long eventSourceVersion)
+        public SnapshotBase(Guid eventSourceId, long eventSourceVersion)
         {
-            Memento = memento;
             EventSourceId = eventSourceId;
             EventSourceVersion = eventSourceVersion;
         }

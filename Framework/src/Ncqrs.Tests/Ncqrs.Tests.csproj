@@ -88,7 +88,6 @@
     <Compile Include="Domain\Mapping\InvalidEventHandlerMappingExceptionTests.cs" />
     <Compile Include="Domain\NoUnitOfWorkAvailableInThisContextExceptionTests.cs" />
     <Compile Include="Domain\Storage\AggregateLoaderExceptionTests.cs" />
-    <Compile Include="Domain\Storage\DefaultAggregateRootLoaderTests.cs" />
     <Compile Include="Domain\Storage\DomainRepositoryTests.cs" />
     <Compile Include="Domain\UnitOfWorkTests.cs" />
     <Compile Include="Eventing\Conversion\EventConverterTests.cs" />

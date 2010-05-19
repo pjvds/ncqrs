@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using System.Reflection;
 using Ncqrs.Eventing;
 using Ncqrs.Eventing.Conversion;
 using Ncqrs.Eventing.ServiceModel.Bus;
@@ -15,41 +16,111 @@ namespace Ncqrs.Domain.Storage
 
         private readonly IEventBus _eventBus;
         private readonly IEventStore _store;
-        private readonly IAggregateRootLoader _loader;
+        private readonly ISnapshotStore _snapshotStore;
         private readonly IEventConverter<DomainEvent, DomainEvent> _converter;
 
-        public DomainRepository(IEventStore store, IEventBus eventBus)
-            : this(store, eventBus, null, new DefaultAggregateRootLoader())
-        {
-            Contract.Requires<ArgumentNullException>(store != null, "store cannot be null.");
-            Contract.Requires<ArgumentNullException>(eventBus != null, "store cannot be null.");
-        }
-
-        public DomainRepository(IEventStore store, IEventBus eventBus, IEventConverter<DomainEvent, DomainEvent> converter, IAggregateRootLoader loader)
+        public DomainRepository(IEventStore store, IEventBus eventBus, ISnapshotStore snapshotStore = null, IEventConverter<DomainEvent, DomainEvent> converter = null)
         {
             Contract.Requires<ArgumentNullException>(store != null);
             Contract.Requires<ArgumentNullException>(eventBus != null);
-            Contract.Requires<ArgumentNullException>(loader != null);
 
             _store = store;
             _eventBus = eventBus;
-            _loader = loader;
             _converter = converter;
         }
 
-        private static bool ShouldCreateSnapshot(AggregateRoot aggregateRoot)
+        private bool ShouldCreateSnapshot(AggregateRoot aggregateRoot)
         {
-            return (aggregateRoot.Version % SnapshotIntervalInEvents) == 0;
+            return (_snapshotStore != null)&&(aggregateRoot.Version % SnapshotIntervalInEvents) == 0;
         }
 
         public AggregateRoot GetById(Type aggregateRootType, Guid id)
         {
-            var events = _store.GetAllEvents(id).Cast<DomainEvent>();
+            AggregateRoot aggregate = null;
 
+            if(_snapshotStore != null)
+            {
+                var snapshot = _snapshotStore.GetSnapshot(id);
+
+                if (snapshot != null)
+                {
+                    aggregate = GetByIdFromSnapshot(aggregateRootType, snapshot);
+                }
+            }
+
+            if(aggregate == null)
+            {
+                aggregate = GetByIdFromScratch(aggregateRootType, id);
+            }
+
+            return aggregate;
+        }
+
+        protected AggregateRoot GetByIdFromSnapshot(Type aggregateRootType, ISnapshot snapshot)
+        {
+            AggregateRoot aggregateRoot = null;
+
+            if(AggregateRootSupportsSnapshot(aggregateRootType, snapshot))
+            {
+                aggregateRoot = CreateEmptyAggRoot(aggregateRootType);
+                var memType = GetMementoableInterfaceType(aggregateRootType);
+                var restoreMethod = memType.GetMethod("RestoreFromSnapshot");
+
+                restoreMethod.Invoke(aggregateRoot, new object[] { snapshot });
+
+                var events = _store.GetAllEventsSinceVersion(aggregateRoot.Id, snapshot.EventSourceVersion);
+                aggregateRoot.InitializeFromHistory(events.Cast<DomainEvent>());
+            }
+            else
+            {
+                aggregateRoot = GetByIdFromScratch(aggregateRootType, snapshot.EventSourceId);
+            }
+
+            return aggregateRoot;
+        }
+
+        protected AggregateRoot GetByIdFromScratch(Type aggregateRootType, Guid id)
+        {
+            AggregateRoot aggregateRoot = null;
+
+            var events = _store.GetAllEvents(id).Cast<DomainEvent>();
             events = ConvertEvents(events);
 
-            AggregateRoot aggregate = _loader.LoadAggregateRootFromEvents(aggregateRootType, events);
-            return aggregate;
+            if (events.Count() > 0)
+            {
+                aggregateRoot = CreateEmptyAggRoot(aggregateRootType);
+                aggregateRoot.InitializeFromHistory(events);
+            }
+
+            return aggregateRoot;
+        }
+
+        private bool AggregateRootSupportsSnapshot(Type aggType, ISnapshot snapshot)
+        {
+            var memType = GetMementoableInterfaceType(aggType);
+            return memType == typeof(ISnapshotable<>).MakeGenericType(memType);
+        }
+
+        private AggregateRoot CreateEmptyAggRoot(Type aggType)
+        {
+            // Flags to search for a public and non public contructor.
+            var flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+
+            // Get the constructor that we want to invoke.
+            var ctor = aggType.GetConstructor(flags, null, Type.EmptyTypes, null);
+
+            // If there was no ctor found, throw exception.
+            if (ctor == null)
+            {
+                var message = String.Format("No constructor found on aggregate root type {0} that accepts " +
+                                            "no parameters.", aggType.AssemblyQualifiedName);
+                throw new AggregateLoaderException(message);
+            }
+
+            // There was a ctor found, so invoke it and return the instance.
+            var aggregateRoot = (AggregateRoot) ctor.Invoke(null);
+
+            return aggregateRoot;
         }
 
         protected IEnumerable<DomainEvent> ConvertEvents(IEnumerable<DomainEvent> events)
@@ -82,7 +153,7 @@ namespace Ncqrs.Domain.Storage
             {
                 var snapshot = GetSnapshot(aggregateRoot);
 
-                if(snapshot != null) _store.SaveShapshot(snapshot);
+                if(snapshot != null) _snapshotStore.SaveShapshot(snapshot);
             }
 
             _eventBus.Publish(events.Cast<IEvent>());
@@ -93,31 +164,40 @@ namespace Ncqrs.Domain.Storage
 
         private ISnapshot GetSnapshot(AggregateRoot aggregateRoot)
         {
-            Type aggType = aggregateRoot.GetType();
+            var memType = GetMementoableInterfaceType(aggregateRoot.GetType());
 
+            if (memType != null)
+            {
+                var createMethod = memType.GetMethod("CreateSnapshot");
 
-            // Query all IMementoable interfaces. We only allow
-            // one IMementoable interface per aggregate root type.
+                return (ISnapshot)createMethod.Invoke(aggregateRoot, new object[0]);
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        private Type GetMementoableInterfaceType(Type aggType)
+        {
+            // Query all ISnapshotable interfaces. We only allow
+            // one ISnapshotable interface per aggregate root type.
             var mementoables = from i in aggType.GetInterfaces()
-                               where i.IsGenericType && i.GetGenericTypeDefinition() == typeof (IMementoable<>)
+                               where i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ISnapshotable<>)
                                select i;
 
-            // Aggregate does not implement any IMementoable interface.
+            // Aggregate does not implement any ISnapshotable interface.
             if (mementoables.Count() == 0)
             {
                 return null;
             }
-            // Aggregate does implement multiple IMementoable interfaces.
+            // Aggregate does implement multiple ISnapshotable interfaces.
             if (mementoables.Count() > 0)
             {
                 return null;
             }
 
-            var mementoable = mementoables.First();
-            var createMethod = mementoable.GetMethod("CreateMemento");
-
-            IMemento memento = (IMemento) createMethod.Invoke(aggregateRoot, new object[0]);
-            return new Snapshot(memento, aggregateRoot.Id, aggregateRoot.Version);
+            return mementoables.First();
         }
     }
 }

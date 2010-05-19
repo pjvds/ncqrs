@@ -119,14 +119,14 @@
     <Compile Include="Eventing\Conversion\EventConverter.cs" />
     <Compile Include="Eventing\Conversion\IEventConverter.cs" />
     <Compile Include="Eventing\IEventSource.cs" />
-    <Compile Include="Eventing\IMemento.cs" />
-    <Compile Include="Eventing\IMementoable.cs" />
+    <Compile Include="Eventing\ISnapshotable.cs" />
     <Compile Include="Eventing\ISnapshot.cs" />
     <Compile Include="Eventing\ISourcedEvent.cs" />
     <EmbeddedResource Include="Eventing\Storage\SQL\TableCreationScript.sql">
       <CustomToolNamespace>Ncqrs.Eventing.Storage.SQL.SimpleMicrosoftSqlServerEventStore</CustomToolNamespace>
     </EmbeddedResource>
     <Compile Include="Eventing\Snapshot.cs" />
+    <Compile Include="Eventing\Storage\ISnapshotStore.cs" />
     <Compile Include="IClock.cs" />
     <Compile Include="ILog.cs" />
     <Compile Include="InternalExtensions.cs" />
@@ -154,9 +154,7 @@
     <Compile Include="Domain\Mapping\MappedAggregateRoot.cs" />
     <Compile Include="Domain\Mapping\NoEventHandlerAttribute.cs" />
     <Compile Include="Domain\Storage\AggregateLoaderException.cs" />
-    <Compile Include="Domain\Storage\DefaultAggregateRootLoader.cs" />
     <Compile Include="Domain\Storage\DomainRepository.cs" />
-    <Compile Include="Domain\Storage\IAggregateRootLoader.cs" />
     <Compile Include="Domain\Storage\IDomainRepository.cs" />
     <Compile Include="Domain\UnitOfWorkFactory.cs" />
     <Compile Include="Domain\TypeThresholdedActionBasedDomainEventHandler.cs" />
