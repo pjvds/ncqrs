@@ -11,7 +11,7 @@ namespace Ncqrs.Eventing.Storage.SQL
     /// <summary>
     /// Stores events for a SQL database.
     /// </summary>
-    public class SimpleMicrosoftSqlServerEventStore : IEventStore
+    public class SimpleMicrosoftSqlServerEventStore : IEventStore, ISnapshotStore
     {
         #region Queries
         private const String DeleteUnusedProviders = "DELETE FROM [EventSources] WHERE (SELECT Count(EventSourceId) FROM [Events] WHERE [EventSourceId]=[EventSources].[Id]) = 0";
@@ -27,6 +27,10 @@ namespace Ncqrs.Eventing.Storage.SQL
         private const String SelectVersionQuery = "SELECT [Version] FROM [EventSources] WHERE [Id] = @id";
 
         private const String UpdateEventSourceVersionQuery = "UPDATE [EventSources] SET [Version] = (SELECT Count(*) FROM [Events] WHERE [EventSourceId] = @Id) WHERE [Id] = @id";
+
+        private const String InsertSnapshot = "INSERT INTO [Snapshots]([EventSourceId], [Version], [MementoType], [MementoData]) VALUES (@EventSourceId, @Version, @MementoType, @MementoData)";
+
+        private const String SelectLatestSnapshot = "SELECT TOP 1 FROM [Snapshots] WHERE [EventSourceId]=@EventSourceId ORDER BY Version DESC";
         #endregion
 
         private readonly String _connectionString;
@@ -143,9 +147,45 @@ namespace Ncqrs.Eventing.Storage.SQL
         /// <summary>
         /// Saves a snapshot of the specified event source.
         /// </summary>
-        public void SaveShapshot(ISnapshot source)
+        public void SaveShapshot(ISnapshot snapshot)
         {
-            throw new NotImplementedException();
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                // Open connection and begin a transaction so we can
+                // commit or rollback all the changes that has been made.
+                connection.Open();
+                using (SqlTransaction transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        using (var dataStream = new MemoryStream())
+                        {
+                            var formatter = new BinaryFormatter();
+                            formatter.Serialize(dataStream, snapshot.Memento);
+                            byte[] data = dataStream.ToArray();
+
+                            using (var command = new SqlCommand(InsertNewEventQuery, transaction.Connection))
+                            {
+                                command.Transaction = transaction;
+                                command.Parameters.AddWithValue("EventSourceId", snapshot.EventSourceId);
+                                command.Parameters.AddWithValue("Version", snapshot.EventSourceVersion);
+                                command.Parameters.AddWithValue("MementoType", snapshot.Memento.GetType().AssemblyQualifiedName);
+                                command.Parameters.AddWithValue("MementoData", data);
+                                command.ExecuteNonQuery();
+                            }
+                        }
+
+                        // Everything is handled, commint transaction.
+                        transaction.Commit();
+                    }
+                    catch
+                    {
+                        // Something went wrong, rollback transaction.
+                        transaction.Rollback();
+                        throw;
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -153,7 +193,33 @@ namespace Ncqrs.Eventing.Storage.SQL
         /// </summary>
         public ISnapshot GetSnapshot(Guid eventSourceId)
         {
-            throw new NotImplementedException();
+            ISnapshot theSnapshot = null;
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                // Open connection and begin a transaction so we can
+                // commit or rollback all the changes that has been made.
+                connection.Open();
+
+                using (var command = new SqlCommand(SelectLatestSnapshot, connection))
+                using (var reader = command.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        var version = (long) reader["Version"];
+                        var mementoData = (byte[]) reader["MementoData"];
+                        using (var buffer = new MemoryStream(mementoData))
+                        {
+                            var formatter = new BinaryFormatter();
+                            IMemento memento = (IMemento) formatter.Deserialize(buffer);
+
+                            theSnapshot = new Snapshot(memento, eventSourceId, version);
+                        }
+                    }
+                }
+            }
+
+            return theSnapshot;
         }
 
         public IEnumerable<Guid> GetAllIdsForType(Type eventProviderType)
