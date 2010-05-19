@@ -55,11 +55,10 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
         }
 
         [Serializable]
-        public class MyMemento : IMemento
+        public class MySnapshot : SnapshotBase
         {
-            public long ForVersion
+            public MySnapshot(Guid eventSourceId, long eventSourceVersion) : base(eventSourceId, eventSourceVersion)
             {
-                get; set;
             }
         }
 
@@ -185,9 +184,7 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
 
             var anId = Guid.NewGuid();
             var aVersion = 12;
-            var memento = new MyMemento();
-
-            var snapshot = new Snapshot(anId, aVersion, memento);
+            var snapshot = new MySnapshot(anId, aVersion);
             
             targetStore.SaveShapshot(snapshot);
 

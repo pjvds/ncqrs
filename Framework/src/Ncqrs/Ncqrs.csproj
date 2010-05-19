@@ -119,8 +119,7 @@
     <Compile Include="Eventing\Conversion\EventConverter.cs" />
     <Compile Include="Eventing\Conversion\IEventConverter.cs" />
     <Compile Include="Eventing\IEventSource.cs" />
-    <Compile Include="Eventing\IMemento.cs" />
-    <Compile Include="Eventing\IMementoable.cs" />
+    <Compile Include="Eventing\ISnapshotable.cs" />
     <Compile Include="Eventing\ISnapshot.cs" />
     <Compile Include="Eventing\ISourcedEvent.cs" />
     <EmbeddedResource Include="Eventing\Storage\SQL\TableCreationScript.sql">

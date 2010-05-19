@@ -64,9 +64,9 @@ namespace Ncqrs.Domain.Storage
             {
                 aggregateRoot = CreateEmptyAggRoot(aggregateRootType);
                 var memType = GetMementoableInterfaceType(aggregateRootType);
-                var restoreMethod = memType.GetMethod("RestoreFromMemento");
+                var restoreMethod = memType.GetMethod("RestoreFromSnapshot");
 
-                restoreMethod.Invoke(aggregateRoot, new object[] { snapshot.Memento });
+                restoreMethod.Invoke(aggregateRoot, new object[] { snapshot });
 
                 var events = _store.GetAllEventsSinceVersion(aggregateRoot.Id, snapshot.EventSourceVersion);
                 aggregateRoot.InitializeFromHistory(events.Cast<DomainEvent>());
@@ -98,7 +98,7 @@ namespace Ncqrs.Domain.Storage
         private bool AggregateRootSupportsSnapshot(Type aggType, ISnapshot snapshot)
         {
             var memType = GetMementoableInterfaceType(aggType);
-            return memType == typeof(IMementoable<>).MakeGenericType(memType);
+            return memType == typeof(ISnapshotable<>).MakeGenericType(memType);
         }
 
         private AggregateRoot CreateEmptyAggRoot(Type aggType)
@@ -168,10 +168,9 @@ namespace Ncqrs.Domain.Storage
 
             if (memType != null)
             {
-                var createMethod = memType.GetMethod("CreateMemento");
+                var createMethod = memType.GetMethod("CreateSnapshot");
 
-                IMemento memento = (IMemento) createMethod.Invoke(aggregateRoot, new object[0]);
-                return new Snapshot(aggregateRoot.Id, aggregateRoot.Version, memento);
+                return (ISnapshot)createMethod.Invoke(aggregateRoot, new object[0]);
             }
             else
             {
@@ -181,18 +180,18 @@ namespace Ncqrs.Domain.Storage
 
         private Type GetMementoableInterfaceType(Type aggType)
         {
-            // Query all IMementoable interfaces. We only allow
-            // one IMementoable interface per aggregate root type.
+            // Query all ISnapshotable interfaces. We only allow
+            // one ISnapshotable interface per aggregate root type.
             var mementoables = from i in aggType.GetInterfaces()
-                               where i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IMementoable<>)
+                               where i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ISnapshotable<>)
                                select i;
 
-            // Aggregate does not implement any IMementoable interface.
+            // Aggregate does not implement any ISnapshotable interface.
             if (mementoables.Count() == 0)
             {
                 return null;
             }
-            // Aggregate does implement multiple IMementoable interfaces.
+            // Aggregate does implement multiple ISnapshotable interfaces.
             if (mementoables.Count() > 0)
             {
                 return null;

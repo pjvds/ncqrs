@@ -50,6 +50,8 @@ namespace Ncqrs.Domain
             }
         }
 
+        private long _initialVersion;
+
         /// <summary>
         /// Gets the initial version.
         /// <para>
@@ -63,7 +65,13 @@ namespace Ncqrs.Domain
         /// <value>The initial version.</value>
         public long InitialVersion
         {
-            get; private set;
+            get { return _initialVersion; }
+            protected set
+            {
+                Contract.Requires<InvalidOperationException>(_uncommittedEvent.Count == 0);
+
+                _initialVersion = value;
+            }
         }
 
         /// <summary>

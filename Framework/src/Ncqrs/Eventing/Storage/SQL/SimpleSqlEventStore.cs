@@ -28,7 +28,7 @@ namespace Ncqrs.Eventing.Storage.SQL
 
         private const String UpdateEventSourceVersionQuery = "UPDATE [EventSources] SET [Version] = (SELECT Count(*) FROM [Events] WHERE [EventSourceId] = @Id) WHERE [Id] = @id";
 
-        private const String InsertSnapshot = "INSERT INTO [Snapshots]([EventSourceId], [Version], [MementoType], [MementoData]) VALUES (@EventSourceId, @Version, @MementoType, @MementoData)";
+        private const String InsertSnapshot = "INSERT INTO [Snapshots]([EventSourceId], [Version], [SnapshotType], [SnapshotData]) VALUES (@EventSourceId, @Version, @SnapshotType, @SnapshotData)";
 
         private const String SelectLatestSnapshot = "SELECT TOP 1 * FROM [Snapshots] WHERE [EventSourceId]=@EventSourceId ORDER BY Version DESC";
         #endregion
@@ -161,7 +161,7 @@ namespace Ncqrs.Eventing.Storage.SQL
                         using (var dataStream = new MemoryStream())
                         {
                             var formatter = new BinaryFormatter();
-                            formatter.Serialize(dataStream, snapshot.Memento);
+                            formatter.Serialize(dataStream, snapshot);
                             byte[] data = dataStream.ToArray();
 
                             using (var command = new SqlCommand(InsertSnapshot, transaction.Connection))
@@ -169,8 +169,8 @@ namespace Ncqrs.Eventing.Storage.SQL
                                 command.Transaction = transaction;
                                 command.Parameters.AddWithValue("EventSourceId", snapshot.EventSourceId);
                                 command.Parameters.AddWithValue("Version", snapshot.EventSourceVersion);
-                                command.Parameters.AddWithValue("MementoType", snapshot.Memento.GetType().AssemblyQualifiedName);
-                                command.Parameters.AddWithValue("MementoData", data);
+                                command.Parameters.AddWithValue("SnapshotType", snapshot.GetType().AssemblyQualifiedName);
+                                command.Parameters.AddWithValue("SnapshotData", data);
                                 command.ExecuteNonQuery();
                             }
                         }
@@ -214,9 +214,7 @@ namespace Ncqrs.Eventing.Storage.SQL
                             using (var buffer = new MemoryStream(mementoData))
                             {
                                 var formatter = new BinaryFormatter();
-                                IMemento memento = (IMemento) formatter.Deserialize(buffer);
-
-                                theSnapshot = new Snapshot(eventSourceId, version, memento);
+                                theSnapshot = (ISnapshot) formatter.Deserialize(buffer);
                             }
                         }
                     }
