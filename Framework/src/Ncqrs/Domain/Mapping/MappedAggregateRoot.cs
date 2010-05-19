@@ -15,8 +15,6 @@ namespace Ncqrs.Domain.Mapping
             InitializeHandlers();
         }
 
-        // TODO: "(T)(AggregateRoot)this)" is ugly bigtime but need the specific type in implementations of the aggregate mapper
-        // so ill first work out my expression mapper and w'll continue work on this later
         private void InitializeHandlers()
         {
             foreach (var handler in _mappingStrategy.GetEventHandlersFromAggregateRoot((T)this))
