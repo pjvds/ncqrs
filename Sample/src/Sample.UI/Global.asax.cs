@@ -14,6 +14,8 @@ using Ncqrs.Domain;
 using Sample.ReadModel.Denormalizers.EditMessageModel;
 using Ncqrs.Eventing.Storage.SQL;
 using Ncqrs.Domain.Storage;
+using Ncqrs.Commanding.ServiceModel;
+using Ncqrs.Commanding.CommandExecution.Mapping;
 
 namespace Sample.UI
 {
