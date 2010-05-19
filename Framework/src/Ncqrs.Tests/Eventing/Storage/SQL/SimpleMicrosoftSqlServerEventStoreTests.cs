@@ -54,7 +54,15 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
             }
         }
 
-        private const string DEFAULT_CONNECTION = "Data Source=.\\sqlexpress;Initial Catalog=NcqrsTestEventStore;Integrated Security=True";
+        [Serializable]
+        public class MySnapshot : SnapshotBase
+        {
+            public MySnapshot(Guid eventSourceId, long eventSourceVersion) : base(eventSourceId, eventSourceVersion)
+            {
+            }
+        }
+
+        private const string DEFAULT_CONNECTION = "Data Source=.\\sqlexpress;Initial Catalog=NcqrsSampleEventStore;Integrated Security=True";
 
         [SetUp]
         public void Verify_sql_connection()
@@ -164,9 +172,25 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
 
             targetStore.Save(eventSource);
 
-            var result = targetStore.GetAllEventsForEventSource(id);
+            var result = targetStore.GetAllEvents(id);
             result.Count().Should().Be(events.Length);
             result.First().EventIdentifier.Should().Be(events.First().EventIdentifier);
+        }
+
+        [Test]
+        public void Saving_snapshot_should_not_throw_an_exception_when_snapshot_is_valid()
+        {
+            var targetStore = new SimpleMicrosoftSqlServerEventStore(DEFAULT_CONNECTION);
+
+            var anId = Guid.NewGuid();
+            var aVersion = 12;
+            var snapshot = new MySnapshot(anId, aVersion);
+            
+            targetStore.SaveShapshot(snapshot);
+
+            var savedSnapshot = targetStore.GetSnapshot(anId);
+            savedSnapshot.EventSourceId.Should().Be(anId);
+            savedSnapshot.EventSourceVersion.Should().Be(aVersion);
         }
     }
 }

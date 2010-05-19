@@ -11,7 +11,7 @@ namespace Ncqrs.Eventing.Storage.SQL
     /// <summary>
     /// Stores events for a SQL database.
     /// </summary>
-    public class SimpleMicrosoftSqlServerEventStore : IEventStore
+    public class SimpleMicrosoftSqlServerEventStore : IEventStore, ISnapshotStore
     {
         #region Queries
         private const String DeleteUnusedProviders = "DELETE FROM [EventSources] WHERE (SELECT Count(EventSourceId) FROM [Events] WHERE [EventSourceId]=[EventSources].[Id]) = 0";
@@ -20,13 +20,17 @@ namespace Ncqrs.Eventing.Storage.SQL
 
         private const String InsertNewProviderQuery = "INSERT INTO [EventSources](Id, Type, Version) VALUES (@Id, @Type, @Version)";
 
-        private const String SelectAllEventsQuery = "SELECT [TimeStamp], [Data], [Sequence] FROM [Events] WHERE [EventSourceId] = @EventSourceId ORDER BY [Sequence]";
+        private const String SelectAllEventsQuery = "SELECT [TimeStamp], [Data], [Sequence] FROM [Events] WHERE [EventSourceId] = @EventSourceId AND [Sequence] > @EventSourceVersion ORDER BY [Sequence]";
 
         private const String SelectAllIdsForTypeQuery = "SELECT [Id] FROM [EventSources] WHERE [Type] = @Type";
 
         private const String SelectVersionQuery = "SELECT [Version] FROM [EventSources] WHERE [Id] = @id";
 
         private const String UpdateEventSourceVersionQuery = "UPDATE [EventSources] SET [Version] = (SELECT Count(*) FROM [Events] WHERE [EventSourceId] = @Id) WHERE [Id] = @id";
+
+        private const String InsertSnapshot = "INSERT INTO [Snapshots]([EventSourceId], [Version], [SnapshotType], [SnapshotData]) VALUES (@EventSourceId, @Version, @SnapshotType, @SnapshotData)";
+
+        private const String SelectLatestSnapshot = "SELECT TOP 1 * FROM [Snapshots] WHERE [EventSourceId]=@EventSourceId ORDER BY Version DESC";
         #endregion
 
         private readonly String _connectionString;
@@ -43,7 +47,17 @@ namespace Ncqrs.Eventing.Storage.SQL
         /// </summary>
         /// <param name="id">The id of the event provider.</param>
         /// <returns>All events for the specified event provider.</returns>
-        public IEnumerable<ISourcedEvent> GetAllEventsForEventSource(Guid id)
+        public IEnumerable<ISourcedEvent> GetAllEvents(Guid id)
+        {
+            return GetAllEventsSinceVersion(id, 0);
+        }
+
+        /// <summary>
+        /// Get all events provided by an specified event source.
+        /// </summary>
+        /// <param name="eventSourceId">The id of the event source that owns the events.</param>
+        /// <returns>All the events from the event source.</returns>
+        public IEnumerable<ISourcedEvent> GetAllEventsSinceVersion(Guid id, long version)
         {
             var result = new List<ISourcedEvent>();
 
@@ -53,6 +67,7 @@ namespace Ncqrs.Eventing.Storage.SQL
             {
                 // Add EventSourceId parameter and open connection.
                 command.Parameters.AddWithValue("EventSourceId", id);
+                command.Parameters.AddWithValue("EventSourceVersion", version);
                 connection.Open();
 
                 // Execute query and create reader.
@@ -127,6 +142,86 @@ namespace Ncqrs.Eventing.Storage.SQL
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Saves a snapshot of the specified event source.
+        /// </summary>
+        public void SaveShapshot(ISnapshot snapshot)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                // Open connection and begin a transaction so we can
+                // commit or rollback all the changes that has been made.
+                connection.Open();
+                using (SqlTransaction transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        using (var dataStream = new MemoryStream())
+                        {
+                            var formatter = new BinaryFormatter();
+                            formatter.Serialize(dataStream, snapshot);
+                            byte[] data = dataStream.ToArray();
+
+                            using (var command = new SqlCommand(InsertSnapshot, transaction.Connection))
+                            {
+                                command.Transaction = transaction;
+                                command.Parameters.AddWithValue("EventSourceId", snapshot.EventSourceId);
+                                command.Parameters.AddWithValue("Version", snapshot.EventSourceVersion);
+                                command.Parameters.AddWithValue("SnapshotType", snapshot.GetType().AssemblyQualifiedName);
+                                command.Parameters.AddWithValue("SnapshotData", data);
+                                command.ExecuteNonQuery();
+                            }
+                        }
+
+                        // Everything is handled, commint transaction.
+                        transaction.Commit();
+                    }
+                    catch
+                    {
+                        // Something went wrong, rollback transaction.
+                        transaction.Rollback();
+                        throw;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets a snapshot of a particular event source, if one exists. Otherwise, returns <c>null</c>.
+        /// </summary>
+        public ISnapshot GetSnapshot(Guid eventSourceId)
+        {
+            ISnapshot theSnapshot = null;
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                // Open connection and begin a transaction so we can
+                // commit or rollback all the changes that has been made.
+                connection.Open();
+
+                using (var command = new SqlCommand(SelectLatestSnapshot, connection))
+                {
+                    command.Parameters.AddWithValue("@EventSourceId", eventSourceId);
+
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            var version = (long) reader["Version"];
+                            var mementoData = (byte[]) reader["MementoData"];
+                            using (var buffer = new MemoryStream(mementoData))
+                            {
+                                var formatter = new BinaryFormatter();
+                                theSnapshot = (ISnapshot) formatter.Deserialize(buffer);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return theSnapshot;
         }
 
         public IEnumerable<Guid> GetAllIdsForType(Type eventProviderType)

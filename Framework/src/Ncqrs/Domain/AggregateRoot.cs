@@ -50,6 +50,8 @@ namespace Ncqrs.Domain
             }
         }
 
+        private long _initialVersion;
+
         /// <summary>
         /// Gets the initial version.
         /// <para>
@@ -63,7 +65,13 @@ namespace Ncqrs.Domain
         /// <value>The initial version.</value>
         public long InitialVersion
         {
-            get; private set;
+            get { return _initialVersion; }
+            protected set
+            {
+                Contract.Requires<InvalidOperationException>(_uncommittedEvent.Count == 0);
+
+                _initialVersion = value;
+            }
         }
 
         /// <summary>
@@ -94,12 +102,8 @@ namespace Ncqrs.Domain
         /// <param name="history">The history.</param>
         protected internal virtual void InitializeFromHistory(IEnumerable<DomainEvent> history)
         {
-            if (history == null) 
-                throw new ArgumentNullException("history");
-            if (history.Count() == 0)
-                throw new ArgumentException("The provided history does not contain any historical event.", "history");
-            if (Version != 0 || _uncommittedEvent.Count > 0)
-                throw new InvalidOperationException("Cannot load from history when a event source is already loaded.");
+            Contract.Requires<ArgumentNullException>(history != null, "The history cannot be null.");
+            if (_uncommittedEvent.Count > 0) throw new InvalidOperationException("Cannot apply history when instance has uncommitted changes.");
 
             foreach (var historicalEvent in history)
             {
@@ -136,15 +140,26 @@ namespace Ncqrs.Domain
 
         private void ApplyEvent(DomainEvent evnt, Boolean historical)
         {
+            if(historical)
+            {
+                if(evnt.EventSequence != InitialVersion+1)
+                {
+                    var message = String.Format("Cannot apply event with sequence {0}. Since the initial version of the " +
+                                                "aggregate root is {1}. Only an event with sequence number {2} can be applied.",
+                                                evnt.EventSequence, InitialVersion, InitialVersion + 1);
+                    throw new InvalidOperationException(message);
+                }
+            }
+
             HandleEvent(evnt);
 
             if (!historical)
             {
                 if (evnt.AggregateRootId != Guid.Empty)
                 {
-                    var message = "The {0} event cannot be applied to aggregate root {1} with id {2} "
-                                  + "since it was already owned by event aggregate root with id {3}."
-                                  .FormatWith(evnt.GetType().FullName, this.GetType().FullName, Id, evnt.AggregateRootId);
+                    var message = String.Format("The {0} event cannot be applied to aggregate root {1} with id {2} " +
+                                                "since it was already owned by event aggregate root with id {3}.",
+                                                evnt.GetType().FullName, this.GetType().FullName, Id, evnt.AggregateRootId);
                     throw new InvalidOperationException(message);
                 }
 
