@@ -3,6 +3,7 @@ using Ncqrs.Domain;
 
 namespace Sample.Events
 {
+    [Serializable]
     public class NewMessageAdded : DomainEvent
     {
         public Guid MessageId

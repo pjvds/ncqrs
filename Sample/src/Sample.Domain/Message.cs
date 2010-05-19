@@ -24,11 +24,6 @@ namespace Sample.Domain
             ApplyEvent(e);
         }
 
-        protected Message(IEnumerable<DomainEvent> history)
-            : base(history)
-        {
-        }
-
         public void UpdateMessageText(String newMessageText)
         {
             var e = new MessageTextUpdated

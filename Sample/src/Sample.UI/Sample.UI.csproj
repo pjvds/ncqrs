@@ -34,26 +34,26 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="log4net">
-      <HintPath>..\..\bin\log4net\log4net.dll</HintPath>
+      <HintPath>..\..\bin\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="MongoDB.Emitter, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\bin\MongoDB.Emitter\MongoDB.Emitter.dll</HintPath>
+    <Reference Include="MongoDB.Driver">
+      <HintPath>..\..\bin\MongoDB.Driver.dll</HintPath>
     </Reference>
-    <Reference Include="Ncqrs">
-      <HintPath>..\..\bin\Ncqrs\Ncqrs.dll</HintPath>
+    <Reference Include="MongoDB.Emitter, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\bin\MongoDB.Emitter.dll</HintPath>
     </Reference>
     <Reference Include="Ncqrs.Config.StructureMap">
-      <HintPath>..\..\bin\Ncqrs\Ncqrs.Config.StructureMap.dll</HintPath>
+      <HintPath>..\..\bin\Ncqrs.Config.StructureMap.dll</HintPath>
     </Reference>
     <Reference Include="Ncqrs.Eventing.Storage.MongoDB">
-      <HintPath>..\..\bin\Ncqrs\Ncqrs.Eventing.Storage.MongoDB.dll</HintPath>
+      <HintPath>..\..\bin\Ncqrs.Eventing.Storage.MongoDB.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json.Net20">
-      <HintPath>..\..\bin\Json.NET\Newtonsoft.Json.Net20.dll</HintPath>
+      <HintPath>..\..\bin\Newtonsoft.Json.Net20.dll</HintPath>
     </Reference>
     <Reference Include="StructureMap">
-      <HintPath>..\..\bin\StructureMap\StructureMap.dll</HintPath>
+      <HintPath>..\..\bin\StructureMap.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -137,6 +137,10 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Framework\src\Ncqrs\Ncqrs.csproj">
+      <Project>{01F84441-80D3-49B4-AB18-96894ACB2F90}</Project>
+      <Name>Ncqrs</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Sample.Commands\Sample.Commands.csproj">
       <Project>{107CC343-852F-4892-8332-6433C406C813}</Project>
       <Name>Sample.Commands</Name>
