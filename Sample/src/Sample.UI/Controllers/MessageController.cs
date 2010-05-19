@@ -3,7 +3,6 @@ using System.Linq;
 using System.Web.Mvc;
 using Sample.ReadModel;
 using Sample.Commands;
-using MongoDB.Driver;
 
 namespace Sample.UI.Controllers
 {
@@ -11,14 +10,16 @@ namespace Sample.UI.Controllers
     {
         public ActionResult Index()
         {
-            using(var repository = new ReadRepository<IMessageModel>())
+            using (var context = new ReadModelDataContext())
             {
-            var model = repository.FindAll(new Document().Append("CreationDate", -1)).ToList();
+                var messages = (from m in context.MessageModels
+                                orderby m.CreationDate
+                                select m).ToList();
 
-            if (model.Count == 0)
-                return RedirectToAction("NoMessageFound");
-            else
-                return View(model);
+                if (messages.Count == 0)
+                    return RedirectToAction("NoMessageFound");
+                else
+                    return View(messages);
             }
         }
 
@@ -43,14 +44,15 @@ namespace Sample.UI.Controllers
 
         public ActionResult Edit()
         {
-            var messageId = Guid.Parse(Request.QueryString["MessageId"]);
+            //var messageId = Guid.Parse(Request.QueryString["MessageId"]);
 
-            using (var repository = new ReadRepository<IEditMessageModel>())
-            {
-                var model = repository.FindOne(new Document().Append("Id", messageId));
+            //using (var repository = new ReadRepository<IEditMessageModel>())
+            //{
+            //    var model = repository.FindOne(new Document().Append("Id", messageId));
 
-                return View(model);
-            }
+            //    return View(model);
+            //}
+            throw new NotImplementedException();
         }
 
         [HttpPost]

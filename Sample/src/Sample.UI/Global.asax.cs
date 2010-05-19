@@ -8,24 +8,25 @@ using Ncqrs.Config.StructureMap;
 using Ncqrs.Eventing.Denormalization;
 using Ncqrs.Eventing.ServiceModel.Bus;
 using Ncqrs.Eventing.Storage;
-using Ncqrs.Eventing.Storage.MongoDB;
 using Sample.Commands;
 using Ncqrs.Domain;
-using Sample.ReadModel.Denormalizers.EditMessageModel;
+using Ncqrs.Eventing.Storage.SQL;
+using Sample.ReadModel.Denormalizers;
+using Ncqrs.Domain.Storage;
 
 namespace Sample.UI
 {
     public class MvcApplication : HttpApplication
     {
-        public static ICommandExecutor CommandExecutor
+        public static ICommandService CommandExecutor
         {
             get
             {
-                return (ICommandExecutor)HttpContext.Current.Application["CommandExecutor"];
+                return (ICommandService)HttpContext.Current.Application["ICommandService"];
             }
             private set
             {
-                HttpContext.Current.Application["CommandExecutor"] = value;
+                HttpContext.Current.Application["ICommandService"] = value;
             }
         }
 
@@ -48,11 +49,11 @@ namespace Sample.UI
             this.Response.Redirect("/Home/Error");
         }
 
-        private ICommandExecutor InitializeCommandService()
+        private ICommandService InitializeCommandService()
         {
-            var commandService = new InProcessCommandExecutionDispatcher();
-            commandService.RegisterExecutor<AddNewMessageCommand>(new AutoMappingCommandExecutor());
-            commandService.RegisterExecutor<UpdateMessageTextCommand>(new AutoMappingCommandExecutor());
+            var commandService = new InProcessCommandService();
+            commandService.RegisterExecutor<AddNewMessageCommand>(new MappedCommandExecutor<AddNewMessageCommand>());
+            commandService.RegisterExecutor<UpdateMessageTextCommand>(new MappedCommandExecutor<UpdateMessageTextCommand>());
 
             CommandExecutor = commandService;
 
@@ -64,6 +65,7 @@ namespace Sample.UI
             EventBus = new InProcessEventBus();
 
             var factory = new DenormalizerFactory();
+
             var denormalizers = factory.CreateDenormalizersFromAssembly(typeof(EditMessageModelMessageTextUpdatedDenormalizer).Assembly);
 
             foreach (var denormalizer in denormalizers)
@@ -76,7 +78,7 @@ namespace Sample.UI
 
         private IEventStore InitializeEventStore()
         {
-            var eventStore = new MongoDBEventStore();
+            var eventStore = new SimpleMicrosoftSqlServerEventStore("Data Source=.\\sqlexpress;Initial Catalog=NcqrsSampleEventStore;Integrated Security=True");
             return eventStore;
         }
 
@@ -101,7 +103,8 @@ namespace Sample.UI
 
                 x.For<IEventBus>().Use(eventBus);
                 x.For<IEventStore>().Use(eventStore);
-                x.For<IUnitOfWorkFactory>().Use<ThreadBasedUnitOfWorkFactory>();
+                x.For<IDomainRepository>().Use(new DomainRepository(eventStore, eventBus));
+                x.For<IUnitOfWorkFactory>().Use<UnitOfWorkFactory>();
             });
 
             NcqrsEnvironment.Configure(config);

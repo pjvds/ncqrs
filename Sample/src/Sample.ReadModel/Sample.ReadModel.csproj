@@ -31,17 +31,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MongoDB.Driver">
-      <HintPath>..\..\bin\MongoDB-CSharp\MongoDB.Driver.dll</HintPath>
-    </Reference>
-    <Reference Include="MongoDB.Emitter">
-      <HintPath>..\..\bin\MongoDB.Emitter\MongoDB.Emitter.dll</HintPath>
-    </Reference>
     <Reference Include="Ncqrs">
-      <HintPath>..\..\bin\Ncqrs\Ncqrs.dll</HintPath>
+      <HintPath>..\..\bin\Ncqrs.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -49,21 +47,47 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Denormalizers\EditMessageModel\EditMessageModelMessageTextUpdatedDenormalizer.cs" />
-    <Compile Include="Denormalizers\EditMessageModel\EditMessageModelNewMessageDenormalizer.cs" />
-    <Compile Include="Denormalizers\MessageModel\MessageModelMessageTextUpdatedDenormalizer.cs" />
-    <Compile Include="Denormalizers\MessageModel\MessageModelNewMessageDenormalizer.cs" />
-    <Compile Include="IEditMessageModel.cs" />
-    <Compile Include="IMessageModel.cs" />
-    <Compile Include="IPreviousTextModel.cs" />
-    <Compile Include="ReadRepository.cs" />
+    <Compile Include="Denormalizers\EditMessageModelMessageTextUpdatedDenormalizer.cs" />
+    <Compile Include="Denormalizers\EditMessageModelNewMessageDenormalizer.cs" />
+    <Compile Include="Denormalizers\MessageModelMessageTextUpdatedDenormalizer.cs" />
+    <Compile Include="Denormalizers\MessageModelNewMessageDenormalizer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="ReadModel.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ReadModel.dbml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Sample.Events\Sample.Events.csproj">
       <Project>{EED221DB-3832-4256-AA3D-A7BA2DBC8C9D}</Project>
       <Name>Sample.Events</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.Config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="ReadModel.dbml">
+      <Generator>MSLinqToSQLGenerator</Generator>
+      <LastGenOutput>ReadModel.designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadModel.dbml.layout">
+      <DependentUpon>ReadModel.dbml</DependentUpon>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

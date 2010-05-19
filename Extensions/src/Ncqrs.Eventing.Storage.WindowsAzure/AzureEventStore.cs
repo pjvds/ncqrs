@@ -20,8 +20,7 @@ namespace Ncqrs.Eventing.Storage.WindowsAzure
         private CloudStorageAccount _account;
         private CloudTableClient _tableClient;
 
-        public AzureEventStore()
-            : this(DEFAULT_DEVELOPMENT_ACCOUNT)
+        public AzureEventStore() : this(DEFAULT_DEVELOPMENT_ACCOUNT)
         {
         }
 
