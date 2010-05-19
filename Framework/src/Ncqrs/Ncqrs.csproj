@@ -155,9 +155,7 @@
     <Compile Include="Domain\Mapping\MappedAggregateRoot.cs" />
     <Compile Include="Domain\Mapping\NoEventHandlerAttribute.cs" />
     <Compile Include="Domain\Storage\AggregateLoaderException.cs" />
-    <Compile Include="Domain\Storage\DefaultAggregateRootLoader.cs" />
     <Compile Include="Domain\Storage\DomainRepository.cs" />
-    <Compile Include="Domain\Storage\IAggregateRootLoader.cs" />
     <Compile Include="Domain\Storage\IDomainRepository.cs" />
     <Compile Include="Domain\UnitOfWorkFactory.cs" />
     <Compile Include="Domain\TypeThresholdedActionBasedDomainEventHandler.cs" />

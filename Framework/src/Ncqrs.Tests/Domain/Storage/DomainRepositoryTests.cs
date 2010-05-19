@@ -65,40 +65,17 @@ namespace Ncqrs.Tests.Domain.Storage
         {
             var store = MockRepository.GenerateMock<IEventStore>();
             var bus = MockRepository.GenerateMock<IEventBus>();
-            var loader = MockRepository.GenerateMock<IAggregateRootLoader>();
             var converter = MockRepository.GenerateMock<IEventConverter<DomainEvent, DomainEvent>>();
 
             var aggId = Guid.NewGuid();
             var eventsInTheStore = new DomainEvent[] { new FooEvent(), new BarEvent() };
             store.Expect(s => s.GetAllEvents(aggId)).Return(eventsInTheStore);
 
-            var repository = new DomainRepository(store, bus, loader, null, converter);
+            var repository = new DomainRepository(store, bus, null, converter);
 
             repository.GetById<MyAggregateRoot>(aggId);
 
             converter.AssertWasCalled(c => c.Convert(null),options => options.IgnoreArguments().Repeat.Twice());
-        }
-
-        [Test]
-        public void When_a_aggregate_root_is_requested_by_id_it_should__get_the_event_from_the_store_and_load_the_aggregate_with_the_loader_with_the_events_from_the_store()
-        {
-            var store = MockRepository.GenerateMock<IEventStore>();
-            var bus = MockRepository.GenerateMock<IEventBus>();
-            var loader = MockRepository.GenerateMock<IAggregateRootLoader>();
-
-            var aggId = Guid.NewGuid();
-            var eventsInTheStore = new DomainEvent[] { new FooEvent(), new BarEvent() };
-            var loadedAggregate = new MyAggregateRoot();
-
-            store.Expect(s => s.GetAllEvents(aggId)).Return(eventsInTheStore);
-            loader.Expect(l => l.LoadAggregateRootFromEvents(typeof (MyAggregateRoot), eventsInTheStore)).Return(loadedAggregate);
-
-            var repository = new DomainRepository(store, bus, loader, null, null);
-            var result = repository.GetById<MyAggregateRoot>(aggId);
-
-            store.VerifyAllExpectations();
-            loader.VerifyAllExpectations();
-            result.Should().Be(loadedAggregate);
         }
 
         [Test]

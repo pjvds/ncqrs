@@ -1,5 +1,6 @@
 ﻿using System;
 using Ncqrs.Domain;
+using System.Diagnostics.Contracts;
 
 namespace Ncqrs.Eventing
 {
@@ -9,9 +10,23 @@ namespace Ncqrs.Eventing
     /// and restored from a the from the same class.
     /// This is used to prevent building <see cref="AggregateRoot"/>'s from the ground up.
     /// </summary>
+    [ContractClass(typeof(IMementoableContracts<>))]
     public interface IMementoable<TMemento> where TMemento : IMemento
     {
         void RestoreFromMemento(TMemento memento);
         TMemento CreateMemento();
+    }
+
+    [ContractClassFor(typeof(IMementoable<>))]
+    public class IMementoableContracts<TMemento> : IMementoable<TMemento> where TMemento : IMemento
+    {
+        public void RestoreFromMemento(TMemento memento)
+        {
+        }
+
+        public TMemento CreateMemento()
+        {
+            return default(TMemento);
+        }
     }
 }

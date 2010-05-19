@@ -57,6 +57,10 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
         [Serializable]
         public class MyMemento : IMemento
         {
+            public long ForVersion
+            {
+                get; set;
+            }
         }
 
         private const string DEFAULT_CONNECTION = "Data Source=.\\sqlexpress;Initial Catalog=NcqrsSampleEventStore;Integrated Security=True";
