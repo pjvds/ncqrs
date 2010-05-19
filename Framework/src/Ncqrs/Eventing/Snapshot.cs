@@ -2,6 +2,7 @@
 
 namespace Ncqrs.Eventing
 {
+    [Serializable]
     public abstract class Snapshot : ISnapshot
     {
         public Guid EventSourceId

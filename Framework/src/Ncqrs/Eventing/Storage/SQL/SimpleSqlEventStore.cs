@@ -28,7 +28,7 @@ namespace Ncqrs.Eventing.Storage.SQL
 
         private const String UpdateEventSourceVersionQuery = "UPDATE [EventSources] SET [Version] = (SELECT Count(*) FROM [Events] WHERE [EventSourceId] = @Id) WHERE [Id] = @id";
 
-        private const String InsertSnapshot = "INSERT INTO [Snapshots]([EventSourceId], [Version], [SnapshotType], [SnapshotData]) VALUES (@EventSourceId, @Version, @SnapshotType, @SnapshotData)";
+        private const String InsertSnapshot = "DELETE FROM [Snapshots] WHERE [EventSourceId]=@EventSourceId; INSERT INTO [Snapshots]([EventSourceId], [Version], [SnapshotType], [SnapshotData]) VALUES (@EventSourceId, @Version, @SnapshotType, @SnapshotData)";
 
         private const String SelectLatestSnapshot = "SELECT TOP 1 * FROM [Snapshots] WHERE [EventSourceId]=@EventSourceId ORDER BY Version DESC";
         #endregion
@@ -210,8 +210,8 @@ namespace Ncqrs.Eventing.Storage.SQL
                         if (reader.Read())
                         {
                             var version = (long) reader["Version"];
-                            var mementoData = (byte[]) reader["MementoData"];
-                            using (var buffer = new MemoryStream(mementoData))
+                            var snapshotData = (byte[]) reader["SnapshotData"];
+                            using (var buffer = new MemoryStream(snapshotData))
                             {
                                 var formatter = new BinaryFormatter();
                                 theSnapshot = (ISnapshot) formatter.Deserialize(buffer);
