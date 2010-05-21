@@ -186,11 +186,11 @@ namespace Ncqrs.Domain
 
         public void AcceptChanges()
         {
-            // Update the initial version.
-            this.InitialVersion = Version;
-
             // Clear the unaccepted event list.
             _uncommittedEvent.Clear();
+
+            // Update the initial version.
+            this.InitialVersion = Version;
         }
 
         private void RegisterCurrentInstanceAsDirty()
