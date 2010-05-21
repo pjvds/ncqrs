@@ -150,10 +150,7 @@ namespace Ncqrs.Domain
                     throw new InvalidOperationException(message);
                 }
             }
-
-            HandleEvent(evnt);
-
-            if (!historical)
+            else
             {
                 if (evnt.AggregateRootId != Guid.Empty)
                 {
@@ -165,8 +162,13 @@ namespace Ncqrs.Domain
 
                 evnt.AggregateRootId = this.Id;
                 evnt.EventSequence = Version + _uncommittedEvent.Count + 1;
-                _uncommittedEvent.Push(evnt);
+            }
 
+            HandleEvent(evnt);
+
+            if (!historical)
+            {
+                _uncommittedEvent.Push(evnt);
                 RegisterCurrentInstanceAsDirty();
             }
         }
