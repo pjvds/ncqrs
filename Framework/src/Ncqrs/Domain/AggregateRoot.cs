@@ -188,11 +188,15 @@ namespace Ncqrs.Domain
 
         public void AcceptChanges()
         {
-            // Clear the unaccepted event list.
+            // Get current version, since when we clear 
+            // the uncommited event stack the version will 
+            // be InitialVersion+0. Since the version is 
+            // the result of InitialVersion+number of uncommited events.
+            long newInitialVersion = Version;
+
             _uncommittedEvent.Clear();
 
-            // Update the initial version.
-            this.InitialVersion = Version;
+            this.InitialVersion = newInitialVersion;
         }
 
         private void RegisterCurrentInstanceAsDirty()

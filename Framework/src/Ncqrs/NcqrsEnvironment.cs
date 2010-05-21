@@ -6,7 +6,6 @@ using Ncqrs.Config;
 using Ncqrs.Domain;
 using Ncqrs.Eventing.ServiceModel.Bus;
 using Ncqrs.Eventing.Storage;
-using Ncqrs.Domain.Storage;
 
 namespace Ncqrs
 {
@@ -16,6 +15,8 @@ namespace Ncqrs
     /// </remarks></summary>
     public static class NcqrsEnvironment
     {
+        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
         static NcqrsEnvironment()
         {
             // Initialize defaults.
@@ -23,11 +24,8 @@ namespace Ncqrs
             SetDefault<IUniqueIdentifierGenerator>(new BasicGuidGenerator());
             SetDefault<IEventBus>(new InProcessEventBus());
             SetDefault<IEventStore>(new InMemoryEventStore());
-            SetDefault<IDomainRepository>(new DomainRepository(Get<IEventStore>(), Get<IEventBus>()));
             SetDefault<IUnitOfWorkFactory>(new UnitOfWorkFactory());
         }
-
-        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
         /// Holds the defaults for requested types that are not configured.
@@ -56,21 +54,25 @@ namespace Ncqrs
         /// </returns>
         public static T Get<T>() where T : class
         {
+            Contract.Ensures(Contract.Result<T>() != null, "The result cannot be null.");
+
             Log.DebugFormat("Requesting instance {0} from the environment.", typeof(T).FullName);
 
-            T result;
+            T result = null;
 
             if (_instance == null || !_instance.TryGet(out result))
             {
                 object defaultResult;
 
-                if (!_defaults.TryGetValue(typeof(T), out defaultResult))
+                if (_defaults.TryGetValue(typeof(T), out defaultResult))
                 {
-                    throw new InstanceNotFoundInEnvironmentConfigurationException(typeof(T));
+                    result = (T)defaultResult;
+                    
                 }
-
-                result = (T) defaultResult;
             }
+
+            if(result == null)
+                throw new InstanceNotFoundInEnvironmentConfigurationException(typeof(T));
 
             return result;
         }

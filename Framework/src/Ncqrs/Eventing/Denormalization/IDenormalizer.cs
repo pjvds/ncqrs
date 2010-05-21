@@ -1,10 +1,9 @@
 ﻿using System;
-using Ncqrs.Eventing.ServiceModel.Bus;
 
 namespace Ncqrs.Eventing.Denormalization
 {
-    public interface IDenormalizer : IEventHandler
+    public interface IDenormalizer<TEvent>
     {
-        void DenormalizeEvent(IEvent evnt);        
+        void DenormalizeEvent(TEvent evnt);        
     }
 }
