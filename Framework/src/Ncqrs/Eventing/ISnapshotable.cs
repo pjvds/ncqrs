@@ -2,15 +2,22 @@
 using System.Collections.Generic;
 using Ncqrs.Domain;
 using System.Diagnostics.Contracts;
+using Ncqrs.Domain.Storage;
 
 namespace Ncqrs.Eventing
 {
     /// <summary>
-    /// This interface flags an object beeing <i>snapshotable</i>. This means that the
-    /// state of the object could be saved to an <see cref="ISnapshot"/> object
-    /// and restored from a the from the same class.
-    /// This is used to prevent building <see cref="AggregateRoot"/>'s from the ground up.
+    /// This interface flags an object beeing <i>snapshotable</i>. This means
+    /// that the state of the object could be saved to an 
+    /// <see cref="ISnapshot"/> object and restored from a the from the same
+    /// class. This is used to prevent building <see cref="AggregateRoot"/>'s
+    /// from the ground up.
     /// </summary>
+    /// <remarks>
+    /// Only one <see cref="ISnapshotable{TSnapshot}"/> can be implemented. If
+    /// you implement more than one, it will cause an exception when saving this
+    /// instance.
+    /// </remarks>
     [ContractClass(typeof(SnapshotableContracts<>))]
     public interface ISnapshotable<TSnapshot> : IEventSource where TSnapshot : ISnapshot
     {
