@@ -136,7 +136,6 @@
     <Compile Include="NcqrsEnvironment.cs" />
     <Compile Include="Config\IEnvironmentConfiguration.cs" />
     <Compile Include="NcqrsEnvironmentConfigurationException.cs" />
-    <Compile Include="Eventing\Denormalization\Denormalizer.cs" />
     <Compile Include="Eventing\Denormalization\DenormalizerFactory.cs" />
     <Compile Include="Eventing\Denormalization\IDenormalizer.cs" />
     <Compile Include="Domain\AggregateRoot.cs" />
