@@ -60,7 +60,7 @@ namespace Ncqrs.Eventing.Storage.WindowsAzure.Tests
             var theEventStore = new AzureEventStore();
             theEventStore.Save(mock);
 
-            var storedEvents = theEventStore.GetAllEventsForEventSource(mock.Id);
+            var storedEvents = theEventStore.GetAllEvents(mock.Id);
             storedEvents.Count().Should().Be(2);
         }
 
@@ -79,7 +79,7 @@ namespace Ncqrs.Eventing.Storage.WindowsAzure.Tests
             theEventStore.Save(mock);
 
 
-            var storedEvents = theEventStore.GetAllEventsForEventSource(mock.Id);
+            var storedEvents = theEventStore.GetAllEvents(mock.Id);
             storedEvents.Count().Should().Be(4);
         }
 
