@@ -149,6 +149,7 @@ namespace Ncqrs.Domain.Storage
 
             _store.Save(aggregateRoot);
 
+            // TODO: Snapshot should not effect saving.
             if(ShouldCreateSnapshot(aggregateRoot))
             {
                 var snapshot = GetSnapshot(aggregateRoot);

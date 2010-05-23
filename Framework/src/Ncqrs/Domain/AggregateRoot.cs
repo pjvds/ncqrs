@@ -150,10 +150,7 @@ namespace Ncqrs.Domain
                     throw new InvalidOperationException(message);
                 }
             }
-
-            HandleEvent(evnt);
-
-            if (!historical)
+            else
             {
                 if (evnt.AggregateRootId != Guid.Empty)
                 {
@@ -165,8 +162,13 @@ namespace Ncqrs.Domain
 
                 evnt.AggregateRootId = this.Id;
                 evnt.EventSequence = Version + _uncommittedEvent.Count + 1;
-                _uncommittedEvent.Push(evnt);
+            }
 
+            HandleEvent(evnt);
+
+            if (!historical)
+            {
+                _uncommittedEvent.Push(evnt);
                 RegisterCurrentInstanceAsDirty();
             }
         }
@@ -186,11 +188,15 @@ namespace Ncqrs.Domain
 
         public void AcceptChanges()
         {
-            // Update the initial version.
-            this.InitialVersion = Version;
+            // Get current version, since when we clear 
+            // the uncommited event stack the version will 
+            // be InitialVersion+0. Since the version is 
+            // the result of InitialVersion+number of uncommited events.
+            long newInitialVersion = Version;
 
-            // Clear the unaccepted event list.
             _uncommittedEvent.Clear();
+
+            this.InitialVersion = newInitialVersion;
         }
 
         private void RegisterCurrentInstanceAsDirty()

@@ -9,6 +9,8 @@ namespace Ncqrs.Domain
     {
         public IUnitOfWorkContext CreateUnitOfWork()
         {
+            if(UnitOfWork.Current != null) throw new InvalidOperationException("There is already a unit of work created for this context.");
+
             var store = NcqrsEnvironment.Get<IEventStore>();
             var bus = NcqrsEnvironment.Get<IEventBus>();
 

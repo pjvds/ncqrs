@@ -2,22 +2,31 @@
 
 namespace Ncqrs.Eventing
 {
-    public abstract class SnapshotBase : ISnapshot
+    /// <summary>
+    /// Holds the full state of an <see cref="IEventSource"/> at a certain version.
+    /// </summary>
+    [Serializable]
+    public abstract class Snapshot : ISnapshot
     {
+        /// <summary>
+        /// Gets the id of the event source from which this snapshot was created.
+        /// </summary>
+        /// <remarks>
+        /// The id of the event source from which this snapshot was created.
+        /// </remarks>
         public Guid EventSourceId
         {
-            get; private set;
+            get; set;
         }
 
+
+        /// <summary>
+        /// Gets the version of the event source when this snapshot was created.
+        /// </summary>
+        /// <value>The version of the event source when this snapshot was created.</value>
         public long EventSourceVersion
         {
-            get; private set;
-        }
-
-        public SnapshotBase(Guid eventSourceId, long eventSourceVersion)
-        {
-            EventSourceId = eventSourceId;
-            EventSourceVersion = eventSourceVersion;
+            get; set;
         }
     }
 }

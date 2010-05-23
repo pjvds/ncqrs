@@ -55,11 +55,8 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
         }
 
         [Serializable]
-        public class MySnapshot : SnapshotBase
+        public class MySnapshot : Snapshot
         {
-            public MySnapshot(Guid eventSourceId, long eventSourceVersion) : base(eventSourceId, eventSourceVersion)
-            {
-            }
         }
 
         private const string DEFAULT_CONNECTION = "Data Source=.\\sqlexpress;Initial Catalog=NcqrsSampleEventStore;Integrated Security=True";
@@ -184,7 +181,7 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
 
             var anId = Guid.NewGuid();
             var aVersion = 12;
-            var snapshot = new MySnapshot(anId, aVersion);
+            var snapshot = new MySnapshot{EventSourceId=anId, EventSourceVersion=aVersion};
             
             targetStore.SaveShapshot(snapshot);
 

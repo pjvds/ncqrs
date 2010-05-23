@@ -141,39 +141,35 @@
       <summary>
             Intercepts a command execution when a exception has been occurred or
             after the command has been executed. See the 
-            <see cref="P:Ncqrs.Commanding.ServiceModel.CommandContext.IsExecuted" /> to determine whether the
+            <see cref="P:Ncqrs.Commanding.ServiceModel.CommandContext.ExecutorHasBeenCalled" /> to determine whether the
             command has been executed.
             </summary>
       <param name="context">The context of the current command
             execution.
             </param>
     </member>
-    <member name="T:Ncqrs.Commanding.CommandExecution.Mapping.Actions.ObjectCreationCommandExecutor">
+    <member name="T:Ncqrs.Commanding.CommandExecution.Mapping.Actions.ObjectCreationCommandExecutor`1">
       <summary>
             An auto mapped action for a command. It created the object as specified by the mapping.
             </summary>
     </member>
-    <member name="T:Ncqrs.Commanding.CommandExecution.ICommandExecutor">
+    <member name="T:Ncqrs.Commanding.CommandExecution.ICommandExecutor`1">
       <summary>
             Executes a command. This means that the handles 
             executes the correct action based on the command.
             </summary>
     </member>
-    <member name="M:Ncqrs.Commanding.CommandExecution.ICommandExecutor.Execute(Ncqrs.Commanding.ICommand)">
+    <member name="M:Ncqrs.Commanding.CommandExecution.ICommandExecutor`1.Execute(`0)">
       <summary>
             Executes the command.
             </summary>
       <param name="command">The command to execute. This should not be null.</param>
       <exception cref="T:System.ArgumentNullException">Occurs when <i>command</i> is null.</exception>
-      <requires description="The command cannot be null." exception="T:System.ArgumentNullException">command != null</requires>
-      <exception cref="T:System.ArgumentNullException">command == null</exception>
     </member>
-    <member name="M:Ncqrs.Commanding.CommandExecution.Mapping.Actions.ObjectCreationCommandExecutor.Execute(Ncqrs.Commanding.ICommand)">
+    <member name="M:Ncqrs.Commanding.CommandExecution.Mapping.Actions.ObjectCreationCommandExecutor`1.Execute(`0)">
       <summary>
             Executes this action.
             </summary>
-      <requires description="The command cannot be null." inheritedFrom="M:Ncqrs.Commanding.CommandExecution.ICommandExecutor.Execute(Ncqrs.Commanding.ICommand)" inheritedFromTypeName="ICommandExecutor" exception="T:System.ArgumentNullException">command != null</requires>
-      <exception cref="T:System.ArgumentNullException">command == null</exception>
     </member>
     <member name="T:Ncqrs.Eventing.Storage.SQL.SimpleMicrosoftSqlServerEventStore">
       <summary>
@@ -185,13 +181,21 @@
             A event store. Can store and load events from an <see cref="T:Ncqrs.Eventing.IEventSource" />.
             </summary>
     </member>
-    <member name="M:Ncqrs.Eventing.Storage.IEventStore.GetAllEventsForEventSource(System.Guid)">
+    <member name="M:Ncqrs.Eventing.Storage.IEventStore.GetAllEvents(System.Guid)">
       <summary>
             Get all events provided by an specified event provider.
             </summary>
       <param name="id">The id of the event source that owns the events.</param>
       <returns>All the events from the event source.</returns>
       <ensures description="Result should never be null.">Contract.Result&lt;IEnumerable&lt;ISourcedEvent&gt;&gt;() != null</ensures>
+    </member>
+    <member name="M:Ncqrs.Eventing.Storage.IEventStore.GetAllEventsSinceVersion(System.Guid,System.Int64)">
+      <summary>
+            Get all events provided by an specified event source.
+            </summary>
+      <param name="eventSourceId">The id of the event source that owns the events.</param>
+      <returns>All the events from the event source.</returns>
+      <ensures>Contract.ForAll(Contract.Result&lt;IEnumerable&lt;ISourcedEvent&gt;&gt;(), e =&gt; e.EventSequence &gt; version)</ensures>
     </member>
     <member name="M:Ncqrs.Eventing.Storage.IEventStore.Save(Ncqrs.Eventing.IEventSource)">
       <summary>
@@ -202,13 +206,34 @@
       <requires description="source cannot be null." exception="T:System.ArgumentNullException">source != null</requires>
       <exception cref="T:System.ArgumentNullException">source == null</exception>
     </member>
-    <member name="M:Ncqrs.Eventing.Storage.SQL.SimpleMicrosoftSqlServerEventStore.GetAllEventsForEventSource(System.Guid)">
+    <member name="M:Ncqrs.Eventing.Storage.ISnapshotStore.SaveShapshot(Ncqrs.Eventing.ISnapshot)">
+      <summary>
+            Saves a snapshot of the specified event source.
+            </summary>
+      <requires description="The source cannot be null." exception="T:System.ArgumentNullException">source != null</requires>
+      <exception cref="T:System.ArgumentNullException">source == null</exception>
+    </member>
+    <member name="M:Ncqrs.Eventing.Storage.ISnapshotStore.GetSnapshot(System.Guid)">
+      <summary>
+            Gets a snapshot of a particular event source, if one exists. Otherwise, returns <c>null</c>.
+            </summary>
+      <ensures>Contract.Result&lt;ISnapshot&gt;() != null ? Contract.Result&lt;ISnapshot&gt;().EventSourceId == eventSourceId : true</ensures>
+    </member>
+    <member name="M:Ncqrs.Eventing.Storage.SQL.SimpleMicrosoftSqlServerEventStore.GetAllEvents(System.Guid)">
       <summary>
             Get all event for a specific event provider.
             </summary>
       <param name="id">The id of the event provider.</param>
       <returns>All events for the specified event provider.</returns>
-      <ensures description="Result should never be null." inheritedFrom="M:Ncqrs.Eventing.Storage.IEventStore.GetAllEventsForEventSource(System.Guid)" inheritedFromTypeName="IEventStore">Contract.Result&lt;IEnumerable&lt;ISourcedEvent&gt;&gt;() != null</ensures>
+      <ensures description="Result should never be null." inheritedFrom="M:Ncqrs.Eventing.Storage.IEventStore.GetAllEvents(System.Guid)" inheritedFromTypeName="IEventStore">Contract.Result&lt;IEnumerable&lt;ISourcedEvent&gt;&gt;() != null</ensures>
+    </member>
+    <member name="M:Ncqrs.Eventing.Storage.SQL.SimpleMicrosoftSqlServerEventStore.GetAllEventsSinceVersion(System.Guid,System.Int64)">
+      <summary>
+            Get all events provided by an specified event source.
+            </summary>
+      <param name="eventSourceId">The id of the event source that owns the events.</param>
+      <returns>All the events from the event source.</returns>
+      <ensures inheritedFrom="M:Ncqrs.Eventing.Storage.IEventStore.GetAllEventsSinceVersion(System.Guid,System.Int64)" inheritedFromTypeName="IEventStore">Contract.ForAll(Contract.Result&lt;IEnumerable&lt;ISourcedEvent&gt;&gt;(), e =&gt; e.EventSequence &gt; version)</ensures>
     </member>
     <member name="M:Ncqrs.Eventing.Storage.SQL.SimpleMicrosoftSqlServerEventStore.Save(Ncqrs.Eventing.IEventSource)">
       <summary>
@@ -218,7 +243,20 @@
       <requires description="source cannot be null." inheritedFrom="M:Ncqrs.Eventing.Storage.IEventStore.Save(Ncqrs.Eventing.IEventSource)" inheritedFromTypeName="IEventStore" exception="T:System.ArgumentNullException">source != null</requires>
       <exception cref="T:System.ArgumentNullException">source == null</exception>
     </member>
-    <member name="M:Ncqrs.Eventing.Storage.SQL.SimpleMicrosoftSqlServerEventStore.SaveEvents(System.Collections.Generic.IEnumerable{Ncqrs.Eventing.IEvent},System.Guid,System.Data.SqlClient.SqlTransaction)">
+    <member name="M:Ncqrs.Eventing.Storage.SQL.SimpleMicrosoftSqlServerEventStore.SaveShapshot(Ncqrs.Eventing.ISnapshot)">
+      <summary>
+            Saves a snapshot of the specified event source.
+            </summary>
+      <requires description="The source cannot be null." inheritedFrom="M:Ncqrs.Eventing.Storage.ISnapshotStore.SaveShapshot(Ncqrs.Eventing.ISnapshot)" inheritedFromTypeName="ISnapshotStore" exception="T:System.ArgumentNullException">source != null</requires>
+      <exception cref="T:System.ArgumentNullException">source == null</exception>
+    </member>
+    <member name="M:Ncqrs.Eventing.Storage.SQL.SimpleMicrosoftSqlServerEventStore.GetSnapshot(System.Guid)">
+      <summary>
+            Gets a snapshot of a particular event source, if one exists. Otherwise, returns <c>null</c>.
+            </summary>
+      <ensures inheritedFrom="M:Ncqrs.Eventing.Storage.ISnapshotStore.GetSnapshot(System.Guid)" inheritedFromTypeName="ISnapshotStore">Contract.Result&lt;ISnapshot&gt;() != null ? Contract.Result&lt;ISnapshot&gt;().EventSourceId == eventSourceId : true</ensures>
+    </member>
+    <member name="M:Ncqrs.Eventing.Storage.SQL.SimpleMicrosoftSqlServerEventStore.SaveEvents(System.Collections.Generic.IEnumerable{Ncqrs.Eventing.ISourcedEvent},System.Guid,System.Data.SqlClient.SqlTransaction)">
       <summary>
             Saves the events to the event store.
             </summary>
@@ -230,7 +268,7 @@
       <requires description="The argument transaction could not be null." exception="T:System.ArgumentNullException">transaction != null</requires>
       <exception cref="T:System.ArgumentNullException">transaction == null</exception>
     </member>
-    <member name="M:Ncqrs.Eventing.Storage.SQL.SimpleMicrosoftSqlServerEventStore.SaveEvent(Ncqrs.Eventing.IEvent,System.Guid,System.Data.SqlClient.SqlTransaction)">
+    <member name="M:Ncqrs.Eventing.Storage.SQL.SimpleMicrosoftSqlServerEventStore.SaveEvent(Ncqrs.Eventing.ISourcedEvent,System.Guid,System.Data.SqlClient.SqlTransaction)">
       <summary>
             Saves the event to the data store.
             </summary>
@@ -263,6 +301,7 @@
             Gets the table creation queries that can be used to create the tables that are needed
             for a database that is used as an event store.
             </summary>
+      <remarks>This returns the content of the TableCreationScript.sql that is embedded as resource.</remarks>
       <returns>Queries that contain the <i>create table</i> statements.</returns>
     </member>
     <member name="T:Ncqrs.Domain.Storage.IDomainRepository">
@@ -360,6 +399,8 @@
             Initializes from history.
             </summary>
       <param name="history">The history.</param>
+      <requires description="The history cannot be null." exception="T:System.ArgumentNullException">history != null</requires>
+      <exception cref="T:System.ArgumentNullException">history == null</exception>
     </member>
     <member name="P:Ncqrs.Domain.AggregateRoot.Id">
       <summary>
@@ -393,6 +434,10 @@
             The version does not change until changes are accepted via the <see cref="M:Ncqrs.Domain.AggregateRoot.AcceptChanges" /> method.
             </para></summary>
       <value>The initial version.</value>
+      <setter>
+        <requires exception="T:System.InvalidOperationException">_uncommittedEvent.Count == 0</requires>
+      </setter>
+      <exception cref="T:System.InvalidOperationException">_uncommittedEvent.Count != 0</exception>
     </member>
     <member name="T:Ncqrs.Domain.Mapping.ConventionBasedDomainEventHandlerMappingStrategy">
       <summary>
@@ -439,6 +484,7 @@
             a <see cref="T:Ncqrs.Config.InstanceNotFoundInEnvironmentConfigurationException" />
             occurs.
             </returns>
+      <ensures description="The result cannot be null.">Contract.Result&lt;T&gt;() != null</ensures>
     </member>
     <member name="M:Ncqrs.NcqrsEnvironment.SetDefault``1(``0)">
       <summary>
@@ -508,7 +554,7 @@
       <exception cref="T:System.ArgumentNullException">Thrown when a instance in <i>messages</i> was null.</exception>
       <exception cref="!:NoHandlerRegisteredForMessageException">Thrown when no handler was found for one of the specified messages.</exception>
     </member>
-    <member name="M:Ncqrs.Eventing.ServiceModel.Bus.IEventBus.RegisterHandler(Ncqrs.Eventing.ServiceModel.Bus.IEventHandler)">
+    <member name="M:Ncqrs.Eventing.ServiceModel.Bus.IEventBus.RegisterHandler``1(Ncqrs.Eventing.ServiceModel.Bus.IEventHandler{``0})">
       <summary>
             Register a handler that will receive all messages that are published.
             </summary>
@@ -620,6 +666,12 @@
       <getter>
         <ensures description="The event time stamp should always be in a UTC kind." inheritedFrom="M:Ncqrs.Eventing.IEvent.get_EventTimeStamp" inheritedFromTypeName="IEvent">Contract.Result&lt;DateTime&gt;().Kind == DateTimeKind.Utc</ensures>
       </getter>
+    </member>
+    <member name="P:Ncqrs.Domain.DomainEvent.Ncqrs#Eventing#ISourcedEvent#EventSourceId">
+      <summary>
+            Gets the id of the event source that owns this event.
+            </summary>
+      <value>The id of the event source that owns this event. This value is always the same as <see cref="P:Ncqrs.Domain.DomainEvent.AggregateRootId" />.</value>
     </member>
     <member name="T:Ncqrs.Config.InstanceNotFoundInEnvironmentConfigurationException">
       <summary>
@@ -757,7 +809,7 @@
             </summary>
       <returns>A new generated <see cref="T:System.Guid" />.</returns>
     </member>
-    <member name="T:Ncqrs.Commanding.CommandExecution.TransactionalCommandExecutorWrapper">
+    <member name="T:Ncqrs.Commanding.CommandExecution.TransactionalCommandExecutorWrapper`1">
       <summary>
             Wraps transactional behavior around the execution of command executor.
             </summary>
@@ -765,41 +817,37 @@
             The transaction logic uses <c>TransactionScope</c> of the .NET framework.
             </remarks>
     </member>
-    <member name="F:Ncqrs.Commanding.CommandExecution.TransactionalCommandExecutorWrapper._executor">
+    <member name="F:Ncqrs.Commanding.CommandExecution.TransactionalCommandExecutorWrapper`1._executor">
       <summary>
             The executor to use to execute the command.
             </summary>
     </member>
-    <member name="M:Ncqrs.Commanding.CommandExecution.TransactionalCommandExecutorWrapper.#ctor(Ncqrs.Commanding.CommandExecution.ICommandExecutor)">
+    <member name="M:Ncqrs.Commanding.CommandExecution.TransactionalCommandExecutorWrapper`1.#ctor(Ncqrs.Commanding.CommandExecution.ICommandExecutor{`0})">
       <summary>
-            Initializes a new instance of the <see cref="T:Ncqrs.Commanding.CommandExecution.TransactionalCommandExecutorWrapper" /> class.
+            Initializes a new instance of the <see cref="!:TransactionalCommandExecutorWrapper" /> class.
             </summary>
       <param name="executor">The executor to use to execute the command.</param>
       <requires description="The executor cannot be null." exception="T:System.ArgumentNullException">executor != null</requires>
       <exception cref="T:System.ArgumentNullException">executor == null</exception>
     </member>
-    <member name="M:Ncqrs.Commanding.CommandExecution.TransactionalCommandExecutorWrapper.Execute(Ncqrs.Commanding.ICommand)">
+    <member name="M:Ncqrs.Commanding.CommandExecution.TransactionalCommandExecutorWrapper`1.Execute(`0)">
       <summary>
             Executes the command within a transaction. The transaction logic uses TransactionScope.
             </summary>
       <param name="command">The command to execute. This should not be null.</param>
       <exception cref="T:System.ArgumentNullException">Occurs when <i>command</i> is null.</exception>
-      <requires description="The command cannot be null." inheritedFrom="M:Ncqrs.Commanding.CommandExecution.ICommandExecutor.Execute(Ncqrs.Commanding.ICommand)" inheritedFromTypeName="ICommandExecutor" exception="T:System.ArgumentNullException">command != null</requires>
-      <exception cref="T:System.ArgumentNullException">command == null</exception>
     </member>
-    <member name="T:Ncqrs.Commanding.CommandExecution.Mapping.MappedCommandExecutor">
+    <member name="T:Ncqrs.Commanding.CommandExecution.Mapping.MappedCommandExecutor`1">
       <summary>
             A command handler that execute an action based on the mapping of a command.
             </summary>
     </member>
-    <member name="M:Ncqrs.Commanding.CommandExecution.Mapping.MappedCommandExecutor.Execute(Ncqrs.Commanding.ICommand)">
+    <member name="M:Ncqrs.Commanding.CommandExecution.Mapping.MappedCommandExecutor`1.Execute(`0)">
       <summary>
             Executes the command.
             </summary>
       <param name="command">The command to execute. This should not be null.</param>
       <exception cref="T:System.ArgumentNullException">Occurs when <i>command</i> is null.</exception>
-      <requires description="The command cannot be null." inheritedFrom="M:Ncqrs.Commanding.CommandExecution.ICommandExecutor.Execute(Ncqrs.Commanding.ICommand)" inheritedFromTypeName="ICommandExecutor" exception="T:System.ArgumentNullException">command != null</requires>
-      <exception cref="T:System.ArgumentNullException">command == null</exception>
     </member>
     <member name="T:Ncqrs.Commanding.CommandExecution.Mapping.Attributes.MapsToAggregateRootMethodAttribute">
       <summary>
@@ -847,28 +895,36 @@
     <member name="P:Ncqrs.Commanding.ServiceModel.CommandContext.Exception">
       <summary>
         <para>Gets the exception that has occurred while handling the event.
-            Use the <see cref="P:Ncqrs.Commanding.ServiceModel.CommandContext.IsExecuted" /> property to determine whether
+            Use the <see cref="P:Ncqrs.Commanding.ServiceModel.CommandContext.ExecutorHasBeenCalled" /> property to determine whether
             the exception has been thrown by a interceptor or by the execution
             itself.</para>
       </summary>
       <value>The exception that has been occurred or <c>null</c> when it
             has not.</value>
     </member>
+    <member name="P:Ncqrs.Commanding.ServiceModel.CommandContext.ExecutorResolved">
+      <summary>
+            Gets a value indicating whether an executor has been resolved.
+            </summary>
+      <value>
+        <c>true</c> if an executor has been resolved for this command; otherwise, <c>false</c>.
+            </value>
+    </member>
     <member name="P:Ncqrs.Commanding.ServiceModel.CommandContext.TheCommand">
       <summary>
             Gets the command that will be or is executed.
             </summary>
       <exception cref="T:System.InvalidOperationException">Occurs when this
-            property is set while the <see cref="P:Ncqrs.Commanding.ServiceModel.CommandContext.TheCommandExecutor" /> property
-            has already been set.</exception>
-      <value>This value is never <c>null</c>.</value>
+            property is set while the <see cref="P:Ncqrs.Commanding.ServiceModel.CommandContext.ExecutorResolved" /> property
+            return true indicating that a executor has been resolved for the command.</exception>
+      <value>The command that will or has been executed. This value is never <c>null</c>.</value>
       <getter>
         <ensures description="The result cannot be null.">Contract.Result&lt;ICommand&gt;() != null</ensures>
       </getter>
       <setter>
-        <requires description="Cannot override command when command executor is already resolved." exception="T:System.InvalidOperationException">TheCommandExecutor == null</requires>
+        <requires description="Cannot override command when a command executor has already been resolved." exception="T:System.InvalidOperationException">!ExecutorResolved</requires>
       </setter>
-      <exception cref="T:System.InvalidOperationException">TheCommandExecutor != null</exception>
+      <exception cref="T:System.InvalidOperationException">ExecutorResolved</exception>
     </member>
     <member name="P:Ncqrs.Commanding.ServiceModel.CommandContext.TheCommandType">
       <summary>
@@ -876,41 +932,20 @@
             </summary>
       <value>The type of the command.</value>
     </member>
-    <member name="P:Ncqrs.Commanding.ServiceModel.CommandContext.TheCommandExecutor">
+    <member name="P:Ncqrs.Commanding.ServiceModel.CommandContext.ExecutorHasBeenCalled">
       <summary>
-            Gets the command executor that will be or is used to execute the
-            command.
-            </summary>
-      <value>When this value is <c>null</c>, it means that there was no
-            executor found for the command.</value>
-    </member>
-    <member name="P:Ncqrs.Commanding.ServiceModel.CommandContext.IsExecuted">
-      <summary>
-            Gets a value indicating whether the command is executed.
+            Gets a value indicating whether the executor for the command has
+            been called.
             </summary>
       <value>
-        <c>true</c> if the command is executed; otherwise, <c>false</c>.
+        <c>true</c> if the executor for this command has been called;
+            	otherwise, <c>false</c>. <c>true</c> does not have to mean that the
+            	executor also executed the command. It could be that an exception
+            	had occurred.
             <remarks>
-            This value is always <c>false</c> in the <see cref="M:Ncqrs.Commanding.ServiceModel.ICommandServiceInterceptor.OnBeforeExecution(Ncqrs.Commanding.ServiceModel.CommandContext)" />.
+            This value is always <c>false</c> in the 
+            <see cref="M:Ncqrs.Commanding.ServiceModel.ICommandServiceInterceptor.OnBeforeExecution(Ncqrs.Commanding.ServiceModel.CommandContext)" />.
             </remarks></value>
-    </member>
-    <member name="T:Ncqrs.Domain.Storage.IAggregateRootLoader">
-      <summary>
-            Can load an aggregate root from a stream of historical events.
-            </summary>
-    </member>
-    <member name="M:Ncqrs.Domain.Storage.IAggregateRootLoader.LoadAggregateRootFromEvents(System.Type,System.Collections.Generic.IEnumerable{Ncqrs.Domain.DomainEvent})">
-      <summary>
-            Loads the aggregate root from historical events.
-            </summary>
-      <param name="aggregateRootType">Type of the aggregate root to load.</param>
-      <param name="events">The historical events.</param>
-      <exception cref="T:Ncqrs.Domain.Storage.AggregateLoaderException">Occurs when the aggregate root could not be loaded.</exception>
-      <returns>A new instance of the specified aggregate root type loaded with context that has been build from the events.</returns>
-      <requires exception="T:System.ArgumentNullException">aggregateRootType != null</requires>
-      <exception cref="T:System.ArgumentNullException">aggregateRootType == null</exception>
-      <requires exception="T:System.ArgumentNullException">events != null</requires>
-      <exception cref="T:System.ArgumentNullException">events == null</exception>
     </member>
     <member name="T:Ncqrs.Commanding.CommandExecution.Mapping.Attributes.MapsToAggregateRootConstructorAttribute">
       <summary>
@@ -1044,7 +1079,7 @@
             is also a converter that can convert the result of that conversion that one is called.
             </summary>
     </member>
-    <member name="T:Ncqrs.Eventing.Conversion.IEventConverter">
+    <member name="T:Ncqrs.Eventing.Conversion.IEventConverter`2">
       <summary>
             Converts an event into another event.
             <para>
@@ -1055,7 +1090,7 @@
             event.
             </para></summary>
     </member>
-    <member name="M:Ncqrs.Eventing.Conversion.IEventConverter.Convert(Ncqrs.Eventing.ISourcedEvent)">
+    <member name="M:Ncqrs.Eventing.Conversion.IEventConverter`2.Convert(`0)">
       <summary>
             Converts an event. It return a new transformed event based on the 
             <paramref name="eventToConvert" />. The 
@@ -1067,12 +1102,6 @@
       <param name="eventToConvert">The event to convert.</param>
       <returns>A new event based on the <paramref name="eventToConvert" />.
             </returns>
-      <requires description="The eventToConvert cannot be null." exception="T:System.ArgumentNullException">eventToConvert != null</requires>
-      <exception cref="T:System.ArgumentNullException">eventToConvert == null</exception>
-      <ensures description="The EventSourceId should not be changed after conversion.">Contract.Result&lt;ISourcedEvent&gt;().EventSourceId == eventToConvert.EventSourceId</ensures>
-      <ensures description="The EventSequence should not be changed after conversion.">Contract.Result&lt;ISourcedEvent&gt;().EventSequence == eventToConvert.EventSequence</ensures>
-      <ensures description="The EventIdentifier should not be changed after conversion.">Contract.Result&lt;ISourcedEvent&gt;().EventIdentifier == eventToConvert.EventIdentifier</ensures>
-      <ensures description="The EventTimeStamp should not be changed after conversion.">Contract.Result&lt;ISourcedEvent&gt;().EventTimeStamp == eventToConvert.EventTimeStamp</ensures>
     </member>
     <member name="M:Ncqrs.Eventing.Conversion.EventConverter.AddConverter``2(System.Converter{``0,``1})">
       <summary>
@@ -1085,15 +1114,13 @@
       <requires description="The converter cannot be null." exception="T:System.ArgumentNullException">converter != null</requires>
       <exception cref="T:System.ArgumentNullException">converter == null</exception>
     </member>
-    <member name="M:Ncqrs.Eventing.Conversion.EventConverter.AddConverter(System.Type,Ncqrs.Eventing.Conversion.IEventConverter)">
+    <member name="M:Ncqrs.Eventing.Conversion.EventConverter.AddConverter``2(Ncqrs.Eventing.Conversion.IEventConverter{``0,``1})">
       <summary>
             Adds the converter for a specific event type.
             </summary>
       <param name="eventSourceType">The type of the event that will be converted.</param>
       <param name="converter">The converter method that does the conversion.</param>
       <returns>The current <see cref="T:Ncqrs.Eventing.Conversion.EventConverter" /> that can be used to chain method calls.</returns>
-      <requires description="The eventSourceType cannot be null." exception="T:System.ArgumentNullException">eventSourceType != null</requires>
-      <exception cref="T:System.ArgumentNullException">eventSourceType == null</exception>
       <requires description="The converter cannot be null." exception="T:System.ArgumentNullException">converter != null</requires>
       <exception cref="T:System.ArgumentNullException">converter == null</exception>
     </member>
@@ -1106,12 +1133,6 @@
       <returns>
             A new event based on the <paramref name="eventToConvert" />.
             </returns>
-      <requires description="The eventToConvert cannot be null." inheritedFrom="M:Ncqrs.Eventing.Conversion.IEventConverter.Convert(Ncqrs.Eventing.ISourcedEvent)" inheritedFromTypeName="IEventConverter" exception="T:System.ArgumentNullException">eventToConvert != null</requires>
-      <exception cref="T:System.ArgumentNullException">eventToConvert == null</exception>
-      <ensures description="The EventSourceId should not be changed after conversion." inheritedFrom="M:Ncqrs.Eventing.Conversion.IEventConverter.Convert(Ncqrs.Eventing.ISourcedEvent)" inheritedFromTypeName="IEventConverter">Contract.Result&lt;ISourcedEvent&gt;().EventSourceId == eventToConvert.EventSourceId</ensures>
-      <ensures description="The EventSequence should not be changed after conversion." inheritedFrom="M:Ncqrs.Eventing.Conversion.IEventConverter.Convert(Ncqrs.Eventing.ISourcedEvent)" inheritedFromTypeName="IEventConverter">Contract.Result&lt;ISourcedEvent&gt;().EventSequence == eventToConvert.EventSequence</ensures>
-      <ensures description="The EventIdentifier should not be changed after conversion." inheritedFrom="M:Ncqrs.Eventing.Conversion.IEventConverter.Convert(Ncqrs.Eventing.ISourcedEvent)" inheritedFromTypeName="IEventConverter">Contract.Result&lt;ISourcedEvent&gt;().EventIdentifier == eventToConvert.EventIdentifier</ensures>
-      <ensures description="The EventTimeStamp should not be changed after conversion." inheritedFrom="M:Ncqrs.Eventing.Conversion.IEventConverter.Convert(Ncqrs.Eventing.ISourcedEvent)" inheritedFromTypeName="IEventConverter">Contract.Result&lt;ISourcedEvent&gt;().EventTimeStamp == eventToConvert.EventTimeStamp</ensures>
     </member>
     <member name="T:Ncqrs.DateTimeBasedClock">
       <summary>
@@ -1144,15 +1165,13 @@
     </member>
     <member name="M:Ncqrs.Commanding.ServiceModel.CommandServiceBase.Execute(Ncqrs.Commanding.ICommand)">
       <summary>
-            Execute a <see cref="T:Ncqrs.Commanding.ICommand" /> by giving it to the registered <see cref="T:Ncqrs.Commanding.CommandExecution.ICommandExecutor" />.
+            Execute a <see cref="T:Ncqrs.Commanding.ICommand" /> by giving it to the registered <see cref="!:ICommandExecutor" />.
             </summary>
       <param name="command">The command to execute.</param>
       <exception cref="T:System.ArgumentNullException">Occurs when the <i>command</i> was a <c>null</c> dereference.</exception>
-      <exception cref="T:Ncqrs.Commanding.CommandExecution.CommandExecutorNotFoundException">Occurs when the <see cref="T:Ncqrs.Commanding.CommandExecution.ICommandExecutor" /> was not found for on the given <see cref="T:Ncqrs.Commanding.ICommand" />.</exception>
-      <requires description="The command cannot be null." inheritedFrom="M:Ncqrs.Commanding.CommandExecution.ICommandExecutor.Execute(Ncqrs.Commanding.ICommand)" inheritedFromTypeName="ICommandExecutor" exception="T:System.ArgumentNullException">command != null</requires>
-      <exception cref="T:System.ArgumentNullException">command == null</exception>
+      <exception cref="T:Ncqrs.Commanding.CommandExecution.CommandExecutorNotFoundException">Occurs when the <see cref="T:Ncqrs.Commanding.CommandExecution.ICommandExecutor`1" /> was not found for on the given <see cref="T:Ncqrs.Commanding.ICommand" />.</exception>
     </member>
-    <member name="M:Ncqrs.Commanding.ServiceModel.CommandServiceBase.RegisterExecutor``1(Ncqrs.Commanding.CommandExecution.ICommandExecutor)">
+    <member name="M:Ncqrs.Commanding.ServiceModel.CommandServiceBase.RegisterExecutor``1(Ncqrs.Commanding.CommandExecution.ICommandExecutor{``0})">
       <summary>
             Registers the executor for the specified command type. The executor will be called for every command of the specified type.
             </summary>
@@ -1160,19 +1179,10 @@
       <param name="executor">The executor that will be called for every command of the specified type.</param>
       <exception cref="T:System.ArgumentNullException">Occurs when the <i>commandType</i> or <i>executor</i> was a <c>null</c> dereference.</exception>
     </member>
-    <member name="M:Ncqrs.Commanding.ServiceModel.CommandServiceBase.RegisterExecutor(System.Type,Ncqrs.Commanding.CommandExecution.ICommandExecutor)">
-      <summary>
-            Registers the executor for the specified command type. The executor will be called for every command of the specified type.
-            </summary>
-      <param name="commandType">Type of the command.</param>
-      <param name="executor">The executor that will be called for every command of the specified type.</param>
-      <exception cref="T:System.ArgumentNullException">Occurs when the <i>commandType</i> or <i>executor</i> was a <c>null</c> dereference.</exception>
-    </member>
-    <member name="M:Ncqrs.Commanding.ServiceModel.CommandServiceBase.UnregisterExecutor(System.Type,Ncqrs.Commanding.CommandExecution.ICommandExecutor)">
+    <member name="M:Ncqrs.Commanding.ServiceModel.CommandServiceBase.UnregisterExecutor``1">
       <summary>
             Unregisters the executor of the specified command type. The executor will not be called any more.
             </summary>
-      <param name="commandType">Type of the command.</param>
       <param name="executor">The executor to unregister.</param>
       <exception cref="T:System.ArgumentNullException">Occurs when the <i>commandType</i> or <i>executor</i> was a <c>null</c> dereference.</exception>
       <exception cref="T:System.InvalidOperationException">Occurs when the <i>executor</i> is not the same as the registered executor for the specified command type.</exception>
@@ -1203,6 +1213,47 @@
             </summary>
       <param name="interceptor">The interceptor to remove.</param>
     </member>
+    <member name="T:Ncqrs.LogManager">
+      <summary>
+            A manager class to use to get a logger for a certain type.
+            </summary>
+    </member>
+    <member name="T:Ncqrs.Eventing.Snapshot">
+      <summary>
+            Holds the full state of an <see cref="T:Ncqrs.Eventing.IEventSource" /> at a certain version.
+            </summary>
+    </member>
+    <member name="T:Ncqrs.Eventing.ISnapshot">
+      <summary>
+            Holds the full state of an <see cref="T:Ncqrs.Eventing.IEventSource" /> at a certain version.
+            </summary>
+    </member>
+    <member name="P:Ncqrs.Eventing.ISnapshot.EventSourceId">
+      <summary>
+            Gets the event source id.
+            </summary>
+      <value>The event source id.</value>
+    </member>
+    <member name="P:Ncqrs.Eventing.ISnapshot.EventSourceVersion">
+      <summary>
+            Gets the version of the event source from when this snapshot was created.
+            </summary>
+      <value>The event source version.</value>
+    </member>
+    <member name="P:Ncqrs.Eventing.Snapshot.EventSourceId">
+      <summary>
+            Gets the id of the event source from which this snapshot was created.
+            </summary>
+      <remarks>
+            The id of the event source from which this snapshot was created.
+            </remarks>
+    </member>
+    <member name="P:Ncqrs.Eventing.Snapshot.EventSourceVersion">
+      <summary>
+            Gets the version of the event source when this snapshot was created.
+            </summary>
+      <value>The version of the event source when this snapshot was created.</value>
+    </member>
     <member name="M:Ncqrs.Commanding.CommandExecution.Mapping.Actions.DirectMethodCommandInfo.#ctor(Ncqrs.Commanding.ICommand,System.Type,System.Guid,System.String)">
       <summary>
             Initializes a new instance of the <see cref="T:Ncqrs.Commanding.CommandExecution.Mapping.Actions.DirectMethodCommandInfo" /> struct.
@@ -1223,31 +1274,6 @@
             Gets the aggregate root id.
             </summary>
       <value>The id of the aggregate root.</value>
-    </member>
-    <member name="T:Ncqrs.Domain.Storage.DefaultAggregateRootLoader">
-      <summary>
-            The default aggregate root loader than can load an aggregate root instance from a historic event stream.
-            </summary>
-    </member>
-    <member name="M:Ncqrs.Domain.Storage.DefaultAggregateRootLoader.LoadAggregateRootFromEvents(System.Type,System.Collections.Generic.IEnumerable{Ncqrs.Domain.DomainEvent})">
-      <summary>
-            Loads the aggregate root from historical events.
-            </summary>
-      <remarks>
-            This method searches for a public or non public constructor that accepts no parameters and invokes it to create the instance. After
-            creating the instance the <see cref="M:Ncqrs.Domain.AggregateRoot.InitializeFromHistory(System.Collections.Generic.IEnumerable{Ncqrs.Domain.DomainEvent})" /> method is called.
-            </remarks>
-      <param name="aggregateRootType">Type of the aggregate root to load.</param>
-      <param name="events">The historical events.</param>
-      <returns>
-            A new instance of the specified aggregate root type loaded with context that has been build from the events.
-            </returns>
-      <exception cref="T:Ncqrs.Domain.Storage.AggregateLoaderException">Occurs when the aggregate root does not contains a constructor that
-            accepts no parameters.</exception>
-      <requires inheritedFrom="M:Ncqrs.Domain.Storage.IAggregateRootLoader.LoadAggregateRootFromEvents(System.Type,System.Collections.Generic.IEnumerable{Ncqrs.Domain.DomainEvent})" inheritedFromTypeName="IAggregateRootLoader" exception="T:System.ArgumentNullException">aggregateRootType != null</requires>
-      <exception cref="T:System.ArgumentNullException">aggregateRootType == null</exception>
-      <requires inheritedFrom="M:Ncqrs.Domain.Storage.IAggregateRootLoader.LoadAggregateRootFromEvents(System.Type,System.Collections.Generic.IEnumerable{Ncqrs.Domain.DomainEvent})" inheritedFromTypeName="IAggregateRootLoader" exception="T:System.ArgumentNullException">events != null</requires>
-      <exception cref="T:System.ArgumentNullException">events == null</exception>
     </member>
     <member name="T:Ncqrs.Domain.Mapping.AttributeBasedDomainEventHandlerMappingStrategy">
       <summary>
@@ -1416,6 +1442,8 @@
             Initializes a new instance of the <see cref="T:Ncqrs.Domain.UnitOfWork" /> class.
             </summary>
       <param name="domainRepository">The domain repository to use in this unit of work.</param>
+      <requires description="An other UnitOfWork instance already exists in this context." exception="T:System.InvalidOperationException">Current == null</requires>
+      <exception cref="T:System.InvalidOperationException">Current != null</exception>
       <requires exception="T:System.ArgumentNullException">domainRepository != null</requires>
       <exception cref="T:System.ArgumentNullException">domainRepository == null</exception>
       <ensures description="The _repository member should be initialized with the one given by the domainRepository parameter.">_repository == domainRepository</ensures>
@@ -1478,6 +1506,20 @@
             </summary>
       <value>The domain repository.</value>
     </member>
+    <member name="T:Ncqrs.Eventing.ISnapshotable`1">
+      <summary>
+            This interface flags an object beeing <i>snapshotable</i>. This means
+            that the state of the object could be saved to an 
+            <see cref="T:Ncqrs.Eventing.ISnapshot" /> object and restored from a the from the same
+            class. This is used to prevent building <see cref="T:Ncqrs.Domain.AggregateRoot" />'s
+            from the ground up.
+            </summary>
+      <remarks>
+            Only one <see cref="T:Ncqrs.Eventing.ISnapshotable`1" /> can be implemented. If
+            you implement more than one, it will cause an exception when saving this
+            instance.
+            </remarks>
+    </member>
     <member name="T:Ncqrs.Eventing.EventBase">
       <summary>
             The base for all event messages.
@@ -1508,14 +1550,14 @@
             A factory to use the create action for commands based on mapping.
             </summary>
     </member>
-    <member name="M:Ncqrs.Commanding.CommandExecution.Mapping.ActionFactory.CreateExecutorForCommand(Ncqrs.Commanding.ICommand)">
+    <member name="M:Ncqrs.Commanding.CommandExecution.Mapping.ActionFactory.CreateExecutorForCommand``1(``0)">
       <summary>
             Creates an executor for command based on mapping.
             </summary>
       <param name="command">The command.</param>
       <exception cref="T:System.ArgumentNullException">Occurs when <i>command</i> was <c>null</c>.</exception>
       <exception cref="T:Ncqrs.Commanding.CommandExecution.Mapping.MappingForCommandNotFoundException">Occurs when there was an error in the mapping of the command.</exception>
-      <returns>A <see cref="T:Ncqrs.Commanding.CommandExecution.ICommandExecutor" /> created based on the mapping of the command.</returns>
+      <returns>A <see cref="!:ICommandExecutor" /> created based on the mapping of the command.</returns>
       <requires exception="T:System.ArgumentNullException">command != null</requires>
       <exception cref="T:System.ArgumentNullException">command == null</exception>
     </member>
@@ -1553,6 +1595,24 @@
             think of any situation where you want to use this in production.
             </summary>
     </member>
+    <member name="M:Ncqrs.Eventing.Storage.InMemoryEventStore.GetAllEventsSinceVersion(System.Guid,System.Int64)">
+      <summary>
+            Get all events provided by an specified event source.
+            </summary>
+      <param name="eventSourceId">The id of the event source that owns the events.</param>
+      <returns>All the events from the event source.</returns>
+      <ensures inheritedFrom="M:Ncqrs.Eventing.Storage.IEventStore.GetAllEventsSinceVersion(System.Guid,System.Int64)" inheritedFromTypeName="IEventStore">Contract.ForAll(Contract.Result&lt;IEnumerable&lt;ISourcedEvent&gt;&gt;(), e =&gt; e.EventSequence &gt; version)</ensures>
+    </member>
+    <member name="M:Ncqrs.Eventing.Storage.InMemoryEventStore.SaveShapshot(Ncqrs.Eventing.ISnapshot)">
+      <summary>
+            Saves a snapshot of the specified event source.
+            </summary>
+    </member>
+    <member name="M:Ncqrs.Eventing.Storage.InMemoryEventStore.GetSnapshot(System.Guid)">
+      <summary>
+            Gets a snapshot of a particular event source, if one exists. Otherwise, returns <c>null</c>.
+            </summary>
+    </member>
     <!-- Badly formed XML comment ignored for member "T:Ncqrs.Domain.AggregateRootMappedByConvention" -->
     <member name="M:Ncqrs.Domain.AggregateRootMappedByConvention.#ctor">
       <summary>
@@ -1580,7 +1640,7 @@
       <requires description="The converter cannot be null." exception="T:System.ArgumentNullException">converter != null</requires>
       <exception cref="T:System.ArgumentNullException">converter == null</exception>
     </member>
-    <member name="M:Ncqrs.Eventing.Conversion.DelegateBasedConverter`2.Convert(Ncqrs.Eventing.ISourcedEvent)">
+    <member name="M:Ncqrs.Eventing.Conversion.DelegateBasedConverter`2.Convert(`0)">
       <summary>
             Converts an event. It return a new transformed event based on the
             <paramref name="eventToConvert" />. The
@@ -1593,12 +1653,6 @@
       <returns>
             A new event based on the <paramref name="eventToConvert" />.
             </returns>
-      <requires description="The eventToConvert cannot be null." inheritedFrom="M:Ncqrs.Eventing.Conversion.IEventConverter.Convert(Ncqrs.Eventing.ISourcedEvent)" inheritedFromTypeName="IEventConverter" exception="T:System.ArgumentNullException">eventToConvert != null</requires>
-      <exception cref="T:System.ArgumentNullException">eventToConvert == null</exception>
-      <ensures description="The EventSourceId should not be changed after conversion." inheritedFrom="M:Ncqrs.Eventing.Conversion.IEventConverter.Convert(Ncqrs.Eventing.ISourcedEvent)" inheritedFromTypeName="IEventConverter">Contract.Result&lt;ISourcedEvent&gt;().EventSourceId == eventToConvert.EventSourceId</ensures>
-      <ensures description="The EventSequence should not be changed after conversion." inheritedFrom="M:Ncqrs.Eventing.Conversion.IEventConverter.Convert(Ncqrs.Eventing.ISourcedEvent)" inheritedFromTypeName="IEventConverter">Contract.Result&lt;ISourcedEvent&gt;().EventSequence == eventToConvert.EventSequence</ensures>
-      <ensures description="The EventIdentifier should not be changed after conversion." inheritedFrom="M:Ncqrs.Eventing.Conversion.IEventConverter.Convert(Ncqrs.Eventing.ISourcedEvent)" inheritedFromTypeName="IEventConverter">Contract.Result&lt;ISourcedEvent&gt;().EventIdentifier == eventToConvert.EventIdentifier</ensures>
-      <ensures description="The EventTimeStamp should not be changed after conversion." inheritedFrom="M:Ncqrs.Eventing.Conversion.IEventConverter.Convert(Ncqrs.Eventing.ISourcedEvent)" inheritedFromTypeName="IEventConverter">Contract.Result&lt;ISourcedEvent&gt;().EventTimeStamp == eventToConvert.EventTimeStamp</ensures>
     </member>
     <member name="T:Ncqrs.Domain.NoUnitOfWorkAvailableInThisContextException">
       <summary>
@@ -1638,8 +1692,24 @@
     </member>
     <member name="T:Ncqrs.Commanding.CommandExecution.CommandExecutorBase`1">
       <summary>
-            Represents a command executor.
-            </summary>
+             Represents a command executor.
+             </summary>
+      <code lang="c#">
+             public class AddProductToShoppingCartExecutor : CommandExecutorBase
+             {
+                 protected override void ExecuteInContext(IUnitOfWorkContext context, AddProductToShoppingCart command)
+                 {
+                     // Get the shopping cart.
+                     var shoppingCart = context.GetById(command.ShoppingCartId);
+             
+                     // Add the product to the shopping cart.
+                     shoppingCart.AddProduct(command.ProductId, command.Amount);
+            
+                     // Accept all the work we just did.
+                     context.Accept();
+                 }
+             }
+             </code>
       <typeparam name="TCommand">The type of the commands to execute.</typeparam>
     </member>
     <member name="M:Ncqrs.Commanding.CommandExecution.CommandExecutorBase`1.Execute(`0)">
@@ -1649,33 +1719,40 @@
       <param name="command">The command to execute. This should not be null.</param>
       <exception cref="T:System.ArgumentNullException">Occurs when <i>command</i> is null.</exception>
     </member>
-    <member name="M:Ncqrs.Commanding.CommandExecution.CommandExecutorBase`1.ExecuteWithingUnitOfWorkContext(Ncqrs.Domain.IUnitOfWorkContext)">
+    <member name="M:Ncqrs.Commanding.CommandExecution.CommandExecutorBase`1.ExecuteInContext(Ncqrs.Domain.IUnitOfWorkContext,`0)">
       <summary>
-            Executes the command withing an unit of work context.
-            <remarks>Make sure you call <see cref="!:IUnitOfWork.Accept" /> to accept the changes that has been made in the context.</remarks></summary>
-      <param name="work">The work.</param>
+             Executes the command withing an unit of work context.
+             <remarks>Make sure you call <see cref="M:Ncqrs.Domain.IUnitOfWorkContext.Accept" /> to accept the changes that has been made in the context.</remarks></summary>
+      <example>
+        <code lang="c#">
+             public class AddProductToShoppingCartExecutor : CommandExecutorBase
+             {
+                 protected override void ExecuteInContext(IUnitOfWorkContext context, AddProductToShoppingCart command)
+                 {
+                     // Get the shopping cart.
+                     var shoppingCart = context.GetById(command.ShoppingCartId);
+             
+                     // Add the product to the shopping cart.
+                     shoppingCart.AddProduct(command.ProductId, command.Amount);
+            
+                     // Accept all the work we just did.
+                     context.Accept();
+                 }
+             }
+             </code>
+      </example>
+      <param name="context">The work context.</param>
+      <param name="command">The command to execute.</param>
     </member>
-    <member name="M:Ncqrs.Commanding.CommandExecution.CommandExecutorBase`1.Ncqrs#Commanding#CommandExecution#ICommandExecutor#Execute(Ncqrs.Commanding.ICommand)">
-      <summary>
-            Executes the command.
-            </summary>
-      <param name="command">The command to execute. This should not be null.</param>
-      <exception cref="T:System.ArgumentNullException">Occurs when <i>command</i> is null.</exception>
-      <exception cref="T:System.InvalidCastException">Occurs when the <i>command</i> could not be casted to <c>TCommand</c>.</exception>
-      <requires description="The command cannot be null." inheritedFrom="M:Ncqrs.Commanding.CommandExecution.ICommandExecutor.Execute(Ncqrs.Commanding.ICommand)" inheritedFromTypeName="ICommandExecutor" exception="T:System.ArgumentNullException">command != null</requires>
-      <exception cref="T:System.ArgumentNullException">command == null</exception>
-    </member>
-    <member name="T:Ncqrs.Commanding.CommandExecution.Mapping.Actions.DirectMethodCommandExecutor">
+    <member name="T:Ncqrs.Commanding.CommandExecution.Mapping.Actions.DirectMethodCommandExecutor`1">
       <summary>
             An auto mapped action that executes a method on an aggregate root based on the mapping specified on the command.
             </summary>
     </member>
-    <member name="M:Ncqrs.Commanding.CommandExecution.Mapping.Actions.DirectMethodCommandExecutor.Execute(Ncqrs.Commanding.ICommand)">
+    <member name="M:Ncqrs.Commanding.CommandExecution.Mapping.Actions.DirectMethodCommandExecutor`1.Execute(`0)">
       <summary>
             Executes this method on the aggregate root based on the mapping of the command given a construction time.
             </summary>
-      <requires description="The command cannot be null." inheritedFrom="M:Ncqrs.Commanding.CommandExecution.ICommandExecutor.Execute(Ncqrs.Commanding.ICommand)" inheritedFromTypeName="ICommandExecutor" exception="T:System.ArgumentNullException">command != null</requires>
-      <exception cref="T:System.ArgumentNullException">command == null</exception>
     </member>
     <member name="T:Ncqrs.Commanding.CommandBase">
       <summary>
@@ -1698,53 +1775,31 @@
             Gets the unique identifier for this command.
             </summary>
     </member>
-    <member name="M:Ncqrs.Domain.Storage.DomainRepository.GetById(System.Type,System.Guid)">
-      <requires inheritedFrom="M:Ncqrs.Domain.Storage.IDomainRepository.GetById(System.Type,System.Guid)" inheritedFromTypeName="IDomainRepository" exception="T:System.ArgumentNullException">aggregateRootType != null</requires>
-      <exception cref="T:System.ArgumentNullException">aggregateRootType == null</exception>
-    </member>
-    <member name="M:Ncqrs.Domain.Storage.DomainRepository.#ctor(Ncqrs.Eventing.Storage.IEventStore,Ncqrs.Eventing.ServiceModel.Bus.IEventBus,Ncqrs.Eventing.Conversion.IEventConverter,Ncqrs.Domain.Storage.IAggregateRootLoader)">
-      <requires exception="T:System.ArgumentNullException">store != null</requires>
-      <exception cref="T:System.ArgumentNullException">store == null</exception>
-      <requires exception="T:System.ArgumentNullException">eventBus != null</requires>
-      <exception cref="T:System.ArgumentNullException">eventBus == null</exception>
-      <requires exception="T:System.ArgumentNullException">loader != null</requires>
-      <exception cref="T:System.ArgumentNullException">loader == null</exception>
-    </member>
-    <member name="M:Ncqrs.Domain.Storage.DomainRepository.#ctor(Ncqrs.Eventing.Storage.IEventStore,Ncqrs.Eventing.ServiceModel.Bus.IEventBus)">
-      <requires description="store cannot be null." exception="T:System.ArgumentNullException">store != null</requires>
-      <exception cref="T:System.ArgumentNullException">store == null</exception>
-      <requires description="store cannot be null." exception="T:System.ArgumentNullException">eventBus != null</requires>
-      <exception cref="T:System.ArgumentNullException">eventBus == null</exception>
-    </member>
-    <member name="M:Ncqrs.Domain.Storage.DomainRepository.Save(Ncqrs.Domain.AggregateRoot)">
-      <requires inheritedFrom="M:Ncqrs.Domain.Storage.IDomainRepository.Save(Ncqrs.Domain.AggregateRoot)" inheritedFromTypeName="IDomainRepository" exception="T:System.ArgumentNullException">aggregateRootToSave != null</requires>
-      <exception cref="T:System.ArgumentNullException">aggregateRootToSave == null</exception>
-    </member>
     <member name="M:Ncqrs.Domain.AggregateRoot.GetUncommittedEvents">
       <ensures description="The result of this method should never be null.">Contract.Result&lt;IEnumerable&lt;DomainEvent&gt;&gt;() != null</ensures>
-    </member>
-    <member name="M:Ncqrs.Domain.AggregateRoot.RegisterHandler(Ncqrs.Domain.IDomainEventHandler)">
-      <requires description="The handler cannot be null." exception="T:System.ArgumentNullException">handler != null</requires>
-      <exception cref="T:System.ArgumentNullException">handler == null</exception>
     </member>
     <member name="M:Ncqrs.Domain.AggregateRoot.HandleEvent(Ncqrs.Domain.DomainEvent)">
       <requires description="The evnt cannot be null." exception="T:System.ArgumentNullException">evnt != null</requires>
       <exception cref="T:System.ArgumentNullException">evnt == null</exception>
     </member>
-    <member name="M:Ncqrs.Domain.Mapping.MappedAggregateRoot.#ctor(Ncqrs.Domain.Mapping.IDomainEventHandlerMappingStrategy)">
-      <requires description="The strategy cannot be null." exception="T:System.ArgumentNullException">strategy != null</requires>
-      <exception cref="T:System.ArgumentNullException">strategy == null</exception>
+    <member name="M:Ncqrs.Domain.AggregateRoot.RegisterHandler(Ncqrs.Domain.IDomainEventHandler)">
+      <requires description="The handler cannot be null." exception="T:System.ArgumentNullException">handler != null</requires>
+      <exception cref="T:System.ArgumentNullException">handler == null</exception>
+    </member>
+    <member name="M:Ncqrs.Domain.DomainEventHandler`1.Ncqrs#Domain#IDomainEventHandler#HandleEvent(Ncqrs.Domain.DomainEvent)">
+      <requires description="The evnt cannot be null." inheritedFrom="M:Ncqrs.Domain.IDomainEventHandler.HandleEvent(Ncqrs.Domain.DomainEvent)" inheritedFromTypeName="IDomainEventHandler" exception="T:System.ArgumentNullException">evnt != null</requires>
+      <exception cref="T:System.ArgumentNullException">evnt == null</exception>
     </member>
     <member name="M:Ncqrs.Domain.Mapping.ConventionBasedDomainEventHandlerMappingStrategy.GetEventHandlersFromAggregateRoot(Ncqrs.Domain.AggregateRoot)">
       <requires description="The aggregateRoot cannot be null." exception="T:System.ArgumentNullException">aggregateRoot != null</requires>
       <exception cref="T:System.ArgumentNullException">aggregateRoot == null</exception>
       <ensures description="The result should never be null.">Contract.Result&lt;IEnumerable&lt;IDomainEventHandler&gt;&gt;() != null</ensures>
     </member>
-    <member name="M:Ncqrs.Domain.Mapping.AttributeBasedDomainEventHandlerMappingStrategy.FirstParameterType(System.Reflection.MethodInfo)">
-      <requires description="The target cannot be null." exception="T:System.ArgumentNullException">target != null</requires>
-      <exception cref="T:System.ArgumentNullException">target == null</exception>
+    <member name="M:Ncqrs.Domain.Mapping.MappedAggregateRoot.#ctor(Ncqrs.Domain.Mapping.IDomainEventHandlerMappingStrategy)">
+      <requires description="The strategy cannot be null." exception="T:System.ArgumentNullException">strategy != null</requires>
+      <exception cref="T:System.ArgumentNullException">strategy == null</exception>
     </member>
-    <member name="M:Ncqrs.Domain.Mapping.AttributeBasedDomainEventHandlerMappingStrategy.IsMarkedAsEventHandler(System.Reflection.MethodInfo,Ncqrs.Domain.Mapping.EventHandlerAttribute@)">
+    <member name="M:Ncqrs.Domain.Mapping.AttributeBasedDomainEventHandlerMappingStrategy.FirstParameterType(System.Reflection.MethodInfo)">
       <requires description="The target cannot be null." exception="T:System.ArgumentNullException">target != null</requires>
       <exception cref="T:System.ArgumentNullException">target == null</exception>
     </member>
@@ -1752,20 +1807,30 @@
       <requires description="The target cannot be null." exception="T:System.ArgumentNullException">target != null</requires>
       <exception cref="T:System.ArgumentNullException">target == null</exception>
     </member>
-    <member name="M:Ncqrs.Domain.DomainEventHandler`1.Ncqrs#Domain#IDomainEventHandler#HandleEvent(Ncqrs.Domain.DomainEvent)">
-      <requires description="The evnt cannot be null." inheritedFrom="M:Ncqrs.Domain.IDomainEventHandler.HandleEvent(Ncqrs.Domain.DomainEvent)" inheritedFromTypeName="IDomainEventHandler" exception="T:System.ArgumentNullException">evnt != null</requires>
-      <exception cref="T:System.ArgumentNullException">evnt == null</exception>
+    <member name="M:Ncqrs.Domain.Mapping.AttributeBasedDomainEventHandlerMappingStrategy.IsMarkedAsEventHandler(System.Reflection.MethodInfo,Ncqrs.Domain.Mapping.EventHandlerAttribute@)">
+      <requires description="The target cannot be null." exception="T:System.ArgumentNullException">target != null</requires>
+      <exception cref="T:System.ArgumentNullException">target == null</exception>
     </member>
-    <member name="M:Ncqrs.Eventing.Storage.InMemoryEventStore.GetAllEventsForEventSource(System.Guid)">
-      <ensures description="Result should never be null." inheritedFrom="M:Ncqrs.Eventing.Storage.IEventStore.GetAllEventsForEventSource(System.Guid)" inheritedFromTypeName="IEventStore">Contract.Result&lt;IEnumerable&lt;ISourcedEvent&gt;&gt;() != null</ensures>
+    <member name="M:Ncqrs.Domain.Storage.DomainRepository.GetById(System.Type,System.Guid)">
+      <requires inheritedFrom="M:Ncqrs.Domain.Storage.IDomainRepository.GetById(System.Type,System.Guid)" inheritedFromTypeName="IDomainRepository" exception="T:System.ArgumentNullException">aggregateRootType != null</requires>
+      <exception cref="T:System.ArgumentNullException">aggregateRootType == null</exception>
+    </member>
+    <member name="M:Ncqrs.Domain.Storage.DomainRepository.Save(Ncqrs.Domain.AggregateRoot)">
+      <requires inheritedFrom="M:Ncqrs.Domain.Storage.IDomainRepository.Save(Ncqrs.Domain.AggregateRoot)" inheritedFromTypeName="IDomainRepository" exception="T:System.ArgumentNullException">aggregateRootToSave != null</requires>
+      <exception cref="T:System.ArgumentNullException">aggregateRootToSave == null</exception>
+    </member>
+    <member name="M:Ncqrs.Domain.Storage.DomainRepository.#ctor(Ncqrs.Eventing.Storage.IEventStore,Ncqrs.Eventing.ServiceModel.Bus.IEventBus,Ncqrs.Eventing.Storage.ISnapshotStore,Ncqrs.Eventing.Conversion.IEventConverter{Ncqrs.Domain.DomainEvent,Ncqrs.Domain.DomainEvent})">
+      <requires exception="T:System.ArgumentNullException">store != null</requires>
+      <exception cref="T:System.ArgumentNullException">store == null</exception>
+      <requires exception="T:System.ArgumentNullException">eventBus != null</requires>
+      <exception cref="T:System.ArgumentNullException">eventBus == null</exception>
+    </member>
+    <member name="M:Ncqrs.Eventing.Storage.InMemoryEventStore.GetAllEvents(System.Guid)">
+      <ensures description="Result should never be null." inheritedFrom="M:Ncqrs.Eventing.Storage.IEventStore.GetAllEvents(System.Guid)" inheritedFromTypeName="IEventStore">Contract.Result&lt;IEnumerable&lt;ISourcedEvent&gt;&gt;() != null</ensures>
     </member>
     <member name="M:Ncqrs.Eventing.Storage.InMemoryEventStore.Save(Ncqrs.Eventing.IEventSource)">
       <requires description="source cannot be null." inheritedFrom="M:Ncqrs.Eventing.Storage.IEventStore.Save(Ncqrs.Eventing.IEventSource)" inheritedFromTypeName="IEventStore" exception="T:System.ArgumentNullException">source != null</requires>
       <exception cref="T:System.ArgumentNullException">source == null</exception>
-    </member>
-    <member name="M:Ncqrs.Commanding.CommandExecution.DirectActionOnAggregateRootCommandExecutor`2.Execute(Ncqrs.Commanding.ICommand)">
-      <requires description="The command cannot be null." inheritedFrom="M:Ncqrs.Commanding.CommandExecution.ICommandExecutor.Execute(Ncqrs.Commanding.ICommand)" inheritedFromTypeName="ICommandExecutor" exception="T:System.ArgumentNullException">command != null</requires>
-      <exception cref="T:System.ArgumentNullException">command == null</exception>
     </member>
     <member name="M:Ncqrs.Commanding.CommandExecution.Mapping.Actions.ObjectCreationCommandInfo.CreateFromDirectMethodCommand(Ncqrs.Commanding.ICommand)">
       <ensures description="The result of the method should not be null.">Contract.Result&lt;ObjectCreationCommandInfo&gt;() != null</ensures>
