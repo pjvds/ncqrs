@@ -125,6 +125,7 @@
     <EmbeddedResource Include="Eventing\Storage\SQL\TableCreationScript.sql">
       <CustomToolNamespace>Ncqrs.Eventing.Storage.SQL.SimpleMicrosoftSqlServerEventStore</CustomToolNamespace>
     </EmbeddedResource>
+    <Compile Include="Eventing\ServiceModel\Bus\IEventHandler.cs" />
     <Compile Include="Eventing\Snapshot.cs" />
     <Compile Include="Eventing\Storage\ISnapshotStore.cs" />
     <Compile Include="IClock.cs" />
@@ -160,7 +161,6 @@
     <Compile Include="Domain\UnitOfWork.cs" />
     <Compile Include="BasicGuidGenerator.cs" />
     <Compile Include="Eventing\ServiceModel\Bus\IEventBus.cs" />
-    <Compile Include="Eventing\ServiceModel\Bus\IEventHandler.cs" />
     <Compile Include="Eventing\ServiceModel\Bus\InProcessEventBus.cs" />
     <Compile Include="Eventing\IEvent.cs" />
     <Compile Include="IUniqueIdentifierGenerator.cs" />

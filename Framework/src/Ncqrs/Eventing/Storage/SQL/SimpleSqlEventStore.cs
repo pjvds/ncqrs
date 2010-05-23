@@ -32,7 +32,7 @@ namespace Ncqrs.Eventing.Storage.SQL
 
         private const String SelectLatestSnapshot = "SELECT TOP 1 * FROM [Snapshots] WHERE [EventSourceId]=@EventSourceId ORDER BY Version DESC";
         #endregion
-
+        
         private readonly String _connectionString;
 
         public SimpleMicrosoftSqlServerEventStore(String connectionString)

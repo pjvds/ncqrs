@@ -21,7 +21,7 @@ namespace Ncqrs.Tests.Eventing.ServiceModel.Bus
         [Test]
         public void When_a_catch_all_handler_is_register_it_should_be_called_for_all_events()
         {
-            var catchAllEventHandler = MockRepository.GenerateMock<IEventHandler>();
+            var catchAllEventHandler = MockRepository.GenerateMock<IEventHandler<IEvent>>();
 
             var bus = new InProcessEventBus();
             bus.RegisterHandler(catchAllEventHandler);
@@ -36,7 +36,7 @@ namespace Ncqrs.Tests.Eventing.ServiceModel.Bus
         public void When_multiple_messages_are_published_at_once_they_all_should_be_published()
         {
 
-            var catchAllEventHandler = MockRepository.GenerateMock<IEventHandler>();
+            var catchAllEventHandler = MockRepository.GenerateMock<IEventHandler<IEvent>>();
             var bus = new InProcessEventBus();
             bus.RegisterHandler(catchAllEventHandler);
 
@@ -54,10 +54,10 @@ namespace Ncqrs.Tests.Eventing.ServiceModel.Bus
         [Test]
         public void Registering_handler_via_generic_overload_should_also_add_the_handler()
         {
-            var aDomainEventHandler = MockRepository.GenerateMock<IEventHandler>();
+            var aDomainEventHandler = MockRepository.GenerateMock<IEventHandler<ADomainEvent>>();
             var bus = new InProcessEventBus();
 
-            bus.RegisterHandler<ADomainEvent>(aDomainEventHandler);
+            bus.RegisterHandler(aDomainEventHandler);
 
             var events = new IEvent[]
                              {
@@ -74,9 +74,9 @@ namespace Ncqrs.Tests.Eventing.ServiceModel.Bus
         [Test]
         public void When_multiple_messages_are_published_and_a_specific_handler_is_register_oply_the_matching_events_should_be_received_at_the_handler()
         {
-            var aDomainEventHandler = MockRepository.GenerateMock<IEventHandler>();
+            var aDomainEventHandler = MockRepository.GenerateMock<IEventHandler<ADomainEvent>>();
             var bus = new InProcessEventBus();
-            bus.RegisterHandler(typeof(ADomainEvent), aDomainEventHandler);
+            bus.RegisterHandler(aDomainEventHandler);
 
             var events = new IEvent[]
                              {
@@ -92,10 +92,10 @@ namespace Ncqrs.Tests.Eventing.ServiceModel.Bus
         [Test]
         public void When_a_handler_is_registered_for_a_specific_type_it_should_not_receive_other_events()
         {
-            var aDomainEventEventHandler = MockRepository.GenerateMock<IEventHandler>();
+            var aDomainEventEventHandler = MockRepository.GenerateMock<IEventHandler<ADomainEvent>>();
 
             var bus = new InProcessEventBus();
-            bus.RegisterHandler(typeof(ADomainEvent), aDomainEventEventHandler);
+            bus.RegisterHandler(aDomainEventEventHandler);
 
             bus.Publish(new ADomainEvent());
             bus.Publish(new AEvent());
@@ -111,9 +111,9 @@ namespace Ncqrs.Tests.Eventing.ServiceModel.Bus
         [Test]
         public void When_a_multiple_catch_all_handler_are_registered_for_they_should_all_been_called()
         {
-            var catchAllEventHandler1 = MockRepository.GenerateMock<IEventHandler>();
-            var catchAllEventHandler2 = MockRepository.GenerateMock<IEventHandler>();
-            var catchAllEventHandler3 = MockRepository.GenerateMock<IEventHandler>();
+            var catchAllEventHandler1 = MockRepository.GenerateMock<IEventHandler<IEvent>>();
+            var catchAllEventHandler2 = MockRepository.GenerateMock<IEventHandler<IEvent>>();
+            var catchAllEventHandler3 = MockRepository.GenerateMock<IEventHandler<IEvent>>();
 
             var bus = new InProcessEventBus();
             bus.RegisterHandler(catchAllEventHandler1);
@@ -136,14 +136,14 @@ namespace Ncqrs.Tests.Eventing.ServiceModel.Bus
         [Test]
         public void When_a_multiple_specific_handlers_are_register_they_all_should_be_called_when_the_specific_event_is_published()
         {
-            var specificEventHandler1 = MockRepository.GenerateMock<IEventHandler>();
-            var specificEventHandler2 = MockRepository.GenerateMock<IEventHandler>();
-            var specificEventHandler3 = MockRepository.GenerateMock<IEventHandler>();
+            var specificEventHandler1 = MockRepository.GenerateMock<IEventHandler<ADomainEvent>>();
+            var specificEventHandler2 = MockRepository.GenerateMock<IEventHandler<ADomainEvent>>();
+            var specificEventHandler3 = MockRepository.GenerateMock<IEventHandler<ADomainEvent>>();
 
             var bus = new InProcessEventBus();
-            bus.RegisterHandler(typeof(ADomainEvent), specificEventHandler1);
-            bus.RegisterHandler(typeof(ADomainEvent), specificEventHandler2);
-            bus.RegisterHandler(typeof(ADomainEvent), specificEventHandler3);
+            bus.RegisterHandler(specificEventHandler1);
+            bus.RegisterHandler(specificEventHandler2);
+            bus.RegisterHandler(specificEventHandler3);
 
             bus.Publish(new ADomainEvent());
             bus.Publish(new AEvent());
