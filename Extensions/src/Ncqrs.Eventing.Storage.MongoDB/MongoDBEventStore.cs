@@ -27,11 +27,12 @@ namespace Ncqrs.Eventing.Storage.MongoDB
             database = Mongo.GetDatabase(databaseUri);
         }
 
-        public virtual IEnumerable<ISourcedEvent> GetAllEventsForEventSource(Guid id)
+        public IEnumerable<ISourcedEvent> GetAllEventsSinceVersion(Guid id, long version)
         {
             IDBCollection eventSources = database.GetCollection("Events");
 
-            IDocument source = eventSources.FindOne(new DBQuery("_SourceId", id.ToString()));
+            var query = new DBQuery("_SourceId", id.ToString());
+            IDocument source = eventSources.FindOne();
 
             if (source == null) return new ISourcedEvent[] { };
 
@@ -42,11 +43,20 @@ namespace Ncqrs.Eventing.Storage.MongoDB
 
             foreach (var eventDbObject in eventsAsDbObjects)
             {
-                events.Add(DeserializeToEventIDBObject(eventDbObject));
+                var evnt = DeserializeToEventIDBObject(eventDbObject);
+
+                // TODO: Optimize: do not first serializing event before event sequence check.
+                if (evnt.EventSequence > version)
+                    events.Add(evnt);
             }
 
-            // todo: Add order to the query for optimization.
+            // TODO: Add order to the query for optimization.
             return events.OrderBy(evnt => evnt.EventSequence);
+        }
+
+        public IEnumerable<ISourcedEvent> GetAllEvents(Guid id)
+        {
+            return GetAllEventsSinceVersion(id, 0);
         }
 
         public virtual void Save(IEventSource source)
