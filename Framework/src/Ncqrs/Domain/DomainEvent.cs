@@ -49,6 +49,10 @@ namespace Ncqrs.Domain
             private set;
         }
 
+        /// <summary>
+        /// Gets the id of the event source that owns this event.
+        /// </summary>
+        /// <value>The id of the event source that owns this event. This value is always the same as <see cref="AggregateRootId"/>.</value>
         Guid ISourcedEvent.EventSourceId
         {
             get

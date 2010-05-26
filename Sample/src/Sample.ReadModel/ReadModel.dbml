@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="NcqrsSampleReadModel" Class="ReadModelDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=.\sqlexpress;Initial Catalog=NcqrsSampleReadModel;Integrated Security=True" SettingsObjectName="Sample.ReadModel.Properties.Settings" SettingsPropertyName="ReadModelConnection" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.MessageModel" Member="MessageModels">
+    <Type Name="MessageModel">
+      <Column Name="Id" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Text" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="CreationDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+    </Type>
+  </Table>
+</Database>

@@ -8,11 +8,10 @@ using Ncqrs.Config.StructureMap;
 using Ncqrs.Eventing.Denormalization;
 using Ncqrs.Eventing.ServiceModel.Bus;
 using Ncqrs.Eventing.Storage;
-using Ncqrs.Eventing.Storage.MongoDB;
 using Sample.Commands;
 using Ncqrs.Domain;
-using Sample.ReadModel.Denormalizers.EditMessageModel;
 using Ncqrs.Eventing.Storage.SQL;
+using Sample.ReadModel.Denormalizers;
 using Ncqrs.Domain.Storage;
 using Ncqrs.Commanding.ServiceModel;
 using Ncqrs.Commanding.CommandExecution.Mapping;
@@ -29,7 +28,7 @@ namespace Sample.UI
             }
             private set
             {
-                HttpContext.Current.Application["CommandExecutor"] = value;
+                HttpContext.Current.Application["ICommandService"] = value;
             }
         }
 
@@ -68,6 +67,7 @@ namespace Sample.UI
             EventBus = new InProcessEventBus();
 
             var factory = new DenormalizerFactory();
+
             var denormalizers = factory.CreateDenormalizersFromAssembly(typeof(EditMessageModelMessageTextUpdatedDenormalizer).Assembly);
 
             foreach (var denormalizer in denormalizers)

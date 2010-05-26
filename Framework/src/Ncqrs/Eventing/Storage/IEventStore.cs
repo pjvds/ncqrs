@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using Ncqrs.Domain;
 
 namespace Ncqrs.Eventing.Storage
 {
@@ -30,16 +31,6 @@ namespace Ncqrs.Eventing.Storage
         /// <exception cref="ConcurrencyException">Occurs when there is already a newer version of the event provider stored in the event store.</exception>
         /// <param name="source">The source that should be saved.</param>
         void Save(IEventSource source);
-
-        /// <summary>
-        /// Saves a snapshot of the specified event source.
-        /// </summary>
-        void SaveShapshot(ISnapshot source);
-
-        /// <summary>
-        /// Gets a snapshot of a particular event source, if one exists. Otherwise, returns <c>null</c>.
-        /// </summary>
-        ISnapshot GetSnapshot(Guid eventSourceId);
     }
 
     [ContractClassFor(typeof(IEventStore))]
@@ -63,24 +54,9 @@ namespace Ncqrs.Eventing.Storage
             Contract.Requires<ArgumentNullException>(source != null, "source cannot be null.");
         }
 
-        public void SaveShapshot(ISnapshot source)
-        {
-        }
-
         public IEnumerable<ISourcedEvent> GetAllEventsSinceVersion(Guid id)
         {
             return default(IEnumerable<ISourcedEvent>);
-        }
-
-        public void SaveshapShot(ISnapshot source)
-        {
-        }
-
-        public ISnapshot GetSnapshot(Guid eventSourceId)
-        {
-            Contract.Ensures(Contract.Result<ISnapshot>() != null ? Contract.Result<ISnapshot>().EventSourceId == eventSourceId : true);
-
-            return default(ISnapshot);
         }
     }
 }

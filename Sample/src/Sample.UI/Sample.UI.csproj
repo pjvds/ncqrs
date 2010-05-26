@@ -40,19 +40,14 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="MongoDB.Driver">
       <HintPath>..\..\bin\MongoDB.Driver.dll</HintPath>
-    </Reference>
     <Reference Include="MongoDB.Emitter, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\bin\MongoDB.Emitter.dll</HintPath>
     </Reference>
     <Reference Include="Ncqrs.Config.StructureMap">
       <HintPath>..\..\bin\Ncqrs.Config.StructureMap.dll</HintPath>
     </Reference>
-    <Reference Include="Ncqrs.Eventing.Storage.MongoDB">
       <HintPath>..\..\bin\Ncqrs.Eventing.Storage.MongoDB.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json.Net20">
       <HintPath>..\..\bin\Newtonsoft.Json.Net20.dll</HintPath>
-    </Reference>
     <Reference Include="StructureMap">
       <HintPath>..\..\bin\StructureMap.dll</HintPath>
     </Reference>

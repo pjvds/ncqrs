@@ -8,7 +8,7 @@ namespace Ncqrs.Eventing.ServiceModel.Bus
 {
     public class InProcessEventBus : IEventBus
     {
-        private readonly Dictionary<Type, List<IEventHandler>> _handlerRegister = new Dictionary<Type, List<IEventHandler>>();
+        private readonly Dictionary<Type, List<Action<IEvent>>> _handlerRegister = new Dictionary<Type, List<Action<IEvent>>>();
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public void Publish(IEvent eventMessage)
@@ -17,7 +17,7 @@ namespace Ncqrs.Eventing.ServiceModel.Bus
 
             Log.InfoFormat("Started publishing event {0}.", eventMessageType.FullName);
 
-            IEnumerable<IEventHandler> handlers = GetHandlersForEvent(eventMessage);
+            IEnumerable<Action<IEvent>> handlers = GetHandlersForEvent(eventMessage);
 
             if (handlers.Count() == 0)
             {
@@ -34,7 +34,7 @@ namespace Ncqrs.Eventing.ServiceModel.Bus
                         Log.DebugFormat("Calling handler {0} for event {1}.", handler.GetType().FullName,
                                         eventMessageType.FullName);
 
-                        handler.Handle(eventMessage);
+                        handler(eventMessage);
 
                         Log.DebugFormat("Call finished.");
                     }
@@ -43,24 +43,21 @@ namespace Ncqrs.Eventing.ServiceModel.Bus
             }
         }
 
-        protected IEnumerable<IEventHandler> GetHandlersForEvent(IEvent eventMessage)
+        protected IEnumerable<Action<IEvent>> GetHandlersForEvent(IEvent eventMessage)
         {
             var eventType = eventMessage.GetType();
+            var result = new List<Action<IEvent>>();
 
-            if(_handlerRegister.ContainsKey(eventType))
+            foreach(var key in _handlerRegister.Keys)
             {
-                foreach(var handler in _handlerRegister[eventType])
+                if(key.IsAssignableFrom(eventType))
                 {
-                    yield return handler;
+                    var handlers = _handlerRegister[key];
+                    result.AddRange(handlers);
                 }
             }
-            if(_handlerRegister.ContainsKey(typeof(IEvent)))
-            {
-                foreach(var handler in _handlerRegister[typeof(IEvent)])
-                {
-                    yield return handler;
-                }
-            }
+
+            return result;
         }
 
         public void Publish(IEnumerable<IEvent> eventMessages)
@@ -71,27 +68,22 @@ namespace Ncqrs.Eventing.ServiceModel.Bus
             }
         }
 
-        public void RegisterHandler<TEvent>(IEventHandler handler) where TEvent : IEvent
+        public void RegisterHandler<TEvent>(IEventHandler<TEvent> handler) where TEvent : IEvent
         {
-            RegisterHandler(typeof(TEvent), handler);
+            Action<IEvent> act = (e) => handler.Handle((TEvent) e);
+            RegisterHandler(typeof(TEvent), act);
         }
 
-        public void RegisterHandler(Type eventType, IEventHandler handler)
+        public void RegisterHandler(Type eventType, Action<IEvent> handler)
         {
-            List<IEventHandler> handlers = null;
+            List<Action<IEvent>> handlers = null;
             if (!_handlerRegister.TryGetValue(eventType, out handlers))
             {
-                handlers = new List<IEventHandler>(1);
+                handlers = new List<Action<IEvent>>(1);
                 _handlerRegister.Add(eventType, handlers);
             }
 
             handlers.Add(handler);
-        }
-
-
-        public void RegisterHandler(IEventHandler handler)
-        {
-            RegisterHandler(typeof(IEvent), handler);
         }
     }
 }
