@@ -85,6 +85,7 @@
     <Compile Include="Domain\EventNotHandledExceptionTests.cs" />
     <Compile Include="Domain\Mapping\AttributeBasedDomainEventHandlerMappingStrategyTests.cs" />
     <Compile Include="Domain\Mapping\ConventionBasedDomainEventHandlerMappingStrategyTests.cs" />
+    <Compile Include="Domain\Mapping\ExpressionBasedDomainEventHandlerMappingStrategyTests.cs" />
     <Compile Include="Domain\Mapping\InvalidEventHandlerMappingExceptionTests.cs" />
     <Compile Include="Domain\NoUnitOfWorkAvailableInThisContextExceptionTests.cs" />
     <Compile Include="Domain\Storage\AggregateLoaderExceptionTests.cs" />
