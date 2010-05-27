@@ -20,7 +20,7 @@ namespace Ncqrs.Domain
         protected AggregateRootMappedWithExpressions() 
             : base(new ExpressionBasedDomainEventHandlerMappingStrategy())
         {
-            InitMappingRules();
+            InitializeEventHandlers();
         }
         
         protected ExpressionHandler<T> Map<T>() where T : DomainEvent
@@ -31,6 +31,6 @@ namespace Ncqrs.Domain
             return handler;
         }
 
-        public abstract void InitMappingRules();
+        public abstract void InitializeEventHandlers();
     }
 }

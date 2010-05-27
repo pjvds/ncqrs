@@ -11,7 +11,7 @@ namespace Ncqrs.Tests.Domain.Mapping
     {
         public class IlligalStaticMethodTarget : AggregateRootMappedWithExpressions
         {
-            public override void InitMappingRules()
+            public override void InitializeEventHandlers()
             {
                 Map<DomainEvent>().ToHandler(x => OnDomainEvent(x));
             }
@@ -22,7 +22,7 @@ namespace Ncqrs.Tests.Domain.Mapping
 
         public class GoodTarget : AggregateRootMappedWithExpressions
         {
-            public override void InitMappingRules()
+            public override void InitializeEventHandlers()
             {
                 Map<PublicEvent>().ToHandler(x => OnPublicEvent(x));
                 Map<ProtectedEvent>().ToHandler(x => OnProtectedEvent(x));
@@ -63,7 +63,7 @@ namespace Ncqrs.Tests.Domain.Mapping
 
         public class MismatchOnEventTypeTarget : AggregateRootMappedWithExpressions
         {
-            public override void InitMappingRules()
+            public override void InitializeEventHandlers()
             {
                 Map<DerivedEvent>().ToHandler(x => OnPublicEvent(x));
             }
@@ -80,7 +80,7 @@ namespace Ncqrs.Tests.Domain.Mapping
 
         public class EventMappedExactOnMethodWithDerivedEventTypeTarget : AggregateRootMappedWithExpressions
         {
-            public override void InitMappingRules()
+            public override void InitializeEventHandlers()
             {
                 Map<BaseEvent>().ToHandler(x => OnPublicEvent(x)).MatchExact();
             }
@@ -97,7 +97,7 @@ namespace Ncqrs.Tests.Domain.Mapping
 
         public class EventMappedOnMethodWithDerivedEventTypeTarget : AggregateRootMappedWithExpressions
         {
-            public override void InitMappingRules()
+            public override void InitializeEventHandlers()
             {
                 Map<BaseEvent>().ToHandler(x => OnPublicEvent(x));
             }
