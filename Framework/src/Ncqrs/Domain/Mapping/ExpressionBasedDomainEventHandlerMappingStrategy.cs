@@ -27,7 +27,7 @@ namespace Ncqrs.Domain.Mapping
             
             var handlers = new List<IDomainEventHandler>();
 
-            foreach (IExpressionHandler mappinghandler in aggregateRoot.MappingHandlers)
+            foreach (ExpressionHandler mappinghandler in aggregateRoot.MappingHandlers)
             {
                 if (mappinghandler.ActionMethodInfo.IsStatic)
                 {

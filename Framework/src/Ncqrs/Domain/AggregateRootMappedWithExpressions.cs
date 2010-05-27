@@ -10,9 +10,9 @@ namespace Ncqrs.Domain
 {
     public abstract class AggregateRootMappedWithExpressions : MappedAggregateRoot<AggregateRootMappedWithExpressions>
     {
-        private IList<IExpressionHandler> _mappinghandlers = new List<IExpressionHandler>();
+        private IList<ExpressionHandler> _mappinghandlers = new List<ExpressionHandler>();
 
-        internal IEnumerable<IExpressionHandler> MappingHandlers
+        internal IEnumerable<ExpressionHandler> MappingHandlers
         {
             get { return _mappinghandlers; }
         }
@@ -23,9 +23,9 @@ namespace Ncqrs.Domain
             InitMappingRules();
         }
         
-        protected IExpressionHandler<T> Map<T>() where T : DomainEvent
+        protected ExpressionHandler<T> Map<T>() where T : DomainEvent
         {
-            var handler = new ExpressionHandlerImpl<T>();
+            var handler = new ExpressionHandler<T>();
             _mappinghandlers.Add(handler);
 
             return handler;

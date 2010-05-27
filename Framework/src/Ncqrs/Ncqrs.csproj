@@ -113,8 +113,7 @@
     <Compile Include="DateTimeBasedClock.cs" />
     <Compile Include="Domain\AggregateRootMappedWithExpressions.cs" />
     <Compile Include="Domain\DomainEvent.cs" />
-    <Compile Include="Domain\Mapping\ExpressionHandlerImpl.cs" />
-    <Compile Include="Domain\Mapping\IExpressionHandler.cs" />
+    <Compile Include="Domain\Mapping\ExpressionHandler.cs" />
     <Compile Include="Domain\IUnitOfWorkContext.cs" />
     <Compile Include="Domain\Mapping\ExpressionBasedDomainEventHandlerMappingStrategy.cs" />
     <Compile Include="Domain\NoUnitOfWorkAvailableInThisContextException.cs" />
