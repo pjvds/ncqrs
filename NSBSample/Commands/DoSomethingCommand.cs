@@ -9,13 +9,12 @@ using Ncqrs.Commanding.CommandExecution.Mapping.Attributes;
 namespace Commands
 {
    [Serializable]
-   [MapsToAggregateRootConstructor("Domain.SomeDomainObject, Domain")]
+   [MapsToAggregateRootMethod("Domain.SomeDomainObject, Domain","DoSomething")]
    public class DoSomethingCommand : CommandBase
    {
       [AggregateRootIdAttribute]
       public Guid ObjectId { get; set; }
-
-      [ExcludeInMapping]
+      
       public string Value { get; set; }
    }
 }

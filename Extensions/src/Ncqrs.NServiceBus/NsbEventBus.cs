@@ -13,12 +13,12 @@ namespace Ncqrs.NServiceBus
    {
       public void Publish(IEvent eventMessage)
       {
-         Bus.Publish(new EventMessage {Payload = eventMessage});
+         Bus.Publish(CreateEventMessage(eventMessage));
       }
 
       public void Publish(IEnumerable<IEvent> eventMessages)
       {
-         Bus.Publish(eventMessages.Select(x => new EventMessage { Payload = x }).ToArray());
+         Bus.Publish(eventMessages.Select(CreateEventMessage).ToArray());
       }
 
       public void RegisterHandler<TEvent>(IEventHandler<TEvent> handler) where TEvent : IEvent
@@ -28,6 +28,31 @@ namespace Ncqrs.NServiceBus
       private static IBus Bus
       {
          get { return NcqrsEnvironment.Get<IBus>(); }
+      }
+
+      private static IMessage CreateEventMessage(IEvent payload)
+      {
+         Type factoryType =
+            typeof (EventMessageFactory<>).MakeGenericType(payload.GetType());
+         var factory =
+            (IEventMessageFactory) Activator.CreateInstance(factoryType);
+         return factory.CreateEventMessage(payload);
+      }
+
+      public interface IEventMessageFactory
+      {
+         IMessage CreateEventMessage(IEvent payload);
+      }
+
+      private class EventMessageFactory<T> : IEventMessageFactory where T : IEvent
+      {
+         IMessage IEventMessageFactory.CreateEventMessage(IEvent payload)
+         {
+            return new EventMessage<T>
+                      {
+                         Payload = (T)payload
+                      };
+         }
       }
    }
 }

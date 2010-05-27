@@ -5,8 +5,9 @@ using NServiceBus;
 namespace Ncqrs.NServiceBus
 {
    [Serializable]
-   public class EventMessage : IMessage
+   public class EventMessage<T> : IMessage
+      where T : IEvent
    {
-      public IEvent Payload { get; set; }
+      public T Payload { get; set; }
    }
 }

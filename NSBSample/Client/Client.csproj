@@ -61,6 +61,7 @@
     <Compile Include="ClientEndpoint.cs" />
     <Compile Include="EndpointConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SomePropertyChangedEventHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -72,6 +73,10 @@
     <ProjectReference Include="..\Commands\Commands.csproj">
       <Project>{5EF85227-BF8E-4A19-8496-2A3BB500E27C}</Project>
       <Name>Commands</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Events\Events.csproj">
+      <Project>{5088657E-AC3F-4081-B0B8-ACFBBD6BFA28}</Project>
+      <Name>Events</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -3,7 +3,7 @@ using NServiceBus;
 
 namespace Server
 {
-   public class EndpointConfig : IConfigureThisEndpoint, AsA_Server, IWantCustomInitialization
+   public class EndpointConfig : IConfigureThisEndpoint, AsA_Publisher, IWantCustomInitialization
    {
       public void Init()
       {
@@ -11,7 +11,10 @@ namespace Server
             .DefaultBuilder()
             .BinarySerializer()
             .InstallNcqrs()
-            .UseMappedExecutors();
+            .UseMappedExecutors()
+            .MsmqTransport()
+            .PurgeOnStartup(true);
+            
       }
    }
 }

@@ -8,7 +8,7 @@ namespace Client
       {
          Configure.With()
             .DefaultBuilder()
-            .BinarySerializer();
+            .BinarySerializer();         
       }
    }
 }

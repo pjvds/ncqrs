@@ -1,6 +1,7 @@
 ﻿using Ncqrs.Commanding;
 using Ncqrs.Commanding.CommandExecution;
 using Ncqrs.Commanding.ServiceModel;
+using Ncqrs.Eventing.ServiceModel.Bus;
 using NServiceBus;
 using NServiceBus.ObjectBuilder;
 
@@ -17,6 +18,8 @@ namespace Ncqrs.NServiceBus
          Configurer = config.Configurer;
 
          NcqrsEnvironment.Configure(new NsbEnvironmentConfiguration(Builder));
+         IEventBus nsbEventBus = new NsbEventBus();
+         NcqrsEnvironment.SetDefault(nsbEventBus);
          _commandService = new NsbCommandService();
          config.Configurer.RegisterSingleton(typeof (ICommandService),
                                              _commandService);          
