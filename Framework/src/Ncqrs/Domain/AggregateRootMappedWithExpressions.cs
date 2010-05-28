@@ -3,12 +3,20 @@ using Ncqrs.Domain.Mapping;
 
 namespace Ncqrs.Domain
 {
-    ///<summary>
-    ///</summary>
+    /// <summary>
+    /// A aggregate root that uses lambda style mapping to map internal event handlers. The following method should be mapped 
+    /// </summary>
+    /// <remarks>
+    /// This aggregate root uses the  <see cref="ExpressionBasedDomainEventHandlerMappingStrategy"/> to get the internal event handlers.
+    /// </remarks>
+    /// <seealso cref="ExpressionBasedDomainEventHandlerMappingStrategy"/>
     public abstract class AggregateRootMappedWithExpressions : MappedAggregateRoot<AggregateRootMappedWithExpressions>
     {
         private readonly IList<ExpressionHandler> _mappinghandlers = new List<ExpressionHandler>();
 
+        /// <summary>
+        /// Gets the <see cref="IList{ExpressionHandler}"/> list of mapping rules.
+        /// </summary>
         internal IList<ExpressionHandler> MappingHandlers
         {
             get { return _mappinghandlers; }
@@ -25,10 +33,10 @@ namespace Ncqrs.Domain
         }
         
         /// <summary>
-        /// 
+        /// Maps the given generic eventtype to the expressed handler.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
+        /// <typeparam name="T">This should always be a <see cref="DomainEvent"/>.</typeparam>
+        /// <returns>An <see cref="ExpressionHandler{T}"/>which allows us to define the mapping to a handler.</returns>
         protected ExpressionHandler<T> Map<T>() where T : DomainEvent
         {
             var handler = new ExpressionHandler<T>();
@@ -38,6 +46,7 @@ namespace Ncqrs.Domain
         }
 
         ///<summary>
+        /// Defines the method that derived types need to implement to support strongly typed mapping.
         ///</summary>
         public abstract void InitializeEventHandlers();
     }
