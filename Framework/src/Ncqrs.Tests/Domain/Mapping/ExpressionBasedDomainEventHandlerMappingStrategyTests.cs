@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Linq;
 using FluentAssertions;
 using Ncqrs.Domain;
 using Ncqrs.Domain.Mapping;
 using NUnit.Framework;
+using System.Linq;
 
 namespace Ncqrs.Tests.Domain.Mapping
 {
