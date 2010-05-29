@@ -168,7 +168,7 @@ namespace Ncqrs.Domain
 
             if (!historical)
             {
-                _uncommittedEvent.Push(evnt);
+                _uncommittedEvent.Enqueue(evnt);
                 RegisterCurrentInstanceAsDirty();
             }
         }
