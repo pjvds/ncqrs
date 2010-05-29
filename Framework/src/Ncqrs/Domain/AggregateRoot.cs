@@ -34,7 +34,7 @@ namespace Ncqrs.Domain
         /// <summary>
         /// Holds the events that are not yet committed.
         /// </summary>
-        private readonly Stack<DomainEvent> _uncommittedEvent = new Stack<DomainEvent>(0);
+        private readonly Queue<DomainEvent> _uncommittedEvent = new Queue<DomainEvent>(0);
 
         /// <summary>
         /// Gets the current version of the instance as it is known in the event store.
@@ -161,14 +161,14 @@ namespace Ncqrs.Domain
                 }
 
                 evnt.AggregateRootId = this.Id;
-                evnt.EventSequence = Version + _uncommittedEvent.Count + 1;
+                evnt.EventSequence = Version + 1;
             }
 
             HandleEvent(evnt);
 
             if (!historical)
             {
-                _uncommittedEvent.Push(evnt);
+                _uncommittedEvent.Enqueue(evnt);
                 RegisterCurrentInstanceAsDirty();
             }
         }
