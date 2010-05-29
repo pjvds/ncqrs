@@ -23,7 +23,7 @@ namespace Ncqrs.Messaging
          {
             MessagingContext.OnBeginMessageProcessing(message);            
             processor.Process(this, message);
-            //ApplyEvent(new MessageReceivedEvent(DateTime.Now, message));
+            ApplyEvent(new MessageReceivedEvent(DateTime.Now, message));
          }
          finally
          {
