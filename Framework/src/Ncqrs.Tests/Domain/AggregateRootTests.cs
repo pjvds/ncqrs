@@ -221,17 +221,22 @@ namespace Ncqrs.Tests.Domain
         }
 
         [Test]
-        public void Applying_an_event_should_higher_the_version()
+        public void Applying_an_event_should_the_the_version()
         {
             using (NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork())
             {
                 var theAggregate = new MyAggregateRoot();
 
                 theAggregate.Version.Should().Be(0);
-                theAggregate.MethodThatCausesAnEventThatHasAHandler();
+
+                theAggregate.MethodThatCausesAnEventThatHasAHandler();                
                 theAggregate.Version.Should().Be(1);
+                theAggregate.GetUncommittedEvents().Last().EventSequence.Should().Be(1);
+
                 theAggregate.MethodThatCausesAnEventThatHasAHandler();
                 theAggregate.Version.Should().Be(2);
+                theAggregate.GetUncommittedEvents().Last().EventSequence.Should().Be(2);
+
                 theAggregate.MethodThatCausesAnEventThatHasAHandler();
             }
         }
