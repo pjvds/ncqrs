@@ -161,7 +161,7 @@ namespace Ncqrs.Domain
                 }
 
                 evnt.AggregateRootId = this.Id;
-                evnt.EventSequence = Version + _uncommittedEvent.Count + 1;
+                evnt.EventSequence = Version + 1;
             }
 
             HandleEvent(evnt);
