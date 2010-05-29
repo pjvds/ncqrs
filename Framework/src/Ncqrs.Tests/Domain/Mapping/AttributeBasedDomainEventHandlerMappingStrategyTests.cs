@@ -10,14 +10,14 @@ namespace Ncqrs.Tests.Domain.Mapping
     public class AttributeBasedDomainEventHandlerMappingStrategyTests
     {
         public class IlligalStaticMethodTarget
-            : AggregateRoot
+            : AggregateRootMappedWithAttributes
         {
             [EventHandler]
             public static void MyEventHandlerMethod(DomainEvent e)
             {}
         }
 
-        public class NoParameterMethodTarget : AggregateRoot
+        public class NoParameterMethodTarget : AggregateRootMappedWithAttributes
         {
             [EventHandler]
             public void MyEventHandlerMethod()
@@ -25,7 +25,7 @@ namespace Ncqrs.Tests.Domain.Mapping
             }
         }
 
-        public class MoreThenOneParameterMethodTarget : AggregateRoot
+        public class MoreThenOneParameterMethodTarget : AggregateRootMappedWithAttributes
         {
             [EventHandler]
             public void MyEventHandlerMethod(DomainEvent e1, DomainEvent e2)
@@ -33,7 +33,7 @@ namespace Ncqrs.Tests.Domain.Mapping
             }
         }
 
-        public class NotADomainEventTarget : AggregateRoot
+        public class NotADomainEventTarget : AggregateRootMappedWithAttributes
         {
             [EventHandler]
             public void MyEventHandlerMethod(String e)
@@ -41,7 +41,7 @@ namespace Ncqrs.Tests.Domain.Mapping
             }
         }
 
-        public class GoodTarget : AggregateRoot
+        public class GoodTarget : AggregateRootMappedWithAttributes
         {
             public class PublicEvent : DomainEvent { }
             public class ProtectedEvent : DomainEvent { }
@@ -91,7 +91,7 @@ namespace Ncqrs.Tests.Domain.Mapping
             var aggregate = new IlligalStaticMethodTarget();
             var mapping = new AttributeBasedDomainEventHandlerMappingStrategy();
 
-            Action act = ()=>mapping.GetEventHandlersFromAggregateRoot(aggregate);
+            Action act = () => mapping.GetEventHandlersFromAggregateRoot(aggregate);
 
             act.ShouldThrow<InvalidEventHandlerMappingException>();
         }

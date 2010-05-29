@@ -34,7 +34,7 @@ namespace Ncqrs.Domain
     /// </code>
     /// </example>
     /// <seealso cref="ConventionBasedDomainEventHandlerMappingStrategy"/>
-    public abstract class AggregateRootMappedByConvention : MappedAggregateRoot
+    public abstract class AggregateRootMappedByConvention : MappedAggregateRoot<AggregateRootMappedByConvention>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="AggregateRootMappedByConvention"/> class.
