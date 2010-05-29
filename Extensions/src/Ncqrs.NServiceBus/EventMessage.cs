@@ -4,10 +4,17 @@ using NServiceBus;
 
 namespace Ncqrs.NServiceBus
 {
-   [Serializable]
-   public class EventMessage<T> : IMessage
-      where T : IEvent
-   {
-      public T Payload { get; set; }
-   }
+    /// <summary>
+    /// Wraps Ncqrs event to be transportable by NServiceBus.
+    /// </summary>
+    /// <typeparam name="T">Type of transported event.</typeparam>
+    [Serializable]
+    public class EventMessage<T> : IMessage
+       where T : IEvent
+    {
+        /// <summary>
+        /// Gets or sets transported event.
+        /// </summary>
+        public T Payload { get; set; }
+    }
 }
