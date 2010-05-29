@@ -37,7 +37,8 @@
     <Reference Include="Ncqrs">
       <HintPath>..\..\Extensions\bin\Ncqrs\Ncqrs.dll</HintPath>
     </Reference>
-    <Reference Include="Ncqrs.NServiceBus">
+    <Reference Include="Ncqrs.NServiceBus, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Extensions\src\Ncqrs.NServiceBus\bin\Debug\Ncqrs.NServiceBus.dll</HintPath>
     </Reference>
     <Reference Include="NServiceBus">

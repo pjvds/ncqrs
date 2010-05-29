@@ -37,6 +37,10 @@
     <Reference Include="Ncqrs">
       <HintPath>..\..\Extensions\bin\Ncqrs\Ncqrs.dll</HintPath>
     </Reference>
+    <Reference Include="Ncqrs.NServiceBus, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Extensions\src\Ncqrs.NServiceBus\bin\Debug\Ncqrs.NServiceBus.dll</HintPath>
+    </Reference>
     <Reference Include="NServiceBus">
       <HintPath>..\..\Extensions\bin\NServiceBus\NServiceBus.dll</HintPath>
     </Reference>
@@ -62,10 +66,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Extensions\src\Ncqrs.NServiceBus\Ncqrs.NServiceBus.csproj">
-      <Project>{9B796256-E9D6-4F21-BB89-C5333A880BFE}</Project>
-      <Name>Ncqrs.NServiceBus</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Commands\Commands.csproj">
       <Project>{5EF85227-BF8E-4A19-8496-2A3BB500E27C}</Project>
       <Name>Commands</Name>
