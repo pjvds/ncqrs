@@ -9,34 +9,34 @@ namespace Ncqrs.Tests.Domain.Mapping
 {
     public class ConventionBasedDomainEventHandlerMappingStrategyTests
     {
-        public class IlligalStaticMethodTarget : AggregateRoot
+        public class IlligalStaticMethodTarget : AggregateRootMappedByConvention
         {
             public static void OnDomainEvent(DomainEvent e)
             { }
         }
 
-        public class NoParameterMethodTarget : AggregateRoot
+        public class NoParameterMethodTarget : AggregateRootMappedByConvention
         {
             public void OnMyEvent()
             {
             }
         }
 
-        public class MoreThenOneParameterMethodTarget : AggregateRoot
+        public class MoreThenOneParameterMethodTarget : AggregateRootMappedByConvention
         {
             public void OnDomainEvent(DomainEvent e1, DomainEvent e2)
             {
             }
         }
 
-        public class NotADomainEventTarget : AggregateRoot
+        public class NotADomainEventTarget : AggregateRootMappedByConvention
         {
             public void OnDomainEvent(String e)
             {
             }
         }
 
-        public class GoodTarget : AggregateRoot
+        public class GoodTarget : AggregateRootMappedByConvention
         {
             public class PublicEvent : DomainEvent { }
             public class ProtectedEvent : DomainEvent { }

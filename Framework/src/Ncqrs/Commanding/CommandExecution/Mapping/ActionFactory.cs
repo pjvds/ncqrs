@@ -21,12 +21,12 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping
         {
             Contract.Requires<ArgumentNullException>(command != null);
 
-            if (IsCommandMappedToObjectCreation(command))
+            if (IsCommandMappedToObjectCreation(command.GetType()))
             {
                 return new ObjectCreationCommandExecutor<TCommand>();
             }
 
-            if (IsCommandMappedToADirectMethod(command))
+            if (IsCommandMappedToADirectMethod(command.GetType()))
             {
                 return new DirectMethodCommandExecutor<TCommand>();
             }
@@ -36,51 +36,39 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping
         }
 
         /// <summary>
+        /// Determines whether the commands is mapped.
+        /// </summary>
+        /// <param name="commandType">Type of the command</param>
+        /// <returns>True, if command is mapped. False otherwise.</returns>
+        public bool IsCommandMapped(Type commandType)
+        {
+            return
+                IsCommandMappedToObjectCreation(commandType) ||
+                IsCommandMappedToADirectMethod(commandType);
+        }
+
+        /// <summary>
         /// Determines whether the command is mapped to a direct method.
         /// </summary>
-        /// <param name="command">The command.</param>
+        /// <param name="commandType">Type of the command.</param>
         /// <returns>
         /// 	<c>true</c> if the command is mapped to a direct method; otherwise, <c>false</c>.
         /// </returns>
-        private static Boolean IsCommandMappedToADirectMethod(ICommand command)
+        private static Boolean IsCommandMappedToADirectMethod(Type commandType)
         {
-            return IsAttributeDefinedOnCommand<MapsToAggregateRootMethodAttribute>(command);
+            return commandType.IsDefined(typeof (MapsToAggregateRootMethodAttribute), false);
         }
 
         /// <summary>
         /// Determines whether the command is mapped for object creation.
         /// </summary>
-        /// <param name="command">The command.</param>
+        /// <param name="commandType">Type of the command.</param>
         /// <returns>
         /// 	<c>true</c> if the is command mapped for object creation; otherwise, <c>false</c>.
         /// </returns>
-        private static Boolean IsCommandMappedToObjectCreation(ICommand command)
+        private static Boolean IsCommandMappedToObjectCreation(Type commandType)
         {
-            return IsAttributeDefinedOnCommand<MapsToAggregateRootConstructorAttribute>(command);
-        }
-
-        /// <summary>
-        /// Determines whether the specified attribute is defined on the command.
-        /// </summary>
-        /// <typeparam name="T">The type of the attribute.</typeparam>
-        /// <param name="command">The command.</param>
-        /// <returns>
-        /// 	<c>true</c> if the specified attribute is defined on the given command; otherwise, <c>false</c>.
-        /// </returns>
-        private static Boolean IsAttributeDefinedOnCommand<T>(ICommand command)
-        {
-            var type = command.GetType();
-            var attributes = type.GetCustomAttributes(false);
-
-            foreach(var attrib in attributes)
-            {
-                if(attrib is T)
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
+            return commandType.IsDefined(typeof (MapsToAggregateRootConstructorAttribute), false);
+        }        
     }
 }

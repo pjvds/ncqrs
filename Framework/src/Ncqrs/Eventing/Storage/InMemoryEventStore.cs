@@ -10,8 +10,9 @@ namespace Ncqrs.Eventing.Storage
     public class InMemoryEventStore : IEventStore
     {
         private readonly Dictionary<Guid, Queue<ISourcedEvent>> _events = new Dictionary<Guid, Queue<ISourcedEvent>>();
+        private readonly Dictionary<Guid, ISnapshot> _snapshots = new Dictionary<Guid, ISnapshot>();
 
-        public IEnumerable<ISourcedEvent> GetAllEventsForEventSource(Guid id)
+        public IEnumerable<ISourcedEvent> GetAllEvents(Guid id)
         {
             Queue<ISourcedEvent> events;
 
@@ -20,6 +21,27 @@ namespace Ncqrs.Eventing.Storage
                 foreach (var evnt in events)
                 {
                     yield return evnt;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get all events provided by an specified event source.
+        /// </summary>
+        /// <param name="eventSourceId">The id of the event source that owns the events.</param>
+        /// <returns>All the events from the event source.</returns>
+        public IEnumerable<ISourcedEvent> GetAllEventsSinceVersion(Guid id, long version)
+        {
+            Queue<ISourcedEvent> events;
+
+            if (_events.TryGetValue(id, out events))
+            {
+                foreach (var evnt in events)
+                {
+                    if (evnt.EventSequence > version)
+                    {
+                        yield return evnt;
+                    }
                 }
             }
         }
@@ -39,6 +61,22 @@ namespace Ncqrs.Eventing.Storage
             {
                 events.Enqueue(evnt);
             }
+        }
+
+        /// <summary>
+        /// Saves a snapshot of the specified event source.
+        /// </summary>
+        public void SaveShapshot(ISnapshot snapshot)
+        {
+            _snapshots[snapshot.EventSourceId] = snapshot;
+        }
+
+        /// <summary>
+        /// Gets a snapshot of a particular event source, if one exists. Otherwise, returns <c>null</c>.
+        /// </summary>
+        public ISnapshot GetSnapshot(Guid eventSourceId)
+        {
+            return _snapshots[eventSourceId];
         }
     }
 }

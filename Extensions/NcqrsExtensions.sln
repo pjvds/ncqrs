@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Eventing.Storage.Wind
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Eventing.Storage.WindowsAzure.Tests", "src\Ncqrs.Eveting.Storage.WindowsAzure.Tests\Ncqrs.Eventing.Storage.WindowsAzure.Tests.csproj", "{E816439F-BA71-4EE9-9141-DBC3E5674ADE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.NServiceBus", "src\Ncqrs.NServiceBus\Ncqrs.NServiceBus.csproj", "{9B796256-E9D6-4F21-BB89-C5333A880BFE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,6 +61,16 @@ Global
 		{E816439F-BA71-4EE9-9141-DBC3E5674ADE}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{E816439F-BA71-4EE9-9141-DBC3E5674ADE}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{E816439F-BA71-4EE9-9141-DBC3E5674ADE}.Release|x86.ActiveCfg = Release|Any CPU
+		{9B796256-E9D6-4F21-BB89-C5333A880BFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B796256-E9D6-4F21-BB89-C5333A880BFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B796256-E9D6-4F21-BB89-C5333A880BFE}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{9B796256-E9D6-4F21-BB89-C5333A880BFE}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{9B796256-E9D6-4F21-BB89-C5333A880BFE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9B796256-E9D6-4F21-BB89-C5333A880BFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B796256-E9D6-4F21-BB89-C5333A880BFE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B796256-E9D6-4F21-BB89-C5333A880BFE}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{9B796256-E9D6-4F21-BB89-C5333A880BFE}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{9B796256-E9D6-4F21-BB89-C5333A880BFE}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

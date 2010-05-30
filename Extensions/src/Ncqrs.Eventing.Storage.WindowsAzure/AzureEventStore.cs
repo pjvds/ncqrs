@@ -20,8 +20,7 @@ namespace Ncqrs.Eventing.Storage.WindowsAzure
         private CloudStorageAccount _account;
         private CloudTableClient _tableClient;
 
-        public AzureEventStore()
-            : this(DEFAULT_DEVELOPMENT_ACCOUNT)
+        public AzureEventStore() : this(DEFAULT_DEVELOPMENT_ACCOUNT)
         {
         }
 
@@ -46,7 +45,7 @@ namespace Ncqrs.Eventing.Storage.WindowsAzure
         /// <returns>
         /// All the events from the event source.
         /// </returns>
-        public IEnumerable<ISourcedEvent> GetAllEventsForEventSource(Guid eventSourceId)
+        public IEnumerable<ISourcedEvent> GetAllEvents(Guid eventSourceId)
         {
             var context = _tableClient.GetDataServiceContext();
             var result = new List<ISourcedEvent>();
@@ -54,6 +53,24 @@ namespace Ncqrs.Eventing.Storage.WindowsAzure
             var eventsFromSource =
                 context.CreateQuery<SourcedEventEntity>(EVENTS_TABLE_NAME).Where(
                     e => e.PartitionKey == eventSourceId.ToString()).AsEnumerable().OrderBy(e => e.Sequence);
+
+            foreach (var eventEntity in eventsFromSource)
+            {
+                var evnt = DeserializeEventEntity(eventEntity);
+                result.Add(evnt);
+            }
+
+            return result;
+        }
+
+        public IEnumerable<ISourcedEvent> GetAllEventsSinceVersion(Guid eventSourceId, long version)
+        {
+            var context = _tableClient.GetDataServiceContext();
+            var result = new List<ISourcedEvent>();
+
+            var eventsFromSource =
+                context.CreateQuery<SourcedEventEntity>(EVENTS_TABLE_NAME).Where(
+                    e => e.PartitionKey == eventSourceId.ToString() && e.Sequence > version).AsEnumerable().OrderBy(e => e.Sequence);
 
             foreach (var eventEntity in eventsFromSource)
             {

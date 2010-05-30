@@ -29,6 +29,6 @@ namespace Ncqrs.Eventing.ServiceModel.Bus
         /// Register a handler that will receive all messages that are published.
         /// </summary>
         /// <param name="handler">The handler to register.</param>
-        void RegisterHandler(IEventHandler handler);
+        void RegisterHandler<TEvent>(IEventHandler<TEvent> handler) where TEvent : IEvent;
     }
 }

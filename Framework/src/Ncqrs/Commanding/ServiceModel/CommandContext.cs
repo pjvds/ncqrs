@@ -14,7 +14,7 @@ namespace Ncqrs.Commanding.ServiceModel
 
         /// <summary>
         /// <para>Gets the exception that has occurred while handling the event.
-        /// Use the <see cref="IsExecuted"></see> property to determine whether
+        /// Use the <see cref="ExecutorHasBeenCalled"></see> property to determine whether
         /// the exception has been thrown by a interceptor or by the execution
         /// itself.</para>
         /// </summary>
@@ -72,15 +72,20 @@ namespace Ncqrs.Commanding.ServiceModel
         }
 
         /// <summary>
-        /// Gets a value indicating whether the command is executed.
+        /// Gets a value indicating whether the executor for the command has
+        /// been called.
         /// </summary>
         /// <value>
-        /// 	<c>true</c> if the command is executed; otherwise, <c>false</c>.
+        /// 	<c>true</c> if the executor for this command has been called;
+        /// 	otherwise, <c>false</c>. <c>true</c> does not have to mean that the
+        /// 	executor also executed the command. It could be that an exception
+        /// 	had occurred.
         /// <remarks>
-        /// This value is always <c>false</c> in the <see cref="ICommandServiceInterceptor.OnBeforeExecution"/>.
+        /// This value is always <c>false</c> in the 
+        /// <see cref="ICommandServiceInterceptor.OnBeforeExecution"/>.
         /// </remarks>
         /// </value>
-        public bool IsExecuted
+        public bool ExecutorHasBeenCalled
         {
             get;
             internal set;

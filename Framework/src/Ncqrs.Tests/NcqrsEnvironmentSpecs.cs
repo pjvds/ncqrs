@@ -29,7 +29,8 @@ namespace Ncqrs.Tests
             NcqrsEnvironment.Get<IClock>().Should().Be(defaultClock);
         }
 
-        [Test] public void Configured_instance_should_over_rule_default()
+        [Test] 
+        public void Configured_instance_should_over_rule_default()
         {
             var defaultClock = new DateTimeBasedClock();
             var configuredClock = MockRepository.GenerateMock<IClock>();
@@ -49,13 +50,15 @@ namespace Ncqrs.Tests
             NcqrsEnvironment.Deconfigure();
         }
 
-        [Test] public void Removing_a_default_while_there_is_no_default_registered_should_not_throw_an_exception()
+        [Test] 
+        public void Removing_a_default_while_there_is_no_default_registered_should_not_throw_an_exception()
         {
             NcqrsEnvironment.RemoveDefault<IFoo>();
             NcqrsEnvironment.RemoveDefault<IFoo>();
         }
 
-        [Test] public void Setting_a_default_should_multiple_times_should_not_throw_an_exception()
+        [Test] 
+        public void Setting_a_default_should_multiple_times_should_not_throw_an_exception()
         {
             var defaultFoo = MockRepository.GenerateMock<IFoo>();
             var newDefaultFoo = MockRepository.GenerateMock<IFoo>();

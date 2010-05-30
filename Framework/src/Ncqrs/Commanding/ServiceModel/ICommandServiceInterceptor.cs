@@ -98,7 +98,7 @@ namespace Ncqrs.Commanding.ServiceModel
         /// <summary>
         /// Intercepts a command execution when a exception has been occurred or
         /// after the command has been executed. See the 
-        /// <see cref = "CommandContext.IsExecuted" /> to determine whether the
+        /// <see cref = "CommandContext.ExecutorHasBeenCalled" /> to determine whether the
         /// command has been executed.
         /// </summary>
         /// <param name = "context">The context of the current command

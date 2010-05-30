@@ -13,6 +13,14 @@ namespace Ncqrs.Tests.Domain
     {
         public class HandledEvent : DomainEvent
         {
+            public HandledEvent()
+            {
+            }
+
+            public HandledEvent(Guid eventIdentifier, Guid aggregateRootId, long eventSequence, DateTime eventTimeStamp) : base(eventIdentifier, aggregateRootId, eventSequence, eventTimeStamp)
+            {
+            }
+
             public void OverrideAggregateRootId(Guid id)
             {
                 this.GetType().GetProperty("AggregateRootId").SetValue(this, id, null);
@@ -132,7 +140,8 @@ namespace Ncqrs.Tests.Domain
         [Test]
         public void Loading_it_from_history_should_apply_all_events()
         {
-            var history = new[] {new HandledEvent(), new HandledEvent(), new HandledEvent()};
+            var aggId = Guid.NewGuid();
+            var history = new[] { new HandledEvent(Guid.NewGuid(), aggId, 1, DateTime.UtcNow), new HandledEvent(Guid.NewGuid(), aggId, 2, DateTime.UtcNow), new HandledEvent(Guid.NewGuid(), aggId, 3, DateTime.UtcNow) };
 
             var theAggregate = new MyAggregateRoot(history);
 
@@ -212,17 +221,22 @@ namespace Ncqrs.Tests.Domain
         }
 
         [Test]
-        public void Applying_an_event_should_higher_the_version()
+        public void Applying_an_event_should_the_the_version()
         {
             using (NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork())
             {
                 var theAggregate = new MyAggregateRoot();
 
                 theAggregate.Version.Should().Be(0);
-                theAggregate.MethodThatCausesAnEventThatHasAHandler();
+
+                theAggregate.MethodThatCausesAnEventThatHasAHandler();                
                 theAggregate.Version.Should().Be(1);
+                theAggregate.GetUncommittedEvents().Last().EventSequence.Should().Be(1);
+
                 theAggregate.MethodThatCausesAnEventThatHasAHandler();
                 theAggregate.Version.Should().Be(2);
+                theAggregate.GetUncommittedEvents().Last().EventSequence.Should().Be(2);
+
                 theAggregate.MethodThatCausesAnEventThatHasAHandler();
             }
         }
@@ -239,14 +253,59 @@ namespace Ncqrs.Tests.Domain
         }
 
         [Test]
-        public void Initializing_from_history_should_throw_an_exception_when_the_history_was_empty()
+        public void Initializing_from_history_should_not_throw_an_exception_when_the_history_was_empty()
         {
-            IEnumerable<DomainEvent> emptyHistory = new DomainEvent[0];
             var theAggregate = new MyAggregateRoot();
 
-            Action act = () => theAggregate.InitializeFromHistory(emptyHistory);
+            IEnumerable<DomainEvent> history = new DomainEvent[0];
 
-            act.ShouldThrow<ArgumentException>();
+            theAggregate.InitializeFromHistory(history);
+        }
+
+        [Test]
+        public void Initiazling_from_wrong_history_with_wrong_sequence_should_throw_exception()
+        {
+            var theAggregate = new MyAggregateRoot();
+            long wrongSequence = 3;
+
+            var event1 = new HandledEvent(Guid.NewGuid(), theAggregate.Id, wrongSequence, DateTime.UtcNow);
+
+            IEnumerable<DomainEvent> history = new[] { event1 };
+
+            Action act = ()=> theAggregate.InitializeFromHistory(history);
+            act.ShouldThrow<InvalidOperationException>().And.Message.Should().Contain("sequence");
+        }
+
+        [Test]
+        public void Initiazling_from_history_with_correct_sequence_should_not_throw_exception()
+        {
+            var theAggregate = new MyAggregateRoot();
+
+            var event1 = new HandledEvent(Guid.NewGuid(), theAggregate.Id, 1, DateTime.UtcNow);
+            var event2 = new HandledEvent(Guid.NewGuid(), theAggregate.Id, 2, DateTime.UtcNow);
+            var event3 = new HandledEvent(Guid.NewGuid(), theAggregate.Id, 3, DateTime.UtcNow);
+            var event4 = new HandledEvent(Guid.NewGuid(), theAggregate.Id, 4, DateTime.UtcNow);
+            var event5 = new HandledEvent(Guid.NewGuid(), theAggregate.Id, 5, DateTime.UtcNow);
+
+            IEnumerable<DomainEvent> history = new[] { event1, event2, event3, event4, event5 };
+
+            theAggregate.InitializeFromHistory(history);
+        }
+
+        [Test]
+        public void Initiazling_from_wrong_history_with_wrong_sequence_should_throw_exception2()
+        {
+            var theAggregate = new MyAggregateRoot();
+            long wrongSequence = 8;
+
+            var event1 = new HandledEvent(Guid.NewGuid(), theAggregate.Id, 0, DateTime.UtcNow);
+            var event2 = new HandledEvent(Guid.NewGuid(), theAggregate.Id, 1, DateTime.UtcNow);
+            var event3 = new HandledEvent(Guid.NewGuid(), theAggregate.Id, wrongSequence, DateTime.UtcNow);
+
+            IEnumerable<DomainEvent> history = new[] { event1, event2, event3 };
+
+            Action act = () => theAggregate.InitializeFromHistory(history);
+            act.ShouldThrow<InvalidOperationException>().And.Message.Should().Contain("sequence");
         }
 
         [Test]
