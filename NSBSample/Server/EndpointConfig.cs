@@ -14,7 +14,6 @@ namespace Server
             .UseMappedExecutors()
             .MsmqTransport()
             .PurgeOnStartup(true);
-            
       }
    }
 }
