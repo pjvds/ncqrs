@@ -91,7 +91,7 @@ namespace Ncqrs.Commanding.ServiceModel
         /// <returns>
         /// A command executor to use to execute the command or <c>null</c> if not found.
         /// </returns>
-        public virtual Action<ICommand> GetCommandExecutorForCommand(Type commandType)
+        protected virtual Action<ICommand> GetCommandExecutorForCommand(Type commandType)
         {
             Action<ICommand> result;
             _executors.TryGetValue(commandType, out result);
