@@ -62,7 +62,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Extensions\src\Ncqrs.NServiceBus\Ncqrs.NServiceBus.csproj">
+    <ProjectReference Include="..\..\..\Extensions\src\Ncqrs.NServiceBus\Ncqrs.NServiceBus.csproj">
       <Project>{9B796256-E9D6-4F21-BB89-C5333A880BFE}</Project>
       <Name>Ncqrs.NServiceBus</Name>
     </ProjectReference>
