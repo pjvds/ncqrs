@@ -6,13 +6,8 @@ using Ncqrs.Commanding.ServiceModel;
 
 namespace Ncqrs.NServiceBus
 {
-   public class NsbCommandService : CommandServiceBase
+   public class NsbCommandService : CommandService
    {
-      public new void RegisterExecutor<TCommand>(ICommandExecutor<TCommand> executor) where TCommand : ICommand
-      {
-         base.RegisterExecutor(executor);
-      }
-
       public bool UseMappedExecutors { get; set; }
 
       protected override Action<ICommand> GetCommandExecutorForCommand(Type commandType)
