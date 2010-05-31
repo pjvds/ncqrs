@@ -42,7 +42,7 @@ namespace Ncqrs.Tests.Commanding.ServiceModel
         [SetUp]
         public void Setup()
         {
-            var service = new InProcessCommandService();
+            var service = new CommandService();
             ExecutorForCommandWithExecutor = MockRepository.GenerateMock<ICommandExecutor<CommandWithExecutor>>();
             ExecutorForCommandWithExecutorThatThrowsException = MockRepository.GenerateMock<ICommandExecutor<CommandWithExecutorThatThrowsException>>();
 

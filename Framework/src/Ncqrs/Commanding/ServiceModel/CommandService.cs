@@ -5,7 +5,7 @@ using Ncqrs.Commanding.CommandExecution;
 
 namespace Ncqrs.Commanding.ServiceModel
 {
-    public abstract class CommandServiceBase : ICommandService
+    public class CommandService : ICommandService
     {
         protected readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -67,7 +67,7 @@ namespace Ncqrs.Commanding.ServiceModel
         /// <typeparam name="TCommand">The type of the command.</typeparam>
         /// <param name="executor">The executor that will be called for every command of the specified type.</param>
         /// <exception cref="ArgumentNullException">Occurs when the <i>commandType</i> or <i>executor</i> was a <c>null</c> dereference.</exception>
-        protected virtual void RegisterExecutor<TCommand>(ICommandExecutor<TCommand> executor) where TCommand : ICommand
+        public virtual void RegisterExecutor<TCommand>(ICommandExecutor<TCommand> executor) where TCommand : ICommand
         {
             Action<ICommand> action = (cmd) => executor.Execute((TCommand) cmd);
             _executors.Add(typeof(TCommand), action);
@@ -79,7 +79,7 @@ namespace Ncqrs.Commanding.ServiceModel
         /// <param name="executor">The executor to unregister.</param>
         /// <exception cref="ArgumentNullException">Occurs when the <i>commandType</i> or <i>executor</i> was a <c>null</c> dereference.</exception>
         /// <exception cref="InvalidOperationException">Occurs when the <i>executor</i> is not the same as the registered executor for the specified command type.</exception>
-        protected virtual void UnregisterExecutor<TCommand>() where TCommand : ICommand
+        public virtual void UnregisterExecutor<TCommand>() where TCommand : ICommand
         {
             _executors.Remove(typeof (TCommand));
         }
@@ -91,7 +91,7 @@ namespace Ncqrs.Commanding.ServiceModel
         /// <returns>
         /// A command executor to use to execute the command or <c>null</c> if not found.
         /// </returns>
-        protected virtual Action<ICommand> GetCommandExecutorForCommand(Type commandType)
+        public virtual Action<ICommand> GetCommandExecutorForCommand(Type commandType)
         {
             Action<ICommand> result;
             _executors.TryGetValue(commandType, out result);
@@ -108,7 +108,7 @@ namespace Ncqrs.Commanding.ServiceModel
         /// is skipped. That means that it is not added twice.
         /// </remarks>
         /// <param name="interceptor">The interceptor to add.</param>
-        protected virtual void AddInterceptor(ICommandServiceInterceptor interceptor)
+        public virtual void AddInterceptor(ICommandServiceInterceptor interceptor)
         {
             if (!_interceptors.Contains(interceptor))
             {
@@ -120,7 +120,7 @@ namespace Ncqrs.Commanding.ServiceModel
         /// Removes the interceptor. The interceptor will not be called anymore.
         /// </summary>
         /// <param name="interceptor">The interceptor to remove.</param>
-        protected virtual void RemoveInterceptor(ICommandServiceInterceptor interceptor)
+        public virtual void RemoveInterceptor(ICommandServiceInterceptor interceptor)
         {
             _interceptors.Remove(interceptor);
         }
