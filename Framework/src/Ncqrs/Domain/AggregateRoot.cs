@@ -25,7 +25,6 @@ namespace Ncqrs.Domain
             protected set
             {
                 Contract.Requires<InvalidOperationException>(Version == 0);
-                Contract.Requires<InvalidOperationException>(_uncommittedEvent.Count == 0);
 
                 _id = value;
             }
@@ -68,7 +67,7 @@ namespace Ncqrs.Domain
             get { return _initialVersion; }
             protected set
             {
-                Contract.Requires<InvalidOperationException>(_uncommittedEvent.Count == 0);
+                Contract.Requires<InvalidOperationException>(Version == InitialVersion);
 
                 _initialVersion = value;
             }
