@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{9B796256-E9D6-4F21-BB89-C5333A880BFE}</ProjectGuid>
+    <ProjectGuid>{97B83914-6A1A-4EF4-AE40-F5CE4FA48FA8}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Ncqrs.NServiceBus</RootNamespace>
-    <AssemblyName>Ncqrs.NServiceBus</AssemblyName>
+    <RootNamespace>Client</RootNamespace>
+    <AssemblyName>Client</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -32,16 +32,22 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="log4net">
-      <HintPath>..\..\lib\NServiceBus\log4net.dll</HintPath>
+      <HintPath>..\..\Extensions\lib\NServiceBus\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Ncqrs">
-      <HintPath>..\..\lib\Ncqrs\Ncqrs.dll</HintPath>
+      <HintPath>..\..\Extensions\lib\Ncqrs\Ncqrs.dll</HintPath>
+    </Reference>
+    <Reference Include="Ncqrs.NServiceBus">
+      <HintPath>..\..\Extensions\src\Ncqrs.NServiceBus\bin\Debug\Ncqrs.NServiceBus.dll</HintPath>
     </Reference>
     <Reference Include="NServiceBus">
-      <HintPath>..\..\lib\NServiceBus\NServiceBus.dll</HintPath>
+      <HintPath>..\..\Extensions\lib\NServiceBus\NServiceBus.dll</HintPath>
     </Reference>
     <Reference Include="NServiceBus.Core">
-      <HintPath>..\..\lib\NServiceBus\NServiceBus.Core.dll</HintPath>
+      <HintPath>..\..\Extensions\lib\NServiceBus\NServiceBus.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="NServiceBus.Host">
+      <HintPath>..\..\Extensions\lib\NServiceBus\NServiceBus.Host.exe</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -52,15 +58,26 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CommandMessage.cs" />
-    <Compile Include="ConfigNcqrs.cs" />
-    <Compile Include="ConfigureNcqrs.cs" />
-    <Compile Include="EventMessage.cs" />
-    <Compile Include="NcqrsMessageHandler.cs" />
-    <Compile Include="NsbCommandService.cs" />
-    <Compile Include="NsbEnvironmentConfiguration.cs" />
-    <Compile Include="NsbEventBus.cs" />
+    <Compile Include="ClientEndpoint.cs" />
+    <Compile Include="EndpointConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SomePropertyChangedEventHandler.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="NServiceBus.Host.exe.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Commands\Commands.csproj">
+      <Project>{5EF85227-BF8E-4A19-8496-2A3BB500E27C}</Project>
+      <Name>Commands</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Events\Events.csproj">
+      <Project>{5088657E-AC3F-4081-B0B8-ACFBBD6BFA28}</Project>
+      <Name>Events</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

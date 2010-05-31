@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{9B796256-E9D6-4F21-BB89-C5333A880BFE}</ProjectGuid>
+    <ProjectGuid>{5EF85227-BF8E-4A19-8496-2A3BB500E27C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Ncqrs.NServiceBus</RootNamespace>
-    <AssemblyName>Ncqrs.NServiceBus</AssemblyName>
+    <RootNamespace>Commands</RootNamespace>
+    <AssemblyName>Commands</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -31,17 +31,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="log4net">
-      <HintPath>..\..\lib\NServiceBus\log4net.dll</HintPath>
-    </Reference>
     <Reference Include="Ncqrs">
-      <HintPath>..\..\lib\Ncqrs\Ncqrs.dll</HintPath>
-    </Reference>
-    <Reference Include="NServiceBus">
-      <HintPath>..\..\lib\NServiceBus\NServiceBus.dll</HintPath>
-    </Reference>
-    <Reference Include="NServiceBus.Core">
-      <HintPath>..\..\lib\NServiceBus\NServiceBus.Core.dll</HintPath>
+      <HintPath>..\..\Extensions\lib\Ncqrs\Ncqrs.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -52,15 +43,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CommandMessage.cs" />
-    <Compile Include="ConfigNcqrs.cs" />
-    <Compile Include="ConfigureNcqrs.cs" />
-    <Compile Include="EventMessage.cs" />
-    <Compile Include="NcqrsMessageHandler.cs" />
-    <Compile Include="NsbCommandService.cs" />
-    <Compile Include="NsbEnvironmentConfiguration.cs" />
-    <Compile Include="NsbEventBus.cs" />
+    <Compile Include="CreateSomeObjectCommand.cs" />
+    <Compile Include="DoSomethingCommand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Domain\Domain.csproj">
+      <Project>{B233A995-93BA-4B6F-8227-EF2A57C750BD}</Project>
+      <Name>Domain</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
