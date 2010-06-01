@@ -27,6 +27,7 @@ namespace Ncqrs.Domain.Storage
             _store = store;
             _eventBus = eventBus;
             _converter = converter;
+            _snapshotStore = snapshotStore;
         }
 
         private bool ShouldCreateSnapshot(AggregateRoot aggregateRoot)

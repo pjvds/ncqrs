@@ -32,6 +32,7 @@ namespace Ncqrs.Config
         {
             Contract.Ensures(Contract.Result<bool>() ? Contract.ValueAtReturn(out result) != null : Contract.ValueAtReturn(out result) == null);
 
+            result = default(T);
             return true;
         }
     }

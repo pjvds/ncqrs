@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Ncqrs</RootNamespace>
     <AssemblyName>Ncqrs</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>
     </SccProjectName>
@@ -63,10 +63,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="log4net">
-      <HintPath>..\..\bin\log4net\log4net.dll</HintPath>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\log4net\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Contracts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=736440c9b414ea16, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
@@ -97,11 +97,10 @@
     <Compile Include="Commanding\CommandExecution\CommandExecutorBase.cs" />
     <Compile Include="Commanding\CommandExecution\CommandExecutorNotFoundException.cs" />
     <Compile Include="Commanding\CommandExecution\ICommandExecutor.cs" />
-    <Compile Include="Commanding\ServiceModel\CommandServiceBase.cs" />
+    <Compile Include="Commanding\ServiceModel\CommandService.cs" />
     <Compile Include="Commanding\ServiceModel\CommandContext.cs" />
     <Compile Include="Commanding\ServiceModel\ICommandService.cs" />
     <Compile Include="Commanding\ServiceModel\ICommandServiceInterceptor.cs" />
-    <Compile Include="Commanding\ServiceModel\InProcessCommandService.cs" />
     <Compile Include="Commanding\CommandExecution\TransactionalCommandExecutorWrapper.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Attributes\AggregateRootIdAttribute.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Attributes\ExcludeInMappingAttribute.cs" />

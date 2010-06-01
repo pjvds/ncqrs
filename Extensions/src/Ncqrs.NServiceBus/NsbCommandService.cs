@@ -12,13 +12,12 @@ namespace Ncqrs.NServiceBus
     /// given command type, if the command can be mapped <see cref="MappedCommandExecutor{TCommand}"/> 
     /// is used automatically.
     /// </summary>
-    public class NsbCommandService : CommandServiceBase
+    public class NsbCommandService : CommandService
     {
         public new void RegisterExecutor<TCommand>(ICommandExecutor<TCommand> executor) where TCommand : ICommand
         {
             base.RegisterExecutor(executor);
         }
-
         protected override Action<ICommand> GetCommandExecutorForCommand(Type commandType)
         {
             var registeredExecutor = base.GetCommandExecutorForCommand(commandType);
