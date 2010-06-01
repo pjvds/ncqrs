@@ -40,6 +40,7 @@ namespace Ncqrs.Eventing.Conversion
         public TTo Convert(TFrom eventToConvert)
         {
             Contract.Requires<ArgumentNullException>(eventToConvert != null, "The eventToConvert cannot be null.");
+            Contract.Ensures(Contract.Result<TTo>() != null);
 
             Contract.Ensures(Contract.Result<TTo>().EventSourceId == eventToConvert.EventSourceId, "The EventSourceId should not be changed after conversion.");
             Contract.Ensures(Contract.Result<TTo>().EventSequence == eventToConvert.EventSequence, "The EventSequence should not be changed after conversion.");

@@ -67,6 +67,9 @@ namespace Ncqrs.Tests.Domain.Storage
             var bus = MockRepository.GenerateMock<IEventBus>();
             var converter = MockRepository.GenerateMock<IEventConverter<DomainEvent, DomainEvent>>();
 
+            Func<DomainEvent, DomainEvent> returnFirstParam = (x) => x;
+            converter.Stub(c => c.Convert(null)).IgnoreArguments().Do(returnFirstParam);
+
             var aggId = Guid.NewGuid();
             var eventsInTheStore = new DomainEvent[] { new FooEvent(), new BarEvent() };
             store.Expect(s => s.GetAllEvents(aggId)).Return(eventsInTheStore);
