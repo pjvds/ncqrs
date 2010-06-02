@@ -10,14 +10,14 @@ namespace Ncqrs.Tests.Domain.Mapping
     public class AttributeBasedDomainEventHandlerMappingStrategyTests
     {
         public class IlligalStaticMethodTarget
-            : AggregateRootMappedWithAttributes
+            : AggregateRoot
         {
             [EventHandler]
             public static void MyEventHandlerMethod(DomainEvent e)
             {}
         }
 
-        public class NoParameterMethodTarget : AggregateRootMappedWithAttributes
+        public class NoParameterMethodTarget : AggregateRoot
         {
             [EventHandler]
             public void MyEventHandlerMethod()
@@ -25,7 +25,7 @@ namespace Ncqrs.Tests.Domain.Mapping
             }
         }
 
-        public class MoreThenOneParameterMethodTarget : AggregateRootMappedWithAttributes
+        public class MoreThenOneParameterMethodTarget : AggregateRoot
         {
             [EventHandler]
             public void MyEventHandlerMethod(DomainEvent e1, DomainEvent e2)
@@ -33,7 +33,7 @@ namespace Ncqrs.Tests.Domain.Mapping
             }
         }
 
-        public class NotADomainEventTarget : AggregateRootMappedWithAttributes
+        public class NotADomainEventTarget : AggregateRoot
         {
             [EventHandler]
             public void MyEventHandlerMethod(String e)
@@ -41,7 +41,7 @@ namespace Ncqrs.Tests.Domain.Mapping
             }
         }
 
-        public class GoodTarget : AggregateRootMappedWithAttributes
+        public class GoodTarget : AggregateRoot
         {
             public class PublicEvent : DomainEvent { }
             public class ProtectedEvent : DomainEvent { }

@@ -30,7 +30,7 @@ namespace Ncqrs.Domain.Mapping
     /// </code>
     /// </remarks>
     /// </summary>
-    public class ExpressionBasedDomainEventHandlerMappingStrategy : IDomainEventHandlerMappingStrategy<AggregateRootMappedWithExpressions>
+    public class ExpressionBasedDomainEventHandlerMappingStrategy : IDomainEventHandlerMappingStrategy
     {
         /// <summary>
         /// Gets the event handlers from aggregate root based on the given mapping.
@@ -38,13 +38,18 @@ namespace Ncqrs.Domain.Mapping
         /// <param name="aggregateRoot">The aggregate root.</param>
         /// <see cref="ExpressionBasedDomainEventHandlerMappingStrategy"/>
         /// <returns>All the <see cref="IDomainEventHandler"/>'s created based on the given mapping.</returns>
-        public IEnumerable<IDomainEventHandler> GetEventHandlersFromAggregateRoot(AggregateRootMappedWithExpressions aggregateRoot)
+        public IEnumerable<IDomainEventHandler> GetEventHandlersFromAggregateRoot(AggregateRoot aggregateRoot)
         {
             Contract.Requires<ArgumentNullException>(aggregateRoot != null, "The aggregateRoot cannot be null.");
-            
+
+            if(!(aggregateRoot is AggregateRootMappedWithExpressions))
+            {
+                throw new ArgumentException("aggregateRoot need to be of type AggregateRootMappedWithExpressions to be used in a ExpressionBasedDomainEventHandlerMappingStrategy.");
+            }
+
             var handlers = new List<IDomainEventHandler>();
 
-            foreach (ExpressionHandler mappinghandler in aggregateRoot.MappingHandlers)
+            foreach (ExpressionHandler mappinghandler in ((AggregateRootMappedWithExpressions)aggregateRoot).MappingHandlers)
             {
                 if (mappinghandler.ActionMethodInfo.IsStatic)
                 {

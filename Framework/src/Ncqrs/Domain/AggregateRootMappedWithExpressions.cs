@@ -10,7 +10,7 @@ namespace Ncqrs.Domain
     /// This aggregate root uses the  <see cref="ExpressionBasedDomainEventHandlerMappingStrategy"/> to get the internal event handlers.
     /// </remarks>
     /// <seealso cref="ExpressionBasedDomainEventHandlerMappingStrategy"/>
-    public abstract class AggregateRootMappedWithExpressions : MappedAggregateRoot<AggregateRootMappedWithExpressions>
+    public abstract class AggregateRootMappedWithExpressions : MappedAggregateRoot
     {
         private readonly IList<ExpressionHandler> _mappinghandlers = new List<ExpressionHandler>();
 

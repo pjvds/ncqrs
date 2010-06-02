@@ -3,11 +3,11 @@ using System.Diagnostics.Contracts;
 
 namespace Ncqrs.Domain.Mapping
 {
-    public abstract class MappedAggregateRoot<T> : AggregateRoot where T : MappedAggregateRoot<T>
+    public abstract class MappedAggregateRoot : AggregateRoot
     {
-        private readonly IDomainEventHandlerMappingStrategy<T> _mappingStrategy;
+        private readonly IDomainEventHandlerMappingStrategy _mappingStrategy;
 
-        protected MappedAggregateRoot(IDomainEventHandlerMappingStrategy<T> strategy)
+        protected MappedAggregateRoot(IDomainEventHandlerMappingStrategy strategy)
         {
             Contract.Requires<ArgumentNullException>(strategy != null, "The strategy cannot be null.");
 
@@ -17,7 +17,7 @@ namespace Ncqrs.Domain.Mapping
 
         private void InitializeHandlers()
         {
-            foreach (var handler in _mappingStrategy.GetEventHandlersFromAggregateRoot((T)this))
+            foreach (var handler in _mappingStrategy.GetEventHandlersFromAggregateRoot(this))
                 RegisterHandler(handler);
         }
     }

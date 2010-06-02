@@ -16,7 +16,15 @@ namespace Ncqrs.Tests.Domain.Storage
     public class DomainRepositoryTests
     {
         public class FooEvent : DomainEvent
-        { }
+        {
+            public FooEvent()
+            {
+            }
+
+            public FooEvent(Guid eventIdentifier, Guid aggregateRootId, long eventSequence, DateTime eventTimeStamp) : base(eventIdentifier, aggregateRootId, eventSequence, eventTimeStamp)
+            {
+            }
+        }
 
         public class BarEvent : DomainEvent
         {
@@ -71,7 +79,11 @@ namespace Ncqrs.Tests.Domain.Storage
             converter.Stub(c => c.Convert(null)).IgnoreArguments().Do(returnFirstParam);
 
             var aggId = Guid.NewGuid();
-            var eventsInTheStore = new DomainEvent[] { new FooEvent(), new BarEvent() };
+            var eventsInTheStore = new DomainEvent[]
+            {
+                new FooEvent(Guid.NewGuid(), aggId, 1, DateTime.UtcNow), 
+                new BarEvent(Guid.NewGuid(), aggId, 2, DateTime.UtcNow)
+            };
             store.Expect(s => s.GetAllEvents(aggId)).Return(eventsInTheStore);
 
             var repository = new DomainRepository(store, bus, null, converter);
