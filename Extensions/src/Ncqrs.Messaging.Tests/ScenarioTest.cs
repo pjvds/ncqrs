@@ -1,10 +1,9 @@
 ﻿using System;
 using Ncqrs.Domain;
 using Ncqrs.Eventing.ServiceModel.Bus;
-using Ncqrs.Messaging;
 using NUnit.Framework;
 
-namespace Ncqrs.Tests.Messaging
+namespace Ncqrs.Messaging.Tests
 {
    [TestFixture]
    public class ScenarioTest

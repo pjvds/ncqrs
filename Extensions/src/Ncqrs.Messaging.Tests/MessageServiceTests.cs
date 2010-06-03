@@ -2,11 +2,10 @@ using System;
 using Ncqrs.Domain;
 using Ncqrs.Eventing;
 using Ncqrs.Eventing.Storage;
-using Ncqrs.Messaging;
 using NUnit.Framework;
 using Rhino.Mocks;
 
-namespace Ncqrs.Tests.Messaging
+namespace Ncqrs.Messaging.Tests
 {
    [TestFixture]
    public class MessageServiceTests

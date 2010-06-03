@@ -1,10 +1,9 @@
 using System;
 using System.Linq;
 using Ncqrs.Domain;
-using Ncqrs.Messaging;
 using NUnit.Framework;
 
-namespace Ncqrs.Tests.Messaging
+namespace Ncqrs.Messaging.Tests
 {
    [TestFixture]
    public class MessagingAggregateRootTests
