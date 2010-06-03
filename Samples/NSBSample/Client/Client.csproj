@@ -32,22 +32,23 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="log4net">
-      <HintPath>..\..\Extensions\lib\NServiceBus\log4net.dll</HintPath>
+      <HintPath>..\..\..\Extensions\lib\NServiceBus\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Ncqrs">
-      <HintPath>..\..\Extensions\lib\Ncqrs\Ncqrs.dll</HintPath>
+      <HintPath>..\..\..\Extensions\lib\Ncqrs\Ncqrs.dll</HintPath>
     </Reference>
-    <Reference Include="Ncqrs.NServiceBus">
-      <HintPath>..\..\Extensions\src\Ncqrs.NServiceBus\bin\Debug\Ncqrs.NServiceBus.dll</HintPath>
+    <Reference Include="Ncqrs.NServiceBus, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Extensions\src\Ncqrs.NServiceBus\bin\Debug\Ncqrs.NServiceBus.dll</HintPath>
     </Reference>
     <Reference Include="NServiceBus">
-      <HintPath>..\..\Extensions\lib\NServiceBus\NServiceBus.dll</HintPath>
+      <HintPath>..\..\..\Extensions\lib\NServiceBus\NServiceBus.dll</HintPath>
     </Reference>
     <Reference Include="NServiceBus.Core">
-      <HintPath>..\..\Extensions\lib\NServiceBus\NServiceBus.Core.dll</HintPath>
+      <HintPath>..\..\..\Extensions\lib\NServiceBus\NServiceBus.Core.dll</HintPath>
     </Reference>
     <Reference Include="NServiceBus.Host">
-      <HintPath>..\..\Extensions\lib\NServiceBus\NServiceBus.Host.exe</HintPath>
+      <HintPath>..\..\..\Extensions\lib\NServiceBus\NServiceBus.Host.exe</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

@@ -9,50 +9,57 @@ using NServiceBus;
 
 namespace Ncqrs.NServiceBus
 {
-   public class NsbEventBus : IEventBus
-   {
-      public void Publish(IEvent eventMessage)
-      {
-         Bus.Publish(CreateEventMessage(eventMessage));
-      }
+    /// <summary>
+    /// A <see cref="IEventBus"/> implementation using NServiceBus. Forwards all published
+    /// events via NServiceBus. Does NOT support registering local event handlers using
+    /// <see cref="RegisterHandler{TEvent}"/>. All events passed to <see cref="Publish(System.Collections.Generic.IEnumerable{Ncqrs.Eventing.IEvent})"/>
+    /// method are send using of NServiceBus transport level message.
+    /// </summary>
+    public class NsbEventBus : IEventBus
+    {
+        public void Publish(IEvent eventMessage)
+        {
+            Bus.Publish(CreateEventMessage(eventMessage));
+        }
 
-      public void Publish(IEnumerable<IEvent> eventMessages)
-      {
-         Bus.Publish(eventMessages.Select(CreateEventMessage).ToArray());
-      }
+        public void Publish(IEnumerable<IEvent> eventMessages)
+        {
+            Bus.Publish(eventMessages.Select(CreateEventMessage).ToArray());
+        }
 
-      public void RegisterHandler<TEvent>(IEventHandler<TEvent> handler) where TEvent : IEvent
-      {
-      }
+        public void RegisterHandler<TEvent>(IEventHandler<TEvent> handler) where TEvent : IEvent
+        {
+            throw new NotSupportedException("Registering local event handlers with NsbEventBus is not supported yet.");
+        }
 
-      private static IBus Bus
-      {
-         get { return NcqrsEnvironment.Get<IBus>(); }
-      }
+        private static IBus Bus
+        {
+            get { return NcqrsEnvironment.Get<IBus>(); }
+        }
 
-      private static IMessage CreateEventMessage(IEvent payload)
-      {
-         Type factoryType =
-            typeof (EventMessageFactory<>).MakeGenericType(payload.GetType());
-         var factory =
-            (IEventMessageFactory) Activator.CreateInstance(factoryType);
-         return factory.CreateEventMessage(payload);
-      }
+        private static IMessage CreateEventMessage(IEvent payload)
+        {
+            Type factoryType =
+               typeof(EventMessageFactory<>).MakeGenericType(payload.GetType());
+            var factory =
+               (IEventMessageFactory)Activator.CreateInstance(factoryType);
+            return factory.CreateEventMessage(payload);
+        }
 
-      public interface IEventMessageFactory
-      {
-         IMessage CreateEventMessage(IEvent payload);
-      }
+        public interface IEventMessageFactory
+        {
+            IMessage CreateEventMessage(IEvent payload);
+        }
 
-      private class EventMessageFactory<T> : IEventMessageFactory where T : IEvent
-      {
-         IMessage IEventMessageFactory.CreateEventMessage(IEvent payload)
-         {
-            return new EventMessage<T>
-                      {
-                         Payload = (T)payload
-                      };
-         }
-      }
-   }
+        private class EventMessageFactory<T> : IEventMessageFactory where T : IEvent
+        {
+            IMessage IEventMessageFactory.CreateEventMessage(IEvent payload)
+            {
+                return new EventMessage<T>
+                          {
+                              Payload = (T)payload
+                          };
+            }
+        }
+    }
 }

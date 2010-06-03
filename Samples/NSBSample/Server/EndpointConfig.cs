@@ -10,8 +10,7 @@ namespace Server
          Configure.With()
             .DefaultBuilder()
             .BinarySerializer()
-            .InstallNcqrs()
-            .UseMappedExecutors()
+            .InstallNcqrs()            
             .MsmqTransport()
             .PurgeOnStartup(true);
       }
