@@ -99,6 +99,9 @@
     <Compile Include="Eventing\Conversion\EventConverterTests.cs" />
     <Compile Include="Eventing\Storage\ConcurrencyExceptionSpecs.cs" />
     <Compile Include="Eventing\Storage\SQL\SimpleMicrosoftSqlServerEventStoreTests.cs" />
+    <Compile Include="Messaging\MessageServiceTests.cs" />
+    <Compile Include="Messaging\MessagingAggregateRootTests.cs" />
+    <Compile Include="Messaging\ScenarioTest.cs" />
     <Compile Include="NcqrsEnvironmentConfigurationExceptionSpecs.cs" />
     <Compile Include="NcqrsEnvironmentSpecs.cs" />
     <Compile Include="DateTimeBasedClockSpecs.cs" />
