@@ -5,135 +5,163 @@ using NUnit.Framework;
 
 namespace Ncqrs.Messaging.Tests
 {
-   [TestFixture]
-   public class ScenarioTest
-   {
-      [Test]
-      public void New_cargo_handling_event_is_registrered()
-      {
-         var cargoId = Guid.NewGuid();
-         var firstEventId = Guid.NewGuid();
-         var clientId = Guid.NewGuid();
-         var messageService = new MessageService(new LocalResolutionStrategy());
-         var messageSendingEventHandler = new MessageSendingEventHandler();
-         var messageSender = new InMemoryLocalMessageSender();
-         messageSendingEventHandler.AddSender(messageSender);
-         NcqrsEnvironment.Get<IEventBus>().RegisterHandler(messageSendingEventHandler);
+    [TestFixture]
+    public class ScenarioTest
+    {
+        [Test]
+        public void New_cargo_handling_event_is_registrered()
+        {
+            var cargoId = Guid.NewGuid();
+            var firstEventId = Guid.NewGuid();
+            var messageService = new MessageService();
+            messageService.UseReceivingStrategy(
+                new ConditionalReceivingStrategy(
+                    x => x.GetType() == typeof (BookCargoMessage),
+                    new MappingReceivingStrategy<BookCargoMessage>(
+                        x => new IncomingMessage()
+                                 {
+                                     MessageId = x.MessageId,
+                                     Payload = x,
+                                     ProcessingRequirements = MessageProcessingRequirements.RequiresNew,
+                                     ReceiverId = x.CargoId,
+                                     ReceiverType = typeof (Cargo),
+                                     SenderId = "Client"
+                                 })));
+            messageService.UseReceivingStrategy(
+                new ConditionalReceivingStrategy(
+                    x => x.GetType() == typeof (RegisterHandlingEventMesasge),
+                    new MappingReceivingStrategy<RegisterHandlingEventMesasge>(
+                        x => new IncomingMessage()
+                                 {
+                                     MessageId = x.MessageId,
+                                     Payload = x,
+                                     ProcessingRequirements = MessageProcessingRequirements.RequiresNew,
+                                     ReceiverId = x.EventId,
+                                     ReceiverType = typeof (HandlingEvent),
+                                     SenderId = "Client"
+                                 })));
+            messageService.UseReceivingStrategy(new ConditionalReceivingStrategy(x => true, new LocalInMemoryReceivingStrategy()));
 
-         //Book new cargo
-         messageService.Process(new BookCargoMessage
-                                   {
-                                      ReceiverId = LocalResolutionStrategy.MakeId(typeof(Cargo),cargoId),
-                                      MessageId = Guid.NewGuid(),
-                                      ProcessingRequirements = MessageProcessingRequirements.RequiresNew,                                      
-                                      SenderId = clientId.ToString()
-                                   });
+            var messageSendingEventHandler = new MessageSendingEventHandler();
+            var sendingStrategy = new LocalInMemorySendingStrategy();
+            messageSendingEventHandler.UseStrategy(new ConditionalSendingStrategy(x => true, sendingStrategy));
+            ((InProcessEventBus)NcqrsEnvironment.Get<IEventBus>()).RegisterHandler(messageSendingEventHandler);
 
-         //Register new handling event
-         messageService.Process(new RegisterHandlingEventMesasge
-                                   {
-                                      ReceiverId = LocalResolutionStrategy.MakeId(typeof(HandlingEvent),firstEventId),
-                                      MessageId = Guid.NewGuid(),
-                                      ProcessingRequirements = MessageProcessingRequirements.RequiresNew,
-                                      SenderId = clientId.ToString(),
-                                      CargoId = cargoId
-                                   });
+            //Book new cargo
+            messageService.Process(new BookCargoMessage
+                                      {
+                                          CargoId = cargoId,
+                                          MessageId = Guid.NewGuid(),                                          
+                                      });
 
-         //Process message from event to cargo
-         Assert.IsTrue(messageSender.ProcessNext());
+            //Register new handling event
+            messageService.Process(new RegisterHandlingEventMesasge
+                                      {
+                                          EventId = firstEventId,
+                                          MessageId = Guid.NewGuid(),
+                                          CargoId = cargoId
+                                      });
 
-         using (var uow = NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork())
-         {
-            var cargo = uow.GetById<Cargo>(cargoId);
-            Assert.AreEqual(1, cargo.HandlingEventCount);
-         }
-      }
+            //Process message from event to cargo
+            object message = sendingStrategy.DequeueMessage();
+            messageService.Process(message);
 
-      public class RegisterHandlingEventMesasge : MessageBase
-      {
-         public Guid CargoId { get; set; }
-      }
+            using (var uow = NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork())
+            {
+                var cargo = uow.GetById<Cargo>(cargoId);
+                Assert.AreEqual(1, cargo.HandlingEventCount);
+            }
+        }
 
-      public class BookCargoMessage : MessageBase
-      {
-      }
+        public class RegisterHandlingEventMesasge
+        {
+            public Guid MessageId { get; set; }
+            public Guid EventId { get; set; }
+            public Guid CargoId { get; set; }
+        }
 
-      public class CargoWasHandledMessage : MessageBase
-      {         
-      }
+        public class BookCargoMessage
+        {
+            public Guid MessageId { get; set; }
+            public Guid CargoId { get; set; }
+        }
 
-      public class HandlingEvent : MessagingAggregateRoot, IMessageHandler<RegisterHandlingEventMesasge>
-      {
-         private Guid _cargoId;
+        public class CargoWasHandledMessage
+        {
+        }
 
-         public void Handle(RegisterHandlingEventMesasge message)
-         {
-            ApplyEvent(new HandlingEventRegistered
-                          {
-                             Id = new LocalResolutionStrategy().Resolve(message.ReceiverId).Id,
-                             CargoId = message.CargoId
-                          });
+        public class HandlingEvent : MessagingAggregateRoot, IMessageHandler<RegisterHandlingEventMesasge>
+        {
+            private Guid _cargoId;
 
-            Send(new CargoWasHandledMessage())
-               .To<Cargo>(_cargoId)
-               .Requiring(MessageProcessingRequirements.RequiresExisting);            
-         }
+            public void Handle(RegisterHandlingEventMesasge message)
+            {
+                ApplyEvent(new HandlingEventRegistered
+                              {
+                                  Id = message.EventId,
+                                  CargoId = message.CargoId
+                              });
 
-         private void OnHandlingEventRegistered(HandlingEventRegistered @event)
-         {
-            Id = @event.Id;
-            _cargoId = @event.CargoId;
-         }
-      }
+                To().Aggregate<Cargo>(_cargoId)
+                    .Ensuring(MessageProcessingRequirements.RequiresExisting)
+                    .Send(new CargoWasHandledMessage());
+            }
 
-      public class Cargo : MessagingAggregateRoot, 
-         IMessageHandler<BookCargoMessage>,
-         IMessageHandler<CargoWasHandledMessage>
-      {
-         private int _handlingEventCount;
+            private void OnHandlingEventRegistered(HandlingEventRegistered @event)
+            {
+                Id = @event.Id;
+                _cargoId = @event.CargoId;
+            }
+        }
 
-         public int HandlingEventCount
-         {
-            get { return _handlingEventCount; }
-         }
+        public class Cargo : MessagingAggregateRoot,
+           IMessageHandler<BookCargoMessage>,
+           IMessageHandler<CargoWasHandledMessage>
+        {
+            private int _handlingEventCount;
 
-         public void Handle(BookCargoMessage message)
-         {
-            ApplyEvent(new CargoBooked
-                          {
-                             Id = new LocalResolutionStrategy().Resolve(message.ReceiverId).Id
-                          });
-         }
+            public int HandlingEventCount
+            {
+                get { return _handlingEventCount; }
+            }
 
-         private void OnCargoBooked(CargoBooked @event)
-         {
-            Id = @event.Id;
-         }
+            public void Handle(BookCargoMessage message)
+            {
+                ApplyEvent(new CargoBooked
+                              {
+                                  Id = message.CargoId
+                              });
+            }
 
-         public void Handle(CargoWasHandledMessage message)
-         {
-            ApplyEvent(new CargoHandled());
-         }
+            private void OnCargoBooked(CargoBooked @event)
+            {
+                Id = @event.Id;
+            }
 
-         private void OnCargoHandled(CargoHandled @event)
-         {
-            _handlingEventCount++;
-         }
-      }
+            public void Handle(CargoWasHandledMessage message)
+            {
+                ApplyEvent(new CargoHandled());
+            }
 
-      public class HandlingEventRegistered : DomainEvent
-      {
-         public Guid Id { get; set; }
-         public Guid CargoId { get; set; }
-      }
+            private void OnCargoHandled(CargoHandled @event)
+            {
+                _handlingEventCount++;
+            }
+        }
 
-      public class CargoBooked : DomainEvent
-      {
-         public Guid Id { get; set; }
-      }
+        public class HandlingEventRegistered : DomainEvent
+        {
+            public Guid Id { get; set; }
+            public Guid CargoId { get; set; }
+        }
 
-      public class CargoHandled : DomainEvent
-      {
-      }
-   }
+        public class CargoBooked : DomainEvent
+        {
+            public Guid Id { get; set; }
+        }
+
+        public class CargoHandled : DomainEvent
+        {
+        }
+    }
 }

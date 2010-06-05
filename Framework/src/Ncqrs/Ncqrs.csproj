@@ -149,6 +149,7 @@
     <EmbeddedResource Include="Eventing\Storage\SQL\TableCreationScript.sql">
       <CustomToolNamespace>Ncqrs.Eventing.Storage.SQL.SimpleMicrosoftSqlServerEventStore</CustomToolNamespace>
     </EmbeddedResource>
+    <Compile Include="Eventing\ServiceModel\Bus\CompositeEventBus.cs" />
     <Compile Include="Eventing\ServiceModel\Bus\IEventHandler.cs" />
     <Compile Include="Eventing\Snapshot.cs" />
     <Compile Include="Eventing\Storage\ISnapshotStore.cs" />

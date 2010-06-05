@@ -7,16 +7,16 @@ namespace Ncqrs.Messaging
 {
    public class MessageSendingEventHandler : IEventHandler<MessageSentEvent>
    {
-      private readonly List<IMessageSender> _sendersInOrder = new List<IMessageSender>();
+      private readonly List<ConditionalSendingStrategy> _strategies = new List<ConditionalSendingStrategy>();
 
-      public void AddSender(IMessageSender sender)
+      public void UseStrategy(ConditionalSendingStrategy conditionalSendingStrategy)
       {
-         _sendersInOrder.Add(sender);
+         _strategies.Add(conditionalSendingStrategy);
       }
 
       public void Handle(MessageSentEvent @event)
       {
-         if (_sendersInOrder.Any(messageSender => messageSender.TrySend(@event.Message)))
+         if (_strategies.Any(messageSender => messageSender.Send(@event.Message)))
          {
             return;
          }

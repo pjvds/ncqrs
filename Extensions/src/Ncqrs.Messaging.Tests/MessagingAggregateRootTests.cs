@@ -14,7 +14,10 @@ namespace Ncqrs.Messaging.Tests
          using (NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork())
          {
             IMessagingAggregateRoot root = new TestMessagingAggregateRoot();
-            root.ProcessMessage(new TestMessage());
+            root.ProcessMessage(new IncomingMessage()
+                                    {
+                                        Payload = new TestMessage()
+                                    });
 
             Assert.AreEqual(1, ((AggregateRoot)root).GetUncommittedEvents().Count());
          }
@@ -27,7 +30,10 @@ namespace Ncqrs.Messaging.Tests
          {
             IMessagingAggregateRoot root = new TestMessagingAggregateRoot();
 
-            var testMessage = new TestMessage();
+            var testMessage = new IncomingMessage()
+                                  {
+                                      Payload = new TestMessage()
+                                  };
             root.ProcessMessage(testMessage);
             root.ProcessMessage(testMessage);
 
@@ -39,8 +45,9 @@ namespace Ncqrs.Messaging.Tests
       {
          public void SendSomething()
          {
-            Send(new TestMessage()).To<TestMessagingAggregateRoot>(Guid.NewGuid())
-               .Requiring(MessageProcessingRequirements.RequiresExisting);
+             To().Aggregate<TestMessagingAggregateRoot>(Guid.NewGuid())
+                 .Ensuring(MessageProcessingRequirements.RequiresExisting)
+                 .Send(new TestMessage());            
          }
 
          public void Handle(TestMessage message)
@@ -48,7 +55,7 @@ namespace Ncqrs.Messaging.Tests
          }
       }
 
-      public class TestMessage : MessageBase
+      public class TestMessage : IncomingMessage
       {         
       }
    }

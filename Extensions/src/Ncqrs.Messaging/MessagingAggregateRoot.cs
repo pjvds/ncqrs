@@ -3,119 +3,120 @@ using Ncqrs.Domain;
 
 namespace Ncqrs.Messaging
 {
-   public class MessagingAggregateRoot : AggregateRootMappedByConvention, IMessagingAggregateRoot
-   {
-      private readonly MessagingContext _messagingContext = new MessagingContext();
+    public class MessagingAggregateRoot : AggregateRootMappedByConvention, IMessagingAggregateRoot
+    {
+        private readonly MessagingContext _messagingContext = new MessagingContext();
 
-      public MessagingContext MessagingContext
-      {
-         get { return _messagingContext; }
-      }
+        public MessagingContext MessagingContext
+        {
+            get { return _messagingContext; }
+        }
 
-      void IMessagingAggregateRoot.ProcessMessage(IMessage message)
-      {
-         if (MessagingContext.WasAlreadyProcessed(message))
-         {
-            return;
-         }
-         var processor = CreateProcessor(message);
-         try
-         {
-            MessagingContext.OnBeginMessageProcessing(message);            
-            processor.Process(this, message);
-            ApplyEvent(new MessageReceivedEvent(DateTime.Now, message));
-         }
-         finally
-         {
-            MessagingContext.OnEndMessageProcessing();
-         }
-      }
-
-      protected ISetMessageRequirements Reply<T>(T message)
-         where T : IMessage
-      {
-         message.SenderId = LocalResolutionStrategy.MakeId(GetType(), Id);
-         message.MessageId = NcqrsEnvironment.Get<IUniqueIdentifierGenerator>().GenerateNewId();
-         message.ReceiverId = MessagingContext.MessageBeingProcessed.SenderId;
-         message.RelatedMessageId = MessagingContext.MessageBeingProcessed.MessageId;
-         return new FluentMessageSender(message, x => ApplyEvent(new MessageSentEvent(DateTime.Now, x)));
-      }
-
-      protected ISetMessageDestination Send<T>(T message)
-         where T : IMessage
-      {
-         message.SenderId = LocalResolutionStrategy.MakeId(GetType(), Id);
-         message.MessageId = NcqrsEnvironment.Get<IUniqueIdentifierGenerator>().GenerateNewId();
-         return new FluentMessageSender(message, x => ApplyEvent(new MessageSentEvent(DateTime.Now, x)));
-      }
-
-      protected void OnMessageReceivedEvent(MessageReceivedEvent @event)
-      {
-         MessagingContext.OnReceived(@event);
-      }
-
-      protected void OnMessageSentEvent(MessageSentEvent @event)
-      {
-         MessagingContext.OnSent(@event);
-      }
-
-      private interface IMessageProcessor
-      {
-         void Process(object aggregateRoot, object message);
-      }
-
-      private static IMessageProcessor CreateProcessor(IMessage message)
-      {
-         Type processorType = typeof(MessageProcessor<>).MakeGenericType(message.GetType());
-         return (IMessageProcessor)Activator.CreateInstance(processorType);
-      }  
-
-      private class MessageProcessor<T> : IMessageProcessor
-         where T : IMessage
-      {
-         public void Process(object aggregateRoot, object message)
-         {
-            var handler = aggregateRoot as IMessageHandler<T>;
-            if (handler == null)
+        void IMessagingAggregateRoot.ProcessMessage(IncomingMessage message)
+        {
+            if (MessagingContext.WasAlreadyProcessed(message))
             {
-               throw new MessageMappingException(message.GetType(), aggregateRoot.GetType());
+                return;
             }
-            handler.Handle((T)message);
-         }
-      }
+            var processor = CreateProcessor(message);
+            try
+            {
+                MessagingContext.OnBeginMessageProcessing(message);
+                processor.Process(this, message);
+                ApplyEvent(new MessageReceivedEvent(DateTime.Now, message));
+            }
+            finally
+            {
+                MessagingContext.OnEndMessageProcessing();
+            }
+        }
 
-      private class FluentMessageSender : ISetMessageDestination, ISetMessageRequirements
-      {
-         private readonly IMessage _message;
-         private readonly Action<IMessage> _sendAction;
+        protected void Reply(object payload)
+        {
+            var message = new OutgoingMessage
+                              {
+                                  Payload = payload,
+                                  SenderId = Id,
+                                  SenderType = GetType(),
+                                  MessageId = NcqrsEnvironment.Get<IUniqueIdentifierGenerator>().GenerateNewId(),
+                                  ReceiverId = MessagingContext.MessageBeingProcessed.SenderId,
+                                  RelatedMessageId = MessagingContext.MessageBeingProcessed.MessageId
+                              };
+            ApplyEvent(new MessageSentEvent(DateTime.Now, message));
+        }
 
-         public FluentMessageSender(IMessage message, Action<IMessage> sendAction)
-         {
-            _message = message;
-            _sendAction = sendAction;
-         }
+        protected ISetMessageDestination To()
+        {
+            return new FluentMessageSender(Id, x => ApplyEvent(new MessageSentEvent(DateTime.Now, x)));
+        }
 
-         public ISetMessageRequirements To<T>(Guid destinationId)
-         {
-            _message.ReceiverId = LocalResolutionStrategy.MakeId(typeof(T), destinationId);
-            return this;
-         }
+        protected void OnMessageReceivedEvent(MessageReceivedEvent @event)
+        {
+            MessagingContext.OnReceived(@event);
+        }
 
-         public void Requiring(MessageProcessingRequirements requirements)
-         {
-            _message.ProcessingRequirements = requirements;
-            _sendAction(_message);
-         }
-      }
-   }
+        protected void OnMessageSentEvent(MessageSentEvent @event)
+        {
+            MessagingContext.OnSent(@event);
+        }
 
-   public interface ISetMessageDestination
-   {
-      ISetMessageRequirements To<T>(Guid destinationId);
-   }
+        private interface IMessageProcessor
+        {
+            void Process(object aggregateRoot, IncomingMessage message);
+        }
 
-   public interface ISetMessageRequirements
-   {
-      void Requiring(MessageProcessingRequirements requirements);
-   }
+        private static IMessageProcessor CreateProcessor(IncomingMessage message)
+        {
+            Type processorType = typeof(MessageProcessor<>).MakeGenericType(message.Payload.GetType());
+            return (IMessageProcessor)Activator.CreateInstance(processorType);
+        }
+
+        private class MessageProcessor<T> : IMessageProcessor           
+        {
+            public void Process(object aggregateRoot, IncomingMessage message)
+            {
+                var handler = aggregateRoot as IMessageHandler<T>;
+                if (handler == null)
+                {
+                    throw new MessageMappingException(message.GetType(), aggregateRoot.GetType());
+                }
+                handler.Handle((T)message.Payload);
+            }
+        }
+
+        private class FluentMessageSender : ISetMessageRequirements, ISetMessageDestination
+        {
+            private readonly Guid _senderId;
+            private readonly OutgoingMessage _message;
+            private readonly Action<OutgoingMessage> _sendAction;
+
+            public FluentMessageSender(Guid senderId, Action<OutgoingMessage> sendAction)
+            {
+                _message = new OutgoingMessage();
+                _senderId = senderId;
+                _sendAction = sendAction;
+            }
+
+            public void Send(object payload)
+            {
+                _message.Payload = payload;
+                _message.SenderId = _senderId;
+                _message.SenderType = GetType();
+                _message.MessageId = NcqrsEnvironment.Get<IUniqueIdentifierGenerator>().GenerateNewId();
+                _sendAction(_message);
+            }
+
+            public ISendMessages Ensuring(MessageProcessingRequirements requirements)
+            {
+                _message.ProcessingRequirements = requirements;
+                return this;
+            }
+
+            public ISetMessageRequirements NamedEndpoint(string receiverId)
+            {
+                _message.ReceiverId = receiverId;
+                return this;
+            }
+        }
+    }
 }

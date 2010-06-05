@@ -7,13 +7,13 @@ namespace Ncqrs.Messaging
    public class MessageReceivedEvent : DomainEvent
    {      
       public DateTime ReceiveTime { get; set; }
-      public IMessage Message { get; set; }
+      public IncomingMessage Message { get; set; }
 
       public MessageReceivedEvent()
       {         
       }
 
-      public MessageReceivedEvent(DateTime receiveTime, IMessage message)
+      public MessageReceivedEvent(DateTime receiveTime, IncomingMessage message)
       {
          ReceiveTime = receiveTime;
          Message = message;

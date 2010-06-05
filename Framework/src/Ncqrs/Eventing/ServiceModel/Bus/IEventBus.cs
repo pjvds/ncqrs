@@ -23,12 +23,6 @@ namespace Ncqrs.Eventing.ServiceModel.Bus
         /// <exception cref="ArgumentNullException">Thrown when <i>messages</i> was null.</exception>
         /// <exception cref="ArgumentNullException">Thrown when a instance in <i>messages</i> was null.</exception>
         /// <exception cref="NoHandlerRegisteredForMessageException">Thrown when no handler was found for one of the specified messages.</exception>
-        void Publish(IEnumerable<IEvent> eventMessages);
-
-        /// <summary>
-        /// Register a handler that will receive all messages that are published.
-        /// </summary>
-        /// <param name="handler">The handler to register.</param>
-        void RegisterHandler<TEvent>(IEventHandler<TEvent> handler) where TEvent : IEvent;
+        void Publish(IEnumerable<IEvent> eventMessages);        
     }
 }

@@ -9,6 +9,6 @@ namespace Ncqrs.Messaging
       /// Exectes processing of the message.
       /// </summary>
       /// <param name="message">A message to be processed.</param>
-      void Process(IMessage message);
+      void Process(object message);
    }
 }

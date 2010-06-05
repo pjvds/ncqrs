@@ -2,6 +2,6 @@
 {
    public interface IMessagingAggregateRoot
    {
-      void ProcessMessage(IMessage message);
+      void ProcessMessage(IncomingMessage message);
    }
 }

@@ -1,21 +1,26 @@
 ﻿using System;
+using Ncqrs;
 using Ncqrs.Commanding;
 using Ncqrs.Commanding.CommandExecution;
 using Ncqrs.Commanding.ServiceModel;
 using Ncqrs.Eventing;
 using Ncqrs.Eventing.ServiceModel.Bus;
+using Ncqrs.Messaging;
+using Ncqrs.Messaging.NServiceBus;
+using Ncqrs.NServiceBus;
 using NServiceBus;
+using NServiceBus.ObjectBuilder;
 
-namespace Ncqrs.NServiceBus
+namespace NServiceBus
 {
     public class ConfigNcqrs : Configure
     {
-        private NsbCommandService _commandService;
+        private MessageService _messageService;
         private InProcessEventBus _inProcessEventBus;
+        private MessageSendingEventHandler _sendingEventHandler;
 
         public void Configure(Configure config)
         {
-
             Builder = config.Builder;
             Configurer = config.Configurer;
 
@@ -24,24 +29,18 @@ namespace Ncqrs.NServiceBus
             _inProcessEventBus = new InProcessEventBus(false);
             compositeBus.AddBus(new NsbEventBus());
             compositeBus.AddBus(_inProcessEventBus);
+            _sendingEventHandler = new MessageSendingEventHandler();
+            _inProcessEventBus.RegisterHandler(_sendingEventHandler);
             NcqrsEnvironment.SetDefault(compositeBus);
-            _commandService = new NsbCommandService();
-            config.Configurer.RegisterSingleton(typeof(ICommandService),
-                                                _commandService);
+            _messageService = new MessageService();
+            config.Configurer.RegisterSingleton(typeof(IMessageService), _messageService);
         }
-
-        /// <summary>
-        /// Registers custom executor in Ncqrs runtime.
-        /// </summary>
-        /// <typeparam name="TCommand">Type of command which will be affected.</typeparam>
-        /// <param name="executor">Custom executor instance.</param>
-        /// <returns>Self.</returns>
-        public ConfigNcqrs RegisterExecutor<TCommand>(ICommandExecutor<TCommand> executor) where TCommand : ICommand
+        
+        public ConfigNcqrs RegisterReceiverResolutionStrategy(IReceivingStrategy receivingStrategy)
         {
-            _commandService.RegisterExecutor(executor);
+            _messageService.RegisterReceiverResolutionStrategy(receivingStrategy);
             return this;
         }
-
 
         /// <summary>
         /// Register a handler that will receive all messages that are published.

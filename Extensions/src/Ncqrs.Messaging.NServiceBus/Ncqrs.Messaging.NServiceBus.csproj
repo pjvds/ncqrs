@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{3624C541-6D6E-4AAC-B70A-7A769FB5C442}</ProjectGuid>
+    <ProjectGuid>{923B7912-224A-4CB1-BA34-D18A9E1EAB66}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Ncqrs.Messaging</RootNamespace>
-    <AssemblyName>Ncqrs.Messaging</AssemblyName>
+    <RootNamespace>Ncqrs.Messaging.NServiceBus</RootNamespace>
+    <AssemblyName>Ncqrs.Messaging.NServiceBus</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -31,8 +31,20 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="log4net">
+      <HintPath>..\..\lib\NServiceBus\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="Ncqrs">
       <HintPath>..\..\lib\Ncqrs\Ncqrs.dll</HintPath>
+    </Reference>
+    <Reference Include="NServiceBus">
+      <HintPath>..\..\lib\NServiceBus\NServiceBus.dll</HintPath>
+    </Reference>
+    <Reference Include="NServiceBus.Core">
+      <HintPath>..\..\lib\NServiceBus\NServiceBus.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="NServiceBus.Host">
+      <HintPath>..\..\lib\NServiceBus\NServiceBus.Host.exe</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -43,33 +55,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConditionalReceivingStrategy.cs" />
-    <Compile Include="ConditionalSendingStrategy.cs" />
-    <Compile Include="IMessageHandler.cs" />
-    <Compile Include="IMessageSender.cs" />
-    <Compile Include="IMessageService.cs" />
-    <Compile Include="IMessagingAggregateRoot.cs" />
-    <Compile Include="IReceivingStrategy.cs" />
-    <Compile Include="ISendingStrategy.cs" />
-    <Compile Include="ISendMessages.cs" />
-    <Compile Include="ISetMessageDestination.cs" />
-    <Compile Include="ISetMessageRequirements.cs" />
-    <Compile Include="LocalInMemoryReceivingStrategy.cs" />
-    <Compile Include="IncomingMessage.cs" />
-    <Compile Include="LocalInMemorySendingStrategy.cs" />
-    <Compile Include="MappingReceivingStrategy.cs" />
-    <Compile Include="MessageMappingException.cs" />
-    <Compile Include="MessageProcessingRequirements.cs" />
-    <Compile Include="MessageProcessingRequirementsViolationException.cs" />
-    <Compile Include="MessageReceivedEvent.cs" />
-    <Compile Include="MessageSendingEventHandler.cs" />
-    <Compile Include="MessageSentEvent.cs" />
-    <Compile Include="MessageService.cs" />
-    <Compile Include="MessagingAggregateRoot.cs" />
-    <Compile Include="MessagingContext.cs" />
-    <Compile Include="OutgoingMessage.cs" />
+    <Compile Include="..\Ncqrs.NServiceBus\ConfigureNcqrs.cs">
+      <Link>ConfigureNcqrs.cs</Link>
+    </Compile>
+    <Compile Include="..\Ncqrs.NServiceBus\EventMessage.cs">
+      <Link>EventMessage.cs</Link>
+    </Compile>
+    <Compile Include="..\Ncqrs.NServiceBus\NsbEnvironmentConfiguration.cs">
+      <Link>NsbEnvironmentConfiguration.cs</Link>
+    </Compile>
+    <Compile Include="..\Ncqrs.NServiceBus\NsbEventBus.cs">
+      <Link>NsbEventBus.cs</Link>
+    </Compile>
+    <Compile Include="ConfigNcqrs.cs" />
+    <Compile Include="NsbMessageSender.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SetMessageDestinationForLocal.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Ncqrs.Messaging\Ncqrs.Messaging.csproj">
+      <Project>{3624C541-6D6E-4AAC-B70A-7A769FB5C442}</Project>
+      <Name>Ncqrs.Messaging</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

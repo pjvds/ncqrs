@@ -8,9 +8,9 @@ namespace Ncqrs.Messaging
    {
       private readonly List<MessageReceivedEvent> _receivedMessages = new List<MessageReceivedEvent>();
       private readonly List<MessageSentEvent> _sentMessages = new List<MessageSentEvent>();
-      private IMessage _messageBeingProcessed;
+      private IncomingMessage _messageBeingProcessed;
 
-      public IMessage MessageBeingProcessed
+      public IncomingMessage MessageBeingProcessed
       {
          get { return _messageBeingProcessed; }
       }
@@ -20,7 +20,7 @@ namespace Ncqrs.Messaging
          _receivedMessages.Add(@event);
       }
 
-      public void OnBeginMessageProcessing(IMessage messageBeingProcessed)
+      public void OnBeginMessageProcessing(IncomingMessage messageBeingProcessed)
       {
          _messageBeingProcessed = messageBeingProcessed;
       }
@@ -35,29 +35,29 @@ namespace Ncqrs.Messaging
          _sentMessages.Add(@event);
       }
 
-      public bool WasAlreadyProcessed(IMessage messageToBeProcessed)
+      public bool WasAlreadyProcessed(IncomingMessage messageToBeProcessed)
       {
          return _receivedMessages.Any(x => x.Message.MessageId == messageToBeProcessed.MessageId);
       }
 
-      public IMessage GetRelatedMessage(IMessage messageBeingProcessed)
+      public object GetRelatedMessage(IncomingMessage messageBeingProcessed)
       {
          if (messageBeingProcessed.RelatedMessageId.HasValue)
          {
             var relatedEvent = _sentMessages.FirstOrDefault(x => x.Message.MessageId == messageBeingProcessed.RelatedMessageId.Value);
             return relatedEvent != null
-                      ? relatedEvent.Message
+                      ? relatedEvent.Message.Payload
                       : null;
          }
          return null;
       }
 
-      //public IEnumerable<IMessage> GetMessagesReceivedFrom(Guid originId)
+      //public IEnumerable<IIncomingMessage> GetMessagesReceivedFrom(Guid originId)
       //{         
       //   return _receivedMessages.Select(x => x.Message).Where(x => x.SenderId == originId);
       //}
 
-      //public IEnumerable<IMessage> GetMessagesSentTo(Guid destinationId)
+      //public IEnumerable<IIncomingMessage> GetMessagesSentTo(Guid destinationId)
       //{
       //   return _sentMessages.Select(x => x.Message).Where(x => x.ReceiverId == destinationId);
       //}

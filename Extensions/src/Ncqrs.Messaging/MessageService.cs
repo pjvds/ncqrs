@@ -1,60 +1,74 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Ncqrs.Domain;
 
 namespace Ncqrs.Messaging
 {
-   public class MessageService : IMessageService
-   {
-      private readonly IReceiverResolutionStrategy _receiverResolutionStrategy;
+    public class MessageService : IMessageService
+    {
+        private readonly List<ConditionalReceivingStrategy> _receiverResolutionStrategies;
 
-      public MessageService(IReceiverResolutionStrategy receiverResolutionStrategy)
-      {
-         _receiverResolutionStrategy = receiverResolutionStrategy;
-      }
+        public MessageService()
+        {
+            _receiverResolutionStrategies = new List<ConditionalReceivingStrategy>();
+        }
 
-      public void Process(IMessage message)
-      {         
-         using (var work = NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork())
-         {
-            var targetAggregateRoot = GetReceiver(work, message);
-            targetAggregateRoot.ProcessMessage(message);            
-            work.Accept();
-         }
-      }
+        public void UseReceivingStrategy(ConditionalReceivingStrategy receivingStrategy)
+        {
+            _receiverResolutionStrategies.Add(receivingStrategy);
+        }
 
-      private IMessagingAggregateRoot GetReceiver(IUnitOfWorkContext work, IMessage message)
-      {
-         var receiverInfo = _receiverResolutionStrategy.Resolve(message.ReceiverId);
-         var existingReceiver = (IMessagingAggregateRoot)work.GetById(receiverInfo.Type, receiverInfo.Id);
-         CheckProcessingRequirements(message, existingReceiver);
+        public void Process(object message)
+        {
+            using (var work = NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork())
+            {
+                var incomingMessage = ReceiveMessage(message);
+                var targetAggregateRoot = GetReceiver(work, incomingMessage);
+                targetAggregateRoot.ProcessMessage(incomingMessage);
+                work.Accept();
+            }
+        }
 
-         return existingReceiver ?? CreateNewAggregateInstance(receiverInfo.Type);
-      }
+        private static IMessagingAggregateRoot GetReceiver(IUnitOfWorkContext work, IncomingMessage message)
+        {            
+            var existingReceiver = (IMessagingAggregateRoot)work.GetById(message.ReceiverType, message.ReceiverId);
+            CheckProcessingRequirements(message, existingReceiver);
 
-      private static void CheckProcessingRequirements(IMessage message, object existingReceiver)
-      {
-         if (ExpectedNoneButFoundOne(message, existingReceiver) ||
-             ExpectedOneButFoundNone(message, existingReceiver))
-         {
-            throw new MessageProcessingRequirementsViolationException(message);
-         }
-      }
+            return existingReceiver ?? CreateNewAggregateInstance(message.ReceiverType);
+        }
 
-      private static bool ExpectedOneButFoundNone(IMessage message, object existingReceiver)
-      {
-         return existingReceiver == null && message.ProcessingRequirements == MessageProcessingRequirements.RequiresExisting;
-      }
+        private IncomingMessage ReceiveMessage(object message)
+        {
+            return _receiverResolutionStrategies
+                .Select(x => x.Receive(message))
+                .FirstOrDefault(x => x != null);            
+        }
 
-      private static bool ExpectedNoneButFoundOne(IMessage message, object existingReceiver)
-      {
-         return existingReceiver != null && message.ProcessingRequirements == MessageProcessingRequirements.RequiresNew;
-      }
+        private static void CheckProcessingRequirements(IncomingMessage message, object existingReceiver)
+        {
+            if (ExpectedNoneButFoundOne(message, existingReceiver) ||
+                ExpectedOneButFoundNone(message, existingReceiver))
+            {
+                throw new MessageProcessingRequirementsViolationException(message);
+            }
+        }
 
-      private static IMessagingAggregateRoot CreateNewAggregateInstance(Type recieverType)
-      {
-         return (IMessagingAggregateRoot)Activator.CreateInstance(recieverType);
-      }
+        private static bool ExpectedOneButFoundNone(IncomingMessage message, object existingReceiver)
+        {
+            return existingReceiver == null && message.ProcessingRequirements == MessageProcessingRequirements.RequiresExisting;
+        }
 
-          
-   }
+        private static bool ExpectedNoneButFoundOne(IncomingMessage message, object existingReceiver)
+        {
+            return existingReceiver != null && message.ProcessingRequirements == MessageProcessingRequirements.RequiresNew;
+        }
+
+        private static IMessagingAggregateRoot CreateNewAggregateInstance(Type recieverType)
+        {
+            return (IMessagingAggregateRoot)Activator.CreateInstance(recieverType);
+        }
+
+
+    }
 }

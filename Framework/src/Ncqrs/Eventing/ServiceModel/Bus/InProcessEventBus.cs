@@ -10,6 +10,25 @@ namespace Ncqrs.Eventing.ServiceModel.Bus
     {
         private readonly Dictionary<Type, List<Action<IEvent>>> _handlerRegister = new Dictionary<Type, List<Action<IEvent>>>();
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private readonly bool _useTransactionScope;
+
+        /// <summary>
+        /// Creates new <see cref="InProcessEventBus"/> instance that wraps publishing to
+        /// handlers into a <see cref="TransactionScope"/>.
+        /// </summary>
+        public InProcessEventBus()
+            : this(true)
+        {            
+        }
+
+        /// <summary>
+        /// Creates new <see cref="InProcessEventBus"/> instance.
+        /// </summary>
+        /// <param name="useTransactionScope">Use transaction scope?</param>
+        public InProcessEventBus(bool useTransactionScope)            
+        {
+            _useTransactionScope = useTransactionScope;
+        }
 
         public void Publish(IEvent eventMessage)
         {
@@ -25,21 +44,38 @@ namespace Ncqrs.Eventing.ServiceModel.Bus
             }
             else
             {
-                using (var transaction = new TransactionScope())
+                if (_useTransactionScope)
                 {
-                    Log.DebugFormat("Found {0} handlers for event {1}.", handlers.Count(), eventMessageType.FullName);
-
-                    foreach (var handler in handlers)
-                    {
-                        Log.DebugFormat("Calling handler {0} for event {1}.", handler.GetType().FullName,
-                                        eventMessageType.FullName);
-
-                        handler(eventMessage);
-
-                        Log.DebugFormat("Call finished.");
-                    }
-                    transaction.Complete();
+                    TransactionallyPublishToHandlers(eventMessage, eventMessageType, handlers);
                 }
+                else
+                {
+                    PublishToHandlers(eventMessage, eventMessageType, handlers);
+                }
+            }
+        }
+
+        private static void TransactionallyPublishToHandlers(IEvent eventMessage, Type eventMessageType, IEnumerable<Action<IEvent>> handlers)
+        {
+            using (var transaction = new TransactionScope())
+            {
+                PublishToHandlers(eventMessage, eventMessageType, handlers);
+                transaction.Complete();
+            }
+        }
+
+        private static void PublishToHandlers(IEvent eventMessage, Type eventMessageType, IEnumerable<Action<IEvent>> handlers)
+        {
+            Log.DebugFormat("Found {0} handlers for event {1}.", handlers.Count(), eventMessageType.FullName);
+
+            foreach (var handler in handlers)
+            {
+                Log.DebugFormat("Calling handler {0} for event {1}.", handler.GetType().FullName,
+                                eventMessageType.FullName);
+
+                handler(eventMessage);
+
+                Log.DebugFormat("Call finished.");
             }
         }
 
