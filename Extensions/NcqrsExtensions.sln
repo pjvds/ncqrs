@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Eventing.Storage.Wind
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.NServiceBus", "src\Ncqrs.NServiceBus\Ncqrs.NServiceBus.csproj", "{9B796256-E9D6-4F21-BB89-C5333A880BFE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.SerializableSnapshots", "src\Ncqrs.SerializableSnapshots\Ncqrs.SerializableSnapshots.csproj", "{EEBD674D-B482-4A84-9C4C-3EECCDA14369}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +73,16 @@ Global
 		{9B796256-E9D6-4F21-BB89-C5333A880BFE}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{9B796256-E9D6-4F21-BB89-C5333A880BFE}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{9B796256-E9D6-4F21-BB89-C5333A880BFE}.Release|x86.ActiveCfg = Release|Any CPU
+		{EEBD674D-B482-4A84-9C4C-3EECCDA14369}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EEBD674D-B482-4A84-9C4C-3EECCDA14369}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EEBD674D-B482-4A84-9C4C-3EECCDA14369}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{EEBD674D-B482-4A84-9C4C-3EECCDA14369}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{EEBD674D-B482-4A84-9C4C-3EECCDA14369}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{EEBD674D-B482-4A84-9C4C-3EECCDA14369}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EEBD674D-B482-4A84-9C4C-3EECCDA14369}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EEBD674D-B482-4A84-9C4C-3EECCDA14369}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{EEBD674D-B482-4A84-9C4C-3EECCDA14369}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{EEBD674D-B482-4A84-9C4C-3EECCDA14369}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
