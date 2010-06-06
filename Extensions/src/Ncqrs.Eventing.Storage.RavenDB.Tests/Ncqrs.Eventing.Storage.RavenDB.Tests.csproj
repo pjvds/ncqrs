@@ -75,6 +75,8 @@
   <ItemGroup>
     <Compile Include="RavenDBEventStoreTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RavenDBSnapshotStoreTests.cs" />
+    <Compile Include="RavenDBTestBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Ncqrs.Eventing.Storage.RavenDB\Ncqrs.Eventing.Storage.RavenDB.csproj">

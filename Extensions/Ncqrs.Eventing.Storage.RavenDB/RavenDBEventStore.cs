@@ -34,7 +34,7 @@ namespace Ncqrs.Eventing.Storage.RavenDB
             return new DocumentConvention
             {
                 JsonContractResolver = new PropertiesOnlyContractResolver(),
-                FindTypeTagName = FindTypeTagName,
+                FindTypeTagName = x => "Events",
                 NewDocumentETagGenerator = GenerateETag
             };
         }
@@ -47,14 +47,7 @@ namespace Ncqrs.Eventing.Storage.RavenDB
                 return Guid.NewGuid();
             }
             return null;
-        }
-
-        private static string FindTypeTagName(Type type)
-        {
-            return type == typeof(StoredEvent)
-                ? "Events" 
-                : "Snapshots";
-        }        
+        }      
 
         public IEnumerable<ISourcedEvent> GetAllEvents(Guid id)
         {

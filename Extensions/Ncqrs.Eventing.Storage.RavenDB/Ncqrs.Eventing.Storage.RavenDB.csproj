@@ -56,7 +56,9 @@
     <Compile Include="PropertiesOnlyContractResolver.cs" />
     <Compile Include="RavenDBEventStore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RavenDBSnapshotStore.cs" />
     <Compile Include="StoredEvent.cs" />
+    <Compile Include="StoredSnaphot.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
