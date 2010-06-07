@@ -5,7 +5,7 @@ using Ncqrs.Domain.Storage;
 
 namespace Ncqrs.Domain
 {
-    internal sealed class UnitOfWork : IUnitOfWorkContext
+    public sealed class UnitOfWork : IUnitOfWorkContext
     {
         /// <summary>
         /// The <see cref="UnitOfWork"/> that is associated with the current thread.

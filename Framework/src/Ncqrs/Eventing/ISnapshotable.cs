@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using Ncqrs.Domain;
 using System.Diagnostics.Contracts;
 using Ncqrs.Domain.Storage;
+using Ncqrs.Eventing.Storage;
 
 namespace Ncqrs.Eventing
-{
+{    
     /// <summary>
     /// This interface flags an object beeing <i>snapshotable</i>. This means
     /// that the state of the object could be saved to an 
