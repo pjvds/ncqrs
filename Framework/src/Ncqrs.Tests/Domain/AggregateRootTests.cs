@@ -81,7 +81,7 @@ namespace Ncqrs.Tests.Domain
             var generator = MockRepository.GenerateMock<IUniqueIdentifierGenerator>();
             NcqrsEnvironment.SetDefault<IUniqueIdentifierGenerator>(generator);
 
-            var theAggregate = new MyAggregateRoot();
+            var theAggregate = new AggregateRoot();
 
             generator.AssertWasCalled(g => g.GenerateNewId());
         }

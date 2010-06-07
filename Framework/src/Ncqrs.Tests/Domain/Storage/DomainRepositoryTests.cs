@@ -41,18 +41,18 @@ namespace Ncqrs.Tests.Domain.Storage
             }
         }
 
-        public class MyAggregateRoot : AggregateRootMappedWithAttributes
+        public class MyAggregateRoot : IAggregateRoot, IAggregateRootMappedWithAttributes
         {
             public void Foo()
             {
                 var e = new FooEvent();
-                ApplyEvent(e);
+                this.ApplyEvent(e);
             }
 
             public void Bar()
             {
                 var e = new BarEvent();
-                ApplyEvent(e);
+                this.ApplyEvent(e);
             }
 
             [EventHandlerAttribute]
@@ -85,16 +85,16 @@ namespace Ncqrs.Tests.Domain.Storage
             {
                 var store = MockRepository.GenerateMock<IEventStore>();
                 var bus = MockRepository.GenerateMock<IEventBus>();
-                var aggregate = new MyAggregateRoot();
+                var aggregate = work.Create<MyAggregateRoot>();
 
                 aggregate.Foo();
                 aggregate.Bar();
 
-                store.Expect(s => s.Save(aggregate));
+                store.Expect(s => s.Save((IEventSource)aggregate));
                 bus.Expect(b => b.Publish((IEnumerable<IEvent>) null)).IgnoreArguments();
 
                 var repository = new DomainRepository(store, bus);
-                repository.Save(aggregate);
+                repository.Save((IEventSource)aggregate);
 
                 bus.VerifyAllExpectations();
                 store.VerifyAllExpectations();

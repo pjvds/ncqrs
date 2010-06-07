@@ -5,7 +5,7 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Fluent
 {
     public class FluentCommandExecutorBuilderWithAggregateRootSource<TCommand, TAggregateRoot>
         where TCommand : ICommand
-        where TAggregateRoot : AggregateRoot
+        where TAggregateRoot : IAggregateRoot
     {
         public FluentAndWord<FluentDirectMethodCommandExecutorBuilderWithClosure<TCommand, TAggregateRoot>> WithId(Func<TCommand, Guid> aggregateRootIdSource)
         {

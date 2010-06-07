@@ -9,7 +9,7 @@ namespace Ncqrs.Domain
     /// <summary>
     /// The abstract concept of an aggregate root.
     /// </summary>
-    public abstract class AggregateRoot : IEventSource, IAggregateRootInternal
+    public class AggregateRoot : IEventSource, IAggregateRootInternal
     {
         [NonSerialized]
         private Guid _id;
@@ -23,7 +23,7 @@ namespace Ncqrs.Domain
         public Guid Id
         {
             get { return _id; }
-            protected set
+            set
             {
                 Contract.Requires<InvalidOperationException>(Version == 0);
 
@@ -115,7 +115,7 @@ namespace Ncqrs.Domain
             }
         }
 
-        protected void RegisterHandler(IDomainEventHandler handler)
+        public void RegisterHandler(IDomainEventHandler handler)
         {
             Contract.Requires<ArgumentNullException>(handler != null, "The handler cannot be null.");
 

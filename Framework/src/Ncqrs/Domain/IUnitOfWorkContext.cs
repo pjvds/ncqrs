@@ -7,8 +7,8 @@ namespace Ncqrs.Domain
     public interface IUnitOfWorkContext : IDisposable
     {
         TAggregateRoot Create<TAggregateRoot>(params object[] constructorArguments) where TAggregateRoot : IAggregateRoot;
-        TAggregateRoot GetById<TAggregateRoot>(Guid id) where TAggregateRoot : IEventSource;
-        IEventSource GetById(Type aggregateRootType, Guid id);
+        TAggregateRoot GetById<TAggregateRoot>(Guid id) where TAggregateRoot : IAggregateRoot;
+        IAggregateRoot GetById(Type aggregateRootType, Guid id);
 
         void Accept();
     }

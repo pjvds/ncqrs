@@ -25,13 +25,13 @@ namespace Ncqrs.Tests.Domain
         public class EventForMethodWithWrongMethodName : DomainEvent
         {}
 
-        public class TheAggregateRoot : IAggregateRoot
+        public class TheAggregateRoot : IAggregateRoot, IAggregateRootMappedByConvention
         {
             public int OnEventForPublicMethodInvokedCount;
             public int OnEventForProtectedMethodInvokeCount;
             public int OnEventForPrivateMethodInvokeCount;
             public int OnEventForNoEventHandlerMethodInvokeCount;
-            public int FooBarEventForMethodWithWrongMethodNameInvokeCount;
+            public int FooBarEventForMethodWithWrongMethodNameInvokeCount;            
             
             public virtual void OnEventForPublicMethod(EventForPublicMethod e)
             {
@@ -58,17 +58,7 @@ namespace Ncqrs.Tests.Domain
             {
                 OnEventForNoEventHandlerMethodInvokeCount++;
             }
-        }
-
-        [Test]
-        public void Initializing_one_should_set_the_mapping_strategy_to_convention_based()
-        {
-            var aggregateRoot = MockRepository.GenerateMock<AggregateRootMappedByConvention>();
-            var field = aggregateRoot.GetType().BaseType.BaseType.GetField("_mappingStrategy", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.GetField);
-
-            var theStrategy = field.GetValue(aggregateRoot);
-            theStrategy.Should().BeOfType<ConventionBasedDomainEventHandlerMappingStrategy>();
-        }
+        }        
 
         [Test]
         public void Public_event_handlers_should_be_mapped()

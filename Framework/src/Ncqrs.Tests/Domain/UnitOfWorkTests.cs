@@ -1,6 +1,8 @@
 ﻿using System;
 using FluentAssertions;
 using Ncqrs.Domain;
+using Ncqrs.Domain.Mapping;
+using Ncqrs.Eventing;
 using Rhino.Mocks;
 using Ncqrs.Domain.Storage;
 using NUnit.Framework;
@@ -23,7 +25,7 @@ namespace Ncqrs.Tests.Domain
             public string FooStringValue { get; private set; }
         }
 
-        public class MyAggregateRoot : AggregateRootMappedByConvention
+        public class MyAggregateRoot : IAggregateRoot, IAggregateRootMappedByConvention
         {
             public String FooString
             {
@@ -33,18 +35,18 @@ namespace Ncqrs.Tests.Domain
             public MyAggregateRoot()
             {
                 var e = new NewMyAggregateRootCreatedEvent();
-                ApplyEvent(e);
+                this.ApplyEvent(e);
             }
 
             public void Foo(string value)
             {
                 var e = new FooEvent(value);
-                ApplyEvent(e);
+                this.ApplyEvent(e);
             }
 
             private void OnNewMyAggregateRootCreatedEvent(NewMyAggregateRootCreatedEvent e)
             {
-                this.Id = e.AggregateRootId;
+                this.SetId(e.AggregateRootId);
             }
 
             private void OnFoo(FooEvent e)
@@ -62,8 +64,8 @@ namespace Ncqrs.Tests.Domain
             var factory = NcqrsEnvironment.Get<IUnitOfWorkFactory>();
             using(var work = factory.CreateUnitOfWork())
             {
-                var agg1 = new MyAggregateRoot();
-                var agg2 = new MyAggregateRoot();
+                var agg1 = work.Create<MyAggregateRoot>();
+                var agg2 = work.Create<MyAggregateRoot>();
 
                 agg1.Foo("a string");
                 agg1.Foo("a string");
@@ -73,8 +75,8 @@ namespace Ncqrs.Tests.Domain
 
                 work.Accept();
 
-                repository.AssertWasCalled(r => r.Save(agg1));
-                repository.AssertWasCalled(r => r.Save(agg2));
+                repository.AssertWasCalled(r => r.Save((IEventSource)agg1));
+                repository.AssertWasCalled(r => r.Save((IEventSource)agg2));
             }
         }
 
@@ -87,8 +89,8 @@ namespace Ncqrs.Tests.Domain
             var factory = NcqrsEnvironment.Get<IUnitOfWorkFactory>();
             using (var work = factory.CreateUnitOfWork())
             {
-                var agg1 = new MyAggregateRoot();
-                var agg2 = new MyAggregateRoot();
+                var agg1 = work.Create<MyAggregateRoot>();
+                var agg2 = work.Create<MyAggregateRoot>();
 
                 agg1.Foo("a string");
                 agg1.Foo("a string");
@@ -109,7 +111,7 @@ namespace Ncqrs.Tests.Domain
             var factory = NcqrsEnvironment.Get<IUnitOfWorkFactory>();
             using (var work = factory.CreateUnitOfWork())
             {
-                var theAggregate = new MyAggregateRoot();
+                var theAggregate = work.Create<MyAggregateRoot>();
                 var aId = Guid.NewGuid();
 
                 theRepository.Expect(r => r.GetById<MyAggregateRoot>(aId)).Return(theAggregate);

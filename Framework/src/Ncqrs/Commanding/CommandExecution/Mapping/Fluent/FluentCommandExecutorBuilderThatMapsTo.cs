@@ -5,7 +5,7 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Fluent
 {
     public class FluentCommandExecutorBuilderThatMapsTo<TCommand> where TCommand : ICommand
     {
-        public FluentCommandExecutorBuilderWithAggregateRootSource<TCommand, TAggregateRoot> ToContextWith<TAggregateRoot>() where TAggregateRoot : AggregateRoot
+        public FluentCommandExecutorBuilderWithAggregateRootSource<TCommand, TAggregateRoot> ToContextWith<TAggregateRoot>() where TAggregateRoot : IAggregateRoot
         {
             return new FluentCommandExecutorBuilderWithAggregateRootSource<TCommand,TAggregateRoot>();
         }

@@ -27,7 +27,7 @@ namespace Ncqrs.Domain.Mapping
     /// }</code>
     /// </remarks>
     /// </summary>
-    public class AttributeBasedDomainEventHandlerMappingStrategy : IDomainEventHandlerMappingStrategy
+    public class AttributeBasedDomainEventHandlerMappingStrategy : DomainEventHandlerMappingStrategy
     {
         /// <summary>
         /// Gets the event handlers from aggregate root based on attributes.
@@ -35,14 +35,13 @@ namespace Ncqrs.Domain.Mapping
         /// <param name="aggregateRoot">The aggregate root.</param>
         /// <see cref="AttributeBasedDomainEventHandlerMappingStrategy"/>
         /// <returns>All the <see cref="IDomainEventHandler"/>'s created based on attribute mapping.</returns>
-        public IEnumerable<IDomainEventHandler> GetEventHandlersFromAggregateRoot( object aggregateRoot)
+        protected override IEnumerable<IDomainEventHandler> GetEventHandlersFromAggregateRoot(Type aggregateRootPocoType, object aggregateRootMixin)
         {
-            Contract.Requires<ArgumentNullException>(aggregateRoot != null, "The aggregateRoot cannot be null.");
+            Contract.Requires<ArgumentNullException>(aggregateRootMixin != null, "The aggregateRoot cannot be null.");
 
-            var targetType = aggregateRoot.GetType();
             var handlers = new List<IDomainEventHandler>();
 
-            foreach (var method in targetType.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static))
+            foreach (var method in aggregateRootPocoType.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static))
             {
                 EventHandlerAttribute attribute;
 
@@ -64,7 +63,7 @@ namespace Ncqrs.Domain.Mapping
                         throw new InvalidEventHandlerMappingException(message);
                     }
 
-                    var handler = CreateHandlerForMethod(aggregateRoot, method, attribute);
+                    var handler = CreateHandlerForMethod(aggregateRootMixin, method, attribute);
                     handlers.Add(handler);
                 }
             }

@@ -30,7 +30,7 @@ namespace Ncqrs.Domain.Mapping
     /// </code>
     /// </remarks>
     /// </summary>
-    public class ExpressionBasedDomainEventHandlerMappingStrategy : IDomainEventHandlerMappingStrategy
+    public class ExpressionBasedDomainEventHandlerMappingStrategy : DomainEventHandlerMappingStrategy
     {
         private readonly IList<ExpressionHandler> _mappinghandlers = new List<ExpressionHandler>();
 
@@ -49,9 +49,9 @@ namespace Ncqrs.Domain.Mapping
         /// <param name="aggregateRoot">The aggregate root.</param>
         /// <see cref="ExpressionBasedDomainEventHandlerMappingStrategy"/>
         /// <returns>All the <see cref="IDomainEventHandler"/>'s created based on the given mapping.</returns>
-        public IEnumerable<IDomainEventHandler> GetEventHandlersFromAggregateRoot(object aggregateRoot)
+        protected override IEnumerable<IDomainEventHandler> GetEventHandlersFromAggregateRoot(Type aggregateRootPocoType, object aggregateRootMixin)
         {
-            Contract.Requires<ArgumentNullException>(aggregateRoot != null, "The aggregateRoot cannot be null.");
+            Contract.Requires<ArgumentNullException>(aggregateRootMixin != null, "The aggregateRoot cannot be null.");
             
             var handlers = new List<IDomainEventHandler>();
 
@@ -63,7 +63,7 @@ namespace Ncqrs.Domain.Mapping
                     throw new InvalidEventHandlerMappingException(message);
                 }
 
-                var handler = CreateHandlerForMethod(aggregateRoot, mappinghandler.ActionMethodInfo, mappinghandler.Exact);
+                var handler = CreateHandlerForMethod(aggregateRootMixin, mappinghandler.ActionMethodInfo, mappinghandler.Exact);
                 handlers.Add(handler);
             }
 

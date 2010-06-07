@@ -16,7 +16,7 @@ namespace Ncqrs.Domain.Storage
         /// <param name="aggregateRootType">Type of the aggregate root.</param>
         /// <param name="id">The id of the aggregate root.</param>
         /// <returns>A new instance of the aggregate root that contains the latest known state.</returns>
-        IEventSource GetById(Type aggregateRootType, Guid id);
+        IAggregateRoot GetById(Type aggregateRootType, Guid id);
 
         /// <summary>
         /// Gets aggregate root by id.
@@ -24,7 +24,7 @@ namespace Ncqrs.Domain.Storage
         /// <typeparam name="T">The type of the aggregate root.</typeparam>
         /// <param name="id">The id of the aggregate root.</param>
         /// <returns>A new instance of the aggregate root that contains the latest known state.</returns>
-        T GetById<T>(Guid id) where T : IEventSource;
+        T GetById<T>(Guid id) where T : IAggregateRoot;
 
         /// <summary>
         /// Saves the specified aggregate root.
@@ -36,14 +36,14 @@ namespace Ncqrs.Domain.Storage
     [ContractClassFor(typeof(IDomainRepository))]
     internal sealed class IDomainRepositoryContracts : IDomainRepository
     {
-        public IEventSource GetById(Type aggregateRootType, Guid id)
+        public IAggregateRoot GetById(Type aggregateRootType, Guid id)
         {
             Contract.Requires<ArgumentNullException>(aggregateRootType != null);
 
-            return default(AggregateRoot);
+            return null;
         }
 
-        public T GetById<T>(Guid id) where T : IEventSource
+        public T GetById<T>(Guid id) where T : IAggregateRoot
         {
             return default(T);
         }

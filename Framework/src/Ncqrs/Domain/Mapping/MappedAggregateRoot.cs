@@ -1,24 +1,25 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 
 namespace Ncqrs.Domain.Mapping
 {
-    public abstract class MappedAggregateRoot<T> : AggregateRoot where T : MappedAggregateRoot<T>
+    public abstract class DomainEventHandlerMappingStrategy : IAggregateRootMixin
     {
-        protected IDomainEventHandlerMappingStrategy MappingStrategy { get; set; }
+        protected abstract IEnumerable<IDomainEventHandler> GetEventHandlersFromAggregateRoot(Type aggregateRootPocoType, object aggregateRootMixin);
 
-        private void InitializeHandlers(object aggregateRootInstance)
+        public void Initialize(Type aggregateRootPocoType, object aggregateRootMixin)
         {
-            foreach (var handler in MappingStrategy.GetEventHandlersFromAggregateRoot(aggregateRootInstance))
-            {
-                RegisterHandler(handler);
-            }
+            InitializeHandlers(aggregateRootPocoType, aggregateRootMixin);
         }
 
-        public override void Initialize(object aggregateRootInstance)
+        private void InitializeHandlers(Type aggregateRootPocoType, object aggregateRootMixin)
         {
-            base.Initialize(aggregateRootInstance);
-            InitializeHandlers(aggregateRootInstance);
+            var internalAggregateRoot = (IAggregateRootInternal) aggregateRootMixin;
+            foreach (var handler in GetEventHandlersFromAggregateRoot(aggregateRootPocoType, aggregateRootMixin))
+            {
+                internalAggregateRoot.RegisterHandler(handler);
+            }
         }
     }
 }

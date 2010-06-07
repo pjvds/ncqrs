@@ -5,7 +5,7 @@ namespace Ncqrs.Commanding.CommandExecution
 {
     public class DirectActionOnAggregateRootCommandExecutor<TCommand, TAggregateRoot> : ICommandExecutor<TCommand>
         where TCommand : ICommand
-        where TAggregateRoot : AggregateRoot
+        where TAggregateRoot : IAggregateRoot
     {
         private readonly Func<TCommand, Guid> _aggregateRootIdOnCommandLocator;
         private readonly Action<TCommand, TAggregateRoot> _action;

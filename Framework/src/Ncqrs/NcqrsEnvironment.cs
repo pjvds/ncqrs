@@ -25,6 +25,7 @@ namespace Ncqrs
             SetDefault<IEventBus>(new InProcessEventBus());
             SetDefault<IEventStore>(new InMemoryEventStore());
             SetDefault<IUnitOfWorkFactory>(new UnitOfWorkFactory());
+            SetDefault<IAggregateRootFactory>(new CastleAggregateRootFactory());
         }
 
         /// <summary>

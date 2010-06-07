@@ -30,22 +30,21 @@ namespace Ncqrs.Domain.Mapping
     /// </list>
     /// </remarks>
     /// </summary>
-    public class ConventionBasedDomainEventHandlerMappingStrategy : IDomainEventHandlerMappingStrategy
+    public class ConventionBasedDomainEventHandlerMappingStrategy : DomainEventHandlerMappingStrategy
     {
         private String _regexPattern = "^(on|On|ON)+";
         private static readonly ILog Logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public IEnumerable<IDomainEventHandler> GetEventHandlersFromAggregateRoot(object aggregateRoot)
+        protected override IEnumerable<IDomainEventHandler> GetEventHandlersFromAggregateRoot(Type aggregateRootPocoType, object aggregateRootMixin)
         {
-            Contract.Requires<ArgumentNullException>(aggregateRoot != null, "The aggregateRoot cannot be null.");
+            Contract.Requires<ArgumentNullException>(aggregateRootMixin != null, "The aggregateRoot cannot be null.");
             Contract.Ensures(Contract.Result<IEnumerable<IDomainEventHandler>>() != null, "The result should never be null.");
 
-            var targetType = aggregateRoot.GetType().BaseType; //Actual type is Castle's proxy
             var handlers = new List<IDomainEventHandler>();
 
-            Logger.DebugFormat("Trying to get all event handlers based by convention for {0}.", targetType);
+            Logger.DebugFormat("Trying to get all event handlers based by convention for {0}.", aggregateRootPocoType);
 
-            var methodsToMatch = targetType.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            var methodsToMatch = aggregateRootPocoType.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 
             var matchedMethods = from method in methodsToMatch
                                  let parameters = method.GetParameters()
@@ -68,7 +67,7 @@ namespace Ncqrs.Domain.Mapping
                 var methodCopy = method.MethodInfo;
                 Type firstParameterType = methodCopy.GetParameters().First().ParameterType;
 
-                Action<DomainEvent> invokeAction = (e) => methodCopy.Invoke(aggregateRoot, new object[] { e });
+                Action<DomainEvent> invokeAction = (e) => methodCopy.Invoke(aggregateRootMixin, new object[] { e });
 
                 Logger.DebugFormat("Created event handler for method {0} based on convention.", methodCopy.Name);
 

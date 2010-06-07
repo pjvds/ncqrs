@@ -35,7 +35,7 @@ namespace Ncqrs.Domain.Storage
             return (_snapshotStore != null)&&(aggregateRoot.Version % SnapshotIntervalInEvents) == 0;
         }
 
-        public IEventSource GetById(Type aggregateRootType, Guid id)
+        public IAggregateRoot GetById(Type aggregateRootType, Guid id)
         {
             IEventSource aggregate = null;
 
@@ -54,7 +54,7 @@ namespace Ncqrs.Domain.Storage
                 aggregate = GetByIdFromScratch(aggregateRootType, id);
             }
 
-            return aggregate;
+            return (IAggregateRoot) aggregate;
         }
 
         protected IEventSource GetByIdFromSnapshot(Type aggregateRootType, ISnapshot snapshot)
@@ -102,26 +102,10 @@ namespace Ncqrs.Domain.Storage
             return memType == typeof(ISnapshotable<>).MakeGenericType(memType);
         }
 
-        private IEventSource CreateEmptyAggRoot(Type aggType)
+        private static IEventSource CreateEmptyAggRoot(Type aggType)
         {
-            // Flags to search for a public and non public contructor.
-            var flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
-
-            // Get the constructor that we want to invoke.
-            var ctor = aggType.GetConstructor(flags, null, Type.EmptyTypes, null);
-
-            // If there was no ctor found, throw exception.
-            if (ctor == null)
-            {
-                var message = String.Format("No constructor found on aggregate root type {0} that accepts " +
-                                            "no parameters.", aggType.AssemblyQualifiedName);
-                throw new AggregateLoaderException(message);
-            }
-
-            // There was a ctor found, so invoke it and return the instance.
-            var aggregateRoot = (AggregateRoot) ctor.Invoke(null);
-
-            return aggregateRoot;
+            var factory = NcqrsEnvironment.Get<IAggregateRootFactory>();
+            return (IEventSource)factory.CreateInstance(aggType);            
         }
 
         protected IEnumerable<DomainEvent> ConvertEvents(IEnumerable<DomainEvent> events)
@@ -139,7 +123,7 @@ namespace Ncqrs.Domain.Storage
             return result;
         }
 
-        public T GetById<T>(Guid id) where T : IEventSource
+        public T GetById<T>(Guid id) where T : IAggregateRoot
         {
             return (T)GetById(typeof(T), id);
         }

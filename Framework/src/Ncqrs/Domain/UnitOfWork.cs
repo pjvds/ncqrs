@@ -128,21 +128,16 @@ namespace Ncqrs.Domain
 
         public TAggregateRoot Create<TAggregateRoot>(params object[] constructorArguments) where TAggregateRoot : IAggregateRoot
         {
-            var generator = new ProxyGenerator();
-            var options = new ProxyGenerationOptions();
-            var byConvention = new AggregateRootMappedByConvention();
-            options.AddMixinInstance(byConvention);
-            var result = (TAggregateRoot)generator.CreateClassProxy(typeof(TAggregateRoot), options, constructorArguments);
-            byConvention.Initialize(result);
-            return result;
+            var factory = NcqrsEnvironment.Get<IAggregateRootFactory>();
+            return (TAggregateRoot)factory.CreateInstance(typeof (TAggregateRoot), constructorArguments);
         }
 
-        public TAggregateRoot GetById<TAggregateRoot>(Guid id) where TAggregateRoot : IEventSource
+        public TAggregateRoot GetById<TAggregateRoot>(Guid id) where TAggregateRoot : IAggregateRoot
         {
             return _repository.GetById<TAggregateRoot>(id);
         }
 
-        public IEventSource GetById(Type aggregateRootType, Guid id)
+        public IAggregateRoot GetById(Type aggregateRootType, Guid id)
         {
             return _repository.GetById(aggregateRootType, id);
         }
