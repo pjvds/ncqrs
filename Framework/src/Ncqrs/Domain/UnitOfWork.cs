@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.Linq.Expressions;
+using Castle.DynamicProxy;
 using Ncqrs.Domain.Storage;
+using Ncqrs.Eventing;
 
 namespace Ncqrs.Domain
 {
@@ -123,12 +126,23 @@ namespace Ncqrs.Domain
             }
         }
 
-        public TAggregateRoot GetById<TAggregateRoot>(Guid id) where TAggregateRoot : AggregateRoot
+        public TAggregateRoot Create<TAggregateRoot>(params object[] constructorArguments) where TAggregateRoot : IAggregateRoot
+        {
+            var generator = new ProxyGenerator();
+            var options = new ProxyGenerationOptions();
+            var byConvention = new AggregateRootMappedByConvention();
+            options.AddMixinInstance(byConvention);
+            var result = (TAggregateRoot)generator.CreateClassProxy(typeof(TAggregateRoot), options, constructorArguments);
+            byConvention.Initialize(result);
+            return result;
+        }
+
+        public TAggregateRoot GetById<TAggregateRoot>(Guid id) where TAggregateRoot : IEventSource
         {
             return _repository.GetById<TAggregateRoot>(id);
         }
 
-        public AggregateRoot GetById(Type aggregateRootType, Guid id)
+        public IEventSource GetById(Type aggregateRootType, Guid id)
         {
             return _repository.GetById(aggregateRootType, id);
         }

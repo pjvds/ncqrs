@@ -5,21 +5,20 @@ namespace Ncqrs.Domain.Mapping
 {
     public abstract class MappedAggregateRoot<T> : AggregateRoot where T : MappedAggregateRoot<T>
     {
-        [NonSerialized]
-        private readonly IDomainEventHandlerMappingStrategy<T> _mappingStrategy;
+        protected IDomainEventHandlerMappingStrategy MappingStrategy { get; set; }
 
-        protected MappedAggregateRoot(IDomainEventHandlerMappingStrategy<T> strategy)
+        private void InitializeHandlers(object aggregateRootInstance)
         {
-            Contract.Requires<ArgumentNullException>(strategy != null, "The strategy cannot be null.");
-
-            _mappingStrategy = strategy;
-            InitializeHandlers();
+            foreach (var handler in MappingStrategy.GetEventHandlersFromAggregateRoot(aggregateRootInstance))
+            {
+                RegisterHandler(handler);
+            }
         }
 
-        private void InitializeHandlers()
+        public override void Initialize(object aggregateRootInstance)
         {
-            foreach (var handler in _mappingStrategy.GetEventHandlersFromAggregateRoot((T)this))
-                RegisterHandler(handler);
+            base.Initialize(aggregateRootInstance);
+            InitializeHandlers(aggregateRootInstance);
         }
     }
 }

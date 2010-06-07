@@ -9,7 +9,7 @@ namespace Ncqrs.Domain
     /// <summary>
     /// The abstract concept of an aggregate root.
     /// </summary>
-    public abstract class AggregateRoot : IEventSource
+    public abstract class AggregateRoot : IEventSource, IAggregateRootInternal
     {
         [NonSerialized]
         private Guid _id;
@@ -84,13 +84,14 @@ namespace Ncqrs.Domain
         /// <summary>
         /// Initializes a new instance of the <see cref="AggregateRoot"/> class.
         /// </summary>
-        protected AggregateRoot()
+        public virtual void Initialize(object aggregateRootInstance)
         {
             InitialVersion = 0;
 
             var idGenerator = NcqrsEnvironment.Get<IUniqueIdentifierGenerator>();
             Id = idGenerator.GenerateNewId();
         }
+        
 
         [ContractInvariantMethod]
         private void ContractInvariants()
@@ -135,7 +136,7 @@ namespace Ncqrs.Domain
                 throw new EventNotHandledException(evnt);
         }
 
-        protected void ApplyEvent(DomainEvent evnt)
+        public void ApplyEvent(DomainEvent evnt)
         {
             ApplyEvent(evnt, false);
         }

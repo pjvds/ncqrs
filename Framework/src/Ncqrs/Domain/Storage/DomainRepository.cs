@@ -30,14 +30,14 @@ namespace Ncqrs.Domain.Storage
             _snapshotStore = snapshotStore;
         }
 
-        private bool ShouldCreateSnapshot(AggregateRoot aggregateRoot)
+        private bool ShouldCreateSnapshot(IEventSource aggregateRoot)
         {
             return (_snapshotStore != null)&&(aggregateRoot.Version % SnapshotIntervalInEvents) == 0;
         }
 
-        public AggregateRoot GetById(Type aggregateRootType, Guid id)
+        public IEventSource GetById(Type aggregateRootType, Guid id)
         {
-            AggregateRoot aggregate = null;
+            IEventSource aggregate = null;
 
             if(_snapshotStore != null)
             {
@@ -57,9 +57,9 @@ namespace Ncqrs.Domain.Storage
             return aggregate;
         }
 
-        protected AggregateRoot GetByIdFromSnapshot(Type aggregateRootType, ISnapshot snapshot)
+        protected IEventSource GetByIdFromSnapshot(Type aggregateRootType, ISnapshot snapshot)
         {
-            AggregateRoot aggregateRoot = null;
+            IEventSource aggregateRoot = null;
 
             if(AggregateRootSupportsSnapshot(aggregateRootType, snapshot))
             {
@@ -80,9 +80,9 @@ namespace Ncqrs.Domain.Storage
             return aggregateRoot;
         }
 
-        protected AggregateRoot GetByIdFromScratch(Type aggregateRootType, Guid id)
+        protected IEventSource GetByIdFromScratch(Type aggregateRootType, Guid id)
         {
-            AggregateRoot aggregateRoot = null;
+            IEventSource aggregateRoot = null;
 
             var events = _store.GetAllEvents(id).Cast<DomainEvent>();
             events = ConvertEvents(events);
@@ -102,7 +102,7 @@ namespace Ncqrs.Domain.Storage
             return memType == typeof(ISnapshotable<>).MakeGenericType(memType);
         }
 
-        private AggregateRoot CreateEmptyAggRoot(Type aggType)
+        private IEventSource CreateEmptyAggRoot(Type aggType)
         {
             // Flags to search for a public and non public contructor.
             var flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
@@ -139,12 +139,12 @@ namespace Ncqrs.Domain.Storage
             return result;
         }
 
-        public T GetById<T>(Guid id) where T : AggregateRoot
+        public T GetById<T>(Guid id) where T : IEventSource
         {
             return (T)GetById(typeof(T), id);
         }
 
-        public void Save(AggregateRoot aggregateRoot)
+        public void Save(IEventSource aggregateRoot)
         {
             var events = aggregateRoot.GetUncommittedEvents();
 
@@ -164,7 +164,7 @@ namespace Ncqrs.Domain.Storage
             aggregateRoot.AcceptChanges();
         }
 
-        private ISnapshot GetSnapshot(AggregateRoot aggregateRoot)
+        private ISnapshot GetSnapshot(IEventSource aggregateRoot)
         {
             var memType = GetMementoableInterfaceType(aggregateRoot.GetType());
 

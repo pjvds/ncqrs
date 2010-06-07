@@ -4,10 +4,11 @@ using Ncqrs.Domain.Mapping;
 namespace Ncqrs.Domain
 {
     public abstract class AggregateRootMappedWithAttributes : MappedAggregateRoot<AggregateRootMappedWithAttributes>
-    {
-        protected AggregateRootMappedWithAttributes()
-            : base(new AttributeBasedDomainEventHandlerMappingStrategy())
+    {        
+        public override void Initialize(object aggregateRootInstance)
         {
+            MappingStrategy = new AttributeBasedDomainEventHandlerMappingStrategy();
+            base.Initialize(aggregateRootInstance);
         }
     }
 }

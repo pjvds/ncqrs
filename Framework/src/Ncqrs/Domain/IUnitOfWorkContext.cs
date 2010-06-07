@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Linq.Expressions;
+using Ncqrs.Eventing;
 
 namespace Ncqrs.Domain
 {
     public interface IUnitOfWorkContext : IDisposable
     {
-        TAggregateRoot GetById<TAggregateRoot>(Guid id) where TAggregateRoot : AggregateRoot;
-        AggregateRoot GetById(Type aggregateRootType, Guid id);
+        TAggregateRoot Create<TAggregateRoot>(params object[] constructorArguments) where TAggregateRoot : IAggregateRoot;
+        TAggregateRoot GetById<TAggregateRoot>(Guid id) where TAggregateRoot : IEventSource;
+        IEventSource GetById(Type aggregateRootType, Guid id);
 
         void Accept();
     }

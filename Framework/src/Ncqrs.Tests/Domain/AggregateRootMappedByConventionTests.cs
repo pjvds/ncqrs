@@ -25,19 +25,14 @@ namespace Ncqrs.Tests.Domain
         public class EventForMethodWithWrongMethodName : DomainEvent
         {}
 
-        public class TheAggregateRoot : AggregateRootMappedByConvention
+        public class TheAggregateRoot : IAggregateRoot
         {
             public int OnEventForPublicMethodInvokedCount;
             public int OnEventForProtectedMethodInvokeCount;
             public int OnEventForPrivateMethodInvokeCount;
             public int OnEventForNoEventHandlerMethodInvokeCount;
             public int FooBarEventForMethodWithWrongMethodNameInvokeCount;
-
-            public new void ApplyEvent(DomainEvent e)
-            {
-                base.ApplyEvent(e);
-            }
-
+            
             public virtual void OnEventForPublicMethod(EventForPublicMethod e)
             {
                 OnEventForPublicMethodInvokedCount++;
@@ -80,7 +75,7 @@ namespace Ncqrs.Tests.Domain
         {
             using (var work = NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork())
             {
-                var target = new TheAggregateRoot();
+                var target = work.Create<TheAggregateRoot>();
 
                 target.ApplyEvent(new EventForPublicMethod());
 
@@ -93,7 +88,7 @@ namespace Ncqrs.Tests.Domain
         {
             using (var work = NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork())
             {
-                var target = new TheAggregateRoot();
+                var target = work.Create<TheAggregateRoot>();
 
                 target.ApplyEvent(new EventForProtectedMethod());
 
@@ -106,7 +101,7 @@ namespace Ncqrs.Tests.Domain
         {
             using (var work = NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork())
             {
-                var target = new TheAggregateRoot();
+                var target = work.Create<TheAggregateRoot>();
 
                 target.ApplyEvent(new EventForPrivateMethod());
 
@@ -119,7 +114,7 @@ namespace Ncqrs.Tests.Domain
         {
             using (var work = NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork())
             {
-                var target = new TheAggregateRoot();
+                var target = work.Create<TheAggregateRoot>();
 
                 Action act = () => target.ApplyEvent(new EventForMethodWithWrongMethodName());
 
@@ -132,7 +127,7 @@ namespace Ncqrs.Tests.Domain
         {
             using (var work = NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork())
             {
-                var target = new TheAggregateRoot();
+                var target = work.Create<TheAggregateRoot>();
 
                 Action act = () => target.ApplyEvent(new EventForNoEventHandlerMethod());
 

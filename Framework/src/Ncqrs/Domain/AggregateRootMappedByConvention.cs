@@ -34,14 +34,12 @@ namespace Ncqrs.Domain
     /// </code>
     /// </example>
     /// <seealso cref="ConventionBasedDomainEventHandlerMappingStrategy"/>
-    public abstract class AggregateRootMappedByConvention : MappedAggregateRoot<AggregateRootMappedByConvention>
-    {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AggregateRootMappedByConvention"/> class.
-        /// </summary>
-        protected AggregateRootMappedByConvention()
-            : base(new ConventionBasedDomainEventHandlerMappingStrategy())
+    public class AggregateRootMappedByConvention : MappedAggregateRoot<AggregateRootMappedByConvention>
+    {        
+        public override void Initialize(object aggregateRootInstance)
         {
+            MappingStrategy = new ConventionBasedDomainEventHandlerMappingStrategy();
+            base.Initialize(aggregateRootInstance);
         }
     }
 }

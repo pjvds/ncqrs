@@ -39,6 +39,10 @@ namespace Ncqrs.Tests.Eventing.Storage
             {
             }
 
+            public void InitializeFromHistory(IEnumerable<DomainEvent> history)
+            {                
+            }
+
             public long InitialVersion
             {
                 get; set;

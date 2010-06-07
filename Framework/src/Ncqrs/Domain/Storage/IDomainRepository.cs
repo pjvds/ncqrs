@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
+using Ncqrs.Eventing;
 
 namespace Ncqrs.Domain.Storage
 {
@@ -15,7 +16,7 @@ namespace Ncqrs.Domain.Storage
         /// <param name="aggregateRootType">Type of the aggregate root.</param>
         /// <param name="id">The id of the aggregate root.</param>
         /// <returns>A new instance of the aggregate root that contains the latest known state.</returns>
-        AggregateRoot GetById(Type aggregateRootType, Guid id);
+        IEventSource GetById(Type aggregateRootType, Guid id);
 
         /// <summary>
         /// Gets aggregate root by id.
@@ -23,31 +24,31 @@ namespace Ncqrs.Domain.Storage
         /// <typeparam name="T">The type of the aggregate root.</typeparam>
         /// <param name="id">The id of the aggregate root.</param>
         /// <returns>A new instance of the aggregate root that contains the latest known state.</returns>
-        T GetById<T>(Guid id) where T : AggregateRoot;
+        T GetById<T>(Guid id) where T : IEventSource;
 
         /// <summary>
         /// Saves the specified aggregate root.
         /// </summary>
         /// <param name="aggregateRootToSave">The aggregate root to save.</param>
-        void Save(AggregateRoot aggregateRootToSave);
+        void Save(IEventSource aggregateRootToSave);
     }
 
     [ContractClassFor(typeof(IDomainRepository))]
     internal sealed class IDomainRepositoryContracts : IDomainRepository
     {
-        public AggregateRoot GetById(Type aggregateRootType, Guid id)
+        public IEventSource GetById(Type aggregateRootType, Guid id)
         {
             Contract.Requires<ArgumentNullException>(aggregateRootType != null);
 
             return default(AggregateRoot);
         }
 
-        public T GetById<T>(Guid id) where T : AggregateRoot
+        public T GetById<T>(Guid id) where T : IEventSource
         {
             return default(T);
         }
 
-        public void Save(AggregateRoot aggregateRootToSave)
+        public void Save(IEventSource aggregateRootToSave)
         {
             Contract.Requires<ArgumentNullException>(aggregateRootToSave != null);
         }

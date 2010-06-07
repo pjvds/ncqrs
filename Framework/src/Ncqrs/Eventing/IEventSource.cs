@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Ncqrs.Domain;
 
 namespace Ncqrs.Eventing
 {
@@ -51,5 +52,11 @@ namespace Ncqrs.Eventing
         /// Commits the events.
         /// </summary>
         void AcceptChanges();
+
+        /// <summary>
+        /// Initializes from history.
+        /// </summary>
+        /// <param name="history">The history.</param>
+        void InitializeFromHistory(IEnumerable<DomainEvent> history);
     }
 }

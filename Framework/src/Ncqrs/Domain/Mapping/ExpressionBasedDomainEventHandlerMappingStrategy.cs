@@ -30,21 +30,32 @@ namespace Ncqrs.Domain.Mapping
     /// </code>
     /// </remarks>
     /// </summary>
-    public class ExpressionBasedDomainEventHandlerMappingStrategy : IDomainEventHandlerMappingStrategy<AggregateRootMappedWithExpressions>
+    public class ExpressionBasedDomainEventHandlerMappingStrategy : IDomainEventHandlerMappingStrategy
     {
+        private readonly IList<ExpressionHandler> _mappinghandlers = new List<ExpressionHandler>();
+
+        public ExpressionBasedDomainEventHandlerMappingStrategy()
+        {            
+        }
+
+        public ExpressionBasedDomainEventHandlerMappingStrategy(IList<ExpressionHandler> mappinghandlers)
+        {
+            _mappinghandlers = mappinghandlers;
+        }
+
         /// <summary>
         /// Gets the event handlers from aggregate root based on the given mapping.
         /// </summary>
         /// <param name="aggregateRoot">The aggregate root.</param>
         /// <see cref="ExpressionBasedDomainEventHandlerMappingStrategy"/>
         /// <returns>All the <see cref="IDomainEventHandler"/>'s created based on the given mapping.</returns>
-        public IEnumerable<IDomainEventHandler> GetEventHandlersFromAggregateRoot(AggregateRootMappedWithExpressions aggregateRoot)
+        public IEnumerable<IDomainEventHandler> GetEventHandlersFromAggregateRoot(object aggregateRoot)
         {
             Contract.Requires<ArgumentNullException>(aggregateRoot != null, "The aggregateRoot cannot be null.");
             
             var handlers = new List<IDomainEventHandler>();
 
-            foreach (ExpressionHandler mappinghandler in aggregateRoot.MappingHandlers)
+            foreach (ExpressionHandler mappinghandler in _mappinghandlers)
             {
                 if (mappinghandler.ActionMethodInfo.IsStatic)
                 {
@@ -66,7 +77,7 @@ namespace Ncqrs.Domain.Mapping
         /// <param name="method">The method to invoke</param>
         /// <param name="exact"><b>True</b> if we need to have an exact match, otherwise <b>False</b>.</param>
         /// <returns>An <see cref="IDomainEventHandler"/> that handles the execution of the given method.</returns>
-        private static IDomainEventHandler CreateHandlerForMethod(AggregateRoot aggregateRoot, MethodInfo method, bool exact)
+        private static IDomainEventHandler CreateHandlerForMethod(object aggregateRoot, MethodInfo method, bool exact)
         {
             Type firstParameterType = method.GetParameters().First().ParameterType;
 

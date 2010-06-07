@@ -16,22 +16,11 @@ namespace Ncqrs.Domain
         [NonSerialized]
         private readonly IList<ExpressionHandler> _mappinghandlers = new List<ExpressionHandler>();
 
-        /// <summary>
-        /// Gets the <see cref="IList{ExpressionHandler}"/> list of mapping rules.
-        /// </summary>
-        internal IList<ExpressionHandler> MappingHandlers
+        public override void Initialize(object aggregateRootInstance)
         {
-            get { return _mappinghandlers; }
-        }
-
-        protected AggregateRootMappedWithExpressions() 
-            : base(new ExpressionBasedDomainEventHandlerMappingStrategy())
-        {
-            /* I know, calling virtual methods from the constructor isn't the smartest thing to do
-             * but in this case it doesn't really matter because the implemented 
-             * method isn't (and shouldn't be) using any derived resources
-            **/
             InitializeEventHandlers();
+            MappingStrategy = new ExpressionBasedDomainEventHandlerMappingStrategy(_mappinghandlers);
+            base.Initialize(aggregateRootInstance);
         }
         
         /// <summary>

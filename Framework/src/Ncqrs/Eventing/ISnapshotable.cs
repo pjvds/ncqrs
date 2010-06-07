@@ -67,5 +67,10 @@ namespace Ncqrs.Eventing
         {
             throw new NotImplementedException();
         }
+
+        public void InitializeFromHistory(IEnumerable<DomainEvent> history)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
