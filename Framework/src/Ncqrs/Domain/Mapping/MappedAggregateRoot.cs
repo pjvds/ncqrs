@@ -5,7 +5,8 @@ namespace Ncqrs.Domain.Mapping
 {
     public abstract class MappedAggregateRoot : AggregateRoot
     {
-        [NonSerialized]
+        [NonSerialized] 
+        private readonly IDomainEventHandlerMappingStrategy _mappingStrategy;
 
         protected MappedAggregateRoot(IDomainEventHandlerMappingStrategy strategy)
         {
