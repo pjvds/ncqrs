@@ -11,6 +11,7 @@ namespace Ncqrs.Domain
     /// </summary>
     public abstract class AggregateRoot : IEventSource
     {
+        [NonSerialized]
         private Guid _id;
 
         /// <summary>
@@ -33,6 +34,7 @@ namespace Ncqrs.Domain
         /// <summary>
         /// Holds the events that are not yet committed.
         /// </summary>
+        [NonSerialized]
         private readonly Queue<DomainEvent> _uncommittedEvent = new Queue<DomainEvent>(0);
 
         /// <summary>
@@ -48,7 +50,7 @@ namespace Ncqrs.Domain
                 return InitialVersion + _uncommittedEvent.Count;
             }
         }
-
+        [NonSerialized]
         private long _initialVersion;
 
         /// <summary>
@@ -76,6 +78,7 @@ namespace Ncqrs.Domain
         /// <summary>
         /// A list that contains all the event handlers.
         /// </summary>
+        [NonSerialized]
         private readonly List<IDomainEventHandler> _eventHandlers = new List<IDomainEventHandler>();
 
         /// <summary>
@@ -99,7 +102,7 @@ namespace Ncqrs.Domain
         /// Initializes from history.
         /// </summary>
         /// <param name="history">The history.</param>
-        protected internal virtual void InitializeFromHistory(IEnumerable<DomainEvent> history)
+        public virtual void InitializeFromHistory(IEnumerable<DomainEvent> history)
         {
             Contract.Requires<ArgumentNullException>(history != null, "The history cannot be null.");
             if (_uncommittedEvent.Count > 0) throw new InvalidOperationException("Cannot apply history when instance has uncommitted changes.");

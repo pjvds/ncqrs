@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Ncqrs.Domain.Mapping;
 
 namespace Ncqrs.Domain
@@ -12,6 +13,7 @@ namespace Ncqrs.Domain
     /// <seealso cref="ExpressionBasedDomainEventHandlerMappingStrategy"/>
     public abstract class AggregateRootMappedWithExpressions : MappedAggregateRoot
     {
+        [NonSerialized]
         private readonly IList<ExpressionHandler> _mappinghandlers = new List<ExpressionHandler>();
 
         /// <summary>

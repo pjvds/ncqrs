@@ -120,7 +120,7 @@ namespace Ncqrs.Eventing.Storage.SQL
                         {
                             AddEventSource(eventSource, transaction);
                         }
-                        else if (currentVersion.Value != eventSource.Version)
+                        else if (currentVersion.Value != eventSource.InitialVersion)
                         {
                             throw new ConcurrencyException(eventSource.Id, eventSource.Version);
                         }

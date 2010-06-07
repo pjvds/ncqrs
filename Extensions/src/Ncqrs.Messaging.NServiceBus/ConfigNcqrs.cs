@@ -35,10 +35,10 @@ namespace NServiceBus
             _messageService = new MessageService();
             config.Configurer.RegisterSingleton(typeof(IMessageService), _messageService);
         }
-        
-        public ConfigNcqrs RegisterReceiverResolutionStrategy(IReceivingStrategy receivingStrategy)
+
+        public ConfigNcqrs UseReceivingStrategy(Func<object, bool> condition, IReceivingStrategy receivingStrategy)
         {
-            _messageService.RegisterReceiverResolutionStrategy(receivingStrategy);
+            _messageService.UseReceivingStrategy(new ConditionalReceivingStrategy(condition, receivingStrategy));
             return this;
         }
 

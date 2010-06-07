@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{86D87653-EC64-4388-A5F7-2F64F690C5F5}</ProjectGuid>
+    <ProjectGuid>{EEBD674D-B482-4A84-9C4C-3EECCDA14369}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Ncqrs.NServiceBus.Tests</RootNamespace>
-    <AssemblyName>Ncqrs.NServiceBus.Tests</AssemblyName>
+    <RootNamespace>Ncqrs.SerializableSnapshots</RootNamespace>
+    <AssemblyName>Ncqrs.SerializableSnapshots</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -31,18 +31,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FluentAssertions">
-      <HintPath>..\..\..\Framework\bin\FluentAssertions\FluentAssertions.dll</HintPath>
-    </Reference>
-    <Reference Include="Ncqrs, Version=0.8.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Ncqrs">
       <HintPath>..\..\lib\Ncqrs\Ncqrs.dll</HintPath>
-    </Reference>
-    <Reference Include="nunit.framework">
-      <HintPath>..\..\..\Framework\bin\Nunit\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="Rhino.Mocks">
-      <HintPath>..\..\bin\RhinoMocks\Rhino.Mocks.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -53,14 +43,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="NsbCommandServiceTests.cs" />
+    <Compile Include="SerializableSnapshotsDomainRepository.cs" />
+    <Compile Include="ISerializableSnapshotStore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Ncqrs.NServiceBus\Ncqrs.NServiceBus.csproj">
-      <Project>{9B796256-E9D6-4F21-BB89-C5333A880BFE}</Project>
-      <Name>Ncqrs.NServiceBus</Name>
-    </ProjectReference>
+    <Compile Include="UnitOfWorkFactory.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
