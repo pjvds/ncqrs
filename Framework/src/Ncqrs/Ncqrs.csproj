@@ -151,6 +151,7 @@
     </EmbeddedResource>
     <Compile Include="Eventing\ServiceModel\Bus\CompositeEventBus.cs" />
     <Compile Include="Eventing\ServiceModel\Bus\IEventHandler.cs" />
+    <Compile Include="Eventing\ServiceModel\Bus\RegisterAllHandlersInAssemblyExtension.cs" />
     <Compile Include="Eventing\Snapshot.cs" />
     <Compile Include="Eventing\Storage\ISnapshotStore.cs" />
     <Compile Include="IClock.cs" />

@@ -1,0 +1,56 @@
+﻿using System;
+using System.Linq;
+using System.Reflection;
+
+namespace Ncqrs.Eventing.ServiceModel.Bus
+{
+    public static class RegisterAllHandlersInAssemblyExtension
+    {
+        private static ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
+        public static void RegisterAllHandlersInAssembly(this InProcessEventBus target, Assembly asm)
+        {
+            foreach(var type in asm.GetTypes().Where(ImplementsAtLeastOneIEventHandlerInterface))
+            {
+                var handler = CreateInstance(type);
+
+                foreach(var handlerInterfaceType in type.GetInterfaces().Where(IsIEventHandlerInterface))
+                {
+                    var eventType = handlerInterfaceType.GetGenericArguments().First();
+                    RegisterHandler(handler, eventType, target);
+                }
+            }
+        }
+
+        private static object CreateInstance(Type type)
+        {
+            return Activator.CreateInstance(type);
+        }
+
+        private static void RegisterHandler(object handler, Type eventType, InProcessEventBus target)
+        {
+            var registerHandlerMethod = target.GetType().GetMethods().Single
+            (
+                m => m.Name == "RegisterHandler" && m.IsGenericMethod && m.GetParameters().Count() == 1
+            );
+
+            var targetMethod = registerHandlerMethod.MakeGenericMethod(new[] { eventType });
+            targetMethod.Invoke(target, new object[] { handler });
+
+            _log.InfoFormat("Registered {0} as event handler for event {1}.", handler.GetType().FullName, eventType.FullName);
+        }
+
+        private static bool ImplementsAtLeastOneIEventHandlerInterface(Type type)
+        {
+            return type.IsClass &&
+                   type.GetInterfaces().Any(IsIEventHandlerInterface);
+        }
+
+        private static bool IsIEventHandlerInterface(Type type)
+        {
+            return type.IsInterface &&
+                   type.IsGenericType &&
+                   type.GetGenericTypeDefinition() == typeof (IEventHandler<>);
+        }
+    }
+}
