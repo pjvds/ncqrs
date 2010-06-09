@@ -10,4 +10,12 @@ namespace Ncqrs.Domain
         {
         }
     }
+
+    public abstract class EntityMappedWithAttributes : MappedEntity
+    {
+        protected EntityMappedWithAttributes()
+            : base(new AttributeBasedDomainEventHandlerMappingStrategy())
+        {
+        }
+    }
 }

@@ -27,6 +27,15 @@ namespace Ncqrs.Domain
         }
 
         /// <summary>
+        /// Gets the id of entity inside the aggregate if this event soure was
+        /// an entity (not an aggregate root).
+        /// </summary>
+        public Guid? EntityId
+        {
+            get; internal set;
+        }
+
+        /// <summary>
         /// Gets the event sequence.
         /// </summary>
         /// <value>A number that represents the number of this event in the sequence.</value>
@@ -93,6 +102,20 @@ namespace Ncqrs.Domain
             AggregateRootId = aggregateRootId;
             EventSequence = eventSequence;
             EventTimeStamp = eventTimeStamp;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DomainEvent"/> class.
+        /// </summary>
+        /// <param name="eventIdentifier">The event identifier.</param>
+        /// <param name="aggregateRootId">The aggregate root id.</param>
+        /// <param name="entityId">The entity id.</param>
+        /// <param name="eventSequence">The event sequence.</param>
+        /// <param name="eventTimeStamp">The event time stamp.</param>
+        protected DomainEvent(Guid eventIdentifier, Guid aggregateRootId, Guid entityId, long eventSequence, DateTime eventTimeStamp)
+            : this(eventIdentifier, aggregateRootId, eventSequence, eventTimeStamp)
+        {            
+            EntityId = entityId;
         }
     }
 }

@@ -77,7 +77,7 @@ namespace Ncqrs.Tests.Domain.Mapping
 
             var handlers = mapping.GetEventHandlersFromAggregateRoot(aggregate);
 
-            handlers.Should().BeEmpty();
+            handlers.Count().Should().Be(1); //0 + OnEntityCreated
         }
 
         [Test]
@@ -88,7 +88,7 @@ namespace Ncqrs.Tests.Domain.Mapping
 
             var handlers = mapping.GetEventHandlersFromAggregateRoot(aggregate);
 
-            handlers.Should().BeEmpty();
+            handlers.Count().Should().Be(1); //0 + OnEntityCreated
         }
 
         [Test]
@@ -99,7 +99,7 @@ namespace Ncqrs.Tests.Domain.Mapping
 
             var handlers = mapping.GetEventHandlersFromAggregateRoot(aggregate);
 
-            handlers.Should().BeEmpty();
+            handlers.Count().Should().Be(1); //0 + OnEntityCreated
         }
 
         [Test]
@@ -110,7 +110,7 @@ namespace Ncqrs.Tests.Domain.Mapping
 
             var handlers = mapping.GetEventHandlersFromAggregateRoot(aggregate);
 
-            handlers.Should().BeEmpty();
+            handlers.Count().Should().Be(1); //0 + OnEntityCreated
         }
 
         [Test]
@@ -121,7 +121,7 @@ namespace Ncqrs.Tests.Domain.Mapping
 
             var handlers = mapping.GetEventHandlersFromAggregateRoot(aggregate);
 
-            handlers.Count().Should().Be(4);
+            handlers.Count().Should().Be(5); //4 + OnEntityCreated
             handlers.Should().OnlyHaveUniqueItems();
         }
 

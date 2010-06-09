@@ -35,7 +35,7 @@ namespace Ncqrs.Domain.Mapping
         /// <param name="aggregateRoot">The aggregate root.</param>
         /// <see cref="AttributeBasedDomainEventHandlerMappingStrategy"/>
         /// <returns>All the <see cref="IDomainEventHandler"/>'s created based on attribute mapping.</returns>
-        public IEnumerable<IDomainEventHandler> GetEventHandlersFromAggregateRoot(AggregateRoot aggregateRoot)
+        public IEnumerable<IDomainEventHandler> GetEventHandlersFromAggregateRoot(object aggregateRoot)
         {
             Contract.Requires<ArgumentNullException>(aggregateRoot != null, "The aggregateRoot cannot be null.");
 
@@ -72,7 +72,7 @@ namespace Ncqrs.Domain.Mapping
             return handlers;
         }
 
-        private static IDomainEventHandler CreateHandlerForMethod(AggregateRoot aggregateRoot, MethodInfo method, EventHandlerAttribute attribute)
+        private static IDomainEventHandler CreateHandlerForMethod(object aggregateRoot, MethodInfo method, EventHandlerAttribute attribute)
         {
             Type firstParameterType = method.GetParameters().First().ParameterType;
 

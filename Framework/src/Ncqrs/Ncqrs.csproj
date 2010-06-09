@@ -134,9 +134,12 @@
     <Compile Include="DateTimeBasedClock.cs" />
     <Compile Include="Domain\AggregateRootMappedWithExpressions.cs" />
     <Compile Include="Domain\DomainEvent.cs" />
+    <Compile Include="Domain\Entity.cs" />
+    <Compile Include="Domain\EntityCreatedEvent.cs" />
     <Compile Include="Domain\Mapping\ExpressionHandler.cs" />
     <Compile Include="Domain\IUnitOfWorkContext.cs" />
     <Compile Include="Domain\Mapping\ExpressionBasedDomainEventHandlerMappingStrategy.cs" />
+    <Compile Include="Domain\Mapping\MappedEntity.cs" />
     <Compile Include="Domain\NoUnitOfWorkAvailableInThisContextException.cs" />
     <Compile Include="Eventing\Conversion\DelegateBasedConverter.cs" />
     <Compile Include="Eventing\EventBase.cs" />

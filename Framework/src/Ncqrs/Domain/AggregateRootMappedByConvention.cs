@@ -44,4 +44,15 @@ namespace Ncqrs.Domain
         {
         }
     }
+
+    public abstract class EntityMappedByConvention : MappedEntity
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EntityMappedByConvention"/> class.
+        /// </summary>
+        protected EntityMappedByConvention()
+            : base(new ConventionBasedDomainEventHandlerMappingStrategy())
+        {
+        }
+    }
 }

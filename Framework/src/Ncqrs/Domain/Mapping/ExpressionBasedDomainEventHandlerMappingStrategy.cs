@@ -38,7 +38,7 @@ namespace Ncqrs.Domain.Mapping
         /// <param name="aggregateRoot">The aggregate root.</param>
         /// <see cref="ExpressionBasedDomainEventHandlerMappingStrategy"/>
         /// <returns>All the <see cref="IDomainEventHandler"/>'s created based on the given mapping.</returns>
-        public IEnumerable<IDomainEventHandler> GetEventHandlersFromAggregateRoot(AggregateRoot aggregateRoot)
+        public IEnumerable<IDomainEventHandler> GetEventHandlersFromAggregateRoot(object aggregateRoot)
         {
             Contract.Requires<ArgumentNullException>(aggregateRoot != null, "The aggregateRoot cannot be null.");
 
@@ -71,7 +71,7 @@ namespace Ncqrs.Domain.Mapping
         /// <param name="method">The method to invoke</param>
         /// <param name="exact"><b>True</b> if we need to have an exact match, otherwise <b>False</b>.</param>
         /// <returns>An <see cref="IDomainEventHandler"/> that handles the execution of the given method.</returns>
-        private static IDomainEventHandler CreateHandlerForMethod(AggregateRoot aggregateRoot, MethodInfo method, bool exact)
+        private static IDomainEventHandler CreateHandlerForMethod(object aggregateRoot, MethodInfo method, bool exact)
         {
             Type firstParameterType = method.GetParameters().First().ParameterType;
 

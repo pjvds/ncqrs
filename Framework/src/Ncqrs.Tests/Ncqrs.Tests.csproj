@@ -88,6 +88,7 @@
     <Compile Include="Domain\AggregateRootTests.cs" />
     <Compile Include="Domain\DomainEventHandlerTests.cs" />
     <Compile Include="Domain\DomainEventTests.cs" />
+    <Compile Include="Domain\EntityTests.cs" />
     <Compile Include="Domain\EventNotHandledExceptionTests.cs" />
     <Compile Include="Domain\Mapping\AttributeBasedDomainEventHandlerMappingStrategyTests.cs" />
     <Compile Include="Domain\Mapping\ConventionBasedDomainEventHandlerMappingStrategyTests.cs" />

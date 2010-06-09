@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using Ncqrs.Eventing;
@@ -30,6 +31,12 @@ namespace Ncqrs.Domain
                 _id = value;
             }
         }
+
+        /// <summary>
+        /// Holds entities belonging to this aggregate.
+        /// </summary>
+        [NonSerialized]
+        private readonly Dictionary<Guid, Entity> _entities = new Dictionary<Guid, Entity>();
 
         /// <summary>
         /// Holds the events that are not yet committed.
@@ -90,6 +97,12 @@ namespace Ncqrs.Domain
 
             var idGenerator = NcqrsEnvironment.Get<IUniqueIdentifierGenerator>();
             Id = idGenerator.GenerateNewId();
+            RegisterEntityCreatedEventHandler();
+        }
+
+        private void RegisterEntityCreatedEventHandler()
+        {
+            _eventHandlers.Add(new TypeThresholdedActionBasedDomainEventHandler(x => OnEntityCreated((EntityCreatedEvent)x), typeof(EntityCreatedEvent) ));
         }
 
         [ContractInvariantMethod]
@@ -124,15 +137,33 @@ namespace Ncqrs.Domain
         protected virtual void HandleEvent(DomainEvent evnt)
         {
             Contract.Requires<ArgumentNullException>(evnt != null, "The evnt cannot be null.");
-            Boolean handled = false;
-
-            foreach (var handler in _eventHandlers)
+            if (evnt.EntityId.HasValue)
             {
-                handled |= handler.HandleEvent(evnt);
+                DispatchEventToEntity(evnt);
             }
+            else
+            {
+                ProcessEventInRoot(evnt);
+            }
+        }
 
+        private void ProcessEventInRoot(DomainEvent evnt)
+        {
+            var handled = _eventHandlers.Aggregate(false, (c, h) => c | h.HandleEvent(evnt));
             if (!handled)
+            {
                 throw new EventNotHandledException(evnt);
+            }
+        }
+
+        private void DispatchEventToEntity(DomainEvent evnt)
+        {
+            Entity target;
+            if (!_entities.TryGetValue(evnt.EntityId.Value, out target))
+            {
+                throw new InvalidOperationException();
+            }
+            target.HandleEvent(evnt);
         }
 
         protected void ApplyEvent(DomainEvent evnt)
@@ -140,30 +171,74 @@ namespace Ncqrs.Domain
             ApplyEvent(evnt, false);
         }
 
+        /// <summary>
+        /// Called by entities inside this aggregate to inform the root about
+        /// events they apply.
+        /// </summary>
+        /// <param name="evnt">An event applied to an entity.</param>
+        public void OnEntityEvent(DomainEvent evnt)
+        {
+            ValidateEventOwnership(evnt);
+            SetEventOwnership(evnt);
+            _uncommittedEvent.Enqueue(evnt);
+            RegisterCurrentInstanceAsDirty();
+        }
+
+        public T GetEntity<T>(Guid id)
+            where T : Entity
+        {
+            return (T)_entities[id];
+        }
+
+        /// <summary>
+        /// Creates new entity inside this aggregate.
+        /// </summary>
+        /// <param name="id">Id of newly created entity.</param>
+        /// <param name="constructorArguments">Optional constructor arguments.</param>
+        /// <returns>New entity instance.</returns>
+        public T CreateEntity<T>(Guid id, params object[] constructorArguments)
+            where T : Entity
+        {
+            return (T) CreateEntity(id, typeof (T), constructorArguments);
+        }
+
+        /// <summary>
+        /// Creates new entity inside this aggregate.
+        /// </summary>
+        /// <param name="id">Id of newly created entity.</param>
+        /// <param name="entityType">Type of entity to create.</param>
+        /// <param name="constructorArguments">Optional constructor arguments.</param>
+        /// <returns>New entity instance.</returns>
+        public Entity CreateEntity(Guid id, Type entityType, params object[] constructorArguments)
+        {
+            var entityCreatedEvent = new EntityCreatedEvent()
+                                         {
+                                             Id = id,
+                                             EntityType = entityType,
+                                             ConstructorArguments = constructorArguments
+                                         };
+            ApplyEvent(entityCreatedEvent);
+            return _entities[id];
+        }
+
+        private void OnEntityCreated(EntityCreatedEvent entityCreatedEvent)
+        {
+            var result = (Entity)Activator.CreateInstance(entityCreatedEvent.EntityType, entityCreatedEvent.ConstructorArguments);
+            result.AggregateRoot = this;
+            result.Id = entityCreatedEvent.Id;
+            _entities[result.Id] = result;
+        }
+
         private void ApplyEvent(DomainEvent evnt, Boolean historical)
         {
             if(historical)
             {
-                if(evnt.EventSequence != InitialVersion+1)
-                {
-                    var message = String.Format("Cannot apply event with sequence {0}. Since the initial version of the " +
-                                                "aggregate root is {1}. Only an event with sequence number {2} can be applied.",
-                                                evnt.EventSequence, InitialVersion, InitialVersion + 1);
-                    throw new InvalidOperationException(message);
-                }
+                ValidateEventSequence(evnt);
             }
             else
             {
-                if (evnt.AggregateRootId != Guid.Empty)
-                {
-                    var message = String.Format("The {0} event cannot be applied to aggregate root {1} with id {2} " +
-                                                "since it was already owned by event aggregate root with id {3}.",
-                                                evnt.GetType().FullName, this.GetType().FullName, Id, evnt.AggregateRootId);
-                    throw new InvalidOperationException(message);
-                }
-
-                evnt.AggregateRootId = this.Id;
-                evnt.EventSequence = Version + 1;
+                ValidateEventOwnership(evnt);
+                SetEventOwnership(evnt);
             }
 
             HandleEvent(evnt);
@@ -172,6 +247,34 @@ namespace Ncqrs.Domain
             {
                 _uncommittedEvent.Enqueue(evnt);
                 RegisterCurrentInstanceAsDirty();
+            }
+        }
+
+        private void ValidateEventSequence(DomainEvent evnt)
+        {
+            if(evnt.EventSequence != InitialVersion+1)
+            {
+                var message = String.Format("Cannot apply event with sequence {0}. Since the initial version of the " +
+                                            "aggregate root is {1}. Only an event with sequence number {2} can be applied.",
+                                            evnt.EventSequence, InitialVersion, InitialVersion + 1);
+                throw new InvalidOperationException(message);
+            }
+        }
+
+        private void SetEventOwnership(DomainEvent evnt)
+        {
+            evnt.AggregateRootId = this.Id;
+            evnt.EventSequence = Version + 1;
+        }
+
+        private void ValidateEventOwnership(DomainEvent evnt)
+        {
+            if (evnt.AggregateRootId != Guid.Empty)
+            {
+                var message = String.Format("The {0} event cannot be applied to aggregate root {1} with id {2} " +
+                                            "since it was already owned by event aggregate root with id {3}.",
+                                            evnt.GetType().FullName, this.GetType().FullName, Id, evnt.AggregateRootId);
+                throw new InvalidOperationException(message);
             }
         }
 
