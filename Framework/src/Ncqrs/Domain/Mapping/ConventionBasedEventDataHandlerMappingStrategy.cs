@@ -31,18 +31,18 @@ namespace Ncqrs.Domain.Mapping
     /// </list>
     /// </remarks>
     /// </summary>
-    public class ConventionBasedDomainEventHandlerMappingStrategy : IDomainEventHandlerMappingStrategy
+    public class ConventionBasedEventDataHandlerMappingStrategy : IEventDataHandlerMappingStrategy
     {
         private String _regexPattern = "^(on|On|ON)+";
         private static readonly ILog Logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public IEnumerable<IDomainEventHandler> GetEventHandlersFromAggregateRoot(AggregateRoot aggregateRoot)
+        public IEnumerable<IEventDataHandler<IEventData>> GetEventHandlersFromAggregateRoot(IEventSource eventSource)
         {
-            Contract.Requires<ArgumentNullException>(aggregateRoot != null, "The aggregateRoot cannot be null.");
-            Contract.Ensures(Contract.Result<IEnumerable<IDomainEventHandler>>() != null, "The result should never be null.");
+            Contract.Requires<ArgumentNullException>(eventSource != null, "The eventSource cannot be null.");
+            Contract.Ensures(Contract.Result<IEnumerable<IEventDataHandler<IEventData>>>() != null, "The result should never be null.");
 
-            var targetType = aggregateRoot.GetType();
-            var handlers = new List<IDomainEventHandler>();
+            var targetType = eventSource.GetType();
+            var handlers = new List<IEventDataHandler<IEventData>>();
 
             Logger.DebugFormat("Trying to get all event handlers based by convention for {0}.", targetType);
 
@@ -58,7 +58,7 @@ namespace Ncqrs.Domain.Mapping
                                      // Get only methods that have 1 parameter.
                                     parameters.Length == 1 &&
                                      // Get only methods where the first parameter is an event.
-                                    typeof(IEvent).IsAssignableFrom(parameters[0].ParameterType) &&
+                                    typeof(IEventData).IsAssignableFrom(parameters[0].ParameterType) &&
                                      // Get only methods that are not marked with the no event handler attribute.
                                     noEventHandlerAttributes.Length == 0
                                  select
@@ -69,7 +69,7 @@ namespace Ncqrs.Domain.Mapping
                 var methodCopy = method.MethodInfo;
                 Type firstParameterType = methodCopy.GetParameters().First().ParameterType;
 
-                Action<IEvent> invokeAction = (e) => methodCopy.Invoke(aggregateRoot, new object[] { e });
+                Action<IEventData> invokeAction = (e) => methodCopy.Invoke(eventSource, new object[] { e });
 
                 Logger.DebugFormat("Created event handler for method {0} based on convention.", methodCopy.Name);
 
