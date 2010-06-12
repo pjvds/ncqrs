@@ -4,6 +4,7 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using Ncqrs.Eventing;
 
 namespace Ncqrs.Domain.Mapping
 {
@@ -57,7 +58,7 @@ namespace Ncqrs.Domain.Mapping
                                      // Get only methods that have 1 parameter.
                                     parameters.Length == 1 &&
                                      // Get only methods where the first parameter is an event.
-                                    typeof(DomainEvent).IsAssignableFrom(parameters[0].ParameterType) &&
+                                    typeof(IEvent).IsAssignableFrom(parameters[0].ParameterType) &&
                                      // Get only methods that are not marked with the no event handler attribute.
                                     noEventHandlerAttributes.Length == 0
                                  select
@@ -68,7 +69,7 @@ namespace Ncqrs.Domain.Mapping
                 var methodCopy = method.MethodInfo;
                 Type firstParameterType = methodCopy.GetParameters().First().ParameterType;
 
-                Action<DomainEvent> invokeAction = (e) => methodCopy.Invoke(aggregateRoot, new object[] { e });
+                Action<IEvent> invokeAction = (e) => methodCopy.Invoke(aggregateRoot, new object[] { e });
 
                 Logger.DebugFormat("Created event handler for method {0} based on convention.", methodCopy.Name);
 

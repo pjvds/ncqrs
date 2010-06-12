@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Diagnostics.Contracts;
 using System.Reflection;
+using Ncqrs.Eventing;
 
 namespace Ncqrs.Domain.Mapping
 {
@@ -75,7 +76,7 @@ namespace Ncqrs.Domain.Mapping
         {
             Type firstParameterType = method.GetParameters().First().ParameterType;
 
-            Action<DomainEvent> handler = e => method.Invoke(aggregateRoot, new object[] { e });
+            Action<IEvent> handler = e => method.Invoke(aggregateRoot, new object[] { e });
             return new TypeThresholdedActionBasedDomainEventHandler(handler, firstParameterType, exact);
         }
     }

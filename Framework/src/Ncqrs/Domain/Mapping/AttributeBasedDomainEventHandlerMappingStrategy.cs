@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
+using Ncqrs.Eventing;
 
 namespace Ncqrs.Domain.Mapping
 {
@@ -58,7 +59,7 @@ namespace Ncqrs.Domain.Mapping
                         var message = String.Format("The method {0}.{1} could not be mapped as an event handler, since it has {2} parameters where 1 is required.", method.DeclaringType.Name, method.Name, NumberOfParameters(method));
                         throw new InvalidEventHandlerMappingException(message);
                     }
-                    if (!typeof(DomainEvent).IsAssignableFrom(FirstParameterType(method))) // The parameter should be an IEvent.
+                    if (!typeof(IEvent).IsAssignableFrom(FirstParameterType(method))) // The parameter should be an IEvent.
                     {
                         var message = String.Format("The method {0}.{1} could not be mapped as an event handler, since it the first parameter is not an event type.", method.DeclaringType.Name, method.Name);
                         throw new InvalidEventHandlerMappingException(message);
@@ -76,7 +77,7 @@ namespace Ncqrs.Domain.Mapping
         {
             Type firstParameterType = method.GetParameters().First().ParameterType;
 
-            Action<DomainEvent> handler = e => method.Invoke(aggregateRoot, new object[] {e});
+            Action<IEvent> handler = e => method.Invoke(aggregateRoot, new object[] {e});
 
             return new TypeThresholdedActionBasedDomainEventHandler(handler, firstParameterType, attribute.Exact);
         }

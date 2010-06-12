@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Ncqrs.Domain.Mapping;
+using Ncqrs.Eventing;
 
 namespace Ncqrs.Domain
 {
@@ -39,7 +40,7 @@ namespace Ncqrs.Domain
         /// </summary>
         /// <typeparam name="T">This should always be a <see cref="DomainEvent"/>.</typeparam>
         /// <returns>An <see cref="ExpressionHandler{T}"/>which allows us to define the mapping to a handler.</returns>
-        protected ExpressionHandler<T> Map<T>() where T : DomainEvent
+        protected ExpressionHandler<T> Map<T>() where T : IEvent
         {
             var handler = new ExpressionHandler<T>();
             _mappinghandlers.Add(handler);

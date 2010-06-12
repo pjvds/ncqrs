@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.Linq;
-using System.Text;
 using System.Reflection;
+using Ncqrs.Eventing;
 
 namespace Ncqrs.Domain.Mapping
 {
@@ -29,7 +27,7 @@ namespace Ncqrs.Domain.Mapping
     /// The generic base implementation for the handling of expression based mapping.
     /// </summary>
     /// <typeparam name="T">This should always be a <see cref="DomainEvent"/>.</typeparam>
-    public class ExpressionHandler<T> : ExpressionHandler where T : DomainEvent
+    public class ExpressionHandler<T> : ExpressionHandler where T : IEvent
     {
         /// <summary>
         /// Stores the given <see cref="Action{T}"/> action.

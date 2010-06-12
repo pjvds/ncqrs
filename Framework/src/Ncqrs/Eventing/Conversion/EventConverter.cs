@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
+using Ncqrs.Eventing.Sourcing;
 
 namespace Ncqrs.Eventing.Conversion
 {
@@ -11,9 +12,9 @@ namespace Ncqrs.Eventing.Conversion
     /// When an event should be converted it resolved the corresponding converter and uses that one to convert the event. When there
     /// is also a converter that can convert the result of that conversion that one is called.
     /// </summary>
-    public class EventConverter : IEventConverter<ISourcedEvent, ISourcedEvent>
+    public class EventConverter : IEventConverter<IEvent, IEvent>
     {
-        private Dictionary<Type, Converter<ISourcedEvent, ISourcedEvent>> _converters = new Dictionary<Type, Converter<ISourcedEvent, ISourcedEvent>>();
+        private Dictionary<Type, Converter<IEvent, IEvent>> _converters = new Dictionary<Type, Converter<IEvent, IEvent>>();
 
         /// <summary>
         /// Adds the converter for a specific event type.
@@ -22,7 +23,7 @@ namespace Ncqrs.Eventing.Conversion
         /// <typeparam name="TTo">The type of the result of the conversion.</typeparam>
         /// <param name="converter">The converter method that does the conversion.</param>
         /// <returns>The current <see cref="EventConverter"/> that can be used to chain method calls.</returns>
-        public EventConverter AddConverter<TFrom, TTo>(Converter<TFrom, TTo> converter) where TFrom : ISourcedEvent where TTo : ISourcedEvent
+        public EventConverter AddConverter<TFrom, TTo>(Converter<TFrom, TTo> converter) where TFrom : IEvent where TTo : IEvent
         {
             Contract.Requires<ArgumentNullException>(converter != null, "The converter cannot be null.");
 
@@ -36,7 +37,7 @@ namespace Ncqrs.Eventing.Conversion
         /// <param name="eventSourceType">The type of the event that will be converted.</param>
         /// <param name="converter">The converter method that does the conversion.</param>
         /// <returns>The current <see cref="EventConverter"/> that can be used to chain method calls.</returns>
-        public EventConverter AddConverter<TFrom, TTo>(IEventConverter<TFrom, TTo> converter) where TFrom : ISourcedEvent where TTo : ISourcedEvent
+        public EventConverter AddConverter<TFrom, TTo>(IEventConverter<TFrom, TTo> converter) where TFrom : IEvent where TTo : IEvent
         {
             Contract.Requires<ArgumentNullException>(converter != null, "The converter cannot be null.");
 
@@ -64,8 +65,8 @@ namespace Ncqrs.Eventing.Conversion
                     var convertMethod = ci.GetMethod("Convert");
                     var fromType = ci.GetGenericArguments().First();
 
-                    Converter<ISourcedEvent, ISourcedEvent> convertClosure =
-                        (x => (ISourcedEvent) convertMethod.Invoke(converter, new object[] {x}));
+                    Converter<IEvent, IEvent> convertClosure =
+                        (x => (IEvent) convertMethod.Invoke(converter, new object[] {x}));
                     _converters.Add(fromType, convertClosure);
                 }
             }
@@ -81,12 +82,12 @@ namespace Ncqrs.Eventing.Conversion
         /// <returns>
         /// A new event based on the <paramref name="eventToConvert"/>.
         /// </returns>
-        public ISourcedEvent Convert(ISourcedEvent eventToConvert)
+        public IEvent Convert(IEvent eventToConvert)
         {
             Type eventType = eventToConvert.GetType();
             var convertedEvent = eventToConvert;
 
-            Converter<ISourcedEvent, ISourcedEvent> converter = null;
+            Converter<IEvent, IEvent> converter = null;
 
             // If we have a converter, convert it.
             if(_converters.TryGetValue(eventType, out converter))

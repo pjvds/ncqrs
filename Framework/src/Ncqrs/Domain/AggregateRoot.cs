@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using Ncqrs.Eventing;
+using Ncqrs.Eventing.Sourcing;
 
 namespace Ncqrs.Domain
 {
@@ -13,6 +14,8 @@ namespace Ncqrs.Domain
     {
         [NonSerialized]
         private Guid _id;
+
+        private SourcedEventStream _eventStream;
 
         /// <summary>
         /// Gets the globally unique identifier.
@@ -35,7 +38,7 @@ namespace Ncqrs.Domain
         /// Holds the events that are not yet committed.
         /// </summary>
         [NonSerialized]
-        private readonly Queue<DomainEvent> _uncommittedEvent = new Queue<DomainEvent>(0);
+        private readonly Queue<SourcedEvent> _uncommittedEvent = new Queue<SourcedEvent>(0);
 
         /// <summary>
         /// Gets the current version of the instance as it is known in the event store.
@@ -102,7 +105,7 @@ namespace Ncqrs.Domain
         /// Initializes from history.
         /// </summary>
         /// <param name="history">The history.</param>
-        public virtual void InitializeFromHistory(IEnumerable<DomainEvent> history)
+        public virtual void InitializeFromHistory(IEnumerable<SourcedEvent> history)
         {
             Contract.Requires<ArgumentNullException>(history != null, "The history cannot be null.");
             if (_uncommittedEvent.Count > 0) throw new InvalidOperationException("Cannot apply history when instance has uncommitted changes.");
@@ -121,7 +124,7 @@ namespace Ncqrs.Domain
             _eventHandlers.Add(handler);
         }
 
-        protected virtual void HandleEvent(DomainEvent evnt)
+        protected virtual void HandleEvent(IEvent evnt)
         {
             Contract.Requires<ArgumentNullException>(evnt != null, "The evnt cannot be null.");
             Boolean handled = false;
@@ -135,12 +138,15 @@ namespace Ncqrs.Domain
                 throw new EventNotHandledException(evnt);
         }
 
-        protected void ApplyEvent(DomainEvent evnt)
+        protected void ApplyEvent(IEvent evnt)
         {
-            ApplyEvent(evnt, false);
+            HandleEvent(evnt);
+
+            _eventStream.Append(evnt);
+            RegisterCurrentInstanceAsDirty();
         }
 
-        private void ApplyEvent(DomainEvent evnt, Boolean historical)
+        private void ApplyEvent(SourcedEvent evnt, Boolean historical)
         {
             if(historical)
             {
@@ -166,7 +172,7 @@ namespace Ncqrs.Domain
                 evnt.EventSequence = Version + 1;
             }
 
-            HandleEvent(evnt);
+            HandleEvent(evnt.Event);
 
             if (!historical)
             {
@@ -175,17 +181,17 @@ namespace Ncqrs.Domain
             }
         }
 
-        public IEnumerable<DomainEvent> GetUncommittedEvents()
+        public IEnumerable<SourcedEvent> GetUncommittedEvents()
         {
-            Contract.Ensures(Contract.Result<IEnumerable<DomainEvent>>() != null, "The result of this method should never be null.");
+            Contract.Ensures(Contract.Result<IEnumerable<SourcedEvent>>() != null, "The result of this method should never be null.");
 
             return _uncommittedEvent.ToArray();
         }
 
-        IEnumerable<ISourcedEvent> IEventSource.GetUncommittedEvents()
+        IEnumerable<SourcedEvent> IEventSource.GetUncommittedEvents()
         {
             // TODO: .net 4.0 co/con
-            return GetUncommittedEvents().Cast<ISourcedEvent>();
+            return GetUncommittedEvents().Cast<SourcedEvent>();
         }
 
         public void AcceptChanges()

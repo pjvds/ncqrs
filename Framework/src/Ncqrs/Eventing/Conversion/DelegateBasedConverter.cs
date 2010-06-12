@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
+using Ncqrs.Eventing.Sourcing;
 
 namespace Ncqrs.Eventing.Conversion
 {
@@ -16,8 +17,8 @@ namespace Ncqrs.Eventing.Conversion
     /// <typeparam name="TFrom">The type of the event that will be converted.</typeparam>
     /// <typeparam name="TTo">The type of the result of the conversion.</typeparam>
     public class DelegateBasedConverter<TFrom, TTo> : IEventConverter<TFrom, TTo>
-        where TFrom : ISourcedEvent
-        where TTo : ISourcedEvent
+        where TFrom : IEvent
+        where TTo : IEvent
     {
         private readonly Converter<TFrom, TTo> _converter;
 
@@ -35,10 +36,6 @@ namespace Ncqrs.Eventing.Conversion
         /// <summary>
         /// Converts an event. It return a new transformed event based on the
         /// <paramref name="eventToConvert"/>. The
-        /// <see cref="ISourcedEvent.EventSourceId"/>,
-        /// <see cref="ISourcedEvent.EventSequence"/>,
-        /// <see cref="ISourcedEvent.EventIdentifier"/> and the
-        /// <see cref="ISourcedEvent.EventTimeStamp"/> should stay the same.
         /// </summary>
         /// <param name="eventToConvert">The event to convert.</param>
         /// <returns>

@@ -3,6 +3,8 @@ using System.Linq;
 using FluentAssertions;
 using Ncqrs.Domain;
 using Ncqrs.Eventing;
+using Ncqrs.Eventing.Sourcing;
+using Ncqrs.Eventing.Sourcing.Snapshotting;
 using Ncqrs.Eventing.Storage.SQL;
 using NUnit.Framework;
 using Rhino.Mocks;

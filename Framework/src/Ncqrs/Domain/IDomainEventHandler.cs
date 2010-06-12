@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
+using Ncqrs.Eventing.Sourcing;
+using Ncqrs.Eventing;
 
 namespace Ncqrs.Domain
 {
@@ -16,13 +18,13 @@ namespace Ncqrs.Domain
         /// <returns><c>true</c> when the event was handled; otherwise, <c>false</c>.
         /// <remarks><c>false</c> does not mean that the handling failed, but that the 
         /// handler was not interested in handling this event.</remarks></returns>
-        Boolean HandleEvent(DomainEvent evnt);
+        Boolean HandleEvent(IEvent evnt);
     }
 
     [ContractClassFor(typeof(IDomainEventHandler))]
     public class DomainEventHandlerContracts : IDomainEventHandler
     {
-        public bool HandleEvent(DomainEvent evnt)
+        public bool HandleEvent(IEvent evnt)
         {
             Contract.Requires<ArgumentNullException>(evnt != null, "The evnt cannot be null.");
 
