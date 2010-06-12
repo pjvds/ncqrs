@@ -5,12 +5,12 @@ using System.Collections;
 
 namespace Ncqrs.Eventing.Sourcing
 {
-    public class SourcedEventStream : IEnumerable<SourcedEvent>
+    public class SourcedEventStream : IEnumerable<ISourcedEvent<IEventData>>
     {
         private Guid _eventSourceId;
         private long _sequence;
 
-        private List<SourcedEvent> _events = new List<SourcedEvent>();
+        private IList<ISourcedEvent<IEventData>> _events = new List<ISourcedEvent<IEventData>>();
 
         public Guid EventSourceId
         {
@@ -20,7 +20,7 @@ namespace Ncqrs.Eventing.Sourcing
             }
             set
             {
-                Contract.Requires<InvalidOperationException>(_events.Count == 0);
+                Contract.Requires<InvalidOperationException>(IsEmpty);
                 _eventSourceId = value;
             }
         }
@@ -33,7 +33,7 @@ namespace Ncqrs.Eventing.Sourcing
             }
             set
             {
-                Contract.Requires<InvalidOperationException>(_events.Count == 0);
+                Contract.Requires<InvalidOperationException>(IsEmpty);
                 _sequence = value;                
             }
         }
@@ -43,6 +43,14 @@ namespace Ncqrs.Eventing.Sourcing
             get
             {
                 return _events.Count;
+            }
+        }
+
+        public bool IsEmpty
+        {
+            get
+            {
+                return Count == 0;
             }
         }
 
@@ -59,15 +67,16 @@ namespace Ncqrs.Eventing.Sourcing
         [ContractInvariantMethod]
         protected void ContractInvariants()
         {
-            Contract.Invariant(_eventSourceId != Guid.Empty);
             Contract.Invariant(_sequence >= 0);
             Contract.Invariant(Contract.ForAll(_events, (sourcedEvent) => sourcedEvent.EventSourceId == _eventSourceId));
         }
 
-        public void Append(IEvent evnt)
+        public ISourcedEvent<TEventData> Append<TEventData>(TEventData eventData) where TEventData : IEventData
         {
-            var sourcedEvent = new SourcedEvent(_eventSourceId, _sequence++, evnt);
-            _events.Add(sourcedEvent);
+            var sourcedEvent = new SourcedEvent<TEventData>(_eventSourceId, _sequence++, eventData);
+            _events.Add((ISourcedEvent<IEventData>)sourcedEvent);
+
+            return sourcedEvent;
         }
 
         public void Clear()
@@ -75,7 +84,7 @@ namespace Ncqrs.Eventing.Sourcing
             _events.Clear();
         }
 
-        public IEnumerator<SourcedEvent> GetEnumerator()
+        public IEnumerator<ISourcedEvent<IEventData>> GetEnumerator()
         {
             return _events.GetEnumerator();
         }

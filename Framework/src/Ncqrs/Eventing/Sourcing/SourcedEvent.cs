@@ -3,7 +3,7 @@
 namespace Ncqrs.Eventing.Sourcing
 {
     [Serializable]
-    public class SourcedEvent
+    public class SourcedEvent<TEventData> : EventBase<TEventData>, ISourcedEvent<TEventData> where TEventData : IEventData
     {
         /// <summary>
         /// Gets the id of the event source that caused the event.
@@ -28,17 +28,10 @@ namespace Ncqrs.Eventing.Sourcing
             internal set;
         }
 
-        public IEvent Event
-        {
-            get;
-            internal set;
-        }
-
-        internal SourcedEvent(Guid eventSourceId, long eventSequence, IEvent evnt)
+        internal SourcedEvent(Guid eventSourceId, long eventSequence, TEventData eventData) : base(eventData)
         {
             EventSourceId = eventSourceId;
             EventSequence = eventSequence;
-            Event = evnt;
         }
     }
 }

@@ -56,7 +56,7 @@ namespace Ncqrs.Eventing.Sourcing.Snapshotting
             get { throw new NotImplementedException(); }
         }
 
-        public IEnumerable<SourcedEvent> GetUncommittedEvents()
+        public IEnumerable<ISourcedEvent<IEventData>> GetUncommittedEvents()
         {
             throw new NotImplementedException();
         }

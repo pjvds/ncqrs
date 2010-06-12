@@ -8,7 +8,7 @@ namespace Ncqrs.Eventing.ServiceModel.Bus
 {
     public class InProcessEventBus : IEventBus
     {
-        private readonly Dictionary<Type, List<Action<IEvent>>> _handlerRegister = new Dictionary<Type, List<Action<IEvent>>>();
+        private readonly Dictionary<Type, List<Action<IEvent<IEventData>>>> _handlerRegister = new Dictionary<Type, List<Action<IEvent<IEventData>>>>();
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private readonly bool _useTransactionScope;
 
@@ -30,13 +30,13 @@ namespace Ncqrs.Eventing.ServiceModel.Bus
             _useTransactionScope = useTransactionScope;
         }
 
-        public void Publish(IEvent eventMessage)
+        public void Publish(IEvent<IEventData> eventMessage)
         {
             var eventMessageType = eventMessage.GetType();
 
             Log.InfoFormat("Started publishing event {0}.", eventMessageType.FullName);
 
-            IEnumerable<Action<IEvent>> handlers = GetHandlersForEvent(eventMessage);
+            IEnumerable<Action<IEvent<IEventData>>> handlers = GetHandlersForEvent(eventMessage);
 
             if (handlers.Count() == 0)
             {
@@ -55,7 +55,7 @@ namespace Ncqrs.Eventing.ServiceModel.Bus
             }
         }
 
-        private static void TransactionallyPublishToHandlers(IEvent eventMessage, Type eventMessageType, IEnumerable<Action<IEvent>> handlers)
+        private static void TransactionallyPublishToHandlers(IEvent<IEventData> eventMessage, Type eventMessageType, IEnumerable<Action<IEvent<IEventData>>> handlers)
         {
             using (var transaction = new TransactionScope())
             {
@@ -64,7 +64,7 @@ namespace Ncqrs.Eventing.ServiceModel.Bus
             }
         }
 
-        private static void PublishToHandlers(IEvent eventMessage, Type eventMessageType, IEnumerable<Action<IEvent>> handlers)
+        private static void PublishToHandlers(IEvent<IEventData> eventMessage, Type eventMessageType, IEnumerable<Action<IEvent<IEventData>>> handlers)
         {
             Log.DebugFormat("Found {0} handlers for event {1}.", handlers.Count(), eventMessageType.FullName);
 
@@ -79,10 +79,10 @@ namespace Ncqrs.Eventing.ServiceModel.Bus
             }
         }
 
-        protected IEnumerable<Action<IEvent>> GetHandlersForEvent(IEvent eventMessage)
+        protected IEnumerable<Action<IEvent<IEventData>>> GetHandlersForEvent(IEvent<IEventData> eventMessage)
         {
             var eventType = eventMessage.GetType();
-            var result = new List<Action<IEvent>>();
+            var result = new List<Action<IEvent<IEventData>>>();
 
             foreach(var key in _handlerRegister.Keys)
             {
@@ -96,7 +96,7 @@ namespace Ncqrs.Eventing.ServiceModel.Bus
             return result;
         }
 
-        public void Publish(IEnumerable<IEvent> eventMessages)
+        public void Publish(IEnumerable<IEvent<IEventData>> eventMessages)
         {
             foreach (var eventMessage in eventMessages)
             {
@@ -104,18 +104,18 @@ namespace Ncqrs.Eventing.ServiceModel.Bus
             }
         }
 
-        public void RegisterHandler<TEvent>(IEventHandler<TEvent> handler) where TEvent : IEvent
+        public void RegisterHandler<TEventData>(IEventHandler<TEventData> handler) where TEventData : IEventData
         {
-            Action<IEvent> act = (e) => handler.Handle((TEvent) e);
-            RegisterHandler(typeof(TEvent), act);
+            Action<IEvent<IEventData>> act = (e) => handler.Handle((IEvent<TEventData>)e);
+            RegisterHandler(typeof(IEvent<TEventData>), act);
         }
 
-        public void RegisterHandler(Type eventType, Action<IEvent> handler)
+        public void RegisterHandler(Type eventType, Action<IEvent<IEventData>> handler)
         {
-            List<Action<IEvent>> handlers = null;
+            List<Action<IEvent<IEventData>>> handlers = null;
             if (!_handlerRegister.TryGetValue(eventType, out handlers))
             {
-                handlers = new List<Action<IEvent>>(1);
+                handlers = new List<Action<IEvent<IEventData>>>(1);
                 _handlerRegister.Add(eventType, handlers);
             }
 

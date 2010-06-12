@@ -19,9 +19,9 @@ namespace Ncqrs.Domain.Storage
         private readonly IEventBus _eventBus;
         private readonly IEventStore _store;
         private readonly ISnapshotStore _snapshotStore;
-        private readonly IEventConverter<IEvent, IEvent> _converter;
+        private readonly IEventConverter<IEventData, IEventData> _converter;
 
-        public DomainRepository(IEventStore store, IEventBus eventBus, ISnapshotStore snapshotStore = null, IEventConverter<IEvent, IEvent> converter = null)
+        public DomainRepository(IEventStore store, IEventBus eventBus, ISnapshotStore snapshotStore = null, IEventConverter<IEventData, IEventData> converter = null)
         {
             Contract.Requires<ArgumentNullException>(store != null);
             Contract.Requires<ArgumentNullException>(eventBus != null);
@@ -126,15 +126,15 @@ namespace Ncqrs.Domain.Storage
             return aggregateRoot;
         }
 
-        protected IEnumerable<SourcedEvent> ConvertEvents(IEnumerable<SourcedEvent> events)
+        protected IEnumerable<ISourcedEvent<IEventData>> ConvertEvents(IEnumerable<ISourcedEvent<IEventData>> events)
         {
             if (_converter == null) return events;
 
-            var result = new List<SourcedEvent>(events.Count());
+            var result = new List<ISourcedEvent<IEventData>>(events.Count());
 
             foreach (var evnt in events)
             {
-                evnt.Event = _converter.Convert(evnt.Event);
+                // TODO: evnt.EventData = _converter.Convert(evnt.EventData);
                 result.Add(evnt);
             }
 
@@ -160,7 +160,7 @@ namespace Ncqrs.Domain.Storage
                 if(snapshot != null) _snapshotStore.SaveShapshot(snapshot);
             }
 
-            _eventBus.Publish(events.Cast<IEvent>());
+            _eventBus.Publish(events);
 
             // Accept the changes.
             aggregateRoot.AcceptChanges();

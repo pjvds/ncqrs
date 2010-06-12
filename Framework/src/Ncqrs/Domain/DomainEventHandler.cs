@@ -1,14 +1,14 @@
 ﻿using System;
-using Ncqrs.Eventing.Sourcing;
 using Ncqrs.Eventing;
+using Ncqrs.Eventing.Sourcing;
 
 namespace Ncqrs.Domain
 {
-    public abstract class DomainEventHandler<TEvent> : IDomainEventHandler where TEvent : IEvent
+    public abstract class DomainEventHandler<TEvent> : IDomainEventHandler
     {
         public abstract Boolean HandleEvent(TEvent evnt);
 
-        Boolean IDomainEventHandler.HandleEvent(IEvent evnt)
+        Boolean IDomainEventHandler.HandleEvent(ISourcedEvent<IEventData> evnt)
         {
             Boolean handled = false;
 

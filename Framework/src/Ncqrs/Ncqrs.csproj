@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Ncqrs</RootNamespace>
     <AssemblyName>Ncqrs</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>
     </SccProjectName>
@@ -88,7 +88,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\log4net\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Contracts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=736440c9b414ea16, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
@@ -133,15 +132,18 @@
     <Compile Include="Config\InstanceNotFoundInEnvironment.cs" />
     <Compile Include="DateTimeBasedClock.cs" />
     <Compile Include="Domain\AggregateRootMappedWithExpressions.cs" />
+    <Compile Include="Domain\IEventDataHandler.cs" />
     <Compile Include="Domain\Mapping\ExpressionHandler.cs" />
     <Compile Include="Domain\IUnitOfWorkContext.cs" />
-    <Compile Include="Domain\Mapping\ExpressionBasedDomainEventHandlerMappingStrategy.cs" />
+    <Compile Include="Domain\Mapping\ExpressionBasedEventDataHandlerMappingStrategy.cs" />
     <Compile Include="Domain\NoUnitOfWorkAvailableInThisContextException.cs" />
     <Compile Include="Eventing\Conversion\DelegateBasedConverter.cs" />
     <Compile Include="Eventing\EventBase.cs" />
     <Compile Include="Eventing\Conversion\EventConverter.cs" />
     <Compile Include="Eventing\Conversion\IEventConverter.cs" />
+    <Compile Include="Eventing\IEventData.cs" />
     <Compile Include="Eventing\Sourcing\IEventSource.cs" />
+    <Compile Include="Eventing\Sourcing\ISourcedEvent.cs" />
     <Compile Include="Eventing\Sourcing\Snapshotting\ISnapshotable.cs" />
     <Compile Include="Eventing\Sourcing\Snapshotting\ISnapshot.cs" />
     <EmbeddedResource Include="Eventing\Storage\SQL\TableCreationScript.sql">
@@ -163,19 +165,17 @@
     <Compile Include="NcqrsEnvironment.cs" />
     <Compile Include="Config\IEnvironmentConfiguration.cs" />
     <Compile Include="NcqrsEnvironmentConfigurationException.cs" />
-    <Compile Include="Eventing\Denormalization\DenormalizerFactory.cs" />
-    <Compile Include="Eventing\Denormalization\IDenormalizer.cs" />
     <Compile Include="Domain\AggregateRoot.cs" />
     <Compile Include="Domain\AggregateRootMappedByConvention.cs" />
     <Compile Include="Domain\AggregateRootMappedWithAttributes.cs" />
-    <Compile Include="Domain\EventNotHandledException.cs" />
+    <Compile Include="Domain\EventDataNotHandledException.cs" />
     <Compile Include="Domain\IDomainEventHandler.cs" />
     <Compile Include="Domain\DomainEventHandler.cs" />
     <Compile Include="Domain\IUnitOfWorkFactory.cs" />
-    <Compile Include="Domain\Mapping\AttributeBasedDomainEventHandlerMappingStrategy.cs" />
-    <Compile Include="Domain\Mapping\ConventionBasedDomainEventHandlerMappingStrategy.cs" />
+    <Compile Include="Domain\Mapping\AttributeBasedEventDataHandlerMappingStrategy.cs" />
+    <Compile Include="Domain\Mapping\ConventionBasedEventDataHandlerMappingStrategy.cs" />
     <Compile Include="Domain\Mapping\EventHandlerAttribute.cs" />
-    <Compile Include="Domain\Mapping\IDomainEventHandlerMappingStrategy.cs" />
+    <Compile Include="Domain\Mapping\IEventDataHandlerMappingStrategy.cs" />
     <Compile Include="Domain\Mapping\InvalidEventHandlerMappingException.cs" />
     <Compile Include="Domain\Mapping\MappedAggregateRoot.cs" />
     <Compile Include="Domain\Mapping\NoEventHandlerAttribute.cs" />

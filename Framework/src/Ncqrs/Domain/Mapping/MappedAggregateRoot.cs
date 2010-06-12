@@ -6,9 +6,9 @@ namespace Ncqrs.Domain.Mapping
     public abstract class MappedAggregateRoot : AggregateRoot
     {
         [NonSerialized] 
-        private readonly IDomainEventHandlerMappingStrategy _mappingStrategy;
+        private readonly IEventDataHandlerMappingStrategy _mappingStrategy;
 
-        protected MappedAggregateRoot(IDomainEventHandlerMappingStrategy strategy)
+        protected MappedAggregateRoot(IEventDataHandlerMappingStrategy strategy)
         {
             Contract.Requires<ArgumentNullException>(strategy != null, "The strategy cannot be null.");
 

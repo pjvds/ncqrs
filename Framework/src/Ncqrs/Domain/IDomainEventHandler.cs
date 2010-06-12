@@ -14,19 +14,19 @@ namespace Ncqrs.Domain
         /// <summary>
         /// Handles the event.
         /// </summary>
-        /// <param name="evnt">The event to handle.</param>
+        /// <param name="sourcedEvent">The event to handle.</param>
         /// <returns><c>true</c> when the event was handled; otherwise, <c>false</c>.
         /// <remarks><c>false</c> does not mean that the handling failed, but that the 
         /// handler was not interested in handling this event.</remarks></returns>
-        Boolean HandleEvent(IEvent evnt);
+        Boolean HandleEvent(ISourcedEvent<IEventData> sourcedEvent);
     }
 
     [ContractClassFor(typeof(IDomainEventHandler))]
     public class DomainEventHandlerContracts : IDomainEventHandler
     {
-        public bool HandleEvent(IEvent evnt)
+        public bool HandleEvent(ISourcedEvent<IEventData> sourcedEvent)
         {
-            Contract.Requires<ArgumentNullException>(evnt != null, "The evnt cannot be null.");
+            Contract.Requires<ArgumentNullException>(sourcedEvent != null, "The sourcedEvent cannot be null.");
 
             return default(bool);
         }

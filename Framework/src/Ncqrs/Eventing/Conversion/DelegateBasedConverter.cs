@@ -6,19 +6,12 @@ namespace Ncqrs.Eventing.Conversion
 {
     /// <summary>
     /// A converter that uses a <see cref="Converter{TFrom, TTo}"/> delegate to execute the actual conversion.
-    /// <para>
-    /// The
-    /// <see cref="ISourcedEvent.EventSourceId"/>,
-    /// <see cref="ISourcedEvent.EventSequence"/>,
-    /// <see cref="ISourcedEvent.EventIdentifier"/> and the
-    /// <see cref="ISourcedEvent.EventTimeStamp"/> should stay the same.
-    /// </para>
     /// </summary>
     /// <typeparam name="TFrom">The type of the event that will be converted.</typeparam>
     /// <typeparam name="TTo">The type of the result of the conversion.</typeparam>
     public class DelegateBasedConverter<TFrom, TTo> : IEventConverter<TFrom, TTo>
-        where TFrom : IEvent
-        where TTo : IEvent
+        where TFrom : IEventData
+        where TTo : IEventData
     {
         private readonly Converter<TFrom, TTo> _converter;
 

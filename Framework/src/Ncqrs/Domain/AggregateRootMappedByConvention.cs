@@ -9,7 +9,7 @@ namespace Ncqrs.Domain
     /// <c>private void OnMyEvent(MyEvent e)</c>.
     /// </summary>
     /// <remarks><para>This aggregate root uses the 
-    /// <see cref="ConventionBasedDomainEventHandlerMappingStrategy"/> to get
+    /// <see cref="ConventionBasedEventDataHandlerMappingStrategy"/> to get
     /// the internal event handlers.</remarks>
     /// <example>
     /// An example of a aggregate root that inhered the 
@@ -33,14 +33,14 @@ namespace Ncqrs.Domain
     /// }
     /// </code>
     /// </example>
-    /// <seealso cref="ConventionBasedDomainEventHandlerMappingStrategy"/>
+    /// <seealso cref="ConventionBasedEventDataHandlerMappingStrategy"/>
     public abstract class AggregateRootMappedByConvention : MappedAggregateRoot
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="AggregateRootMappedByConvention"/> class.
         /// </summary>
         protected AggregateRootMappedByConvention()
-            : base(new ConventionBasedDomainEventHandlerMappingStrategy())
+            : base(new ConventionBasedEventDataHandlerMappingStrategy())
         {
         }
     }

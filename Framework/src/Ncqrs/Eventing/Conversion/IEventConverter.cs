@@ -15,8 +15,8 @@ namespace Ncqrs.Eventing.Conversion
     /// </summary>
     [ContractClass(typeof(IEventConverterContracts<,>))]
     public interface IEventConverter<TFrom, TTo>
-        where TFrom : IEvent
-        where TTo : IEvent
+        where TFrom : IEventData
+        where TTo : IEventData
     {
         /// <summary>
         /// Converts an event. It return a new transformed event based on the 
@@ -30,8 +30,8 @@ namespace Ncqrs.Eventing.Conversion
 
     [ContractClassFor(typeof(IEventConverter<,>))]
     internal sealed class IEventConverterContracts<TFrom, TTo> : IEventConverter<TFrom, TTo>
-        where TFrom : IEvent
-        where TTo : IEvent
+        where TFrom : IEventData
+        where TTo : IEventData
     {
         public TTo Convert(TFrom eventToConvert)
         {
