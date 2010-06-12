@@ -71,12 +71,11 @@ namespace Ncqrs.Eventing.Sourcing
             Contract.Invariant(Contract.ForAll(_events, (sourcedEvent) => sourcedEvent.EventSourceId == _eventSourceId));
         }
 
-        public ISourcedEvent<TEventData> Append<TEventData>(TEventData eventData) where TEventData : IEventData
+        public void Append(IEventData eventData)
         {
-            var sourcedEvent = new SourcedEvent<TEventData>(_eventSourceId, _sequence++, eventData);
-            _events.Add((ISourcedEvent<IEventData>)sourcedEvent);
-
-            return sourcedEvent;
+            // TODO: Move to factory.
+            var sourcedEvent = SourcedEvent<IEventData>.Create(_eventSourceId, _sequence++, eventData);
+            _events.Add(sourcedEvent);
         }
 
         public void Clear()

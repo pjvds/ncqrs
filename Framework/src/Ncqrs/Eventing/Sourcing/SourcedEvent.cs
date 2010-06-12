@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Globalization;
+using System.Reflection;
 
 namespace Ncqrs.Eventing.Sourcing
 {
@@ -28,10 +30,19 @@ namespace Ncqrs.Eventing.Sourcing
             internal set;
         }
 
-        internal SourcedEvent(Guid eventSourceId, long eventSequence, TEventData eventData) : base(eventData)
+        private SourcedEvent(Guid eventSourceId, long eventSequence, TEventData eventData) : base(eventData)
         {
             EventSourceId = eventSourceId;
             EventSequence = eventSequence;
+        }
+
+        internal static ISourcedEvent<IEventData> Create(Guid eventSourceId, long eventSequence, IEventData eventData)
+        {
+            var eventDataType = eventData.GetType();
+            var sourcedEventType = typeof (SourcedEvent<>).MakeGenericType(eventDataType);
+
+            var flags = BindingFlags.NonPublic | BindingFlags.Instance;
+            return (ISourcedEvent<IEventData>)Activator.CreateInstance(sourcedEventType, flags, null, new object[] { eventSourceId, eventSequence, eventData }, CultureInfo.InvariantCulture);
         }
     }
 }
