@@ -15,7 +15,12 @@ namespace Ncqrs.Domain
         [NonSerialized]
         private Guid _id;
 
-        private SourcedEventStream _eventStream;
+        /// <summary>
+        /// Holds the events that are not yet committed.
+        /// </summary>
+        
+        [NonSerialized]
+        private readonly SourcedEventStream _uncommittedEvents = new SourcedEventStream();
 
         /// <summary>
         /// Gets the globally unique identifier.
@@ -31,14 +36,9 @@ namespace Ncqrs.Domain
                 Contract.Requires<InvalidOperationException>(Version == 0);
 
                 _id = value;
+                _uncommittedEvents.EventSourceId = Id;
             }
         }
-
-        /// <summary>
-        /// Holds the events that are not yet committed.
-        /// </summary>
-        [NonSerialized]
-        private readonly Queue<SourcedEvent> _uncommittedEvent = new Queue<SourcedEvent>(0);
 
         /// <summary>
         /// Gets the current version of the instance as it is known in the event store.
@@ -50,7 +50,7 @@ namespace Ncqrs.Domain
         {
             get
             {
-                return InitialVersion + _uncommittedEvent.Count;
+                return InitialVersion + _uncommittedEvents.Count;
             }
         }
         [NonSerialized]
@@ -75,6 +75,7 @@ namespace Ncqrs.Domain
                 Contract.Requires<InvalidOperationException>(Version == InitialVersion);
 
                 _initialVersion = value;
+                _uncommittedEvents.Sequence = value;
             }
         }
 
@@ -98,7 +99,7 @@ namespace Ncqrs.Domain
         [ContractInvariantMethod]
         private void ContractInvariants()
         {
-            Contract.Invariant(_uncommittedEvent != null, "The member _unacceptedEvents should never be null.");
+            Contract.Invariant(_uncommittedEvents != null, "The member _unacceptedEvents should never be null.");
         }
 
         /// <summary>
@@ -108,11 +109,11 @@ namespace Ncqrs.Domain
         public virtual void InitializeFromHistory(IEnumerable<SourcedEvent> history)
         {
             Contract.Requires<ArgumentNullException>(history != null, "The history cannot be null.");
-            if (_uncommittedEvent.Count > 0) throw new InvalidOperationException("Cannot apply history when instance has uncommitted changes.");
+            if (_uncommittedEvents.Count > 0) throw new InvalidOperationException("Cannot apply history when instance has uncommitted changes.");
 
             foreach (var historicalEvent in history)
             {
-                ApplyEvent(historicalEvent, true);
+                ApplyEventFromHistory(historicalEvent);
                 InitialVersion++; // TODO: Thought... couldn't we get this from the event?
             }
         }
@@ -142,50 +143,34 @@ namespace Ncqrs.Domain
         {
             HandleEvent(evnt);
 
-            _eventStream.Append(evnt);
+            _uncommittedEvents.Append(evnt);
             RegisterCurrentInstanceAsDirty();
         }
 
-        private void ApplyEvent(SourcedEvent evnt, Boolean historical)
+        private void ApplyEventFromHistory(SourcedEvent evnt)
         {
-            if(historical)
+            if(evnt.EventSourceId != Id)
             {
-                if(evnt.EventSequence != InitialVersion+1)
-                {
-                    var message = String.Format("Cannot apply event with sequence {0}. Since the initial version of the " +
-                                                "aggregate root is {1}. Only an event with sequence number {2} can be applied.",
-                                                evnt.EventSequence, InitialVersion, InitialVersion + 1);
-                    throw new InvalidOperationException(message);
-                }
+                var message = String.Format("Cannot apply historical event from other event source.");
+                throw new InvalidOperationException(message);
             }
-            else
-            {
-                if (evnt.EventSourceId != Guid.Empty)
-                {
-                    var message = String.Format("The {0} event cannot be applied to aggregate root {1} with id {2} " +
-                                                "since it was already owned by event aggregate root with id {3}.",
-                                                evnt.GetType().FullName, this.GetType().FullName, Id, evnt.EventSourceId);
-                    throw new InvalidOperationException(message);
-                }
 
-                evnt.EventSourceId = this.Id;
-                evnt.EventSequence = Version + 1;
+            if (evnt.EventSequence != InitialVersion + 1)
+            {
+                var message = String.Format("Cannot apply event with sequence {0}. Since the initial version of the " +
+                                            "aggregate root is {1}. Only an event with sequence number {2} can be applied.",
+                                            evnt.EventSequence, InitialVersion, InitialVersion + 1);
+                throw new InvalidOperationException(message);
             }
 
             HandleEvent(evnt.Event);
-
-            if (!historical)
-            {
-                _uncommittedEvent.Enqueue(evnt);
-                RegisterCurrentInstanceAsDirty();
-            }
         }
 
         public IEnumerable<SourcedEvent> GetUncommittedEvents()
         {
             Contract.Ensures(Contract.Result<IEnumerable<SourcedEvent>>() != null, "The result of this method should never be null.");
 
-            return _uncommittedEvent.ToArray();
+            return _uncommittedEvents;
         }
 
         IEnumerable<SourcedEvent> IEventSource.GetUncommittedEvents()
@@ -202,7 +187,7 @@ namespace Ncqrs.Domain
             // the result of InitialVersion+number of uncommited events.
             long newInitialVersion = Version;
 
-            _uncommittedEvent.Clear();
+            _uncommittedEvents.Clear();
 
             this.InitialVersion = newInitialVersion;
         }

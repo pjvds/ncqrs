@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.Collections;
 
 namespace Ncqrs.Eventing.Sourcing
 {
-    public class SourcedEventStream
+    public class SourcedEventStream : IEnumerable<SourcedEvent>
     {
         private Guid _eventSourceId;
         private long _sequence;
@@ -37,6 +38,18 @@ namespace Ncqrs.Eventing.Sourcing
             }
         }
 
+        public int Count
+        {
+            get
+            {
+                return _events.Count;
+            }
+        }
+
+        public SourcedEventStream()
+        {
+        }
+
         public SourcedEventStream(Guid eventSourceId, long sequence)
         {
             _eventSourceId = eventSourceId;
@@ -55,6 +68,21 @@ namespace Ncqrs.Eventing.Sourcing
         {
             var sourcedEvent = new SourcedEvent(_eventSourceId, _sequence++, evnt);
             _events.Add(sourcedEvent);
+        }
+
+        public void Clear()
+        {
+            _events.Clear();
+        }
+
+        public IEnumerator<SourcedEvent> GetEnumerator()
+        {
+            return _events.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }
