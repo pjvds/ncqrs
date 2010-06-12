@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.Linq;
 using Ncqrs.Eventing;
 using Ncqrs.Eventing.Sourcing;
 
@@ -140,9 +139,13 @@ namespace Ncqrs.Domain
 
         protected void ApplyEvent(IEventData eventData)
         {
-            var sourcedEvent = _uncommittedEvents.Append(eventData);
-            HandleEvent(sourcedEvent.EventData);
+            // First handle event. This to support the set of the
+            // Id property for the first event. If we first Append
+            // the event to the event stream, the handler cannot set
+            // the Id property anymore.
+            HandleEvent(eventData);
 
+            _uncommittedEvents.Append(eventData);
             RegisterCurrentInstanceAsDirty();
         }
 
