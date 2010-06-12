@@ -64,7 +64,7 @@ namespace Ncqrs.Domain.Storage
             if(AggregateRootSupportsSnapshot(aggregateRootType, snapshot))
             {
                 aggregateRoot = CreateEmptyAggRoot(aggregateRootType);
-                var memType = GetMementoableInterfaceType(aggregateRootType);
+                var memType = GetSnapshotInterfaceType(aggregateRootType);
                 var restoreMethod = memType.GetMethod("RestoreFromSnapshot");
 
                 restoreMethod.Invoke(aggregateRoot, new object[] { snapshot });
@@ -98,7 +98,7 @@ namespace Ncqrs.Domain.Storage
 
         private bool AggregateRootSupportsSnapshot(Type aggType, ISnapshot snapshot)
         {
-            var memType = GetMementoableInterfaceType(aggType);
+            var memType = GetSnapshotInterfaceType(aggType);
             return memType == typeof(ISnapshotable<>).MakeGenericType(memType);
         }
 
@@ -166,7 +166,7 @@ namespace Ncqrs.Domain.Storage
 
         private ISnapshot GetSnapshot(AggregateRoot aggregateRoot)
         {
-            var memType = GetMementoableInterfaceType(aggregateRoot.GetType());
+            var memType = GetSnapshotInterfaceType(aggregateRoot.GetType());
 
             if (memType != null)
             {
@@ -180,26 +180,26 @@ namespace Ncqrs.Domain.Storage
             }
         }
 
-        private Type GetMementoableInterfaceType(Type aggType)
+        private Type GetSnapshotInterfaceType(Type aggType)
         {
-            // Query all ISnapshotable interfaces. We only allow
+            // Query all ISnapshotable interfaces. We only allow only
             // one ISnapshotable interface per aggregate root type.
-            var mementoables = from i in aggType.GetInterfaces()
+            var snapshotables = from i in aggType.GetInterfaces()
                                where i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ISnapshotable<>)
                                select i;
 
             // Aggregate does not implement any ISnapshotable interface.
-            if (mementoables.Count() == 0)
+            if (snapshotables.Count() == 0)
             {
                 return null;
             }
             // Aggregate does implement multiple ISnapshotable interfaces.
-            if (mementoables.Count() > 0)
+            if (snapshotables.Count() > 1)
             {
                 return null;
             }
 
-            return mementoables.First();
+            return snapshotables.Single();
         }
     }
 }
