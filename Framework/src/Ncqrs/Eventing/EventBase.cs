@@ -6,7 +6,7 @@ namespace Ncqrs.Eventing
     /// The base for all event messages.
     /// </summary>
     [Serializable]
-    public abstract class EventBase<TEventData> : IEvent<TEventData> where TEventData : IEventData
+    public class EventBase<TEventData> : IEvent<TEventData> where TEventData : IEventData
     {
         /// <summary>
         /// Gets the unique identifier for this event.
@@ -25,7 +25,7 @@ namespace Ncqrs.Eventing
         /// <summary>
         /// Initializes a new instance of the <see cref="EventBase"/> class.
         /// </summary>
-        protected EventBase(TEventData eventData)
+        internal EventBase(TEventData eventData)
         {
             var idGenerator = NcqrsEnvironment.Get<IUniqueIdentifierGenerator>();
             var clock = NcqrsEnvironment.Get<IClock>();

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Collections;
+using System.Globalization;
+using System.Reflection;
 
 namespace Ncqrs.Eventing.Sourcing
 {
@@ -73,9 +75,26 @@ namespace Ncqrs.Eventing.Sourcing
 
         public void Append(IEventData eventData)
         {
-            // TODO: Move to factory.
-            var sourcedEvent = SourcedEvent<IEventData>.Create(_eventSourceId, _sequence++, eventData);
+            var sourcedEvent = CreateSourcedEvent(_eventSourceId, _sequence++, eventData);
             _events.Add(sourcedEvent);
+        }
+
+        private static ISourcedEvent<IEventData> CreateSourcedEvent(Guid eventSourceId, long eventSequence, IEventData eventData)
+        {
+            var eventDataType = eventData.GetType();
+            var sourcedEventType = typeof(SourcedEvent<>).MakeGenericType(eventDataType);
+
+            var flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
+            var args = new object[] {eventSourceId, eventSequence, eventData};
+            return (ISourcedEvent<IEventData>)Activator.CreateInstance(sourcedEventType, flags, null, args, CultureInfo.InvariantCulture);
+        }
+
+        public void Append(IEnumerable<IEventData> eventDatas)
+        {
+            foreach(var data in eventDatas)
+            {
+                Append(data);
+            }
         }
 
         public void Clear()
