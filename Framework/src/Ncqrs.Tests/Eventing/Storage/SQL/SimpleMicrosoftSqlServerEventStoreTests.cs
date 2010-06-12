@@ -40,7 +40,7 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
             {
                 get
                 {
-                    return AggregateRootId;
+                    return EventSourceId;
                 }
             }
 

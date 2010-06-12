@@ -154,15 +154,15 @@ namespace Ncqrs.Domain
             }
             else
             {
-                if (evnt.AggregateRootId != Guid.Empty)
+                if (evnt.EventSourceId != Guid.Empty)
                 {
                     var message = String.Format("The {0} event cannot be applied to aggregate root {1} with id {2} " +
                                                 "since it was already owned by event aggregate root with id {3}.",
-                                                evnt.GetType().FullName, this.GetType().FullName, Id, evnt.AggregateRootId);
+                                                evnt.GetType().FullName, this.GetType().FullName, Id, evnt.EventSourceId);
                     throw new InvalidOperationException(message);
                 }
 
-                evnt.AggregateRootId = this.Id;
+                evnt.EventSourceId = this.Id;
                 evnt.EventSequence = Version + 1;
             }
 

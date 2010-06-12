@@ -17,10 +17,10 @@ namespace Ncqrs.Domain
         }
 
         /// <summary>
-        /// Gets the aggregate root id.
+        /// Gets the id of the event source that owns this event.
         /// </summary>
-        /// <value>The aggregate root id of the one that owns this event.</value>
-        public Guid AggregateRootId
+        /// <value>The id of the event source that owns this event.</value>
+        public Guid EventSourceId
         {
             get;
             internal set;
@@ -50,18 +50,6 @@ namespace Ncqrs.Domain
         }
 
         /// <summary>
-        /// Gets the id of the event source that owns this event.
-        /// </summary>
-        /// <value>The id of the event source that owns this event. This value is always the same as <see cref="AggregateRootId"/>.</value>
-        Guid ISourcedEvent.EventSourceId
-        {
-            get
-            {
-                return AggregateRootId;
-            }
-        }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="DomainEvent"/> class.
         /// </summary>
         /// <remarks>This initializes the <see cref="EventIdentifier"/> with the
@@ -71,7 +59,7 @@ namespace Ncqrs.Domain
         /// <see cref="NcqrsEnvironment"/>.</remarks>
         protected DomainEvent()
         {
-            AggregateRootId = Guid.Empty;
+            EventSourceId = Guid.Empty;
 
             var clock = NcqrsEnvironment.Get<IClock>();
             var idGenerator = NcqrsEnvironment.Get<IUniqueIdentifierGenerator>();
@@ -84,13 +72,13 @@ namespace Ncqrs.Domain
         /// Initializes a new instance of the <see cref="DomainEvent"/> class.
         /// </summary>
         /// <param name="eventIdentifier">The event identifier.</param>
-        /// <param name="aggregateRootId">The aggregate root id.</param>
+        /// <param name="eventSourceId">The id of the event source that caused this event.</param>
         /// <param name="eventSequence">The event sequence.</param>
         /// <param name="eventTimeStamp">The event time stamp.</param>
-        protected DomainEvent(Guid eventIdentifier, Guid aggregateRootId, long eventSequence, DateTime eventTimeStamp)
+        protected DomainEvent(Guid eventIdentifier, Guid eventSourceId, long eventSequence, DateTime eventTimeStamp)
         {
             EventIdentifier = eventIdentifier;
-            AggregateRootId = aggregateRootId;
+            EventSourceId = eventSourceId;
             EventSequence = eventSequence;
             EventTimeStamp = eventTimeStamp;
         }

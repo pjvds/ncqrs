@@ -54,7 +54,7 @@ namespace Ncqrs.Tests.Domain
         {
             var eventBase = MockRepository.GenerateStub<DomainEvent>();
 
-            var aggregateRootId = eventBase.AggregateRootId;
+            var aggregateRootId = eventBase.EventSourceId;
             var eventSourceId = ((ISourcedEvent) eventBase).EventSourceId;
 
             aggregateRootId.Should().Be(eventSourceId);

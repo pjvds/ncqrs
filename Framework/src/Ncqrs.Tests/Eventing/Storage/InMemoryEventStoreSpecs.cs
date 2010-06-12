@@ -49,7 +49,7 @@ namespace Ncqrs.Tests.Eventing.Storage
         {
             public SomethingDoneEvent(Guid sourceId)
             {
-                GetType().GetProperty("AggregateRootId").SetValue(this, sourceId, null);
+                GetType().GetProperty("EventSourceId").SetValue(this, sourceId, null);
             }
         }
 

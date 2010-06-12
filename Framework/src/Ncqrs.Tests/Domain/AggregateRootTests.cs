@@ -23,7 +23,7 @@ namespace Ncqrs.Tests.Domain
 
             public void OverrideAggregateRootId(Guid id)
             {
-                this.GetType().GetProperty("AggregateRootId").SetValue(this, id, null);
+                this.GetType().GetProperty("EventSourceId").SetValue(this, id, null);
                 
             }
         }

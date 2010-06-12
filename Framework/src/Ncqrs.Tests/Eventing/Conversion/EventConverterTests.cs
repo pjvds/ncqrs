@@ -13,7 +13,7 @@ namespace Ncqrs.Tests.Eventing.Conversion
         {
             public FooEventV2 Convert(FooEventV1 e)
             {
-                return new FooEventV2(e.EventIdentifier, e.AggregateRootId, e.EventSequence, e.EventTimeStamp, e.Name, "");
+                return new FooEventV2(e.EventIdentifier, e.EventSourceId, e.EventSequence, e.EventTimeStamp, e.Name, "");
             }
         }
 
@@ -21,7 +21,7 @@ namespace Ncqrs.Tests.Eventing.Conversion
         {
             public FooEventV3 Convert(FooEventV2 e)
             {
-                return new FooEventV3(e.EventIdentifier, e.AggregateRootId, e.EventSequence, e.EventTimeStamp, e.Name, e.LastName, "");
+                return new FooEventV3(e.EventIdentifier, e.EventSourceId, e.EventSequence, e.EventTimeStamp, e.Name, e.LastName, "");
             }
         }
 
@@ -114,7 +114,7 @@ namespace Ncqrs.Tests.Eventing.Conversion
             var converter = new EventConverter();
             converter.AddConverter(
                 (BarEventV1 e) =>
-                new BarEventV2(e.EventIdentifier, e.AggregateRootId, e.EventSequence, e.EventTimeStamp));
+                new BarEventV2(e.EventIdentifier, e.EventSourceId, e.EventSequence, e.EventTimeStamp));
 
             converter.Convert(new BarEventV1()).Should().BeOfType<BarEventV2>();
         }
@@ -126,15 +126,15 @@ namespace Ncqrs.Tests.Eventing.Conversion
             converter.AddConverter
                 (
                     (BarEventV1 e) =>
-                    new BarEventV2(e.EventIdentifier, e.AggregateRootId, e.EventSequence, e.EventTimeStamp)
+                    new BarEventV2(e.EventIdentifier, e.EventSourceId, e.EventSequence, e.EventTimeStamp)
                 ).AddConverter
                 (
                     (FooEventV1 e) =>
-                    new FooEventV2(e.EventIdentifier, e.AggregateRootId, e.EventSequence, e.EventTimeStamp, e.Name, "")
+                    new FooEventV2(e.EventIdentifier, e.EventSourceId, e.EventSequence, e.EventTimeStamp, e.Name, "")
                 ).AddConverter
                 (
                     (FooEventV2 e) =>
-                    new FooEventV3(e.EventIdentifier, e.AggregateRootId, e.EventSequence, e.EventTimeStamp, e.Name,
+                    new FooEventV3(e.EventIdentifier, e.EventSourceId, e.EventSequence, e.EventTimeStamp, e.Name,
                                    e.LastName, "")
                 );
 
