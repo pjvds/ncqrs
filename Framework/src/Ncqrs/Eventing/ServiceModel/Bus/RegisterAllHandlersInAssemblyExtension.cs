@@ -16,8 +16,8 @@ namespace Ncqrs.Eventing.ServiceModel.Bus
 
                 foreach(var handlerInterfaceType in type.GetInterfaces().Where(IsIEventHandlerInterface))
                 {
-                    var eventType = handlerInterfaceType.GetGenericArguments().First();
-                    RegisterHandler(handler, eventType, target);
+                    var eventDataType = handlerInterfaceType.GetGenericArguments().First();
+                    RegisterHandler(handler, eventDataType, target);
                 }
             }
         }
@@ -27,17 +27,17 @@ namespace Ncqrs.Eventing.ServiceModel.Bus
             return Activator.CreateInstance(type);
         }
 
-        private static void RegisterHandler(object handler, Type eventType, InProcessEventBus target)
+        private static void RegisterHandler(object handler, Type eventDataType, InProcessEventBus target)
         {
             var registerHandlerMethod = target.GetType().GetMethods().Single
             (
                 m => m.Name == "RegisterHandler" && m.IsGenericMethod && m.GetParameters().Count() == 1
             );
 
-            var targetMethod = registerHandlerMethod.MakeGenericMethod(new[] { eventType });
+            var targetMethod = registerHandlerMethod.MakeGenericMethod(new[] { eventDataType });
             targetMethod.Invoke(target, new object[] { handler });
 
-            _log.InfoFormat("Registered {0} as event handler for event {1}.", handler.GetType().FullName, eventType.FullName);
+            _log.InfoFormat("Registered {0} as event handler for event {1}.", handler.GetType().FullName, eventDataType.FullName);
         }
 
         private static bool ImplementsAtLeastOneIEventHandlerInterface(Type type)

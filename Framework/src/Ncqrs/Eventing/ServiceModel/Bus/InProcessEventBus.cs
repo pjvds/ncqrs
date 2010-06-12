@@ -107,16 +107,16 @@ namespace Ncqrs.Eventing.ServiceModel.Bus
         public void RegisterHandler<TEventData>(IEventHandler<TEventData> handler) where TEventData : IEventData
         {
             Action<IEvent<IEventData>> act = (e) => handler.Handle((IEvent<TEventData>)e);
-            RegisterHandler(typeof(IEvent<TEventData>), act);
+            RegisterHandler(typeof(TEventData), act);
         }
 
-        public void RegisterHandler(Type eventType, Action<IEvent<IEventData>> handler)
+        public void RegisterHandler(Type eventDataType, Action<IEvent<IEventData>> handler)
         {
             List<Action<IEvent<IEventData>>> handlers = null;
-            if (!_handlerRegister.TryGetValue(eventType, out handlers))
+            if (!_handlerRegister.TryGetValue(eventDataType, out handlers))
             {
                 handlers = new List<Action<IEvent<IEventData>>>(1);
-                _handlerRegister.Add(eventType, handlers);
+                _handlerRegister.Add(eventDataType, handlers);
             }
 
             handlers.Add(handler);
