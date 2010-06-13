@@ -3,7 +3,7 @@
 namespace Ncqrs.Eventing.Sourcing
 {
     [Serializable]
-    public abstract class SourcedEventBase : EventBase, ISourcedEvent
+    public abstract class SourcedEvent : Event, ISourcedEvent
     {
         public static Guid UndefinedEventSourceId = Guid.Empty;
         public const int UndefinedEventSequence = -1;
@@ -31,10 +31,10 @@ namespace Ncqrs.Eventing.Sourcing
             internal set;
         }
 
-        public SourcedEventBase() : this(UndefinedEventSourceId, UndefinedEventSequence)
+        public SourcedEvent() : this(UndefinedEventSourceId, UndefinedEventSequence)
         {}
 
-        public SourcedEventBase(Guid eventSourceId, long eventSequence)
+        public SourcedEvent(Guid eventSourceId, long eventSequence)
         {
             EventSourceId = eventSourceId;
             EventSequence = eventSequence;
