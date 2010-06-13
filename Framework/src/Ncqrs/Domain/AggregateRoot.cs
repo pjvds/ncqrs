@@ -111,6 +111,11 @@ namespace Ncqrs.Domain
 
             foreach (var historicalEvent in history)
             {
+                if(InitialVersion == 0)
+                {
+                    Id = historicalEvent.EventSourceId;
+                }
+
                 ApplyEventFromHistory(historicalEvent);
                 InitialVersion++; // TODO: Thought... couldn't we get this from the event?
             }
@@ -137,8 +142,28 @@ namespace Ncqrs.Domain
                 throw new EventNotHandledException(evnt);
         }
 
-        protected void ApplyEvent(ISourcedEvent evnt)
+        protected void ApplyEvent(SourcedEvent evnt)
         {
+            if(evnt.EventSourceId != SourcedEvent.UndefinedEventSourceId)
+            {
+                var message = String.Format("The {0} event cannot be applied to event source {1} with id {2} " +
+                                            "since it was already owned by event source with id {3}.",
+                                            evnt.GetType().FullName, this.GetType().FullName, Id, evnt.EventSourceId);
+                throw new InvalidOperationException(message);
+            }
+
+            if(evnt.EventSequence != SourcedEvent.UndefinedEventSequence)
+            {
+                // TODO: Add better exception message.
+                var message = String.Format("The {0} event cannot be applied to event source {1} with id {2} " +
+                            "since the event already contains a sequence {3} while {4} was expected.",
+                            evnt.GetType().FullName, this.GetType().FullName, Id, evnt.EventSequence, SourcedEvent.UndefinedEventSequence);
+                throw new InvalidOperationException(message);
+            }
+
+            evnt.EventSourceId = Id;
+            evnt.EventSequence = Version + 1;
+
             // First handle event. This to support the set of the
             // Id property for the first event. If we first Append
             // the event to the event stream, the handler cannot set
