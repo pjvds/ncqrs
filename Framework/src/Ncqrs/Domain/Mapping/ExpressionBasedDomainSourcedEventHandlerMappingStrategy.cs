@@ -32,24 +32,24 @@ namespace Ncqrs.Domain.Mapping
     /// </code>
     /// </remarks>
     /// </summary>
-    public class ExpressionBasedDomainEventHandlerMappingStrategy : IEventDataHandlerMappingStrategy
+    public class ExpressionBasedDomainSourcedEventHandlerMappingStrategy : ISourcedEventHandlerMappingStrategy
     {
         /// <summary>
         /// Gets the event handlers from aggregate root based on the given mapping.
         /// </summary>
         /// <param name="eventSource">The aggregate root.</param>
-        /// <see cref="ExpressionBasedDomainEventHandlerMappingStrategy"/>
+        /// <see cref="ExpressionBasedDomainSourcedEventHandlerMappingStrategy"/>
         /// <returns>All the <see cref="IDomainEventHandler"/>'s created based on the given mapping.</returns>
-        public IEnumerable<IEventHandler<SourcedEvent>> GetEventHandlersFromAggregateRoot(IEventSource eventSource)
+        public IEnumerable<IDomainEventHandler> GetEventHandlersFromAggregateRoot(IEventSource eventSource)
         {
             Contract.Requires<ArgumentNullException>(eventSource != null, "The eventSource cannot be null.");
 
             if(!(eventSource is AggregateRootMappedWithExpressions))
             {
-                throw new ArgumentException("aggregateRoot need to be of type AggregateRootMappedWithExpressions to be used in a ExpressionBasedDomainEventHandlerMappingStrategy.");
+                throw new ArgumentException("aggregateRoot need to be of type AggregateRootMappedWithExpressions to be used in a ExpressionBasedDomainSourcedEventHandlerMappingStrategy.");
             }
 
-            var handlers = new List<IEventHandler<SourcedEvent>>();
+            var handlers = new List<IDomainEventHandler>();
 
             foreach (ExpressionHandler mappinghandler in ((AggregateRootMappedWithExpressions)eventSource).MappingHandlers)
             {
@@ -73,7 +73,7 @@ namespace Ncqrs.Domain.Mapping
         /// <param name="method">The method to invoke</param>
         /// <param name="exact"><b>True</b> if we need to have an exact match, otherwise <b>False</b>.</param>
         /// <returns>An <see cref="IDomainEventHandler"/> that handles the execution of the given method.</returns>
-        private static IEventHandler<SourcedEvent> CreateHandlerForMethod(IEventSource eventSource, MethodInfo method, bool exact)
+        private static IDomainEventHandler CreateHandlerForMethod(IEventSource eventSource, MethodInfo method, bool exact)
         {
             Type firstParameterType = method.GetParameters().First().ParameterType;
 

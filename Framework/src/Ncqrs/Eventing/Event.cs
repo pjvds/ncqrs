@@ -31,5 +31,11 @@ namespace Ncqrs.Eventing
             EventIdentifier = idGenerator.GenerateNewId();
             EventTimeStamp = clock.UtcNow();
         }
+
+        public Event(Guid eventIdentifier, DateTime eventTimeStamp)
+        {
+            EventIdentifier = eventIdentifier;
+            EventTimeStamp = eventTimeStamp;
+        }
     }
 }

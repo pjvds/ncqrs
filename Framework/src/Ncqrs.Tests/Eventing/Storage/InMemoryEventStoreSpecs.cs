@@ -16,7 +16,7 @@ namespace Ncqrs.Tests.Eventing.Storage
     {
         public class EventSourceMock : IEventSource
         {
-            public Func<IEnumerable<ISourcedEvent>> GetUncommittedEventsStub;
+            public Func<IEnumerable<SourcedEvent>> GetUncommittedEventsStub;
 
             public Guid Id
             {
@@ -28,7 +28,7 @@ namespace Ncqrs.Tests.Eventing.Storage
                 get; set;
             }
 
-            public IEnumerable<ISourcedEvent> GetUncommittedEvents()
+            public IEnumerable<SourcedEvent> GetUncommittedEvents()
             {
                 return GetUncommittedEventsStub();
             }

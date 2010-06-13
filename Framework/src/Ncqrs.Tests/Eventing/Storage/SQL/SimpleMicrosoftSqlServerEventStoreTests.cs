@@ -94,7 +94,7 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
 
             int sequenceCounter = 0;
 
-            var events = new ISourcedEvent[]
+            var events = new SourcedEvent[]
                              {
                                  new CustomerCreatedEvent(Guid.NewGuid(), id, sequenceCounter++, DateTime.UtcNow, "Foo",
                                                           35),
@@ -123,7 +123,7 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
 
             int sequenceCounter = 0;
 
-            var events = new ISourcedEvent[]
+            var events = new SourcedEvent[]
                              {
                                  new CustomerCreatedEvent(Guid.NewGuid(), id, sequenceCounter++, DateTime.UtcNow, "Foo",
                                                           35),
@@ -151,7 +151,7 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
 
             int sequenceCounter = 0;
 
-            var events = new ISourcedEvent[]
+            var events = new SourcedEvent[]
                              {
                                  new CustomerCreatedEvent(Guid.NewGuid(), id, sequenceCounter++, DateTime.UtcNow, "Foo",
                                                           35),

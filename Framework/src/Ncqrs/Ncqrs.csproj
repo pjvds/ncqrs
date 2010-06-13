@@ -132,10 +132,9 @@
     <Compile Include="Config\InstanceNotFoundInEnvironment.cs" />
     <Compile Include="DateTimeBasedClock.cs" />
     <Compile Include="Domain\AggregateRootMappedWithExpressions.cs" />
-    <Compile Include="Domain\IEventHandler.cs" />
     <Compile Include="Domain\Mapping\ExpressionHandler.cs" />
     <Compile Include="Domain\IUnitOfWorkContext.cs" />
-    <Compile Include="Domain\Mapping\ExpressionBasedDomainEventHandlerMappingStrategy.cs" />
+    <Compile Include="Domain\Mapping\ExpressionBasedDomainSourcedEventHandlerMappingStrategy.cs" />
     <Compile Include="Domain\NoUnitOfWorkAvailableInThisContextException.cs" />
     <Compile Include="Eventing\Conversion\DelegateBasedConverter.cs" />
     <Compile Include="Eventing\Event.cs" />
@@ -171,10 +170,10 @@
     <Compile Include="Domain\IDomainEventHandler.cs" />
     <Compile Include="Domain\DomainEventHandler.cs" />
     <Compile Include="Domain\IUnitOfWorkFactory.cs" />
-    <Compile Include="Domain\Mapping\AttributeBasedDomainEventHandlerMappingStrategy.cs" />
-    <Compile Include="Domain\Mapping\ConventionBasedDomainEventHandlerMappingStrategy.cs" />
+    <Compile Include="Domain\Mapping\AttributeBasedDomainSourcedEventHandlerMappingStrategy.cs" />
+    <Compile Include="Domain\Mapping\ConventionBasedDomainSourcedEventHandlerMappingStrategy.cs" />
     <Compile Include="Domain\Mapping\EventHandlerAttribute.cs" />
-    <Compile Include="Domain\Mapping\IEventDataHandlerMappingStrategy.cs" />
+    <Compile Include="Domain\Mapping\ISourcedEventHandlerMappingStrategy.cs" />
     <Compile Include="Domain\Mapping\InvalidEventHandlerMappingException.cs" />
     <Compile Include="Domain\Mapping\MappedAggregateRoot.cs" />
     <Compile Include="Domain\Mapping\NoEventHandlerAttribute.cs" />

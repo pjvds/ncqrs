@@ -32,18 +32,18 @@ namespace Ncqrs.Domain.Mapping
     /// </list>
     /// </remarks>
     /// </summary>
-    public class ConventionBasedDomainEventHandlerMappingStrategy : IEventDataHandlerMappingStrategy
+    public class ConventionBasedDomainEventHandlerMappingStrategy : ISourcedEventHandlerMappingStrategy
     {
         private String _regexPattern = "^(on|On|ON)+";
         private static readonly ILog Logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public IEnumerable<IEventHandler<SourcedEvent>> GetEventHandlersFromAggregateRoot(IEventSource eventSource)
+        public IEnumerable<IDomainEventHandler> GetEventHandlersFromAggregateRoot(IEventSource eventSource)
         {
             Contract.Requires<ArgumentNullException>(eventSource != null, "The eventSource cannot be null.");
-            Contract.Ensures(Contract.Result<IEnumerable<IEventHandler<SourcedEvent>>>() != null, "The result should never be null.");
+            Contract.Ensures(Contract.Result<IEnumerable<IDomainEventHandler>>() != null, "The result should never be null.");
 
             var targetType = eventSource.GetType();
-            var handlers = new List<IEventHandler<SourcedEvent>>();
+            var handlers = new List<IDomainEventHandler>();
 
             Logger.DebugFormat("Trying to get all event handlers based by convention for {0}.", targetType);
 

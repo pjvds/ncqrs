@@ -3,11 +3,11 @@ using Ncqrs.Eventing.Sourcing;
 
 namespace Ncqrs.Domain
 {
-    public abstract class DomainEventHandler<TEvent> : IDomainEventHandler where TEvent : ISourcedEvent
+    public abstract class DomainEventHandler<TEvent> : IDomainEventHandler where TEvent : SourcedEvent
     {
         public abstract Boolean HandleEvent(TEvent evnt);
 
-        Boolean IDomainEventHandler.HandleEvent(ISourcedEvent evnt)
+        Boolean IDomainEventHandler.HandleEvent(SourcedEvent evnt)
         {
             Boolean handled = false;
 

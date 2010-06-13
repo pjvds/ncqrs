@@ -31,10 +31,15 @@ namespace Ncqrs.Eventing.Sourcing
             internal set;
         }
 
-        public SourcedEvent() : this(UndefinedEventSourceId, UndefinedEventSequence)
-        {}
+        public SourcedEvent()
+        {
+            EventSourceId = UndefinedEventSourceId;
+            EventSequence = UndefinedEventSequence;
+        }
 
-        public SourcedEvent(Guid eventSourceId, long eventSequence)
+
+        public SourcedEvent(Guid eventIdentifier, Guid eventSourceId, long eventSequence, DateTime eventTimeStamp)
+            : base(eventIdentifier, eventTimeStamp)
         {
             EventSourceId = eventSourceId;
             EventSequence = eventSequence;
