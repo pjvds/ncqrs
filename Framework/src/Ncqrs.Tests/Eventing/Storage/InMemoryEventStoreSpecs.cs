@@ -46,7 +46,7 @@ namespace Ncqrs.Tests.Eventing.Storage
             }
         }
 
-        public class SomethingDoneEvent : DomainEvent
+        public class SomethingDoneEvent : SourcedEvent
         {
             public SomethingDoneEvent(Guid sourceId)
             {

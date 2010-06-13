@@ -1,6 +1,7 @@
 ﻿using System;
 using FluentAssertions;
 using Ncqrs.Eventing;
+using Ncqrs.Eventing.Sourcing;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Ncqrs.Domain;
@@ -9,14 +10,14 @@ namespace Ncqrs.Tests.Domain
 {
     public class DomainEventHandlerTests
     {
-        public class FooDomainEvent : DomainEvent
+        public class FooDomainEvent : SourcedEvent
         {}
 
         [Test]
         public void Invoking_it_with_a_lower_type_should_make_the_HandleEvent_method_return_false()
         {
             var theHandler = MockRepository.GenerateMock<DomainEventHandler<FooDomainEvent>>();
-            var aDomainEvent = MockRepository.GenerateMock<DomainEvent>();
+            var aDomainEvent = MockRepository.GenerateMock<SourcedEvent>();
 
             var handlerAsIDomainEventHandler = theHandler as IDomainEventHandler;
             var handled = handlerAsIDomainEventHandler.HandleEvent(aDomainEvent);
@@ -28,7 +29,7 @@ namespace Ncqrs.Tests.Domain
         public void Invoking_it_with_a_lower_type_should_not_call_the_implemented_HandleEvent_method()
         {
             var theHandler = MockRepository.GenerateMock<DomainEventHandler<FooDomainEvent>>();
-            var aDomainEvent = MockRepository.GenerateMock<DomainEvent>();
+            var aDomainEvent = MockRepository.GenerateMock<SourcedEvent>();
 
             var handlerAsIDomainEventHandler = theHandler as IDomainEventHandler;
             handlerAsIDomainEventHandler.HandleEvent(aDomainEvent);

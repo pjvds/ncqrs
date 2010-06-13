@@ -15,7 +15,7 @@ namespace Ncqrs.Tests.Eventing
             var generator = MockRepository.GenerateMock<IUniqueIdentifierGenerator>();
             NcqrsEnvironment.SetDefault<IUniqueIdentifierGenerator>(generator);
 
-            var mock = MockRepository.GenerateStub<EventBase>();
+            var mock = MockRepository.GenerateStub<Event>();
 
             generator.AssertWasCalled(g=>g.GenerateNewId());
         }
@@ -30,7 +30,7 @@ namespace Ncqrs.Tests.Eventing
 
             NcqrsEnvironment.SetDefault<IUniqueIdentifierGenerator>(generator);
 
-            var mock = MockRepository.GenerateStub<EventBase>();
+            var mock = MockRepository.GenerateStub<Event>();
             mock.EventIdentifier.Should().Be(identiefier);
         }
 
@@ -44,7 +44,7 @@ namespace Ncqrs.Tests.Eventing
 
             NcqrsEnvironment.SetDefault<IClock>(clock);
 
-            var eventBase = MockRepository.GenerateStub<EventBase>();
+            var eventBase = MockRepository.GenerateStub<Event>();
             eventBase.EventTimeStamp.Should().Be(theTimeStamp);
         }
     }

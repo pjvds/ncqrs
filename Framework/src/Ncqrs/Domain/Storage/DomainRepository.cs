@@ -19,9 +19,9 @@ namespace Ncqrs.Domain.Storage
         private readonly IEventBus _eventBus;
         private readonly IEventStore _store;
         private readonly ISnapshotStore _snapshotStore;
-        private readonly IEventConverter<IEvent, IEvent> _converter;
+        private readonly IEventConverter<SourcedEvent, SourcedEvent> _converter;
 
-        public DomainRepository(IEventStore store, IEventBus eventBus, ISnapshotStore snapshotStore = null, IEventConverter<IEvent, IEvent> converter = null)
+        public DomainRepository(IEventStore store, IEventBus eventBus, ISnapshotStore snapshotStore = null, IEventConverter<SourcedEvent, SourcedEvent> converter = null)
         {
             Contract.Requires<ArgumentNullException>(store != null);
             Contract.Requires<ArgumentNullException>(eventBus != null);
@@ -126,16 +126,16 @@ namespace Ncqrs.Domain.Storage
             return aggregateRoot;
         }
 
-        protected IEnumerable<ISourcedEvent> ConvertEvents(IEnumerable<ISourcedEvent> events)
+        protected IEnumerable<SourcedEvent> ConvertEvents(IEnumerable<SourcedEvent> events)
         {
             if (_converter == null) return events;
 
-            var result = new List<ISourcedEvent>(events.Count());
+            var result = new List<SourcedEvent>(events.Count());
 
             foreach (var evnt in events)
             {
-                // TODO: evnt.Event = _converter.Convert(evnt.Event);
-                result.Add(evnt);
+                var convertedEvent = _converter.Convert(evnt);
+                result.Add(convertedEvent);
             }
 
             return result;

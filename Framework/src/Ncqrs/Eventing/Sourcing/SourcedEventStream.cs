@@ -5,13 +5,13 @@ using System.Collections;
 
 namespace Ncqrs.Eventing.Sourcing
 {
-    public class SourcedEventStream : IEnumerable<ISourcedEvent>
+    public class SourcedEventStream : IEnumerable<SourcedEvent>
     {
         private Guid _eventSourceId;
 
         private long _sequenceOffset;
 
-        private IList<ISourcedEvent> _events = new List<ISourcedEvent>();
+        private IList<SourcedEvent> _events = new List<SourcedEvent>();
 
         public Guid EventSourceId
         {
@@ -74,13 +74,13 @@ namespace Ncqrs.Eventing.Sourcing
             Contract.Invariant(Contract.ForAll(_events, (sourcedEvent) => sourcedEvent.EventSequence == (_sequenceOffset+_events.IndexOf(sourcedEvent)+1)));
         }
 
-        public void Append(ISourcedEvent sourcedEvent)
+        public void Append(SourcedEvent sourcedEvent)
         {
             // TODO: Validate sequence and source id.
             _events.Add(sourcedEvent);
         }
 
-        public void Append(IEnumerable<ISourcedEvent> eventDatas)
+        public void Append(IEnumerable<SourcedEvent> eventDatas)
         {
             foreach(var data in eventDatas)
             {
@@ -93,7 +93,7 @@ namespace Ncqrs.Eventing.Sourcing
             _events.Clear();
         }
 
-        public IEnumerator<ISourcedEvent> GetEnumerator()
+        public IEnumerator<SourcedEvent> GetEnumerator()
         {
             return _events.GetEnumerator();
         }

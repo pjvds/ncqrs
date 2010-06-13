@@ -46,7 +46,7 @@ namespace Ncqrs.Eventing
         /// Gets the uncommitted events.
         /// </summary>
         /// <returns></returns>
-        IEnumerable<ISourcedEvent> GetUncommittedEvents();
+        IEnumerable<SourcedEvent> GetUncommittedEvents();
 
         /// <summary>
         /// Commits the events.

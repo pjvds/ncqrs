@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Ncqrs.Eventing;
+using Ncqrs.Eventing.Sourcing;
 
 namespace Ncqrs.Domain.Mapping
 {
@@ -25,24 +26,24 @@ namespace Ncqrs.Domain.Mapping
     ///     </item>
     ///     <item>
     ///         <value>
-    ///             The parameter must be, or inhired from, the <see cref="DomainEvent"/> class.
+    ///             The parameter must be, or inhired from, the <see cref="SourcedEvent"/> class.
     ///         </value>
     ///     </item>
     /// </list>
     /// </remarks>
     /// </summary>
-    public class ConventionBasedEventDataHandlerMappingStrategy : IEventDataHandlerMappingStrategy
+    public class ConventionBasedDomainEventHandlerMappingStrategy : IEventDataHandlerMappingStrategy
     {
         private String _regexPattern = "^(on|On|ON)+";
         private static readonly ILog Logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public IEnumerable<IEventHandler<IEvent>> GetEventHandlersFromAggregateRoot(IEventSource eventSource)
+        public IEnumerable<IEventHandler<SourcedEvent>> GetEventHandlersFromAggregateRoot(IEventSource eventSource)
         {
             Contract.Requires<ArgumentNullException>(eventSource != null, "The eventSource cannot be null.");
-            Contract.Ensures(Contract.Result<IEnumerable<IEventHandler<IEvent>>>() != null, "The result should never be null.");
+            Contract.Ensures(Contract.Result<IEnumerable<IEventHandler<SourcedEvent>>>() != null, "The result should never be null.");
 
             var targetType = eventSource.GetType();
-            var handlers = new List<IEventHandler<IEvent>>();
+            var handlers = new List<IEventHandler<SourcedEvent>>();
 
             Logger.DebugFormat("Trying to get all event handlers based by convention for {0}.", targetType);
 

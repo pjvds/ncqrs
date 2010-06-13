@@ -5,6 +5,6 @@ namespace Ncqrs.Domain
 {
     public interface IEventHandler<TEvent> where TEvent : IEvent
     {
-        bool HandleEventData(TEvent evnt);
+        bool HandleEvent(TEvent evnt);
     }
 }

@@ -11,7 +11,7 @@ namespace Ncqrs.Tests.Domain
 {
     public class EventNotHandledExceptionTests
     {
-        public class FooEvent : EventBase
+        public class FooEvent : Event
         {}
 
         [Test]

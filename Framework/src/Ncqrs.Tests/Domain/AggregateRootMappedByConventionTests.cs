@@ -3,6 +3,7 @@ using System.Reflection;
 using FluentAssertions;
 using Ncqrs.Domain;
 using Ncqrs.Domain.Mapping;
+using Ncqrs.Eventing.Sourcing;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -10,19 +11,19 @@ namespace Ncqrs.Tests.Domain
 {
     public class AggregateRootMappedByConventionTests
     {
-        public class EventForPublicMethod : DomainEvent
+        public class EventForPublicMethod : SourcedEvent
         {}
 
-        public class EventForProtectedMethod : DomainEvent
+        public class EventForProtectedMethod : SourcedEvent
         {}
 
-        public class EventForPrivateMethod : DomainEvent
+        public class EventForPrivateMethod : SourcedEvent
         {}
 
-        public class EventForNoEventHandlerMethod : DomainEvent
+        public class EventForNoEventHandlerMethod : SourcedEvent
         {}
 
-        public class EventForMethodWithWrongMethodName : DomainEvent
+        public class EventForMethodWithWrongMethodName : SourcedEvent
         {}
 
         public class TheAggregateRoot : AggregateRootMappedByConvention
@@ -33,7 +34,7 @@ namespace Ncqrs.Tests.Domain
             public int OnEventForNoEventHandlerMethodInvokeCount;
             public int FooBarEventForMethodWithWrongMethodNameInvokeCount;
 
-            public new void ApplyEvent(DomainEvent e)
+            public new void ApplyEvent(SourcedEvent e)
             {
                 base.ApplyEvent(e);
             }

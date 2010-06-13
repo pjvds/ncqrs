@@ -2,6 +2,7 @@
 using FluentAssertions;
 using Ncqrs.Domain;
 using Ncqrs.Eventing.Conversion;
+using Ncqrs.Eventing.Sourcing;
 using NUnit.Framework;
 using System.Reflection;
 
@@ -25,7 +26,7 @@ namespace Ncqrs.Tests.Eventing.Conversion
             }
         }
 
-        public class FooEventV1 : DomainEvent
+        public class FooEventV1 : SourcedEvent
         {
             public string Name
             {
@@ -34,7 +35,7 @@ namespace Ncqrs.Tests.Eventing.Conversion
             }
         }
 
-        public class FooEventV2 : DomainEvent
+        public class FooEventV2 : SourcedEvent
         {
             public string Name
             {
@@ -56,7 +57,7 @@ namespace Ncqrs.Tests.Eventing.Conversion
             }
         }
 
-        public class FooEventV3 : DomainEvent
+        public class FooEventV3 : SourcedEvent
         {
             public string Name
             {
@@ -85,7 +86,7 @@ namespace Ncqrs.Tests.Eventing.Conversion
             }
         }
 
-        public class BarEventV1 : DomainEvent
+        public class BarEventV1 : SourcedEvent
         {
             public string Name
             {
@@ -94,7 +95,7 @@ namespace Ncqrs.Tests.Eventing.Conversion
             }
         }
 
-        public class BarEventV2 : DomainEvent
+        public class BarEventV2 : SourcedEvent
         {
             public string FullName
             {

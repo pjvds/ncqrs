@@ -23,7 +23,7 @@ namespace Ncqrs.Eventing
         /// <summary>
         /// Initializes a new instance of the <see cref="Event"/> class.
         /// </summary>
-        internal Event()
+        public Event()
         {
             var idGenerator = NcqrsEnvironment.Get<IUniqueIdentifierGenerator>();
             var clock = NcqrsEnvironment.Get<IClock>();

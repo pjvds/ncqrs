@@ -135,7 +135,7 @@
     <Compile Include="Domain\IEventHandler.cs" />
     <Compile Include="Domain\Mapping\ExpressionHandler.cs" />
     <Compile Include="Domain\IUnitOfWorkContext.cs" />
-    <Compile Include="Domain\Mapping\ExpressionBasedEventDataHandlerMappingStrategy.cs" />
+    <Compile Include="Domain\Mapping\ExpressionBasedDomainEventHandlerMappingStrategy.cs" />
     <Compile Include="Domain\NoUnitOfWorkAvailableInThisContextException.cs" />
     <Compile Include="Eventing\Conversion\DelegateBasedConverter.cs" />
     <Compile Include="Eventing\Event.cs" />
@@ -171,8 +171,8 @@
     <Compile Include="Domain\IDomainEventHandler.cs" />
     <Compile Include="Domain\DomainEventHandler.cs" />
     <Compile Include="Domain\IUnitOfWorkFactory.cs" />
-    <Compile Include="Domain\Mapping\AttributeBasedEventDataHandlerMappingStrategy.cs" />
-    <Compile Include="Domain\Mapping\ConventionBasedEventDataHandlerMappingStrategy.cs" />
+    <Compile Include="Domain\Mapping\AttributeBasedDomainEventHandlerMappingStrategy.cs" />
+    <Compile Include="Domain\Mapping\ConventionBasedDomainEventHandlerMappingStrategy.cs" />
     <Compile Include="Domain\Mapping\EventHandlerAttribute.cs" />
     <Compile Include="Domain\Mapping\IEventDataHandlerMappingStrategy.cs" />
     <Compile Include="Domain\Mapping\InvalidEventHandlerMappingException.cs" />

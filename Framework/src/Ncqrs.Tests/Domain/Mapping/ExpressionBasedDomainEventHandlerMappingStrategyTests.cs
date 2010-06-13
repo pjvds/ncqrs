@@ -2,6 +2,7 @@
 using FluentAssertions;
 using Ncqrs.Domain;
 using Ncqrs.Domain.Mapping;
+using Ncqrs.Eventing.Sourcing;
 using NUnit.Framework;
 using System.Linq;
 
@@ -13,10 +14,10 @@ namespace Ncqrs.Tests.Domain.Mapping
         {
             public override void InitializeEventHandlers()
             {
-                Map<DomainEvent>().ToHandler(x => OnDomainEvent(x));
+                Map<SourcedEvent>().ToHandler(x => OnDomainEvent(x));
             }
 
-            public static void OnDomainEvent(DomainEvent e)
+            public static void OnDomainEvent(SourcedEvent e)
             { }
         }
 
@@ -30,10 +31,10 @@ namespace Ncqrs.Tests.Domain.Mapping
                 Map<PrivateEvent>().ToHandler(x => OnPrivateEvent(x));
             }
 
-            public class PublicEvent : DomainEvent { }
-            public class ProtectedEvent : DomainEvent { }
-            public class InternalEvent : DomainEvent { }
-            public class PrivateEvent : DomainEvent { }
+            public class PublicEvent : SourcedEvent { }
+            public class ProtectedEvent : SourcedEvent { }
+            public class InternalEvent : SourcedEvent { }
+            public class PrivateEvent : SourcedEvent { }
 
             public int PublicEventHandlerInvokeCount;
             public int ProtectedEventHandlerInvokeCount;
@@ -71,7 +72,7 @@ namespace Ncqrs.Tests.Domain.Mapping
             public void OnPublicEvent(BaseEvent e)
             { }
 
-            public class BaseEvent : DomainEvent
+            public class BaseEvent : SourcedEvent
             { }
 
             public class DerivedEvent : BaseEvent
@@ -85,7 +86,7 @@ namespace Ncqrs.Tests.Domain.Mapping
                 Map<BaseEvent>().ToHandler(x => OnPublicEvent(x)).MatchExact();
             }
 
-            public class BaseEvent : DomainEvent
+            public class BaseEvent : SourcedEvent
             { }
 
             public class DerivedEvent : BaseEvent
@@ -102,7 +103,7 @@ namespace Ncqrs.Tests.Domain.Mapping
                 Map<BaseEvent>().ToHandler(x => OnPublicEvent(x));
             }
 
-            public class BaseEvent : DomainEvent
+            public class BaseEvent : SourcedEvent
             { }
 
             public class DerivedEvent : BaseEvent

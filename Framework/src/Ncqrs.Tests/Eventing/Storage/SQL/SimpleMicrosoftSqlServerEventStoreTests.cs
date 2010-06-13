@@ -16,7 +16,7 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
     public class SimpleMicrosoftSqlServerEventStoreTests
     {
         [Serializable]
-        public class CustomerCreatedEvent : DomainEvent
+        public class CustomerCreatedEvent : SourcedEvent
         {
             public CustomerCreatedEvent(Guid eventIdentifier, Guid aggregateRootId, long eventSequence, DateTime eventTimeStamp, string name, int age)
                 : base(eventIdentifier, aggregateRootId, eventSequence, eventTimeStamp)
@@ -36,7 +36,7 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
         }
 
         [Serializable]
-        public class CustomerNameChanged : DomainEvent
+        public class CustomerNameChanged : SourcedEvent
         {
             public Guid CustomerId
             {

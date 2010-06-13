@@ -16,7 +16,7 @@ namespace Ncqrs.Domain.Mapping
     /// <list type="number">
     /// <item><description>The method should be an instance method (no static).</description></item>
     /// <item><description>It should accept 1 parameter.</description></item>
-    /// <item><description>The parameter should be, or inherited from, the <see cref="DomainEvent"/> class.</description></item>
+    /// <item><description>The parameter should be, or inherited from, the <see cref="SourcedEvent"/> class.</description></item>
     /// <item><description>The method should be marked with the <see cref="EventHandlerAttribute"/>.</description></item>
     /// </list>
     /// <code>public class Foo : AggregateRootMappedWithAttributes
@@ -29,20 +29,20 @@ namespace Ncqrs.Domain.Mapping
     /// }</code>
     /// </remarks>
     /// </summary>
-    public class AttributeBasedEventDataHandlerMappingStrategy : IEventDataHandlerMappingStrategy
+    public class AttributeBasedDomainEventHandlerMappingStrategy : IEventDataHandlerMappingStrategy
     {
         /// <summary>
         /// Gets the event handlers from aggregate root based on attributes.
         /// </summary>
         /// <param name="eventSource">The aggregate root.</param>
-        /// <see cref="AttributeBasedEventDataHandlerMappingStrategy"/>
+        /// <see cref="AttributeBasedDomainEventHandlerMappingStrategy"/>
         /// <returns>All the <see cref="IDomainEventHandler"/>'s created based on attribute mapping.</returns>
-        public IEnumerable<IEventHandler<IEvent>> GetEventHandlersFromAggregateRoot(IEventSource eventSource)
+        public IEnumerable<IEventHandler<SourcedEvent>> GetEventHandlersFromAggregateRoot(IEventSource eventSource)
         {
             Contract.Requires<ArgumentNullException>(eventSource != null, "The eventSource cannot be null.");
 
             var targetType = eventSource.GetType();
-            var handlers = new List<IEventHandler<IEvent>>();
+            var handlers = new List<IEventHandler<SourcedEvent>>();
 
             foreach (var method in targetType.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static))
             {
@@ -74,7 +74,7 @@ namespace Ncqrs.Domain.Mapping
             return handlers;
         }
 
-        private static IEventHandler<IEvent> CreateHandlerForMethod(IEventSource eventSource, MethodInfo method, EventHandlerAttribute attribute)
+        private static IEventHandler<SourcedEvent> CreateHandlerForMethod(IEventSource eventSource, MethodInfo method, EventHandlerAttribute attribute)
         {
             Type firstParameterType = method.GetParameters().First().ParameterType;
 

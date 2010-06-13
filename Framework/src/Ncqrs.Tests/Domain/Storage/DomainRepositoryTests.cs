@@ -2,6 +2,7 @@
 using FluentAssertions;
 using Ncqrs.Eventing;
 using Ncqrs.Eventing.Conversion;
+using Ncqrs.Eventing.Sourcing;
 using NUnit.Framework;
 using Ncqrs.Domain.Storage;
 using Rhino.Mocks;
@@ -15,7 +16,7 @@ namespace Ncqrs.Tests.Domain.Storage
 {
     public class DomainRepositoryTests
     {
-        public class FooEvent : DomainEvent
+        public class FooEvent : SourcedEvent
         {
             public FooEvent()
             {
@@ -26,7 +27,7 @@ namespace Ncqrs.Tests.Domain.Storage
             }
         }
 
-        public class BarEvent : DomainEvent
+        public class BarEvent : SourcedEvent
         {
             public BarEvent()
             {
@@ -37,7 +38,7 @@ namespace Ncqrs.Tests.Domain.Storage
             }
         }
 
-        public class BarEvent_v2 : DomainEvent
+        public class BarEvent_v2 : SourcedEvent
         {
             public BarEvent_v2()
             {
@@ -64,7 +65,7 @@ namespace Ncqrs.Tests.Domain.Storage
             }
 
             [EventHandlerAttribute]
-            private void CatchAllHandler(DomainEvent e)
+            private void CatchAllHandler(SourcedEvent e)
             {}
         }
 
@@ -73,13 +74,13 @@ namespace Ncqrs.Tests.Domain.Storage
         {
             var store = MockRepository.GenerateMock<IEventStore>();
             var bus = MockRepository.GenerateMock<IEventBus>();
-            var converter = MockRepository.GenerateMock<IEventConverter<DomainEvent, DomainEvent>>();
+            var converter = MockRepository.GenerateMock<IEventConverter<SourcedEvent, SourcedEvent>>();
 
-            Func<DomainEvent, DomainEvent> returnFirstParam = (x) => x;
+            Func<SourcedEvent, SourcedEvent> returnFirstParam = (x) => x;
             converter.Stub(c => c.Convert(null)).IgnoreArguments().Do(returnFirstParam);
 
             var aggId = Guid.NewGuid();
-            var eventsInTheStore = new DomainEvent[]
+            var eventsInTheStore = new SourcedEvent[]
             {
                 new FooEvent(Guid.NewGuid(), aggId, 1, DateTime.UtcNow), 
                 new BarEvent(Guid.NewGuid(), aggId, 2, DateTime.UtcNow)

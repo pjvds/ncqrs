@@ -49,7 +49,7 @@ namespace Ncqrs.Eventing.Storage.SQL
         /// </summary>
         /// <param name="id">The id of the event provider.</param>
         /// <returns>All events for the specified event provider.</returns>
-        public IEnumerable<ISourcedEvent> GetAllEvents(Guid id)
+        public IEnumerable<SourcedEvent> GetAllEvents(Guid id)
         {
             return GetAllEventsSinceVersion(id, 0);
         }
@@ -59,9 +59,9 @@ namespace Ncqrs.Eventing.Storage.SQL
         /// </summary>
         /// <param name="eventSourceId">The id of the event source that owns the events.</param>
         /// <returns>All the events from the event source.</returns>
-        public IEnumerable<ISourcedEvent> GetAllEventsSinceVersion(Guid id, long version)
+        public IEnumerable<SourcedEvent> GetAllEventsSinceVersion(Guid id, long version)
         {
-            var result = new List<ISourcedEvent>();
+            var result = new List<SourcedEvent>();
 
             // Create connection and command.
             using (var connection = new SqlConnection(_connectionString))
@@ -85,7 +85,7 @@ namespace Ncqrs.Eventing.Storage.SQL
 
                         using (var dataStream = new MemoryStream(rawData))
                         {
-                            var evnt = (ISourcedEvent)formatter.Deserialize(dataStream);
+                            var evnt = (SourcedEvent)formatter.Deserialize(dataStream);
                             result.Add(evnt);
                         }
                     }

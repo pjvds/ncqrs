@@ -9,7 +9,7 @@ namespace Ncqrs.Domain
     ///   An event handler that uses a specified action as handler, but only calls this when the event
     ///   is of a certain type, or is inherited from it.
     /// </summary>
-    public class TypeThresholdedActionBasedDomainEventHandler : IEventHandler<IEvent>
+    public class TypeThresholdedActionBasedDomainEventHandler : IEventHandler<SourcedEvent>
     {
         /// <summary>
         ///   The event type that should be used as threshold.
@@ -30,7 +30,7 @@ namespace Ncqrs.Domain
         /// <summary>
         ///   The handler that should be called when the threshold did not hold the event.
         /// </summary>
-        private readonly Action<IEvent> _handler;
+        private readonly Action<SourcedEvent> _handler;
 
         /// <summary>
         ///   Initializes a new instance of the <see cref = "TypeThresholdedActionBasedDomainEventHandler" /> class.
@@ -39,7 +39,7 @@ namespace Ncqrs.Domain
         /// <param name = "eventTypeThreshold">The event type that should be used as threshold.</param>
         /// <param name = "exact">if set to <c>true</c> the threshold will hold all types that are not the same type; otherwise it hold 
         /// all types that are not inhered from the event type threshold or implement the interface that is specified by the threshold type.</param>
-        public TypeThresholdedActionBasedDomainEventHandler(Action<IEvent> handler, Type eventTypeThreshold,
+        public TypeThresholdedActionBasedDomainEventHandler(Action<SourcedEvent> handler, Type eventTypeThreshold,
                                                               Boolean exact = false)
         {
             Contract.Requires<ArgumentNullException>(handler != null, "The handler cannot be null.");
@@ -68,7 +68,7 @@ namespace Ncqrs.Domain
         ///     handler was not interested in handling this event.
         ///   </remarks>
         /// </returns>
-        public bool HandleEventData(IEvent evnt)
+        public bool HandleEvent(SourcedEvent evnt)
         {
             Contract.Requires<ArgumentNullException>(evnt != null, "The Event cannot be null.");
 
