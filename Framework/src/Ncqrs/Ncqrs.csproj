@@ -141,7 +141,6 @@
     <Compile Include="Eventing\EventBase.cs" />
     <Compile Include="Eventing\Conversion\EventConverter.cs" />
     <Compile Include="Eventing\Conversion\IEventConverter.cs" />
-    <Compile Include="Eventing\IEventData.cs" />
     <Compile Include="Eventing\Sourcing\IEventSource.cs" />
     <Compile Include="Eventing\Sourcing\ISourcedEvent.cs" />
     <Compile Include="Eventing\Sourcing\Snapshotting\ISnapshotable.cs" />
@@ -153,7 +152,7 @@
     <Compile Include="Eventing\ServiceModel\Bus\IEventHandler.cs" />
     <Compile Include="Eventing\ServiceModel\Bus\RegisterAllHandlersInAssemblyExtension.cs" />
     <Compile Include="Eventing\Sourcing\Snapshotting\Snapshot.cs" />
-    <Compile Include="Eventing\Sourcing\SourcedEvent.cs" />
+    <Compile Include="Eventing\Sourcing\SourcedEventBase.cs" />
     <Compile Include="Eventing\Sourcing\SourcedEventStream.cs" />
     <Compile Include="Eventing\Storage\ISnapshotStore.cs" />
     <Compile Include="IClock.cs" />

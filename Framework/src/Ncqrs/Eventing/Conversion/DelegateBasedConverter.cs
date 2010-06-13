@@ -10,8 +10,8 @@ namespace Ncqrs.Eventing.Conversion
     /// <typeparam name="TFrom">The type of the event that will be converted.</typeparam>
     /// <typeparam name="TTo">The type of the result of the conversion.</typeparam>
     public class DelegateBasedConverter<TFrom, TTo> : IEventConverter<TFrom, TTo>
-        where TFrom : IEventData
-        where TTo : IEventData
+        where TFrom : IEvent
+        where TTo : IEvent
     {
         private readonly Converter<TFrom, TTo> _converter;
 

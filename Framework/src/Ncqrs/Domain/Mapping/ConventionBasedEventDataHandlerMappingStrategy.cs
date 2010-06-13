@@ -36,13 +36,13 @@ namespace Ncqrs.Domain.Mapping
         private String _regexPattern = "^(on|On|ON)+";
         private static readonly ILog Logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public IEnumerable<IEventDataHandler<IEventData>> GetEventHandlersFromAggregateRoot(IEventSource eventSource)
+        public IEnumerable<IEventDataHandler<IEvent>> GetEventHandlersFromAggregateRoot(IEventSource eventSource)
         {
             Contract.Requires<ArgumentNullException>(eventSource != null, "The eventSource cannot be null.");
-            Contract.Ensures(Contract.Result<IEnumerable<IEventDataHandler<IEventData>>>() != null, "The result should never be null.");
+            Contract.Ensures(Contract.Result<IEnumerable<IEventDataHandler<IEvent>>>() != null, "The result should never be null.");
 
             var targetType = eventSource.GetType();
-            var handlers = new List<IEventDataHandler<IEventData>>();
+            var handlers = new List<IEventDataHandler<IEvent>>();
 
             Logger.DebugFormat("Trying to get all event handlers based by convention for {0}.", targetType);
 
@@ -58,7 +58,7 @@ namespace Ncqrs.Domain.Mapping
                                      // Get only methods that have 1 parameter.
                                     parameters.Length == 1 &&
                                      // Get only methods where the first parameter is an event.
-                                    typeof(IEventData).IsAssignableFrom(parameters[0].ParameterType) &&
+                                    typeof(IEvent).IsAssignableFrom(parameters[0].ParameterType) &&
                                      // Get only methods that are not marked with the no event handler attribute.
                                     noEventHandlerAttributes.Length == 0
                                  select
@@ -69,7 +69,7 @@ namespace Ncqrs.Domain.Mapping
                 var methodCopy = method.MethodInfo;
                 Type firstParameterType = methodCopy.GetParameters().First().ParameterType;
 
-                Action<IEventData> invokeAction = (e) => methodCopy.Invoke(eventSource, new object[] { e });
+                Action<IEvent> invokeAction = (e) => methodCopy.Invoke(eventSource, new object[] { e });
 
                 Logger.DebugFormat("Created event handler for method {0} based on convention.", methodCopy.Name);
 

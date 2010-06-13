@@ -81,7 +81,7 @@ namespace Ncqrs.Domain
         /// A list that contains all the event handlers.
         /// </summary>
         [NonSerialized]
-        private readonly List<IEventDataHandler<IEventData>> _eventHandlers = new List<IEventDataHandler<IEventData>>();
+        private readonly List<IEventDataHandler<IEvent>> _eventHandlers = new List<IEventDataHandler<IEvent>>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AggregateRoot"/> class.
@@ -104,7 +104,7 @@ namespace Ncqrs.Domain
         /// Initializes from history.
         /// </summary>
         /// <param name="history">The history.</param>
-        public virtual void InitializeFromHistory(IEnumerable<ISourcedEvent<IEventData>> history)
+        public virtual void InitializeFromHistory(IEnumerable<ISourcedEvent> history)
         {
             Contract.Requires<ArgumentNullException>(history != null, "The history cannot be null.");
             if (_uncommittedEvents.Count > 0) throw new InvalidOperationException("Cannot apply history when instance has uncommitted changes.");
@@ -116,40 +116,40 @@ namespace Ncqrs.Domain
             }
         }
 
-        protected void RegisterHandler(IEventDataHandler<IEventData> handler)
+        protected void RegisterHandler(IEventDataHandler<IEvent> handler)
         {
             Contract.Requires<ArgumentNullException>(handler != null, "The handler cannot be null.");
 
             _eventHandlers.Add(handler);
         }
 
-        protected virtual void HandleEvent(IEventData eventData)
+        protected virtual void HandleEvent(IEvent evnt)
         {
-            Contract.Requires<ArgumentNullException>(eventData != null, "The eventData cannot be null.");
+            Contract.Requires<ArgumentNullException>(evnt != null, "The Event cannot be null.");
             Boolean handled = false;
 
             foreach (var handler in _eventHandlers)
             {
-                handled |= handler.HandleEventData(eventData);
+                handled |= handler.HandleEventData(evnt);
             }
 
             if (!handled)
-                throw new EventDataNotHandledException(eventData);
+                throw new EventDataNotHandledException(evnt);
         }
 
-        protected void ApplyEvent(IEventData eventData)
+        protected void ApplyEvent(ISourcedEvent evnt)
         {
             // First handle event. This to support the set of the
             // Id property for the first event. If we first Append
             // the event to the event stream, the handler cannot set
             // the Id property anymore.
-            HandleEvent(eventData);
+            HandleEvent(evnt);
 
-            _uncommittedEvents.Append(eventData);
+            _uncommittedEvents.Append(evnt);
             RegisterCurrentInstanceAsDirty();
         }
 
-        private void ApplyEventFromHistory(ISourcedEvent<IEventData> evnt)
+        private void ApplyEventFromHistory(ISourcedEvent evnt)
         {
             if(evnt.EventSourceId != Id)
             {
@@ -165,12 +165,12 @@ namespace Ncqrs.Domain
                 throw new InvalidOperationException(message);
             }
 
-            HandleEvent(evnt.EventData);
+            HandleEvent(evnt);
         }
 
-        public IEnumerable<ISourcedEvent<IEventData>> GetUncommittedEvents()
+        public IEnumerable<ISourcedEvent> GetUncommittedEvents()
         {
-            Contract.Ensures(Contract.Result<IEnumerable<ISourcedEvent<IEventData>>>() != null, "The result of this method should never be null.");
+            Contract.Ensures(Contract.Result<IEnumerable<ISourcedEvent>>() != null, "The result of this method should never be null.");
 
             return _uncommittedEvents;
         }

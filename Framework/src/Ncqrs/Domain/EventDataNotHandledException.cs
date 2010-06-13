@@ -7,27 +7,27 @@ namespace Ncqrs.Domain
     [Serializable]
     public class EventDataNotHandledException : Exception
     {
-        public IEventData EventData
+        public IEvent Event
         {
             get;
             private set;
         }
 
-        public EventDataNotHandledException(IEventData eventData)
-            : this(eventData, eventData != null ? String.Format("No handler handled the {0} event data.", eventData.GetType().FullName) : null)
+        public EventDataNotHandledException(IEvent evnt)
+            : this(evnt, evnt != null ? String.Format("No handler handled the {0} event data.", evnt.GetType().FullName) : null)
         {
 
         }
 
-        public EventDataNotHandledException(IEventData eventData, String message)
-            : this(eventData, message, null)
+        public EventDataNotHandledException(IEvent evnt, String message)
+            : this(evnt, message, null)
         {
         }
 
-        public EventDataNotHandledException(IEventData eventData, String message, Exception inner)
+        public EventDataNotHandledException(IEvent evnt, String message, Exception inner)
             : base(message, inner)
         {
-            EventData = eventData;
+            Event = evnt;
         }
 
         protected EventDataNotHandledException(

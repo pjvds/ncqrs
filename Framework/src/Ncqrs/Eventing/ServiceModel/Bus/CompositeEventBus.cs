@@ -28,7 +28,7 @@ namespace Ncqrs.Eventing.ServiceModel.Bus
             _wrappedBuses.Remove(bus);
         }
 
-        public void Publish(IEvent<IEventData> eventMessage)
+        public void Publish(IEvent eventMessage)
         {
             foreach (var bus in _wrappedBuses)
             {
@@ -36,7 +36,7 @@ namespace Ncqrs.Eventing.ServiceModel.Bus
             }
         }
 
-        public void Publish(IEnumerable<IEvent<IEventData>> eventMessages)
+        public void Publish(IEnumerable<IEvent> eventMessages)
         {
             foreach (var bus in _wrappedBuses)
             {

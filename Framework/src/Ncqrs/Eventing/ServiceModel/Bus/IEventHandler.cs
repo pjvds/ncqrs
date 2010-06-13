@@ -2,8 +2,8 @@
 
 namespace Ncqrs.Eventing.ServiceModel.Bus
 {
-    public interface IEventHandler<TEventData> where TEventData : IEventData
+    public interface IEventHandler<TEventData> where TEventData : IEvent
     {
-        void Handle(IEvent<TEventData> evnt);
+        void Handle(IEvent evnt);
     }
 }

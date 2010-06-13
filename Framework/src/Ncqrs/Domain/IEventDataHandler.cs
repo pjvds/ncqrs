@@ -3,8 +3,8 @@ using Ncqrs.Eventing;
 
 namespace Ncqrs.Domain
 {
-    public interface IEventDataHandler<TEventData> where TEventData : IEventData
+    public interface IEventDataHandler<TEventData> where TEventData : IEvent
     {
-        bool HandleEventData(TEventData eventData);
+        bool HandleEventData(TEventData evnt);
     }
 }

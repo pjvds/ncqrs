@@ -2,7 +2,7 @@ using System;
 
 namespace Ncqrs.Eventing.Sourcing
 {
-    public interface ISourcedEvent<out TEventData> : IEvent<TEventData> where TEventData : IEventData
+    public interface ISourcedEvent : IEvent
     {
         /// <summary>
         /// Gets the id of the event source that caused the event.

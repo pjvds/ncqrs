@@ -9,7 +9,7 @@ namespace Ncqrs.Domain
     ///   An event handler that uses a specified action as handler, but only calls this when the event
     ///   is of a certain type, or is inherited from it.
     /// </summary>
-    public class TypeThresholdedActionBasedDomainEventHandler : IEventDataHandler<IEventData>
+    public class TypeThresholdedActionBasedDomainEventHandler : IEventDataHandler<IEvent>
     {
         /// <summary>
         ///   The event type that should be used as threshold.
@@ -30,7 +30,7 @@ namespace Ncqrs.Domain
         /// <summary>
         ///   The handler that should be called when the threshold did not hold the event.
         /// </summary>
-        private readonly Action<IEventData> _handler;
+        private readonly Action<IEvent> _handler;
 
         /// <summary>
         ///   Initializes a new instance of the <see cref = "TypeThresholdedActionBasedDomainEventHandler" /> class.
@@ -39,14 +39,14 @@ namespace Ncqrs.Domain
         /// <param name = "eventTypeThreshold">The event type that should be used as threshold.</param>
         /// <param name = "exact">if set to <c>true</c> the threshold will hold all types that are not the same type; otherwise it hold 
         /// all types that are not inhered from the event type threshold or implement the interface that is specified by the threshold type.</param>
-        public TypeThresholdedActionBasedDomainEventHandler(Action<IEventData> handler, Type eventTypeThreshold,
+        public TypeThresholdedActionBasedDomainEventHandler(Action<IEvent> handler, Type eventTypeThreshold,
                                                               Boolean exact = false)
         {
             Contract.Requires<ArgumentNullException>(handler != null, "The handler cannot be null.");
             Contract.Requires<ArgumentNullException>(eventTypeThreshold != null,
                                                      "The eventTypeThreshold cannot be null.");
-            Contract.Requires<ArgumentException>(typeof(IEventData).IsAssignableFrom(eventTypeThreshold),
-                                                 "The eventTypeThreshold should be of a type that implements the IEventData interface.");
+            Contract.Requires<ArgumentException>(typeof(IEvent).IsAssignableFrom(eventTypeThreshold),
+                                                 "The eventTypeThreshold should be of a type that implements the IEvent interface.");
 
             _handler = handler;
             _eventTypeThreshold = eventTypeThreshold;
@@ -56,7 +56,7 @@ namespace Ncqrs.Domain
         /// <summary>
         ///   Handles the event.
         /// </summary>
-        /// <param name = "eventData">The event data to handle.
+        /// <param name = "evnttData">The event data to handle.
         ///   <remarks>
         ///     This value should not be <c>null</c>.
         ///   </remarks>
@@ -68,15 +68,15 @@ namespace Ncqrs.Domain
         ///     handler was not interested in handling this event.
         ///   </remarks>
         /// </returns>
-        public bool HandleEventData(IEventData eventData)
+        public bool HandleEventData(IEvent evnt)
         {
-            Contract.Requires<ArgumentNullException>(eventData != null, "The eventData cannot be null.");
+            Contract.Requires<ArgumentNullException>(evnt != null, "The Event cannot be null.");
 
             var handled = false;
 
-            if (ShouldHandleThisEventData(eventData))
+            if (ShouldHandleThisEventData(evnt))
             {
-                _handler(eventData);
+                _handler(evnt);
                 handled = true;
             }
 
@@ -96,15 +96,15 @@ namespace Ncqrs.Domain
         /// <summary>
         ///   Determine whether the event should be handled or not.
         /// </summary>
-        /// <param name = "eventData">The event data.</param>
+        /// <param name = "evnttData">The event data.</param>
         /// <returns><c>true</c> when this event should be handled; otherwise, <c>false</c>.</returns>
-        private bool ShouldHandleThisEventData(IEventData eventData)
+        private bool ShouldHandleThisEventData(IEvent evnt)
         {
-            Contract.Assume(eventData != null, "The eventData should not be null.");
+            Contract.Assume(evnt != null, "The Event should not be null.");
 
             var shouldHandle = false;
 
-            var dataType = eventData.GetType();
+            var dataType = evnt.GetType();
 
             // This is true when the eventTypeThreshold is 
             // true if event type and the threshold type represent the same type, or if the theshold type is in the inheritance hierarchy 

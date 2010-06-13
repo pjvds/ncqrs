@@ -11,12 +11,12 @@ namespace Ncqrs.Eventing.Storage
     /// </summary>
     public class InMemoryEventStore : IEventStore
     {
-        private readonly Dictionary<Guid, Queue<ISourcedEvent<IEventData>>> _events = new Dictionary<Guid, Queue<ISourcedEvent<IEventData>>>();
+        private readonly Dictionary<Guid, Queue<ISourcedEvent>> _events = new Dictionary<Guid, Queue<ISourcedEvent>>();
         private readonly Dictionary<Guid, ISnapshot> _snapshots = new Dictionary<Guid, ISnapshot>();
 
-        public IEnumerable<ISourcedEvent<IEventData>> GetAllEvents(Guid id)
+        public IEnumerable<ISourcedEvent> GetAllEvents(Guid id)
         {
-            Queue<ISourcedEvent<IEventData>> events;
+            Queue<ISourcedEvent> events;
 
             if (_events.TryGetValue(id, out events))
             {
@@ -32,9 +32,9 @@ namespace Ncqrs.Eventing.Storage
         /// </summary>
         /// <param name="eventSourceId">The id of the event source that owns the events.</param>
         /// <returns>All the events from the event source.</returns>
-        public IEnumerable<ISourcedEvent<IEventData>> GetAllEventsSinceVersion(Guid id, long version)
+        public IEnumerable<ISourcedEvent> GetAllEventsSinceVersion(Guid id, long version)
         {
-            Queue<ISourcedEvent<IEventData>> events;
+            Queue<ISourcedEvent> events;
 
             if (_events.TryGetValue(id, out events))
             {
@@ -50,12 +50,12 @@ namespace Ncqrs.Eventing.Storage
 
         public void Save(IEventSource source)
         {
-            Queue<ISourcedEvent<IEventData>> events;
+            Queue<ISourcedEvent> events;
             var eventsToCommit = source.GetUncommittedEvents();
 
             if (!_events.TryGetValue(source.Id, out events))
             {
-                events = new Queue<ISourcedEvent<IEventData>>();
+                events = new Queue<ISourcedEvent>();
                 _events.Add(source.Id, events);
             }
 

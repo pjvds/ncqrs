@@ -6,15 +6,15 @@ namespace Ncqrs.Eventing
     /// <summary>
     /// Represents an event.
     /// </summary>
-    [ContractClass(typeof(IEventContracts<>))]
-    public interface IEvent<out TEventData> where TEventData : IEventData
+    [ContractClass(typeof(IEventContracts))]
+    public interface IEvent
     {
         /// <summary>
         /// Gets the unique identifier for this event.
         /// </summary>
         /// <value>A <see cref="Guid"/> that represents the unique identifier of this event.</value>
         Guid EventIdentifier
-        { 
+        {
             get;
         }
 
@@ -24,18 +24,13 @@ namespace Ncqrs.Eventing
         /// <value>a <see cref="DateTime"/> UTC value that represents the point
         /// in time where this event occurred.</value>
         DateTime EventTimeStamp
-        { 
-            get;
-        }
-
-        TEventData EventData
         {
             get;
         }
     }
 
-    [ContractClassFor(typeof(IEvent<>))]
-    internal sealed class IEventContracts<TEventData> : IEvent<TEventData> where TEventData : IEventData
+    [ContractClassFor(typeof(IEvent))]
+    internal sealed class IEventContracts : IEvent
     {
         public Guid EventIdentifier
         {
@@ -52,14 +47,6 @@ namespace Ncqrs.Eventing
                 Contract.Ensures(Contract.Result<DateTime>().Kind == DateTimeKind.Utc, "The event time stamp should always be in a UTC kind.");
 
                 return default(DateTime);
-            }
-        }
-
-        public TEventData EventData
-        {
-            get
-            {
-                return default(TEventData);
             }
         }
     }

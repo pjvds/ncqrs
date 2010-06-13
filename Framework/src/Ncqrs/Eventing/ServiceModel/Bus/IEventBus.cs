@@ -14,7 +14,7 @@ namespace Ncqrs.Eventing.ServiceModel.Bus
         /// <param name="eventMessage">The message to publish.</param>
         /// <exception cref="ArgumentNullException">Thrown when <i>message</i> was null.</exception>
         /// <exception cref="NoHandlerRegisteredForMessageException">Thrown when no handler was found for the specified message.</exception>
-        void Publish(IEvent<IEventData> eventMessage);
+        void Publish(IEvent eventMessage);
 
         /// <summary>
         /// Publishes the messages to the handlers.
@@ -23,6 +23,6 @@ namespace Ncqrs.Eventing.ServiceModel.Bus
         /// <exception cref="ArgumentNullException">Thrown when <i>messages</i> was null.</exception>
         /// <exception cref="ArgumentNullException">Thrown when a instance in <i>messages</i> was null.</exception>
         /// <exception cref="NoHandlerRegisteredForMessageException">Thrown when no handler was found for one of the specified messages.</exception>
-        void Publish(IEnumerable<IEvent<IEventData>> eventMessages);        
+        void Publish(IEnumerable<IEvent> eventMessages);        
     }
 }

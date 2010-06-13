@@ -7,12 +7,12 @@ using System.Reflection;
 
 namespace Ncqrs.Eventing.Sourcing
 {
-    public class SourcedEventStream : IEnumerable<ISourcedEvent<IEventData>>
+    public class SourcedEventStream : IEnumerable<ISourcedEvent>
     {
         private Guid _eventSourceId;
         private long _sequence;
 
-        private IList<ISourcedEvent<IEventData>> _events = new List<ISourcedEvent<IEventData>>();
+        private IList<ISourcedEvent> _events = new List<ISourcedEvent>();
 
         public Guid EventSourceId
         {
@@ -73,23 +73,13 @@ namespace Ncqrs.Eventing.Sourcing
             Contract.Invariant(Contract.ForAll(_events, (sourcedEvent) => sourcedEvent.EventSourceId == _eventSourceId));
         }
 
-        public void Append(IEventData eventData)
+        public void Append(ISourcedEvent sourcedEvent)
         {
-            var sourcedEvent = CreateSourcedEvent(_eventSourceId, _sequence++, eventData);
+            // TODO: Validate sequence and source id.
             _events.Add(sourcedEvent);
         }
 
-        private static ISourcedEvent<IEventData> CreateSourcedEvent(Guid eventSourceId, long eventSequence, IEventData eventData)
-        {
-            var eventDataType = eventData.GetType();
-            var sourcedEventType = typeof(SourcedEvent<>).MakeGenericType(eventDataType);
-
-            var flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
-            var args = new object[] {eventSourceId, eventSequence, eventData};
-            return (ISourcedEvent<IEventData>)Activator.CreateInstance(sourcedEventType, flags, null, args, CultureInfo.InvariantCulture);
-        }
-
-        public void Append(IEnumerable<IEventData> eventDatas)
+        public void Append(IEnumerable<ISourcedEvent> eventDatas)
         {
             foreach(var data in eventDatas)
             {
@@ -102,7 +92,7 @@ namespace Ncqrs.Eventing.Sourcing
             _events.Clear();
         }
 
-        public IEnumerator<ISourcedEvent<IEventData>> GetEnumerator()
+        public IEnumerator<ISourcedEvent> GetEnumerator()
         {
             return _events.GetEnumerator();
         }
