@@ -9,7 +9,7 @@ namespace Ncqrs.Domain
     ///   An event handler that uses a specified action as handler, but only calls this when the event
     ///   is of a certain type, or is inherited from it.
     /// </summary>
-    public class TypeThresholdedActionBasedDomainEventHandler : IEventDataHandler<IEvent>
+    public class TypeThresholdedActionBasedDomainEventHandler : IEventHandler<IEvent>
     {
         /// <summary>
         ///   The event type that should be used as threshold.

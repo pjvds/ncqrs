@@ -36,13 +36,13 @@ namespace Ncqrs.Domain.Mapping
         private String _regexPattern = "^(on|On|ON)+";
         private static readonly ILog Logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public IEnumerable<IEventDataHandler<IEvent>> GetEventHandlersFromAggregateRoot(IEventSource eventSource)
+        public IEnumerable<IEventHandler<IEvent>> GetEventHandlersFromAggregateRoot(IEventSource eventSource)
         {
             Contract.Requires<ArgumentNullException>(eventSource != null, "The eventSource cannot be null.");
-            Contract.Ensures(Contract.Result<IEnumerable<IEventDataHandler<IEvent>>>() != null, "The result should never be null.");
+            Contract.Ensures(Contract.Result<IEnumerable<IEventHandler<IEvent>>>() != null, "The result should never be null.");
 
             var targetType = eventSource.GetType();
-            var handlers = new List<IEventDataHandler<IEvent>>();
+            var handlers = new List<IEventHandler<IEvent>>();
 
             Logger.DebugFormat("Trying to get all event handlers based by convention for {0}.", targetType);
 

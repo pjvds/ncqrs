@@ -1,9 +1,10 @@
 ﻿using System;
+using Ncqrs.Eventing;
 
-namespace Ncqrs.Eventing.ServiceModel.Bus
+namespace Ncqrs.Domain
 {
     public interface IEventHandler<TEvent> where TEvent : IEvent
     {
-        void Handle(TEvent evnt);
+        bool HandleEventData(TEvent evnt);
     }
 }

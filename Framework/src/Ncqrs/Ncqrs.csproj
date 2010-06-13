@@ -132,7 +132,7 @@
     <Compile Include="Config\InstanceNotFoundInEnvironment.cs" />
     <Compile Include="DateTimeBasedClock.cs" />
     <Compile Include="Domain\AggregateRootMappedWithExpressions.cs" />
-    <Compile Include="Domain\IEventDataHandler.cs" />
+    <Compile Include="Domain\IEventHandler.cs" />
     <Compile Include="Domain\Mapping\ExpressionHandler.cs" />
     <Compile Include="Domain\IUnitOfWorkContext.cs" />
     <Compile Include="Domain\Mapping\ExpressionBasedEventDataHandlerMappingStrategy.cs" />
@@ -167,7 +167,7 @@
     <Compile Include="Domain\AggregateRoot.cs" />
     <Compile Include="Domain\AggregateRootMappedByConvention.cs" />
     <Compile Include="Domain\AggregateRootMappedWithAttributes.cs" />
-    <Compile Include="Domain\EventDataNotHandledException.cs" />
+    <Compile Include="Domain\EventNotHandledException.cs" />
     <Compile Include="Domain\IDomainEventHandler.cs" />
     <Compile Include="Domain\DomainEventHandler.cs" />
     <Compile Include="Domain\IUnitOfWorkFactory.cs" />

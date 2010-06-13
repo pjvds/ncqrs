@@ -40,7 +40,7 @@ namespace Ncqrs.Domain.Mapping
         /// <param name="eventSource">The aggregate root.</param>
         /// <see cref="ExpressionBasedEventDataHandlerMappingStrategy"/>
         /// <returns>All the <see cref="IDomainEventHandler"/>'s created based on the given mapping.</returns>
-        public IEnumerable<IEventDataHandler<IEvent>> GetEventHandlersFromAggregateRoot(IEventSource eventSource)
+        public IEnumerable<IEventHandler<IEvent>> GetEventHandlersFromAggregateRoot(IEventSource eventSource)
         {
             Contract.Requires<ArgumentNullException>(eventSource != null, "The eventSource cannot be null.");
 
@@ -49,7 +49,7 @@ namespace Ncqrs.Domain.Mapping
                 throw new ArgumentException("aggregateRoot need to be of type AggregateRootMappedWithExpressions to be used in a ExpressionBasedEventDataHandlerMappingStrategy.");
             }
 
-            var handlers = new List<IEventDataHandler<IEvent>>();
+            var handlers = new List<IEventHandler<IEvent>>();
 
             foreach (ExpressionHandler mappinghandler in ((AggregateRootMappedWithExpressions)eventSource).MappingHandlers)
             {
@@ -73,7 +73,7 @@ namespace Ncqrs.Domain.Mapping
         /// <param name="method">The method to invoke</param>
         /// <param name="exact"><b>True</b> if we need to have an exact match, otherwise <b>False</b>.</param>
         /// <returns>An <see cref="IDomainEventHandler"/> that handles the execution of the given method.</returns>
-        private static IEventDataHandler<IEvent> CreateHandlerForMethod(IEventSource eventSource, MethodInfo method, bool exact)
+        private static IEventHandler<IEvent> CreateHandlerForMethod(IEventSource eventSource, MethodInfo method, bool exact)
         {
             Type firstParameterType = method.GetParameters().First().ParameterType;
 

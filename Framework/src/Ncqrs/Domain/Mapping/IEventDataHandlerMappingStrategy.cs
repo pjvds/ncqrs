@@ -6,6 +6,6 @@ namespace Ncqrs.Domain.Mapping
 {
     public interface IEventDataHandlerMappingStrategy
     {
-        IEnumerable<IEventDataHandler<IEvent>> GetEventHandlersFromAggregateRoot(IEventSource eventSource);
+        IEnumerable<IEventHandler<IEvent>> GetEventHandlersFromAggregateRoot(IEventSource eventSource);
     }
 }
