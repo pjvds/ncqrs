@@ -111,7 +111,7 @@ namespace Ncqrs.Eventing.ServiceModel.Bus
         {
             var eventDataType = typeof(TEvent);
 
-            Action<IEvent> act = handler.Handle;
+            Action<IEvent> act = (evnt) => handler.Handle((TEvent)evnt);
             RegisterHandler(eventDataType, act);
         }
 
