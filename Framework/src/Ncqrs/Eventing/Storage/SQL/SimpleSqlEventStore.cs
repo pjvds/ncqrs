@@ -18,7 +18,7 @@ namespace Ncqrs.Eventing.Storage.SQL
         #region Queries
         private const String DeleteUnusedProviders = "DELETE FROM [EventSources] WHERE (SELECT Count(EventSourceId) FROM [Events] WHERE [EventSourceId]=[EventSources].[Id]) = 0";
 
-        private const String InsertNewEventQuery = "INSERT INTO [Events]([EventSourceId], [Name], [Data], [Sequence], [TimeStamp]) VALUES (@Id, @Name, @Data, @Sequence, getDate())";
+        private const String InsertNewEventQuery = "INSERT INTO [Events]([Id], [EventSourceId], [Name], [Data], [Sequence], [TimeStamp]) VALUES (@EventId, @EventSourceId, @Name, @Data, @Sequence, getDate())";
 
         private const String InsertNewProviderQuery = "INSERT INTO [EventSources](Id, Type, Version) VALUES (@Id, @Type, @Version)";
 
@@ -312,7 +312,8 @@ namespace Ncqrs.Eventing.Storage.SQL
                 using (var command = new SqlCommand(InsertNewEventQuery, transaction.Connection))
                 {
                     command.Transaction = transaction;
-                    command.Parameters.AddWithValue("Id", evnt.EventSourceId);
+                    command.Parameters.AddWithValue("EventId", evnt.EventIdentifier);
+                    command.Parameters.AddWithValue("EventSourceId", evnt.EventSourceId);
                     command.Parameters.AddWithValue("Name", evnt.GetType().FullName);
                     command.Parameters.AddWithValue("Sequence", evnt.EventSequence);
                     command.Parameters.AddWithValue("Data", data);
