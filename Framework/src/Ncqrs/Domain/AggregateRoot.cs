@@ -73,7 +73,7 @@ namespace Ncqrs.Domain
                 Contract.Requires<InvalidOperationException>(Version == InitialVersion);
 
                 _initialVersion = value;
-                _uncommittedEvents.Sequence = value;
+                _uncommittedEvents.SequenceOffset = value;
             }
         }
 

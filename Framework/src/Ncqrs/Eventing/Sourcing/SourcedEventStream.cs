@@ -2,15 +2,14 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Collections;
-using System.Globalization;
-using System.Reflection;
 
 namespace Ncqrs.Eventing.Sourcing
 {
     public class SourcedEventStream : IEnumerable<ISourcedEvent>
     {
         private Guid _eventSourceId;
-        private long _sequence;
+
+        private long _sequenceOffset;
 
         private IList<ISourcedEvent> _events = new List<ISourcedEvent>();
 
@@ -27,18 +26,19 @@ namespace Ncqrs.Eventing.Sourcing
             }
         }
 
-        public long Sequence
+        public long SequenceOffset
         {
             get
             {
-                return _sequence;
+                return _sequenceOffset;
             }
             set
             {
                 Contract.Requires<InvalidOperationException>(IsEmpty);
-                _sequence = value;                
+                _sequenceOffset = value;                
             }
         }
+
 
         public int Count
         {
@@ -60,17 +60,18 @@ namespace Ncqrs.Eventing.Sourcing
         {
         }
 
-        public SourcedEventStream(Guid eventSourceId, long sequence)
+        public SourcedEventStream(Guid eventSourceId, long sequenceOffset)
         {
             _eventSourceId = eventSourceId;
-            _sequence = sequence;
+            _sequenceOffset = sequenceOffset;
         }
 
         [ContractInvariantMethod]
         protected void ContractInvariants()
         {
-            Contract.Invariant(_sequence >= 0);
+            Contract.Invariant(_sequenceOffset >= 0);
             Contract.Invariant(Contract.ForAll(_events, (sourcedEvent) => sourcedEvent.EventSourceId == _eventSourceId));
+            Contract.Invariant(Contract.ForAll(_events, (sourcedEvent) => sourcedEvent.EventSequence == (_sequenceOffset+_events.IndexOf(sourcedEvent)+1)));
         }
 
         public void Append(ISourcedEvent sourcedEvent)

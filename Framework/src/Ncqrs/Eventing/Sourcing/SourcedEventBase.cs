@@ -5,6 +5,9 @@ namespace Ncqrs.Eventing.Sourcing
     [Serializable]
     public abstract class SourcedEventBase : EventBase, ISourcedEvent
     {
+        public static Guid UndefinedEventSourceId = Guid.Empty;
+        public const int UndefinedEventSequence = -1;
+
         /// <summary>
         /// Gets the id of the event source that caused the event.
         /// </summary>
@@ -28,7 +31,10 @@ namespace Ncqrs.Eventing.Sourcing
             internal set;
         }
 
-        internal SourcedEventBase(Guid eventSourceId, long eventSequence)
+        public SourcedEventBase() : this(UndefinedEventSourceId, UndefinedEventSequence)
+        {}
+
+        public SourcedEventBase(Guid eventSourceId, long eventSequence)
         {
             EventSourceId = eventSourceId;
             EventSequence = eventSequence;
