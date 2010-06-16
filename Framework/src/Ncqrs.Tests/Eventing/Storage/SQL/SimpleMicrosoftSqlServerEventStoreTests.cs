@@ -3,6 +3,8 @@ using System.Linq;
 using FluentAssertions;
 using Ncqrs.Domain;
 using Ncqrs.Eventing;
+using Ncqrs.Eventing.Sourcing;
+using Ncqrs.Eventing.Sourcing.Snapshotting;
 using Ncqrs.Eventing.Storage.SQL;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -14,7 +16,7 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
     public class SimpleMicrosoftSqlServerEventStoreTests
     {
         [Serializable]
-        public class CustomerCreatedEvent : DomainEvent
+        public class CustomerCreatedEvent : SourcedEvent
         {
             public CustomerCreatedEvent(Guid eventIdentifier, Guid aggregateRootId, long eventSequence, DateTime eventTimeStamp, string name, int age)
                 : base(eventIdentifier, aggregateRootId, eventSequence, eventTimeStamp)
@@ -34,13 +36,13 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
         }
 
         [Serializable]
-        public class CustomerNameChanged : DomainEvent
+        public class CustomerNameChanged : SourcedEvent
         {
             public Guid CustomerId
             {
                 get
                 {
-                    return AggregateRootId;
+                    return EventSourceId;
                 }
             }
 
@@ -92,7 +94,7 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
 
             int sequenceCounter = 0;
 
-            var events = new ISourcedEvent[]
+            var events = new SourcedEvent[]
                              {
                                  new CustomerCreatedEvent(Guid.NewGuid(), id, sequenceCounter++, DateTime.UtcNow, "Foo",
                                                           35),
@@ -121,7 +123,7 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
 
             int sequenceCounter = 0;
 
-            var events = new ISourcedEvent[]
+            var events = new SourcedEvent[]
                              {
                                  new CustomerCreatedEvent(Guid.NewGuid(), id, sequenceCounter++, DateTime.UtcNow, "Foo",
                                                           35),
@@ -149,7 +151,7 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
 
             int sequenceCounter = 0;
 
-            var events = new ISourcedEvent[]
+            var events = new SourcedEvent[]
                              {
                                  new CustomerCreatedEvent(Guid.NewGuid(), id, sequenceCounter++, DateTime.UtcNow, "Foo",
                                                           35),

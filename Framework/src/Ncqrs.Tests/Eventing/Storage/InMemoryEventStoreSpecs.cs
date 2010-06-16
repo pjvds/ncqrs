@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using FluentAssertions;
+using Ncqrs.Eventing.Sourcing;
 using NUnit.Framework;
 using Ncqrs.Eventing.Storage;
 using Ncqrs.Domain;
@@ -15,7 +16,7 @@ namespace Ncqrs.Tests.Eventing.Storage
     {
         public class EventSourceMock : IEventSource
         {
-            public Func<IEnumerable<ISourcedEvent>> GetUncommittedEventsStub;
+            public Func<IEnumerable<SourcedEvent>> GetUncommittedEventsStub;
 
             public Guid Id
             {
@@ -27,7 +28,7 @@ namespace Ncqrs.Tests.Eventing.Storage
                 get; set;
             }
 
-            public IEnumerable<ISourcedEvent> GetUncommittedEvents()
+            public IEnumerable<SourcedEvent> GetUncommittedEvents()
             {
                 return GetUncommittedEventsStub();
             }
@@ -45,11 +46,11 @@ namespace Ncqrs.Tests.Eventing.Storage
             }
         }
 
-        public class SomethingDoneEvent : DomainEvent
+        public class SomethingDoneEvent : SourcedEvent
         {
             public SomethingDoneEvent(Guid sourceId)
             {
-                GetType().GetProperty("AggregateRootId").SetValue(this, sourceId, null);
+                GetType().GetProperty("EventSourceId").SetValue(this, sourceId, null);
             }
         }
 

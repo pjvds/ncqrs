@@ -5,8 +5,10 @@ using System.Reflection;
 using Ncqrs.Eventing;
 using Ncqrs.Eventing.Conversion;
 using Ncqrs.Eventing.ServiceModel.Bus;
+using Ncqrs.Eventing.Sourcing.Snapshotting;
 using Ncqrs.Eventing.Storage;
 using System.Collections.Generic;
+using Ncqrs.Eventing.Sourcing;
 
 namespace Ncqrs.Domain.Storage
 {
@@ -17,9 +19,9 @@ namespace Ncqrs.Domain.Storage
         private readonly IEventBus _eventBus;
         private readonly IEventStore _store;
         private readonly ISnapshotStore _snapshotStore;
-        private readonly IEventConverter<DomainEvent, DomainEvent> _converter;
+        private readonly IEventConverter<SourcedEvent, SourcedEvent> _converter;
 
-        public DomainRepository(IEventStore store, IEventBus eventBus, ISnapshotStore snapshotStore = null, IEventConverter<DomainEvent, DomainEvent> converter = null)
+        public DomainRepository(IEventStore store, IEventBus eventBus, ISnapshotStore snapshotStore = null, IEventConverter<SourcedEvent, SourcedEvent> converter = null)
         {
             Contract.Requires<ArgumentNullException>(store != null);
             Contract.Requires<ArgumentNullException>(eventBus != null);
@@ -70,7 +72,7 @@ namespace Ncqrs.Domain.Storage
                 restoreMethod.Invoke(aggregateRoot, new object[] { snapshot });
 
                 var events = _store.GetAllEventsSinceVersion(aggregateRoot.Id, snapshot.EventSourceVersion);
-                aggregateRoot.InitializeFromHistory(events.Cast<DomainEvent>());
+                aggregateRoot.InitializeFromHistory(events);
             }
             else
             {
@@ -84,7 +86,7 @@ namespace Ncqrs.Domain.Storage
         {
             AggregateRoot aggregateRoot = null;
 
-            var events = _store.GetAllEvents(id).Cast<DomainEvent>();
+            var events = _store.GetAllEvents(id);
             events = ConvertEvents(events);
 
             if (events.Count() > 0)
@@ -124,11 +126,11 @@ namespace Ncqrs.Domain.Storage
             return aggregateRoot;
         }
 
-        protected IEnumerable<DomainEvent> ConvertEvents(IEnumerable<DomainEvent> events)
+        protected IEnumerable<SourcedEvent> ConvertEvents(IEnumerable<SourcedEvent> events)
         {
             if (_converter == null) return events;
 
-            var result = new List<DomainEvent>(events.Count());
+            var result = new List<SourcedEvent>(events.Count());
 
             foreach (var evnt in events)
             {
@@ -158,7 +160,7 @@ namespace Ncqrs.Domain.Storage
                 if(snapshot != null) _snapshotStore.SaveShapshot(snapshot);
             }
 
-            _eventBus.Publish(events.Cast<IEvent>());
+            _eventBus.Publish(events);
 
             // Accept the changes.
             aggregateRoot.AcceptChanges();

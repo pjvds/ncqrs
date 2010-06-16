@@ -5,6 +5,8 @@ using System.Diagnostics.Contracts;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Reflection;
+using Ncqrs.Eventing.Sourcing;
+using Ncqrs.Eventing.Sourcing.Snapshotting;
 
 namespace Ncqrs.Eventing.Storage.SQL
 {
@@ -16,7 +18,7 @@ namespace Ncqrs.Eventing.Storage.SQL
         #region Queries
         private const String DeleteUnusedProviders = "DELETE FROM [EventSources] WHERE (SELECT Count(EventSourceId) FROM [Events] WHERE [EventSourceId]=[EventSources].[Id]) = 0";
 
-        private const String InsertNewEventQuery = "INSERT INTO [Events]([EventSourceId], [Name], [Data], [Sequence], [TimeStamp]) VALUES (@Id, @Name, @Data, @Sequence, getDate())";
+        private const String InsertNewEventQuery = "INSERT INTO [Events]([Id], [EventSourceId], [Name], [Data], [Sequence], [TimeStamp]) VALUES (@EventId, @EventSourceId, @Name, @Data, @Sequence, getDate())";
 
         private const String InsertNewProviderQuery = "INSERT INTO [EventSources](Id, Type, Version) VALUES (@Id, @Type, @Version)";
 
@@ -47,7 +49,7 @@ namespace Ncqrs.Eventing.Storage.SQL
         /// </summary>
         /// <param name="id">The id of the event provider.</param>
         /// <returns>All events for the specified event provider.</returns>
-        public IEnumerable<ISourcedEvent> GetAllEvents(Guid id)
+        public IEnumerable<SourcedEvent> GetAllEvents(Guid id)
         {
             return GetAllEventsSinceVersion(id, 0);
         }
@@ -57,9 +59,9 @@ namespace Ncqrs.Eventing.Storage.SQL
         /// </summary>
         /// <param name="eventSourceId">The id of the event source that owns the events.</param>
         /// <returns>All the events from the event source.</returns>
-        public IEnumerable<ISourcedEvent> GetAllEventsSinceVersion(Guid id, long version)
+        public IEnumerable<SourcedEvent> GetAllEventsSinceVersion(Guid id, long version)
         {
-            var result = new List<ISourcedEvent>();
+            var result = new List<SourcedEvent>();
 
             // Create connection and command.
             using (var connection = new SqlConnection(_connectionString))
@@ -83,7 +85,7 @@ namespace Ncqrs.Eventing.Storage.SQL
 
                         using (var dataStream = new MemoryStream(rawData))
                         {
-                            var evnt = (ISourcedEvent)formatter.Deserialize(dataStream);
+                            var evnt = (SourcedEvent)formatter.Deserialize(dataStream);
                             result.Add(evnt);
                         }
                     }
@@ -126,7 +128,7 @@ namespace Ncqrs.Eventing.Storage.SQL
                         }
 
                         // Save all events to the store.
-                        SaveEvents(events, eventSource.Id, transaction);
+                        SaveEvents(events, transaction);
 
                         // Update the version of the provider.
                         UpdateEventSourceVersion(eventSource, transaction);
@@ -279,14 +281,14 @@ namespace Ncqrs.Eventing.Storage.SQL
         /// <param name="evnts">The events to save.</param>
         /// <param name="eventSourceId">The event source id that owns the events.</param>
         /// <param name="transaction">The transaction.</param>
-        private static void SaveEvents(IEnumerable<ISourcedEvent> evnts, Guid eventSourceId, SqlTransaction transaction)
+        private static void SaveEvents(IEnumerable<ISourcedEvent> evnts, SqlTransaction transaction)
         {
             Contract.Requires<ArgumentNullException>(evnts != null, "The argument evnts could not be null.");
             Contract.Requires<ArgumentNullException>(transaction != null, "The argument transaction could not be null.");
 
-            foreach (ISourcedEvent evnt in evnts)
+            foreach (var sourcedEvent in evnts)
             {
-                SaveEvent(evnt, eventSourceId, transaction);
+                SaveEvent(sourcedEvent, transaction);
             }
         }
 
@@ -296,7 +298,7 @@ namespace Ncqrs.Eventing.Storage.SQL
         /// <param name="evnt">The event to save.</param>
         /// <param name="eventSourceId">The id of the event source that owns the event.</param>
         /// <param name="transaction">The transaction.</param>
-        private static void SaveEvent(ISourcedEvent evnt, Guid eventSourceId, SqlTransaction transaction)
+        private static void SaveEvent(ISourcedEvent evnt, SqlTransaction transaction)
         {
             Contract.Requires<ArgumentNullException>(evnt != null, "The argument evnt could not be null.");
             Contract.Requires<ArgumentNullException>(transaction != null, "The argument transaction could not be null.");
@@ -310,7 +312,8 @@ namespace Ncqrs.Eventing.Storage.SQL
                 using (var command = new SqlCommand(InsertNewEventQuery, transaction.Connection))
                 {
                     command.Transaction = transaction;
-                    command.Parameters.AddWithValue("Id", eventSourceId);
+                    command.Parameters.AddWithValue("EventId", evnt.EventIdentifier);
+                    command.Parameters.AddWithValue("EventSourceId", evnt.EventSourceId);
                     command.Parameters.AddWithValue("Name", evnt.GetType().FullName);
                     command.Parameters.AddWithValue("Sequence", evnt.EventSequence);
                     command.Parameters.AddWithValue("Data", data);

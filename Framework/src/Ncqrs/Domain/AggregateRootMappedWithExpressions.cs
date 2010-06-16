@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Ncqrs.Domain.Mapping;
+using Ncqrs.Eventing;
 
 namespace Ncqrs.Domain
 {
@@ -8,9 +9,9 @@ namespace Ncqrs.Domain
     /// A aggregate root that uses lambda style mapping to map internal event handlers. The following method should be mapped 
     /// </summary>
     /// <remarks>
-    /// This aggregate root uses the  <see cref="ExpressionBasedDomainEventHandlerMappingStrategy"/> to get the internal event handlers.
+    /// This aggregate root uses the  <see cref="ExpressionBasedDomainSourcedEventHandlerMappingStrategy"/> to get the internal event handlers.
     /// </remarks>
-    /// <seealso cref="ExpressionBasedDomainEventHandlerMappingStrategy"/>
+    /// <seealso cref="ExpressionBasedDomainSourcedEventHandlerMappingStrategy"/>
     public abstract class AggregateRootMappedWithExpressions : MappedAggregateRoot
     {
         [NonSerialized]
@@ -25,7 +26,7 @@ namespace Ncqrs.Domain
         }
 
         protected AggregateRootMappedWithExpressions() 
-            : base(new ExpressionBasedDomainEventHandlerMappingStrategy())
+            : base(new ExpressionBasedDomainSourcedEventHandlerMappingStrategy())
         {
             /* I know, calling virtual methods from the constructor isn't the smartest thing to do
              * but in this case it doesn't really matter because the implemented 
@@ -37,9 +38,9 @@ namespace Ncqrs.Domain
         /// <summary>
         /// Maps the given generic eventtype to the expressed handler.
         /// </summary>
-        /// <typeparam name="T">This should always be a <see cref="DomainEvent"/>.</typeparam>
+        /// <typeparam name="T">This should always be a <see cref="SourcedEvent"/>.</typeparam>
         /// <returns>An <see cref="ExpressionHandler{T}"/>which allows us to define the mapping to a handler.</returns>
-        protected ExpressionHandler<T> Map<T>() where T : DomainEvent
+        protected ExpressionHandler<T> Map<T>() where T : IEvent
         {
             var handler = new ExpressionHandler<T>();
             _mappinghandlers.Add(handler);

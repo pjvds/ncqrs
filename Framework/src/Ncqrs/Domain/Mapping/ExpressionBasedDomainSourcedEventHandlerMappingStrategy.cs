@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Diagnostics.Contracts;
 using System.Reflection;
+using Ncqrs.Eventing;
+using Ncqrs.Eventing.Sourcing;
 
 namespace Ncqrs.Domain.Mapping
 {
@@ -21,35 +23,35 @@ namespace Ncqrs.Domain.Mapping
     ///         Map<SomethingHappenedEvent>().ToHandler(x => SomethingHasHappened(x));
     ///     }
     ///     
-    ///     public void SomethingHasHappened(DomainEvent e)
+    ///     public void SomethingHasHappened(SourcedEvent e)
     ///     {}
     /// }
     /// 
-    /// public class SomethingHappenedEvent : DomainEvent
+    /// public class SomethingHappenedEvent : SourcedEvent
     /// {}
     /// </code>
     /// </remarks>
     /// </summary>
-    public class ExpressionBasedDomainEventHandlerMappingStrategy : IDomainEventHandlerMappingStrategy
+    public class ExpressionBasedDomainSourcedEventHandlerMappingStrategy : ISourcedEventHandlerMappingStrategy
     {
         /// <summary>
         /// Gets the event handlers from aggregate root based on the given mapping.
         /// </summary>
-        /// <param name="aggregateRoot">The aggregate root.</param>
-        /// <see cref="ExpressionBasedDomainEventHandlerMappingStrategy"/>
+        /// <param name="eventSource">The aggregate root.</param>
+        /// <see cref="ExpressionBasedDomainSourcedEventHandlerMappingStrategy"/>
         /// <returns>All the <see cref="IDomainEventHandler"/>'s created based on the given mapping.</returns>
-        public IEnumerable<IDomainEventHandler> GetEventHandlersFromAggregateRoot(AggregateRoot aggregateRoot)
+        public IEnumerable<IDomainEventHandler> GetEventHandlersFromAggregateRoot(IEventSource eventSource)
         {
-            Contract.Requires<ArgumentNullException>(aggregateRoot != null, "The aggregateRoot cannot be null.");
+            Contract.Requires<ArgumentNullException>(eventSource != null, "The eventSource cannot be null.");
 
-            if(!(aggregateRoot is AggregateRootMappedWithExpressions))
+            if(!(eventSource is AggregateRootMappedWithExpressions))
             {
-                throw new ArgumentException("aggregateRoot need to be of type AggregateRootMappedWithExpressions to be used in a ExpressionBasedDomainEventHandlerMappingStrategy.");
+                throw new ArgumentException("aggregateRoot need to be of type AggregateRootMappedWithExpressions to be used in a ExpressionBasedDomainSourcedEventHandlerMappingStrategy.");
             }
 
             var handlers = new List<IDomainEventHandler>();
 
-            foreach (ExpressionHandler mappinghandler in ((AggregateRootMappedWithExpressions)aggregateRoot).MappingHandlers)
+            foreach (ExpressionHandler mappinghandler in ((AggregateRootMappedWithExpressions)eventSource).MappingHandlers)
             {
                 if (mappinghandler.ActionMethodInfo.IsStatic)
                 {
@@ -57,7 +59,7 @@ namespace Ncqrs.Domain.Mapping
                     throw new InvalidEventHandlerMappingException(message);
                 }
 
-                var handler = CreateHandlerForMethod(aggregateRoot, mappinghandler.ActionMethodInfo, mappinghandler.Exact);
+                var handler = CreateHandlerForMethod(eventSource, mappinghandler.ActionMethodInfo, mappinghandler.Exact);
                 handlers.Add(handler);
             }
 
@@ -67,15 +69,15 @@ namespace Ncqrs.Domain.Mapping
         /// <summary>
         /// Converts the given method into an <see cref="IDomainEventHandler"/> object.
         /// </summary>
-        /// <param name="aggregateRoot">The aggregateroot from which we want to invoke the method.</param>
+        /// <param name="aggregateRoot">The event source from which we want to invoke the method.</param>
         /// <param name="method">The method to invoke</param>
         /// <param name="exact"><b>True</b> if we need to have an exact match, otherwise <b>False</b>.</param>
         /// <returns>An <see cref="IDomainEventHandler"/> that handles the execution of the given method.</returns>
-        private static IDomainEventHandler CreateHandlerForMethod(AggregateRoot aggregateRoot, MethodInfo method, bool exact)
+        private static IDomainEventHandler CreateHandlerForMethod(IEventSource eventSource, MethodInfo method, bool exact)
         {
             Type firstParameterType = method.GetParameters().First().ParameterType;
 
-            Action<DomainEvent> handler = e => method.Invoke(aggregateRoot, new object[] { e });
+            Action<IEvent> handler = e => method.Invoke(eventSource, new object[] { e });
             return new TypeThresholdedActionBasedDomainEventHandler(handler, firstParameterType, exact);
         }
     }

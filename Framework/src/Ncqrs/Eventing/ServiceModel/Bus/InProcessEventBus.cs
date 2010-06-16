@@ -81,12 +81,15 @@ namespace Ncqrs.Eventing.ServiceModel.Bus
 
         protected IEnumerable<Action<IEvent>> GetHandlersForEvent(IEvent eventMessage)
         {
-            var eventType = eventMessage.GetType();
+            if (eventMessage == null)
+                return null;
+
+            var dataType = eventMessage.GetType();
             var result = new List<Action<IEvent>>();
 
             foreach(var key in _handlerRegister.Keys)
             {
-                if(key.IsAssignableFrom(eventType))
+                if(key.IsAssignableFrom(dataType))
                 {
                     var handlers = _handlerRegister[key];
                     result.AddRange(handlers);
@@ -106,17 +109,19 @@ namespace Ncqrs.Eventing.ServiceModel.Bus
 
         public void RegisterHandler<TEvent>(IEventHandler<TEvent> handler) where TEvent : IEvent
         {
-            Action<IEvent> act = (e) => handler.Handle((TEvent) e);
-            RegisterHandler(typeof(TEvent), act);
+            var eventDataType = typeof(TEvent);
+
+            Action<IEvent> act = (evnt) => handler.Handle((TEvent)evnt);
+            RegisterHandler(eventDataType, act);
         }
 
-        public void RegisterHandler(Type eventType, Action<IEvent> handler)
+        public void RegisterHandler(Type eventDataType, Action<IEvent> handler)
         {
             List<Action<IEvent>> handlers = null;
-            if (!_handlerRegister.TryGetValue(eventType, out handlers))
+            if (!_handlerRegister.TryGetValue(eventDataType, out handlers))
             {
                 handlers = new List<Action<IEvent>>(1);
-                _handlerRegister.Add(eventType, handlers);
+                _handlerRegister.Add(eventDataType, handlers);
             }
 
             handlers.Add(handler);

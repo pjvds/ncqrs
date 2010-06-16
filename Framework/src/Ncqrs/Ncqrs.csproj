@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Ncqrs</RootNamespace>
     <AssemblyName>Ncqrs</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>
     </SccProjectName>
@@ -88,7 +88,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\log4net\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Contracts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=736440c9b414ea16, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
@@ -133,26 +132,27 @@
     <Compile Include="Config\InstanceNotFoundInEnvironment.cs" />
     <Compile Include="DateTimeBasedClock.cs" />
     <Compile Include="Domain\AggregateRootMappedWithExpressions.cs" />
-    <Compile Include="Domain\DomainEvent.cs" />
     <Compile Include="Domain\Mapping\ExpressionHandler.cs" />
     <Compile Include="Domain\IUnitOfWorkContext.cs" />
-    <Compile Include="Domain\Mapping\ExpressionBasedDomainEventHandlerMappingStrategy.cs" />
+    <Compile Include="Domain\Mapping\ExpressionBasedDomainSourcedEventHandlerMappingStrategy.cs" />
     <Compile Include="Domain\NoUnitOfWorkAvailableInThisContextException.cs" />
     <Compile Include="Eventing\Conversion\DelegateBasedConverter.cs" />
-    <Compile Include="Eventing\EventBase.cs" />
+    <Compile Include="Eventing\Event.cs" />
     <Compile Include="Eventing\Conversion\EventConverter.cs" />
     <Compile Include="Eventing\Conversion\IEventConverter.cs" />
-    <Compile Include="Eventing\IEventSource.cs" />
-    <Compile Include="Eventing\ISnapshotable.cs" />
-    <Compile Include="Eventing\ISnapshot.cs" />
-    <Compile Include="Eventing\ISourcedEvent.cs" />
+    <Compile Include="Eventing\Sourcing\IEventSource.cs" />
+    <Compile Include="Eventing\Sourcing\ISourcedEvent.cs" />
+    <Compile Include="Eventing\Sourcing\Snapshotting\ISnapshotable.cs" />
+    <Compile Include="Eventing\Sourcing\Snapshotting\ISnapshot.cs" />
     <EmbeddedResource Include="Eventing\Storage\SQL\TableCreationScript.sql">
       <CustomToolNamespace>Ncqrs.Eventing.Storage.SQL.SimpleMicrosoftSqlServerEventStore</CustomToolNamespace>
     </EmbeddedResource>
     <Compile Include="Eventing\ServiceModel\Bus\CompositeEventBus.cs" />
     <Compile Include="Eventing\ServiceModel\Bus\IEventHandler.cs" />
     <Compile Include="Eventing\ServiceModel\Bus\RegisterAllHandlersInAssemblyExtension.cs" />
-    <Compile Include="Eventing\Snapshot.cs" />
+    <Compile Include="Eventing\Sourcing\Snapshotting\Snapshot.cs" />
+    <Compile Include="Eventing\Sourcing\SourcedEvent.cs" />
+    <Compile Include="Eventing\Sourcing\SourcedEventStream.cs" />
     <Compile Include="Eventing\Storage\ISnapshotStore.cs" />
     <Compile Include="IClock.cs" />
     <Compile Include="ILog.cs" />
@@ -163,8 +163,6 @@
     <Compile Include="NcqrsEnvironment.cs" />
     <Compile Include="Config\IEnvironmentConfiguration.cs" />
     <Compile Include="NcqrsEnvironmentConfigurationException.cs" />
-    <Compile Include="Eventing\Denormalization\DenormalizerFactory.cs" />
-    <Compile Include="Eventing\Denormalization\IDenormalizer.cs" />
     <Compile Include="Domain\AggregateRoot.cs" />
     <Compile Include="Domain\AggregateRootMappedByConvention.cs" />
     <Compile Include="Domain\AggregateRootMappedWithAttributes.cs" />
@@ -172,10 +170,10 @@
     <Compile Include="Domain\IDomainEventHandler.cs" />
     <Compile Include="Domain\DomainEventHandler.cs" />
     <Compile Include="Domain\IUnitOfWorkFactory.cs" />
-    <Compile Include="Domain\Mapping\AttributeBasedDomainEventHandlerMappingStrategy.cs" />
-    <Compile Include="Domain\Mapping\ConventionBasedDomainEventHandlerMappingStrategy.cs" />
+    <Compile Include="Domain\Mapping\AttributeBasedDomainSourcedEventHandlerMappingStrategy.cs" />
+    <Compile Include="Domain\Mapping\ConventionBasedDomainSourcedEventHandlerMappingStrategy.cs" />
     <Compile Include="Domain\Mapping\EventHandlerAttribute.cs" />
-    <Compile Include="Domain\Mapping\IDomainEventHandlerMappingStrategy.cs" />
+    <Compile Include="Domain\Mapping\ISourcedEventHandlerMappingStrategy.cs" />
     <Compile Include="Domain\Mapping\InvalidEventHandlerMappingException.cs" />
     <Compile Include="Domain\Mapping\MappedAggregateRoot.cs" />
     <Compile Include="Domain\Mapping\NoEventHandlerAttribute.cs" />

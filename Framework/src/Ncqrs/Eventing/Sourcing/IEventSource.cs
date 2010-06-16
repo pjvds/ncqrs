@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Ncqrs.Eventing.Sourcing;
 
 namespace Ncqrs.Eventing
 {
@@ -45,7 +46,7 @@ namespace Ncqrs.Eventing
         /// Gets the uncommitted events.
         /// </summary>
         /// <returns></returns>
-        IEnumerable<ISourcedEvent> GetUncommittedEvents();
+        IEnumerable<SourcedEvent> GetUncommittedEvents();
 
         /// <summary>
         /// Commits the events.

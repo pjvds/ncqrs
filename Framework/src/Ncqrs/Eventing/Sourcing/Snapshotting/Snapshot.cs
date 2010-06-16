@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Ncqrs.Eventing
+namespace Ncqrs.Eventing.Sourcing.Snapshotting
 {
     /// <summary>
     /// Holds the full state of an <see cref="IEventSource"/> at a certain version.

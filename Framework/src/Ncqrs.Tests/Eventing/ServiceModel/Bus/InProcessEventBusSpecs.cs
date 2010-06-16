@@ -1,4 +1,5 @@
 ﻿using Ncqrs.Eventing;
+using Ncqrs.Eventing.Sourcing;
 using NUnit.Framework;
 using Ncqrs.Eventing.ServiceModel.Bus;
 using Rhino.Mocks;
@@ -9,12 +10,12 @@ namespace Ncqrs.Tests.Eventing.ServiceModel.Bus
     [TestFixture]
     public class InProcessEventBusSpecs
     {
-        public class ADomainEvent : DomainEvent
+        public class ADomainEvent : SourcedEvent
         {
 
         }
 
-        public class AEvent : EventBase
+        public class AEvent : Event
         {
         }
 

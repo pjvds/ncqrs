@@ -2,6 +2,7 @@
 using FluentAssertions;
 using Ncqrs.Domain;
 using Ncqrs.Eventing.Conversion;
+using Ncqrs.Eventing.Sourcing;
 using NUnit.Framework;
 using System.Reflection;
 
@@ -13,7 +14,7 @@ namespace Ncqrs.Tests.Eventing.Conversion
         {
             public FooEventV2 Convert(FooEventV1 e)
             {
-                return new FooEventV2(e.EventIdentifier, e.AggregateRootId, e.EventSequence, e.EventTimeStamp, e.Name, "");
+                return new FooEventV2(e.EventIdentifier, e.EventSourceId, e.EventSequence, e.EventTimeStamp, e.Name, "");
             }
         }
 
@@ -21,11 +22,11 @@ namespace Ncqrs.Tests.Eventing.Conversion
         {
             public FooEventV3 Convert(FooEventV2 e)
             {
-                return new FooEventV3(e.EventIdentifier, e.AggregateRootId, e.EventSequence, e.EventTimeStamp, e.Name, e.LastName, "");
+                return new FooEventV3(e.EventIdentifier, e.EventSourceId, e.EventSequence, e.EventTimeStamp, e.Name, e.LastName, "");
             }
         }
 
-        public class FooEventV1 : DomainEvent
+        public class FooEventV1 : SourcedEvent
         {
             public string Name
             {
@@ -34,7 +35,7 @@ namespace Ncqrs.Tests.Eventing.Conversion
             }
         }
 
-        public class FooEventV2 : DomainEvent
+        public class FooEventV2 : SourcedEvent
         {
             public string Name
             {
@@ -56,7 +57,7 @@ namespace Ncqrs.Tests.Eventing.Conversion
             }
         }
 
-        public class FooEventV3 : DomainEvent
+        public class FooEventV3 : SourcedEvent
         {
             public string Name
             {
@@ -85,7 +86,7 @@ namespace Ncqrs.Tests.Eventing.Conversion
             }
         }
 
-        public class BarEventV1 : DomainEvent
+        public class BarEventV1 : SourcedEvent
         {
             public string Name
             {
@@ -94,7 +95,7 @@ namespace Ncqrs.Tests.Eventing.Conversion
             }
         }
 
-        public class BarEventV2 : DomainEvent
+        public class BarEventV2 : SourcedEvent
         {
             public string FullName
             {
@@ -114,7 +115,7 @@ namespace Ncqrs.Tests.Eventing.Conversion
             var converter = new EventConverter();
             converter.AddConverter(
                 (BarEventV1 e) =>
-                new BarEventV2(e.EventIdentifier, e.AggregateRootId, e.EventSequence, e.EventTimeStamp));
+                new BarEventV2(e.EventIdentifier, e.EventSourceId, e.EventSequence, e.EventTimeStamp));
 
             converter.Convert(new BarEventV1()).Should().BeOfType<BarEventV2>();
         }
@@ -126,15 +127,15 @@ namespace Ncqrs.Tests.Eventing.Conversion
             converter.AddConverter
                 (
                     (BarEventV1 e) =>
-                    new BarEventV2(e.EventIdentifier, e.AggregateRootId, e.EventSequence, e.EventTimeStamp)
+                    new BarEventV2(e.EventIdentifier, e.EventSourceId, e.EventSequence, e.EventTimeStamp)
                 ).AddConverter
                 (
                     (FooEventV1 e) =>
-                    new FooEventV2(e.EventIdentifier, e.AggregateRootId, e.EventSequence, e.EventTimeStamp, e.Name, "")
+                    new FooEventV2(e.EventIdentifier, e.EventSourceId, e.EventSequence, e.EventTimeStamp, e.Name, "")
                 ).AddConverter
                 (
                     (FooEventV2 e) =>
-                    new FooEventV3(e.EventIdentifier, e.AggregateRootId, e.EventSequence, e.EventTimeStamp, e.Name,
+                    new FooEventV3(e.EventIdentifier, e.EventSourceId, e.EventSequence, e.EventTimeStamp, e.Name,
                                    e.LastName, "")
                 );
 

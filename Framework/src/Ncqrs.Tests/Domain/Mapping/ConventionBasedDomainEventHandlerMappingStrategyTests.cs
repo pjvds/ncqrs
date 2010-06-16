@@ -3,6 +3,7 @@ using System.Linq;
 using FluentAssertions;
 using Ncqrs.Domain;
 using Ncqrs.Domain.Mapping;
+using Ncqrs.Eventing.Sourcing;
 using NUnit.Framework;
 
 namespace Ncqrs.Tests.Domain.Mapping
@@ -11,7 +12,7 @@ namespace Ncqrs.Tests.Domain.Mapping
     {
         public class IlligalStaticMethodTarget : AggregateRootMappedByConvention
         {
-            public static void OnDomainEvent(DomainEvent e)
+            public static void OnDomainEvent(SourcedEvent e)
             { }
         }
 
@@ -24,7 +25,7 @@ namespace Ncqrs.Tests.Domain.Mapping
 
         public class MoreThenOneParameterMethodTarget : AggregateRootMappedByConvention
         {
-            public void OnDomainEvent(DomainEvent e1, DomainEvent e2)
+            public void OnDomainEvent(SourcedEvent e1, SourcedEvent e2)
             {
             }
         }
@@ -38,10 +39,10 @@ namespace Ncqrs.Tests.Domain.Mapping
 
         public class GoodTarget : AggregateRootMappedByConvention
         {
-            public class PublicEvent : DomainEvent { }
-            public class ProtectedEvent : DomainEvent { }
-            public class InternalEvent : DomainEvent { }
-            public class PrivateEvent : DomainEvent { }
+            public class PublicEvent : SourcedEvent { }
+            public class ProtectedEvent : SourcedEvent { }
+            public class InternalEvent : SourcedEvent { }
+            public class PrivateEvent : SourcedEvent { }
 
             public int PublicEventHandlerInvokeCount;
             public int ProtectedEventHandlerInvokeCount;

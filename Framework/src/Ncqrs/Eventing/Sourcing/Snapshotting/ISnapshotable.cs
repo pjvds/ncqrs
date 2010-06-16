@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using Ncqrs.Domain;
 using System.Diagnostics.Contracts;
-using Ncqrs.Domain.Storage;
-using Ncqrs.Eventing.Storage;
 
-namespace Ncqrs.Eventing
+namespace Ncqrs.Eventing.Sourcing.Snapshotting
 {    
     /// <summary>
     /// This interface flags an object beeing <i>snapshotable</i>. This means
@@ -58,7 +56,7 @@ namespace Ncqrs.Eventing
             get { throw new NotImplementedException(); }
         }
 
-        public IEnumerable<ISourcedEvent> GetUncommittedEvents()
+        public IEnumerable<SourcedEvent> GetUncommittedEvents()
         {
             throw new NotImplementedException();
         }

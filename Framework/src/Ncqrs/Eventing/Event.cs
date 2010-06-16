@@ -3,10 +3,10 @@
 namespace Ncqrs.Eventing
 {
     /// <summary>
-    /// The base for all event messages.
+    /// The base for all event messages. All sourced events should subclass from <see cref="SourcedEvent"/>.
     /// </summary>
     [Serializable]
-    public abstract class EventBase : IEvent
+    public abstract class Event : IEvent
     {
         /// <summary>
         /// Gets the unique identifier for this event.
@@ -21,15 +21,21 @@ namespace Ncqrs.Eventing
         public DateTime EventTimeStamp { get; private set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="EventBase"/> class.
+        /// Initializes a new instance of the <see cref="Event"/> class.
         /// </summary>
-        protected EventBase()
+        public Event()
         {
             var idGenerator = NcqrsEnvironment.Get<IUniqueIdentifierGenerator>();
             var clock = NcqrsEnvironment.Get<IClock>();
 
             EventIdentifier = idGenerator.GenerateNewId();
             EventTimeStamp = clock.UtcNow();
+        }
+
+        public Event(Guid eventIdentifier, DateTime eventTimeStamp)
+        {
+            EventIdentifier = eventIdentifier;
+            EventTimeStamp = eventTimeStamp;
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using FluentAssertions;
 using Ncqrs.Domain;
 using Ncqrs.Eventing;
+using Ncqrs.Eventing.Sourcing;
 using Rhino.Mocks;
 using NUnit.Framework;
 
@@ -11,7 +12,7 @@ namespace Ncqrs.Tests.Domain
 {
     public class AggregateRootTests
     {
-        public class HandledEvent : DomainEvent
+        public class HandledEvent : SourcedEvent
         {
             public HandledEvent()
             {
@@ -23,12 +24,12 @@ namespace Ncqrs.Tests.Domain
 
             public void OverrideAggregateRootId(Guid id)
             {
-                this.GetType().GetProperty("AggregateRootId").SetValue(this, id, null);
+                this.GetType().GetProperty("EventSourceId").SetValue(this, id, null);
                 
             }
         }
 
-        public class UnhandledEvent : DomainEvent
+        public class UnhandledEvent : SourcedEvent
         {}
 
         public class MyAggregateRoot : AggregateRoot
@@ -40,14 +41,14 @@ namespace Ncqrs.Tests.Domain
                 RegisterHandler(new TypeThresholdedActionBasedDomainEventHandler(OnFoo, typeof(HandledEvent), false));
             }
 
-            public MyAggregateRoot(IEnumerable<DomainEvent> history)
+            public MyAggregateRoot(IEnumerable<SourcedEvent> history)
             {
                 RegisterHandler(new TypeThresholdedActionBasedDomainEventHandler(OnFoo, typeof(HandledEvent), false));
 
                 InitializeFromHistory(history);
             }
 
-            public new void InitializeFromHistory(IEnumerable<DomainEvent> history)
+            public new void InitializeFromHistory(IEnumerable<SourcedEvent> history)
             {
                 base.InitializeFromHistory(history);
             }
@@ -64,12 +65,12 @@ namespace Ncqrs.Tests.Domain
                 ApplyEvent(e);
             }
 
-            public new void ApplyEvent(DomainEvent e)
+            public new void ApplyEvent(SourcedEvent e)
             {
                 base.ApplyEvent(e);
             }
 
-            private void OnFoo(DomainEvent e)
+            private void OnFoo(SourcedEvent e)
             {
                 FooEventHandlerInvokeCount++;
             }
@@ -244,7 +245,7 @@ namespace Ncqrs.Tests.Domain
         [Test]
         public void Initializing_from_history_should_throw_an_exception_when_the_history_was_null()
         {
-            IEnumerable<DomainEvent> nullHistory = null;
+            IEnumerable<SourcedEvent> nullHistory = null;
             var theAggregate = new MyAggregateRoot();
 
             Action act = () => theAggregate.InitializeFromHistory(nullHistory);
@@ -257,7 +258,7 @@ namespace Ncqrs.Tests.Domain
         {
             var theAggregate = new MyAggregateRoot();
 
-            IEnumerable<DomainEvent> history = new DomainEvent[0];
+            IEnumerable<SourcedEvent> history = new SourcedEvent[0];
 
             theAggregate.InitializeFromHistory(history);
         }
@@ -270,7 +271,7 @@ namespace Ncqrs.Tests.Domain
 
             var event1 = new HandledEvent(Guid.NewGuid(), theAggregate.Id, wrongSequence, DateTime.UtcNow);
 
-            IEnumerable<DomainEvent> history = new[] { event1 };
+            IEnumerable<SourcedEvent> history = new[] { event1 };
 
             Action act = ()=> theAggregate.InitializeFromHistory(history);
             act.ShouldThrow<InvalidOperationException>().And.Message.Should().Contain("sequence");
@@ -287,7 +288,7 @@ namespace Ncqrs.Tests.Domain
             var event4 = new HandledEvent(Guid.NewGuid(), theAggregate.Id, 4, DateTime.UtcNow);
             var event5 = new HandledEvent(Guid.NewGuid(), theAggregate.Id, 5, DateTime.UtcNow);
 
-            IEnumerable<DomainEvent> history = new[] { event1, event2, event3, event4, event5 };
+            IEnumerable<SourcedEvent> history = new[] { event1, event2, event3, event4, event5 };
 
             theAggregate.InitializeFromHistory(history);
         }
@@ -302,7 +303,7 @@ namespace Ncqrs.Tests.Domain
             var event2 = new HandledEvent(Guid.NewGuid(), theAggregate.Id, 1, DateTime.UtcNow);
             var event3 = new HandledEvent(Guid.NewGuid(), theAggregate.Id, wrongSequence, DateTime.UtcNow);
 
-            IEnumerable<DomainEvent> history = new[] { event1, event2, event3 };
+            IEnumerable<SourcedEvent> history = new[] { event1, event2, event3 };
 
             Action act = () => theAggregate.InitializeFromHistory(history);
             act.ShouldThrow<InvalidOperationException>().And.Message.Should().Contain("sequence");

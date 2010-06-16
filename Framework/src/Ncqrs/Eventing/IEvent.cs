@@ -14,7 +14,7 @@ namespace Ncqrs.Eventing
         /// </summary>
         /// <value>A <see cref="Guid"/> that represents the unique identifier of this event.</value>
         Guid EventIdentifier
-        { 
+        {
             get;
         }
 
@@ -24,7 +24,7 @@ namespace Ncqrs.Eventing
         /// <value>a <see cref="DateTime"/> UTC value that represents the point
         /// in time where this event occurred.</value>
         DateTime EventTimeStamp
-        { 
+        {
             get;
         }
     }

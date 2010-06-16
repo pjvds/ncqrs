@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
+using Ncqrs.Eventing;
+using Ncqrs.Eventing.Sourcing;
 
 namespace Ncqrs.Domain.Mapping
 {
@@ -14,7 +16,7 @@ namespace Ncqrs.Domain.Mapping
     /// <list type="number">
     /// <item><description>The method should be an instance method (no static).</description></item>
     /// <item><description>It should accept 1 parameter.</description></item>
-    /// <item><description>The parameter should be, or inherited from, the <see cref="DomainEvent"/> class.</description></item>
+    /// <item><description>The parameter should be, or inherited from, the <see cref="SourcedEvent"/> class.</description></item>
     /// <item><description>The method should be marked with the <see cref="EventHandlerAttribute"/>.</description></item>
     /// </list>
     /// <code>public class Foo : AggregateRootMappedWithAttributes
@@ -27,19 +29,19 @@ namespace Ncqrs.Domain.Mapping
     /// }</code>
     /// </remarks>
     /// </summary>
-    public class AttributeBasedDomainEventHandlerMappingStrategy : IDomainEventHandlerMappingStrategy
+    public class AttributeBasedDomainSourcedEventHandlerMappingStrategy : ISourcedEventHandlerMappingStrategy
     {
         /// <summary>
         /// Gets the event handlers from aggregate root based on attributes.
         /// </summary>
-        /// <param name="aggregateRoot">The aggregate root.</param>
-        /// <see cref="AttributeBasedDomainEventHandlerMappingStrategy"/>
+        /// <param name="eventSource">The aggregate root.</param>
+        /// <see cref="AttributeBasedDomainSourcedEventHandlerMappingStrategy"/>
         /// <returns>All the <see cref="IDomainEventHandler"/>'s created based on attribute mapping.</returns>
-        public IEnumerable<IDomainEventHandler> GetEventHandlersFromAggregateRoot(AggregateRoot aggregateRoot)
+        public IEnumerable<IDomainEventHandler> GetEventHandlersFromAggregateRoot(IEventSource eventSource)
         {
-            Contract.Requires<ArgumentNullException>(aggregateRoot != null, "The aggregateRoot cannot be null.");
+            Contract.Requires<ArgumentNullException>(eventSource != null, "The eventSource cannot be null.");
 
-            var targetType = aggregateRoot.GetType();
+            var targetType = eventSource.GetType();
             var handlers = new List<IDomainEventHandler>();
 
             foreach (var method in targetType.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static))
@@ -58,13 +60,13 @@ namespace Ncqrs.Domain.Mapping
                         var message = String.Format("The method {0}.{1} could not be mapped as an event handler, since it has {2} parameters where 1 is required.", method.DeclaringType.Name, method.Name, NumberOfParameters(method));
                         throw new InvalidEventHandlerMappingException(message);
                     }
-                    if (!typeof(DomainEvent).IsAssignableFrom(FirstParameterType(method))) // The parameter should be an IEvent.
+                    if (!typeof(IEvent).IsAssignableFrom(FirstParameterType(method))) // The parameter should be an IEvent.
                     {
                         var message = String.Format("The method {0}.{1} could not be mapped as an event handler, since it the first parameter is not an event type.", method.DeclaringType.Name, method.Name);
                         throw new InvalidEventHandlerMappingException(message);
                     }
 
-                    var handler = CreateHandlerForMethod(aggregateRoot, method, attribute);
+                    var handler = CreateHandlerForMethod(eventSource, method, attribute);
                     handlers.Add(handler);
                 }
             }
@@ -72,11 +74,11 @@ namespace Ncqrs.Domain.Mapping
             return handlers;
         }
 
-        private static IDomainEventHandler CreateHandlerForMethod(AggregateRoot aggregateRoot, MethodInfo method, EventHandlerAttribute attribute)
+        private static IDomainEventHandler CreateHandlerForMethod(IEventSource eventSource, MethodInfo method, EventHandlerAttribute attribute)
         {
             Type firstParameterType = method.GetParameters().First().ParameterType;
 
-            Action<DomainEvent> handler = e => method.Invoke(aggregateRoot, new object[] {e});
+            Action<IEvent> handler = e => method.Invoke(eventSource, new object[] { e });
 
             return new TypeThresholdedActionBasedDomainEventHandler(handler, firstParameterType, attribute.Exact);
         }
