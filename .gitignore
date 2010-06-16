@@ -1,0 +1,18 @@
+# Standard VS.NET
+obj
+bin
+*.csproj.user
+
+# Resharper
+*ReSharper*
+*resharper*
+*.suo
+*.cache
+
+# Other useful stuff
+* Thumbs.db
+*.bak
+*.cache
+*.log
+*.swp
+*.user
