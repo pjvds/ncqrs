@@ -79,6 +79,11 @@ namespace Ncqrs.Eventing.Sourcing
         {
         }
 
+        public SourcedEventStream(Guid eventSourceId) : this(eventSourceId, 0)
+        {
+
+        }
+
         public SourcedEventStream(Guid eventSourceId, long sequenceOffset)
         {
             _eventSourceId = eventSourceId;

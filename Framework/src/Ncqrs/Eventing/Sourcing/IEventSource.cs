@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Ncqrs.Eventing.Sourcing;
 
-namespace Ncqrs.Eventing
+namespace Ncqrs.Eventing.Sourcing
 {
     /// <summary>
     /// An object that represents all his state changes via a sequence of events.
