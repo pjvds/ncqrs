@@ -86,7 +86,7 @@
     <Compile Include="Domain\AggregateRootMappedByConventionTests.cs" />
     <Compile Include="Domain\AggregateRootMappedWithAttributesTests.cs" />
     <Compile Include="Domain\AggregateRootTests.cs" />
-    <Compile Include="Domain\DomainEventHandlerTests.cs" />
+    <Compile Include="Domain\SourcedEventHanderTests.cs" />
     <Compile Include="Domain\EventNotHandledExceptionTests.cs" />
     <Compile Include="Domain\Mapping\AttributeBasedDomainEventHandlerMappingStrategyTests.cs" />
     <Compile Include="Domain\Mapping\ConventionBasedDomainEventHandlerMappingStrategyTests.cs" />
@@ -96,6 +96,7 @@
     <Compile Include="Domain\Storage\AggregateLoaderExceptionTests.cs" />
     <Compile Include="Domain\Storage\DomainRepositoryTests.cs" />
     <Compile Include="Eventing\Conversion\EventConverterTests.cs" />
+    <Compile Include="Eventing\Sourcing\SourcedEventStreamTests.cs" />
     <Compile Include="Eventing\Storage\ConcurrencyExceptionSpecs.cs" />
     <Compile Include="Eventing\Storage\SQL\SimpleMicrosoftSqlServerEventStoreTests.cs" />
     <Compile Include="NcqrsEnvironmentConfigurationExceptionSpecs.cs" />

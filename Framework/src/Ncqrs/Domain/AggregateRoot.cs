@@ -81,7 +81,7 @@ namespace Ncqrs.Domain
         /// A list that contains all the event handlers.
         /// </summary>
         [NonSerialized]
-        private readonly List<IDomainEventHandler> _eventHandlers = new List<IDomainEventHandler>();
+        private readonly List<ISourcedEventHandler> _eventHandlers = new List<ISourcedEventHandler>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AggregateRoot"/> class.
@@ -121,7 +121,7 @@ namespace Ncqrs.Domain
             }
         }
 
-        protected void RegisterHandler(IDomainEventHandler handler)
+        protected void RegisterHandler(ISourcedEventHandler handler)
         {
             Contract.Requires<ArgumentNullException>(handler != null, "The handler cannot be null.");
 

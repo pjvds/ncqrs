@@ -117,7 +117,7 @@ namespace Ncqrs.Tests.Domain.Mapping
         public void It_should_throw_an_exception_when_mapped_method_is_static()
         {
             var aggregate = new IlligalStaticMethodTarget();
-            var mapping = new ExpressionBasedDomainSourcedEventHandlerMappingStrategy();
+            var mapping = new ExpressionBasedSourcedEventHandlerMappingStrategy();
 
             Action act = () => mapping.GetEventHandlersFromAggregateRoot(aggregate);
             act.ShouldThrow<InvalidEventHandlerMappingException>();
@@ -127,7 +127,7 @@ namespace Ncqrs.Tests.Domain.Mapping
         public void It_should_map_the_mapped_events()
         {
             var aggregate = new GoodTarget();
-            var mapping = new ExpressionBasedDomainSourcedEventHandlerMappingStrategy();
+            var mapping = new ExpressionBasedSourcedEventHandlerMappingStrategy();
 
             var handlers = mapping.GetEventHandlersFromAggregateRoot(aggregate);
 
@@ -139,7 +139,7 @@ namespace Ncqrs.Tests.Domain.Mapping
         public void It_should_create_the_correct_event_handlers()
         {
             var aggregate = new GoodTarget();
-            var mapping = new ExpressionBasedDomainSourcedEventHandlerMappingStrategy();
+            var mapping = new ExpressionBasedSourcedEventHandlerMappingStrategy();
 
             var handlers = mapping.GetEventHandlersFromAggregateRoot(aggregate);
 
@@ -161,7 +161,7 @@ namespace Ncqrs.Tests.Domain.Mapping
         public void It_should_not_handle_event_when_there_is_a_mapping_inheritance_type_mismatch()
         {
             var aggregate = new MismatchOnEventTypeTarget();
-            var mapping = new ExpressionBasedDomainSourcedEventHandlerMappingStrategy();
+            var mapping = new ExpressionBasedSourcedEventHandlerMappingStrategy();
 
             var handlers = mapping.GetEventHandlersFromAggregateRoot(aggregate);
             
@@ -173,7 +173,7 @@ namespace Ncqrs.Tests.Domain.Mapping
         public void It_should_not_handle_event_when_there_needs_to_be_an_exact_match_and_event_types_are_derived()
         {
             var aggregate = new EventMappedExactOnMethodWithDerivedEventTypeTarget();
-            var mapping = new ExpressionBasedDomainSourcedEventHandlerMappingStrategy();
+            var mapping = new ExpressionBasedSourcedEventHandlerMappingStrategy();
 
             var handlers = mapping.GetEventHandlersFromAggregateRoot(aggregate);
 
@@ -185,7 +185,7 @@ namespace Ncqrs.Tests.Domain.Mapping
         public void It_should_handle_event_when_there_is_no_exact_match_and_event_types_are_derived()
         {
             var aggregate = new EventMappedOnMethodWithDerivedEventTypeTarget();
-            var mapping = new ExpressionBasedDomainSourcedEventHandlerMappingStrategy();
+            var mapping = new ExpressionBasedSourcedEventHandlerMappingStrategy();
 
             var handlers = mapping.GetEventHandlersFromAggregateRoot(aggregate);
 

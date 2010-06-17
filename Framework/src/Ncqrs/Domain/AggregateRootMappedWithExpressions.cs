@@ -9,9 +9,9 @@ namespace Ncqrs.Domain
     /// A aggregate root that uses lambda style mapping to map internal event handlers. The following method should be mapped 
     /// </summary>
     /// <remarks>
-    /// This aggregate root uses the  <see cref="ExpressionBasedDomainSourcedEventHandlerMappingStrategy"/> to get the internal event handlers.
+    /// This aggregate root uses the  <see cref="ExpressionBasedSourcedEventHandlerMappingStrategy"/> to get the internal event handlers.
     /// </remarks>
-    /// <seealso cref="ExpressionBasedDomainSourcedEventHandlerMappingStrategy"/>
+    /// <seealso cref="ExpressionBasedSourcedEventHandlerMappingStrategy"/>
     public abstract class AggregateRootMappedWithExpressions : MappedAggregateRoot
     {
         [NonSerialized]
@@ -26,7 +26,7 @@ namespace Ncqrs.Domain
         }
 
         protected AggregateRootMappedWithExpressions() 
-            : base(new ExpressionBasedDomainSourcedEventHandlerMappingStrategy())
+            : base(new ExpressionBasedSourcedEventHandlerMappingStrategy())
         {
             /* I know, calling virtual methods from the constructor isn't the smartest thing to do
              * but in this case it doesn't really matter because the implemented 
