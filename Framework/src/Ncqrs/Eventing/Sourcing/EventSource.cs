@@ -5,7 +5,7 @@ using Ncqrs.Domain;
 
 namespace Ncqrs.Eventing.Sourcing
 {
-    public class EventSource
+    public abstract class EventSource
     {
         [NonSerialized]
         private Guid _eventSourceId;
