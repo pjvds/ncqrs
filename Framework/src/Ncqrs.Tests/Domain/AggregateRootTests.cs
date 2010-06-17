@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using Ncqrs.Domain;
-using Ncqrs.Eventing;
 using Ncqrs.Eventing.Sourcing;
 using Rhino.Mocks;
 using NUnit.Framework;
@@ -269,7 +268,7 @@ namespace Ncqrs.Tests.Domain
             var theAggregate = new MyAggregateRoot();
             long wrongSequence = 3;
 
-            var event1 = new HandledEvent(Guid.NewGuid(), theAggregate.Id, wrongSequence, DateTime.UtcNow);
+            var event1 = new HandledEvent(Guid.NewGuid(), theAggregate.EventSourceId, wrongSequence, DateTime.UtcNow);
 
             IEnumerable<SourcedEvent> history = new[] { event1 };
 
@@ -282,11 +281,11 @@ namespace Ncqrs.Tests.Domain
         {
             var theAggregate = new MyAggregateRoot();
 
-            var event1 = new HandledEvent(Guid.NewGuid(), theAggregate.Id, 1, DateTime.UtcNow);
-            var event2 = new HandledEvent(Guid.NewGuid(), theAggregate.Id, 2, DateTime.UtcNow);
-            var event3 = new HandledEvent(Guid.NewGuid(), theAggregate.Id, 3, DateTime.UtcNow);
-            var event4 = new HandledEvent(Guid.NewGuid(), theAggregate.Id, 4, DateTime.UtcNow);
-            var event5 = new HandledEvent(Guid.NewGuid(), theAggregate.Id, 5, DateTime.UtcNow);
+            var event1 = new HandledEvent(Guid.NewGuid(), theAggregate.EventSourceId, 1, DateTime.UtcNow);
+            var event2 = new HandledEvent(Guid.NewGuid(), theAggregate.EventSourceId, 2, DateTime.UtcNow);
+            var event3 = new HandledEvent(Guid.NewGuid(), theAggregate.EventSourceId, 3, DateTime.UtcNow);
+            var event4 = new HandledEvent(Guid.NewGuid(), theAggregate.EventSourceId, 4, DateTime.UtcNow);
+            var event5 = new HandledEvent(Guid.NewGuid(), theAggregate.EventSourceId, 5, DateTime.UtcNow);
 
             IEnumerable<SourcedEvent> history = new[] { event1, event2, event3, event4, event5 };
 
@@ -299,9 +298,9 @@ namespace Ncqrs.Tests.Domain
             var theAggregate = new MyAggregateRoot();
             long wrongSequence = 8;
 
-            var event1 = new HandledEvent(Guid.NewGuid(), theAggregate.Id, 0, DateTime.UtcNow);
-            var event2 = new HandledEvent(Guid.NewGuid(), theAggregate.Id, 1, DateTime.UtcNow);
-            var event3 = new HandledEvent(Guid.NewGuid(), theAggregate.Id, wrongSequence, DateTime.UtcNow);
+            var event1 = new HandledEvent(Guid.NewGuid(), theAggregate.EventSourceId, 0, DateTime.UtcNow);
+            var event2 = new HandledEvent(Guid.NewGuid(), theAggregate.EventSourceId, 1, DateTime.UtcNow);
+            var event3 = new HandledEvent(Guid.NewGuid(), theAggregate.EventSourceId, wrongSequence, DateTime.UtcNow);
 
             IEnumerable<SourcedEvent> history = new[] { event1, event2, event3 };
 
