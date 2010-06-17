@@ -37,12 +37,12 @@ namespace Ncqrs.Domain.Mapping
         /// <param name="eventSource">The aggregate root.</param>
         /// <see cref="AttributeBasedDomainSourcedEventHandlerMappingStrategy"/>
         /// <returns>All the <see cref="IDomainEventHandler"/>'s created based on attribute mapping.</returns>
-        public IEnumerable<IDomainEventHandler> GetEventHandlersFromAggregateRoot(IEventSource eventSource)
+        public IEnumerable<ISourcedEventHandler> GetEventHandlersFromAggregateRoot(IEventSource eventSource)
         {
             Contract.Requires<ArgumentNullException>(eventSource != null, "The eventSource cannot be null.");
 
             var targetType = eventSource.GetType();
-            var handlers = new List<IDomainEventHandler>();
+            var handlers = new List<ISourcedEventHandler>();
 
             foreach (var method in targetType.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static))
             {
@@ -74,7 +74,7 @@ namespace Ncqrs.Domain.Mapping
             return handlers;
         }
 
-        private static IDomainEventHandler CreateHandlerForMethod(IEventSource eventSource, MethodInfo method, EventHandlerAttribute attribute)
+        private static ISourcedEventHandler CreateHandlerForMethod(IEventSource eventSource, MethodInfo method, EventHandlerAttribute attribute)
         {
             Type firstParameterType = method.GetParameters().First().ParameterType;
 

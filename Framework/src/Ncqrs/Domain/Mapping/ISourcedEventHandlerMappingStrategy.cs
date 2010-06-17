@@ -7,6 +7,6 @@ namespace Ncqrs.Domain.Mapping
 {
     public interface ISourcedEventHandlerMappingStrategy
     {
-        IEnumerable<IDomainEventHandler> GetEventHandlersFromAggregateRoot(IEventSource eventSource);
+        IEnumerable<ISourcedEventHandler> GetEventHandlersFromAggregateRoot(IEventSource eventSource);
     }
 }

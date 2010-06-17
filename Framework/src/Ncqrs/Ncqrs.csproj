@@ -134,14 +134,16 @@
     <Compile Include="Domain\AggregateRootMappedWithExpressions.cs" />
     <Compile Include="Domain\Mapping\ExpressionHandler.cs" />
     <Compile Include="Domain\IUnitOfWorkContext.cs" />
-    <Compile Include="Domain\Mapping\ExpressionBasedDomainSourcedEventHandlerMappingStrategy.cs" />
+    <Compile Include="Domain\Mapping\ExpressionBasedSourcedEventHandlerMappingStrategy.cs" />
     <Compile Include="Domain\NoUnitOfWorkAvailableInThisContextException.cs" />
+    <Compile Include="Eventing\Sourcing\TypeThresholdedActionBasedSourcedEventHandler.cs" />
     <Compile Include="Eventing\Conversion\DelegateBasedConverter.cs" />
     <Compile Include="Eventing\Event.cs" />
     <Compile Include="Eventing\Conversion\EventConverter.cs" />
     <Compile Include="Eventing\Conversion\IEventConverter.cs" />
     <Compile Include="Eventing\Sourcing\IEventSource.cs" />
     <Compile Include="Eventing\Sourcing\ISourcedEvent.cs" />
+    <Compile Include="Eventing\Sourcing\ISourcedEventHandler.cs" />
     <Compile Include="Eventing\Sourcing\Snapshotting\ISnapshotable.cs" />
     <Compile Include="Eventing\Sourcing\Snapshotting\ISnapshot.cs" />
     <EmbeddedResource Include="Eventing\Storage\SQL\TableCreationScript.sql">
@@ -152,6 +154,7 @@
     <Compile Include="Eventing\ServiceModel\Bus\RegisterAllHandlersInAssemblyExtension.cs" />
     <Compile Include="Eventing\Sourcing\Snapshotting\Snapshot.cs" />
     <Compile Include="Eventing\Sourcing\SourcedEvent.cs" />
+    <Compile Include="Eventing\Sourcing\SourcedEventHandler.cs" />
     <Compile Include="Eventing\Sourcing\SourcedEventStream.cs" />
     <Compile Include="Eventing\Storage\ISnapshotStore.cs" />
     <Compile Include="IClock.cs" />
@@ -167,8 +170,6 @@
     <Compile Include="Domain\AggregateRootMappedByConvention.cs" />
     <Compile Include="Domain\AggregateRootMappedWithAttributes.cs" />
     <Compile Include="Domain\EventNotHandledException.cs" />
-    <Compile Include="Domain\IDomainEventHandler.cs" />
-    <Compile Include="Domain\DomainEventHandler.cs" />
     <Compile Include="Domain\IUnitOfWorkFactory.cs" />
     <Compile Include="Domain\Mapping\AttributeBasedDomainSourcedEventHandlerMappingStrategy.cs" />
     <Compile Include="Domain\Mapping\ConventionBasedDomainSourcedEventHandlerMappingStrategy.cs" />
@@ -181,7 +182,6 @@
     <Compile Include="Domain\Storage\DomainRepository.cs" />
     <Compile Include="Domain\Storage\IDomainRepository.cs" />
     <Compile Include="Domain\UnitOfWorkFactory.cs" />
-    <Compile Include="Domain\TypeThresholdedActionBasedDomainEventHandler.cs" />
     <Compile Include="Domain\UnitOfWork.cs" />
     <Compile Include="BasicGuidGenerator.cs" />
     <Compile Include="Eventing\ServiceModel\Bus\IEventBus.cs" />
