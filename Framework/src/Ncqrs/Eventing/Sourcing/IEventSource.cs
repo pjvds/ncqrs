@@ -11,7 +11,7 @@ namespace Ncqrs.Eventing.Sourcing
         /// <summary>
         /// Gets the globally unique identifier.
         /// </summary>
-        Guid Id
+        Guid EventSourceId
         {
             get;
         }

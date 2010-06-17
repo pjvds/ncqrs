@@ -29,19 +29,19 @@ namespace Ncqrs.Eventing.Sourcing.Snapshotting
     {
         public void RestoreFromSnapshot(TSnapshot snapshot)
         {
-            Contract.Ensures(Id == snapshot.EventSourceId, "Restoring from snapshot should initialize the Id.");
+            Contract.Ensures(EventSourceId == snapshot.EventSourceId, "Restoring from snapshot should initialize the Id.");
             Contract.Ensures(InitialVersion == snapshot.EventSourceVersion, "Restoring from snapshot should initialize the initial version.");
         }
 
         public TSnapshot CreateSnapshot()
         {
-            Contract.Ensures(Contract.Result<TSnapshot>().EventSourceId == Id, "The EventSourceId of the snapshot should be initialized with the Id value of the event source.");
+            Contract.Ensures(Contract.Result<TSnapshot>().EventSourceId == EventSourceId, "The EventSourceId of the snapshot should be initialized with the Id value of the event source.");
             Contract.Ensures(Contract.Result<TSnapshot>().EventSourceVersion == Version, "The EventSourceVersion of the snapshot should be initialized with the Version value of the event source.");
 
             return default(TSnapshot);
         }
 
-        public Guid Id
+        public Guid EventSourceId
         {
             get { throw new NotImplementedException(); }
         }

@@ -53,10 +53,10 @@ namespace Ncqrs.Eventing.Storage
             Queue<SourcedEvent> events;
             var eventsToCommit = source.GetUncommittedEvents();
 
-            if (!_events.TryGetValue(source.Id, out events))
+            if (!_events.TryGetValue(source.EventSourceId, out events))
             {
                 events = new Queue<SourcedEvent>();
-                _events.Add(source.Id, events);
+                _events.Add(source.EventSourceId, events);
             }
 
             foreach (var evnt in eventsToCommit)

@@ -107,7 +107,7 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
                              };
 
             var eventSource = MockRepository.GenerateMock<IEventSource>();
-            eventSource.Stub(e => e.Id).Return(id);
+            eventSource.Stub(e => e.EventSourceId).Return(id);
             eventSource.Stub(e => e.InitialVersion).Return(0);
             eventSource.Stub(e => e.Version).Return(events.Length);
             eventSource.Stub(e => e.GetUncommittedEvents()).Return(events);
@@ -132,7 +132,7 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
                              };
 
             var eventSource = MockRepository.GenerateMock<IEventSource>();
-            eventSource.Stub(e => e.Id).Return(id).Repeat.Twice();
+            eventSource.Stub(e => e.EventSourceId).Return(id).Repeat.Twice();
             eventSource.Stub(e => e.InitialVersion).Return(0).Repeat.Twice();
             eventSource.Stub(e => e.Version).Return(events.Length).Repeat.Twice();
             eventSource.Stub(e => e.GetUncommittedEvents()).Return(events).Repeat.Twice();
@@ -164,7 +164,7 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
                              };
 
             var eventSource = MockRepository.GenerateMock<IEventSource>();
-            eventSource.Stub(e => e.Id).Return(id);
+            eventSource.Stub(e => e.EventSourceId).Return(id);
             eventSource.Stub(e => e.InitialVersion).Return(0);
             eventSource.Stub(e => e.Version).Return(events.Length);
             eventSource.Stub(e => e.GetUncommittedEvents()).Return(events);

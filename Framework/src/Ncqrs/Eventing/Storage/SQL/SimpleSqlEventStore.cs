@@ -115,7 +115,7 @@ namespace Ncqrs.Eventing.Storage.SQL
                     try
                     {
                         // Get the current version of the event provider.
-                        int? currentVersion = GetVersion(eventSource.Id, transaction);
+                        int? currentVersion = GetVersion(eventSource.EventSourceId, transaction);
 
                         // Create new event provider when it is not found.
                         if (currentVersion == null)
@@ -124,7 +124,7 @@ namespace Ncqrs.Eventing.Storage.SQL
                         }
                         else if (currentVersion.Value != eventSource.InitialVersion)
                         {
-                            throw new ConcurrencyException(eventSource.Id, eventSource.Version);
+                            throw new ConcurrencyException(eventSource.EventSourceId, eventSource.Version);
                         }
 
                         // Save all events to the store.
@@ -270,7 +270,7 @@ namespace Ncqrs.Eventing.Storage.SQL
             using (var command = new SqlCommand(UpdateEventSourceVersionQuery, transaction.Connection))
             {
                 command.Transaction = transaction;
-                command.Parameters.AddWithValue("Id", eventSource.Id);
+                command.Parameters.AddWithValue("Id", eventSource.EventSourceId);
                 command.ExecuteNonQuery();
             }
         }
@@ -332,7 +332,7 @@ namespace Ncqrs.Eventing.Storage.SQL
             using (var command = new SqlCommand(InsertNewProviderQuery, transaction.Connection))
             {
                 command.Transaction = transaction;
-                command.Parameters.AddWithValue("Id", eventSource.Id);
+                command.Parameters.AddWithValue("Id", eventSource.EventSourceId);
                 command.Parameters.AddWithValue("Type", eventSource.GetType().ToString());
                 command.Parameters.AddWithValue("Version", eventSource.Version);
                 command.ExecuteNonQuery();

@@ -71,7 +71,7 @@ namespace Ncqrs.Domain.Storage
 
                 restoreMethod.Invoke(aggregateRoot, new object[] { snapshot });
 
-                var events = _store.GetAllEventsSinceVersion(aggregateRoot.Id, snapshot.EventSourceVersion);
+                var events = _store.GetAllEventsSinceVersion(aggregateRoot.EventSourceId, snapshot.EventSourceVersion);
                 aggregateRoot.InitializeFromHistory(events);
             }
             else
