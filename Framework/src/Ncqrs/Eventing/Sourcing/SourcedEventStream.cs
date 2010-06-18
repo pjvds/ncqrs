@@ -9,7 +9,7 @@ namespace Ncqrs.Eventing.Sourcing
     {
         private Guid _eventSourceId;
         private long _sequenceOffset;
-        private IList<SourcedEvent> _events = new List<SourcedEvent>();
+        private readonly IList<SourcedEvent> _events = new List<SourcedEvent>();
 
         /// <summary>
         /// Gets or sets the id of the <see cref="IEventSource"/> that owns the events.
@@ -33,6 +33,10 @@ namespace Ncqrs.Eventing.Sourcing
             }
         }
 
+        /// <summary>
+        /// Gets the last sequence in this stream.
+        /// </summary>
+        /// <value>The last sequence.</value>
         public long LastSequence
         {
             get
@@ -59,6 +63,10 @@ namespace Ncqrs.Eventing.Sourcing
         }
 
 
+        /// <summary>
+        /// Gets the number of events in this stream.
+        /// </summary>
+        /// <value>The number of events in this stream. This value is zero when <see cref="IsEmpty"/> is <c>true</c>.</value>
         public int Count
         {
             get
@@ -67,6 +75,10 @@ namespace Ncqrs.Eventing.Sourcing
             }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether this instance is empty.
+        /// </summary>
+        /// <value><c>true</c> if this instance is empty; otherwise, <c>false</c>.</value>
         public bool IsEmpty
         {
             get
@@ -81,7 +93,6 @@ namespace Ncqrs.Eventing.Sourcing
 
         public SourcedEventStream(Guid eventSourceId) : this(eventSourceId, 0)
         {
-
         }
 
         public SourcedEventStream(Guid eventSourceId, long sequenceOffset)
@@ -98,11 +109,28 @@ namespace Ncqrs.Eventing.Sourcing
             Contract.Invariant(Contract.ForAll(_events, (sourcedEvent) => sourcedEvent.EventSequence == (_sequenceOffset + _events.IndexOf(sourcedEvent) + 1)));
         }
 
+        /// <summary>
+        /// Appends the specified sourced event to this steam.
+        /// </summary>
+        /// <exception cref="ArgumentNullException">Occurs when <paramref name="sourcedEvent"/> is null.</exception>
+        /// <exception cref="ArgumentException">Occurs when <paramref name="sourcedEvent.EventSourceId"/> is not owned set to the <see cref="EventSourceId"/> property of this stream.</exception>
+        /// <exception cref="ArgumentException">Occurs when <paramref name="sourcedEvent.Sequence"/> is not set to LastSequence+1.</exception>
+        /// <param name="sourcedEvent">The sourced event.</param>
         public void Append(SourcedEvent sourcedEvent)
         {
             ValidateSourcedEvent(sourcedEvent);
 
             _events.Add(sourcedEvent);
+        }
+
+        public void Append(IEnumerable<SourcedEvent> eventDatas)
+        {
+            if(eventDatas == null) throw new ArgumentNullException("eventDatas");
+
+            foreach (var data in eventDatas)
+            {
+                Append(data);
+            }
         }
 
         private void ValidateSourcedEvent(SourcedEvent sourcedEvent)
@@ -129,14 +157,6 @@ namespace Ncqrs.Eventing.Sourcing
                                         sourcedEvent.EventSequence, requiredSequence);
 
                 throw new ArgumentException("Cannot apply event with incorrect sequence number. The sequence number of the event is {0} while {1} was required.");
-            }
-        }
-
-        public void Append(IEnumerable<SourcedEvent> eventDatas)
-        {
-            foreach (var data in eventDatas)
-            {
-                Append(data);
             }
         }
 
