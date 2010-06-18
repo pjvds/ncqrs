@@ -158,7 +158,12 @@
     <Compile Include="Eventing\Sourcing\SourcedEvent.cs" />
     <Compile Include="Eventing\Sourcing\SourcedEventHandler.cs" />
     <Compile Include="Eventing\Sourcing\SourcedEventStream.cs" />
+    <Compile Include="Eventing\Storage\IPropertyBagTypeResolver.cs" />
+    <Compile Include="Eventing\Storage\IPropertyBagConverter.cs" />
+    <Compile Include="Eventing\Storage\IPropertyBagPostConverter.cs" />
     <Compile Include="Eventing\Storage\ISnapshotStore.cs" />
+    <Compile Include="Eventing\Storage\PropertyBag.cs" />
+    <Compile Include="Eventing\Storage\PropertyBagConverter.cs" />
     <Compile Include="IClock.cs" />
     <Compile Include="ILog.cs" />
     <Compile Include="InternalExtensions.cs" />
