@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
 using FluentAssertions;
 using Ncqrs.Eventing.Sourcing;
 using NUnit.Framework;
 using Ncqrs.Eventing.Storage;
-using Ncqrs.Domain;
-using Ncqrs.Eventing;
 
 namespace Ncqrs.Tests.Eventing.Storage
 {
@@ -26,6 +23,10 @@ namespace Ncqrs.Tests.Eventing.Storage
             public long Version
             {
                 get; set;
+            }
+
+            public void InitializeFromHistory(IEnumerable<SourcedEvent> history)
+            {
             }
 
             public IEnumerable<SourcedEvent> GetUncommittedEvents()

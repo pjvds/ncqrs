@@ -8,8 +8,8 @@ Follow these steps to get the website running.
 1. Open MyNotes.sln with Visual Studio 2010.
 2. Run MyNotesEventStore.sql to create the event store database.
 3. Run MyNotesReadModel.sql to create the read model database.
-4. If needed, update ReadModelContainer connection string in (this step
-   is not needed when you run the default SQL express)
+4. If needed (this step is not needed when you run the default SQL express), 
+   update ReadModelContainer connection string in 
 	- CommandService\Web.config
 	- ReadModel\App.config
 	- Website\Web.config

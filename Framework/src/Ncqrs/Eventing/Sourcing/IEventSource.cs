@@ -32,14 +32,20 @@ namespace Ncqrs.Eventing.Sourcing
         /// via history, it contains the version as it was at that time. For new instances this value is always 0.
         /// </para>
         /// <para>
-        /// The version does not change until changes are accepted via the <see cref="AcceptChanges"/> method.
+        /// The version does not change until changes are accepted via the <see cref="IEventSource.AcceptChanges"/> method.
         /// </para>
         /// </summary>
         /// <value>The initial version.</value>
         long InitialVersion
-        { 
+        {
             get;
         }
+
+        /// <summary>
+        /// Initializes from history.
+        /// </summary>
+        /// <param name="history">The history.</param>
+        void InitializeFromHistory(IEnumerable<SourcedEvent> history);
 
         /// <summary>
         /// Gets the uncommitted events.
