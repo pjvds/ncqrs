@@ -8,13 +8,30 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
     public class MapsToAggregateRootConstructorAttribute : Attribute
     {
+        private Type _type;
+
         /// <summary>
-        /// Get or sets the full qualified type name of the target aggregate root.
+        /// Get the full qualified type name of the target aggregate root.
         /// </summary>
         public String TypeName
         {
             get;
-            set;
+            private set;
+        }
+
+        /// <summary>
+        /// Get the type of the target aggregate root.
+        /// </summary>
+        public Type Type
+        {
+            get
+            {
+                //delay resolving the type from type name to avoid potentially
+                //loading another assembly whilst holding class loader locks.
+                if (_type == null)
+                    _type = Type.GetType(TypeName, true);
+                return _type;
+            }
         }
 
         /// <summary>
@@ -38,7 +55,7 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
         {
             if (type == null) throw new ArgumentNullException("type");
 
-            TypeName = type.FullName;
+            _type = type;
             TypeName = type.AssemblyQualifiedName;
         }
     }

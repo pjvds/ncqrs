@@ -47,7 +47,7 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Actions
             var mappingAttribute = GetMappingAttribute(command);
             // TODO: Add exception wrapping.
 
-            return Type.GetType(mappingAttribute.TypeName, true);
+            return mappingAttribute.Type;
         }
 
         private static MapsToAggregateRootConstructorAttribute GetMappingAttribute(ICommand command)

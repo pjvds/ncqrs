@@ -72,7 +72,7 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Actions
 
             try
             {
-                return Type.GetType(mappingAttribute.TypeName, true);
+                return mappingAttribute.Type;
             }
             catch (Exception e)
             {
