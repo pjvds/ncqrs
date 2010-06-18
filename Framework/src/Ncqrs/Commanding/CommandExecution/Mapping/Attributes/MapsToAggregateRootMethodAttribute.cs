@@ -48,12 +48,12 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
             MethodName = methodName;
         }
 
-        public MapsToAggregateRootMethodAttribute(Type typeName, String methodName)
+        public MapsToAggregateRootMethodAttribute(Type type, String methodName)
         {
-            if (typeName == null) throw new ArgumentNullException("typeName");
+            if (type == null) throw new ArgumentNullException("type");
             if (String.IsNullOrEmpty(methodName)) throw new ArgumentNullException("methodName");
 
-            TypeName = typeName.FullName;
+            TypeName = type.FullName;
             MethodName = methodName;
         }
     }
