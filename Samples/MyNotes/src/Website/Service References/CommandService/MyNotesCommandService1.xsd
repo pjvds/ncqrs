@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:tns="http://schemas.datacontract.org/2004/07/Commands" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/Commands" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost:39531/MyNotesCommandService.svc?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/Ncqrs.Commanding" />
+  <xs:import schemaLocation="http://localhost:39531/MyNotesCommandService.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+  <xs:complexType name="CreateNewNote">
+    <xs:complexContent mixed="false">
+      <xs:extension xmlns:q1="http://schemas.datacontract.org/2004/07/Ncqrs.Commanding" base="q1:CommandBase">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Text" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="CreateNewNote" nillable="true" type="tns:CreateNewNote" />
+  <xs:complexType name="ChangeNoteText">
+    <xs:complexContent mixed="false">
+      <xs:extension xmlns:q2="http://schemas.datacontract.org/2004/07/Ncqrs.Commanding" base="q2:CommandBase">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="NewText" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="NoteId" type="ser:guid" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ChangeNoteText" nillable="true" type="tns:ChangeNoteText" />
+</xs:schema>

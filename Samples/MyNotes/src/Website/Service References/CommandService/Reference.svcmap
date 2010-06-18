@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="1a018590-e68d-4da3-a0b7-b13a2c03b7c7" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:39531/MyNotesCommandService.svc" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="MyNotesCommandService.xsd" MetadataType="Schema" ID="f57395b7-6b1e-46e8-acda-540f74b519fc" SourceId="1" SourceUrl="http://localhost:39531/MyNotesCommandService.svc?xsd=xsd3" />
+    <MetadataFile FileName="MyNotesCommandService1.xsd" MetadataType="Schema" ID="84bcbf55-ab24-4ba7-892e-e3f59b165ae6" SourceId="1" SourceUrl="http://localhost:39531/MyNotesCommandService.svc?xsd=xsd2" />
+    <MetadataFile FileName="MyNotesCommandService2.xsd" MetadataType="Schema" ID="bcce392f-dcbd-430b-b44c-90a1322db3af" SourceId="1" SourceUrl="http://localhost:39531/MyNotesCommandService.svc?xsd=xsd1" />
+    <MetadataFile FileName="MyNotesCommandService3.xsd" MetadataType="Schema" ID="48e98e44-eea8-4c19-a0fc-e5a8222b0c8a" SourceId="1" SourceUrl="http://localhost:39531/MyNotesCommandService.svc?xsd=xsd0" />
+    <MetadataFile FileName="MyNotesCommandService.wsdl" MetadataType="Wsdl" ID="75170b03-8e68-437b-8f41-60054ddb02b2" SourceId="1" SourceUrl="http://localhost:39531/MyNotesCommandService.svc?wsdl" />
+    <MetadataFile FileName="MyNotesCommandService.disco" MetadataType="Disco" ID="a64cacfa-9bb8-4ffd-bc3f-682f3499b6e2" SourceId="1" SourceUrl="http://localhost:39531/MyNotesCommandService.svc?disco" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>
