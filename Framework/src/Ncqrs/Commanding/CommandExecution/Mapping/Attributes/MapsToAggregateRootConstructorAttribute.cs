@@ -39,6 +39,7 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
             if (type == null) throw new ArgumentNullException("type");
 
             TypeName = type.FullName;
+            TypeName = type.AssemblyQualifiedName;
         }
     }
 }

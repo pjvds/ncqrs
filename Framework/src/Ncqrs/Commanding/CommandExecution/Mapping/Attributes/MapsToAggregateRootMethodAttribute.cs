@@ -54,6 +54,7 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
             if (String.IsNullOrEmpty(methodName)) throw new ArgumentNullException("methodName");
 
             TypeName = type.FullName;
+            TypeName = type.AssemblyQualifiedName;
             MethodName = methodName;
         }
     }
