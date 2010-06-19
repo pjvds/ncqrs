@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using Ncqrs.Domain;
 using Ncqrs.Domain.Storage;
 using Ncqrs.Eventing;
 using Ncqrs.Eventing.Conversion;
 using Ncqrs.Eventing.ServiceModel.Bus;
+using Ncqrs.Eventing.Sourcing;
 using Ncqrs.Eventing.Storage;
 
 namespace Ncqrs.SerializableSnapshots
@@ -20,9 +20,9 @@ namespace Ncqrs.SerializableSnapshots
         private readonly IEventBus _eventBus;
         private readonly IEventStore _store;
         private readonly ISerializableSnapshotStore _snapshotStore;
-        private readonly IEventConverter<DomainEvent, DomainEvent> _converter;
+        private readonly IEventConverter<SourcedEvent, SourcedEvent> _converter;
 
-        public SerializableSnapshotsDomainRepository(IEventStore store, IEventBus eventBus, ISerializableSnapshotStore snapshotStore, IEventConverter<DomainEvent, DomainEvent> converter = null)
+        public SerializableSnapshotsDomainRepository(IEventStore store, IEventBus eventBus, ISerializableSnapshotStore snapshotStore, IEventConverter<SourcedEvent, SourcedEvent> converter = null)
         {
             Contract.Requires<ArgumentNullException>(store != null);
             Contract.Requires<ArgumentNullException>(eventBus != null);
@@ -57,8 +57,8 @@ namespace Ncqrs.SerializableSnapshots
 
         protected AggregateRoot GetByIdFromSnapshot(AggregateRoot aggregateRoot)
         {
-            var events = _store.GetAllEventsSinceVersion(aggregateRoot.Id, aggregateRoot.InitialVersion);
-            aggregateRoot.InitializeFromHistory(events.Cast<DomainEvent>());
+            var events = _store.GetAllEventsSinceVersion(aggregateRoot.EventSourceId, aggregateRoot.InitialVersion);
+            aggregateRoot.InitializeFromHistory(events);
 
             return aggregateRoot;
         }
@@ -67,7 +67,7 @@ namespace Ncqrs.SerializableSnapshots
         {
             AggregateRoot aggregateRoot = null;
 
-            var events = _store.GetAllEvents(id).Cast<DomainEvent>();
+            var events = _store.GetAllEvents(id);
             events = ConvertEvents(events);
 
             if (events.Count() > 0)
@@ -101,7 +101,7 @@ namespace Ncqrs.SerializableSnapshots
             return aggregateRoot;
         }
 
-        protected IEnumerable<DomainEvent> ConvertEvents(IEnumerable<DomainEvent> events)
+        protected IEnumerable<SourcedEvent> ConvertEvents(IEnumerable<SourcedEvent> events)
         {
             return _converter == null 
                 ? events : 

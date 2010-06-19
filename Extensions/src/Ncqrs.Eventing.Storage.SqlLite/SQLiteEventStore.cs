@@ -20,6 +20,7 @@ namespace Ncqrs.Eventing.Storage.SQLite
         public SQLiteEventStore(string connectionString, IPropertyBagConverter converter)
         {
             _connectionString = connectionString;
+            _converter = converter;
         }
 
         public IEnumerable<SourcedEvent> GetAllEvents(Guid id)
