@@ -5,6 +5,10 @@
 
     [Serializable]
     public class CustomerNameChanged : SourcedEvent{
+        public CustomerNameChanged()
+        {
+        }
+
         public CustomerNameChanged(Guid eventIdentifier, Guid eventSourceId, long eventSequence, DateTime eventTimeStamp, string newName)
             : base(eventIdentifier, eventSourceId, eventSequence, eventTimeStamp)
         {
