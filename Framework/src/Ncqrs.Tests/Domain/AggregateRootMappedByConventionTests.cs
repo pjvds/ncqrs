@@ -2,8 +2,8 @@
 using System.Reflection;
 using FluentAssertions;
 using Ncqrs.Domain;
-using Ncqrs.Domain.Mapping;
 using Ncqrs.Eventing.Sourcing;
+using Ncqrs.Eventing.Sourcing.Mapping;
 using NUnit.Framework;
 using Rhino.Mocks;
 
