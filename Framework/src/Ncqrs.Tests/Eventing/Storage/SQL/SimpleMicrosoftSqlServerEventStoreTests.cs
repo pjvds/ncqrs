@@ -81,7 +81,7 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
         [Test]
         public void Retrieving_table_creation_queries_should_return_dll()
         {
-            var dllQueries = SimpleMicrosoftSqlServerEventStore.GetTableCreationQueries();
+            var dllQueries = MsSqlServerEventStore.GetTableCreationQueries();
             
             dllQueries.Should().NotBeNull().And.NotBeEmpty();
         }
@@ -89,7 +89,7 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
         [Test]
         public void Saving_event_source_should_succeed()
         {
-            var targetStore = new SimpleMicrosoftSqlServerEventStore(DEFAULT_CONNECTION);
+            var targetStore = new MsSqlServerEventStore(DEFAULT_CONNECTION);
             var id = Guid.NewGuid();
 
             int sequenceCounter = 0;
@@ -118,7 +118,7 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
         [Test]
         public void Saving_event_source_while_there_is_a_newer_event_source_should_throw_concurency_exception()
         {
-            var targetStore = new SimpleMicrosoftSqlServerEventStore(DEFAULT_CONNECTION);
+            var targetStore = new MsSqlServerEventStore(DEFAULT_CONNECTION);
             var id = Guid.NewGuid();
 
             int sequenceCounter = 0;
@@ -146,7 +146,7 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
         [Test]
         public void Retrieving_all_events_should_return_the_same_as_added()
         {
-            var targetStore = new SimpleMicrosoftSqlServerEventStore(DEFAULT_CONNECTION);
+            var targetStore = new MsSqlServerEventStore(DEFAULT_CONNECTION);
             var id = Guid.NewGuid();
 
             int sequenceCounter = 0;
@@ -179,7 +179,7 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
         [Test]
         public void Saving_snapshot_should_not_throw_an_exception_when_snapshot_is_valid()
         {
-            var targetStore = new SimpleMicrosoftSqlServerEventStore(DEFAULT_CONNECTION);
+            var targetStore = new MsSqlServerEventStore(DEFAULT_CONNECTION);
 
             var anId = Guid.NewGuid();
             var aVersion = 12;

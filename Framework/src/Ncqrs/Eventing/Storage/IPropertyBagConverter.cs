@@ -18,7 +18,7 @@ namespace Ncqrs.Eventing.Storage
         void AddPostConversion(Type targetType, IPropertyBagPostConverter converter);
 
         /// <summary>
-        /// Converts a command or event into a property bag.
+        /// Converts a event into a property bag.
         /// </summary>
         PropertyBag Convert(object obj);
 

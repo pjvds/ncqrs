@@ -16,6 +16,7 @@ namespace Ncqrs.Eventing.Storage
             TypeName = type.Name;
             Namespace = type.Namespace;
             AssemblyName = type.Assembly.FullName;
+            AssemblyQualfiedName = type.AssemblyQualifiedName;
         }
 
         /// <summary>
@@ -36,10 +37,7 @@ namespace Ncqrs.Eventing.Storage
         /// <summary>
         ///   Gets the assembly-qualified name of the System.Type, which includes the name of the assembly from which the System.Type was loaded.
         /// </summary>
-        public string AssemblyQualfiedName
-        {
-            get { return Namespace + "." + TypeName + "," + AssemblyName; }
-        }
+        public string AssemblyQualfiedName {get; private set; }
 
         /// <summary>
         ///   Gets or sets the names and values of all public properties of the original object.
