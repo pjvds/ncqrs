@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Ncqrs.Domain.Mapping;
 using Ncqrs.Eventing;
+using Ncqrs.Eventing.Sourcing.Mapping;
 
 namespace Ncqrs.Domain
 {

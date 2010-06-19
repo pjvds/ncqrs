@@ -2,7 +2,7 @@
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using FluentAssertions;
-using Ncqrs.Domain.Mapping;
+using Ncqrs.Eventing.Sourcing.Mapping;
 using NUnit.Framework;
 
 namespace Ncqrs.Tests.Domain.Mapping

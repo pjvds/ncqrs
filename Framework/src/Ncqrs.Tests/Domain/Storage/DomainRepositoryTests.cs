@@ -3,6 +3,7 @@ using FluentAssertions;
 using Ncqrs.Eventing;
 using Ncqrs.Eventing.Conversion;
 using Ncqrs.Eventing.Sourcing;
+using Ncqrs.Eventing.Sourcing.Mapping;
 using NUnit.Framework;
 using Ncqrs.Domain.Storage;
 using Rhino.Mocks;
@@ -10,7 +11,6 @@ using Ncqrs.Eventing.Storage;
 using Ncqrs.Eventing.ServiceModel.Bus;
 using Ncqrs.Domain;
 using System.Collections.Generic;
-using Ncqrs.Domain.Mapping;
 
 namespace Ncqrs.Tests.Domain.Storage
 {
@@ -64,7 +64,7 @@ namespace Ncqrs.Tests.Domain.Storage
                 ApplyEvent(e);
             }
 
-            [EventHandlerAttribute]
+            [EventHandler]
             private void CatchAllHandler(SourcedEvent e)
             {}
         }

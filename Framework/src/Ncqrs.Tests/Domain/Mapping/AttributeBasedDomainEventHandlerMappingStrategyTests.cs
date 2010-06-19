@@ -2,9 +2,9 @@
 using System.Linq;
 using FluentAssertions;
 using Ncqrs.Eventing.Sourcing;
+using Ncqrs.Eventing.Sourcing.Mapping;
 using NUnit.Framework;
 using Ncqrs.Domain;
-using Ncqrs.Domain.Mapping;
 
 namespace Ncqrs.Tests.Domain.Mapping
 {
