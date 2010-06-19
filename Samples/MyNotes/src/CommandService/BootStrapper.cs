@@ -38,7 +38,7 @@ namespace CommandService
 
         private static IEventStore InitializeEventStore()
         {
-            var store = new SimpleMicrosoftSqlServerEventStore(Settings.Default.SqlEventStoreConnectionString);
+            var store = new MsSqlServerEventStore(Settings.Default.SqlEventStoreConnectionString);
             return store;
         }
 

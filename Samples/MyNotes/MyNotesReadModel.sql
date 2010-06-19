@@ -5,6 +5,7 @@ IF NOT exists(SELECT * FROM sys.databases WHERE name = N'MyNotesReadModel')
 BEGIN
     CREATE DATABASE [MyNotesReadModel]
 END
+GO
 
 USE [MyNotesReadModel]
 SET ANSI_NULLS ON

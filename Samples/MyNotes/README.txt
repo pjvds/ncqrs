@@ -13,6 +13,8 @@ Follow these steps to get the website running.
 	- CommandService\Web.config
 	- ReadModel\App.config
 	- Website\Web.config
+5. Set Website as default startup project.
+6. Hit F5 and have fun!
 
 == CONTACT ==
 If you have any questions or feedback, contact me via:
