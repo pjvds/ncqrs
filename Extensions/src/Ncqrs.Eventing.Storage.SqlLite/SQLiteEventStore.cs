@@ -11,8 +11,13 @@ namespace Ncqrs.Eventing.Storage.SQLite
     public class SQLiteEventStore : IEventStore
     {
         private readonly string _connectionString;
+        private IPropertyBagConverter _converter;
 
-        public SQLiteEventStore(string connectionString)
+        public SQLiteEventStore(string connectionString) : this(connectionString, new PropertyBagConverter())
+        {
+        }
+
+        public SQLiteEventStore(string connectionString, IPropertyBagConverter converter)
         {
             _connectionString = connectionString;
         }
@@ -39,7 +44,8 @@ namespace Ncqrs.Eventing.Storage.SQLite
 
                         using (var dataStream = new MemoryStream(rawData))
                         {
-                            var evnt = (SourcedEvent)formatter.Deserialize(dataStream);
+                            var bag = (PropertyBag) formatter.Deserialize(dataStream);
+                            var evnt = (SourcedEvent)_converter.Convert(bag);
                             res.Add(evnt);
                         }
                     }
@@ -87,7 +93,7 @@ namespace Ncqrs.Eventing.Storage.SQLite
         }
 
 
-        private static void AddEventSource(IEventSource eventSource, SQLiteTransaction transaction)
+        private void AddEventSource(IEventSource eventSource, SQLiteTransaction transaction)
         {
             using (var cmd = new SQLiteCommand(Query.InsertNewProviderQuery, transaction.Connection))
             {
@@ -99,19 +105,21 @@ namespace Ncqrs.Eventing.Storage.SQLite
             }
         }
 
-        private static void SaveEvents(IEnumerable<SourcedEvent> evnts, Guid eventSourceId, SQLiteTransaction transaction)
+        private void SaveEvents(IEnumerable<SourcedEvent> evnts, Guid eventSourceId, SQLiteTransaction transaction)
         {
             if (transaction == null || evnts == null) throw new ArgumentNullException();
             foreach (var e in evnts) SaveEvent(e, eventSourceId, transaction);
         }
 
-        private static void SaveEvent(SourcedEvent evnt, Guid eventSourceId, SQLiteTransaction transaction)
+        private void SaveEvent(SourcedEvent evnt, Guid eventSourceId, SQLiteTransaction transaction)
         {
             if (evnt == null || transaction == null) throw new ArgumentNullException();
             using (var dataStream = new MemoryStream())
             {
+                var bag = _converter.Convert(evnt);
+
                 var formatter = new BinaryFormatter();
-                formatter.Serialize(dataStream, evnt);
+                formatter.Serialize(dataStream, bag);
                 var data = dataStream.ToArray();
 
                 using (var cmd = new SQLiteCommand(Query.InsertNewEventQuery, transaction.Connection))
