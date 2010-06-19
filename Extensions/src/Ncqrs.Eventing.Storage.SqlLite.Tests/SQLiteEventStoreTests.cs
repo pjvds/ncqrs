@@ -1,4 +1,6 @@
-﻿namespace Ncqrs.Eventing.Storage.SQLite.Tests{
+﻿using Ncqrs.Eventing.Sourcing;
+
+namespace Ncqrs.Eventing.Storage.SQLite.Tests{
     using System;
     using System.Data.SQLite;
     using System.IO;
@@ -41,13 +43,13 @@
         {
             var sequenceCounter = 0;
             var id=Guid.NewGuid();
-            var events = new ISourcedEvent[]{
+            var events = new SourcedEvent[]{
                 new CustomerCreatedEvent(Guid.NewGuid(), id, sequenceCounter++, DateTime.UtcNow, "Foo", 35), 
                 new CustomerNameChanged(Guid.NewGuid(), id, sequenceCounter++, DateTime.UtcNow, "Name" + sequenceCounter), 
                 new CustomerNameChanged(Guid.NewGuid(), id, sequenceCounter++, DateTime.UtcNow, "Name" + sequenceCounter)
             };
             var source = MockRepository.GenerateMock<IEventSource>();
-            source.Stub(e => e.Id).Return(id);
+            source.Stub(e => e.EventSourceId).Return(id);
             source.Stub(e => e.InitialVersion).Return(0);
             source.Stub(e => e.Version).Return(events.Length);
             source.Stub(e => e.GetUncommittedEvents()).Return(events);
@@ -58,7 +60,7 @@
         public void Retrieving_all_events_should_return_the_same_as_added() {
             var id=Guid.NewGuid();
             var sequenceCounter=0;
-            var events=new ISourcedEvent[]
+            var events=new SourcedEvent[]
                              {
                                  new CustomerCreatedEvent(Guid.NewGuid(), id, sequenceCounter++, DateTime.UtcNow, "Foo",35),
                                  new CustomerNameChanged(Guid.NewGuid(), id, sequenceCounter++, DateTime.UtcNow,"Name" + sequenceCounter),
@@ -67,7 +69,7 @@
                              };
 
             var eventSource=MockRepository.GenerateMock<IEventSource>();
-            eventSource.Stub(e => e.Id).Return(id);
+            eventSource.Stub(e => e.EventSourceId).Return(id);
             eventSource.Stub(e => e.InitialVersion).Return(0);
             eventSource.Stub(e => e.Version).Return(events.Length);
             eventSource.Stub(e => e.GetUncommittedEvents()).Return(events);

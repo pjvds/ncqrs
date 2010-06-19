@@ -1,5 +1,6 @@
 ﻿using System;
 using Newtonsoft.Json;
+using Ncqrs.Eventing.Sourcing;
 
 namespace Ncqrs.Eventing.Storage.RavenDB
 {
@@ -9,6 +10,6 @@ namespace Ncqrs.Eventing.Storage.RavenDB
         public long EventSequence { get; set; }
         public Guid EventSourceId { get; set; }
         [JsonProperty(TypeNameHandling = TypeNameHandling.All)]
-        public ISourcedEvent Data { get; set; }
+        public SourcedEvent Data { get; set; }
     }
 }

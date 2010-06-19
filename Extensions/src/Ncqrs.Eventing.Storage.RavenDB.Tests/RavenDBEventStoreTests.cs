@@ -7,6 +7,7 @@ using Ncqrs.Domain;
 using NUnit.Framework;
 using Raven.Client;
 using Rhino.Mocks;
+using Ncqrs.Eventing.Sourcing;
 
 namespace Ncqrs.Eventing.Storage.RavenDB.Tests
 {
@@ -14,10 +15,10 @@ namespace Ncqrs.Eventing.Storage.RavenDB.Tests
     public class RavenDBEventStoreTests : RavenDBTestBase
     {
         [Serializable]
-        public class CustomerCreatedEvent : DomainEvent
+        public class CustomerCreatedEvent : SourcedEvent
         {
-            public CustomerCreatedEvent(Guid eventIdentifier, Guid aggregateRootId, long eventSequence, DateTime eventTimeStamp, string name, int age)
-                : base(eventIdentifier, aggregateRootId, eventSequence, eventTimeStamp)
+            public CustomerCreatedEvent(Guid eventIdentifier, Guid eventSourceId, long eventSequence, DateTime eventTimeStamp, string name, int age)
+                : base(eventIdentifier, eventSourceId, eventSequence, eventTimeStamp)
             {
                 Name = name;
                 Age = age;
@@ -40,7 +41,7 @@ namespace Ncqrs.Eventing.Storage.RavenDB.Tests
                     return false;
                 }
                 bool result = EventIdentifier.Equals(other.EventIdentifier)
-                       && AggregateRootId.Equals(other.AggregateRootId)
+                       && EventSourceId.Equals(other.EventSourceId)
                        && EventSequence.Equals(other.EventSequence)
                        //&& EventTimeStamp.Equals(other.EventTimeStamp)
                        && Name.Equals(other.Name)
@@ -50,21 +51,21 @@ namespace Ncqrs.Eventing.Storage.RavenDB.Tests
         }
 
         [Serializable]
-        public class CustomerNameChanged : DomainEvent
+        public class CustomerNameChanged : SourcedEvent
         {
             public Guid CustomerId
             {
                 get
                 {
-                    return AggregateRootId;
+                    return EventSourceId;
                 }
             }
 
             public string NewName
             { get; set; }
 
-            public CustomerNameChanged(Guid eventIdentifier, Guid aggregateRootId, long eventSequence, DateTime eventTimeStamp, string newName)
-                : base(eventIdentifier, aggregateRootId, eventSequence, eventTimeStamp)
+            public CustomerNameChanged(Guid eventIdentifier, Guid eventSourceId, long eventSequence, DateTime eventTimeStamp, string newName)
+                : base(eventIdentifier, eventSourceId, eventSequence, eventTimeStamp)
             {
                 NewName = newName;
             }
@@ -77,7 +78,7 @@ namespace Ncqrs.Eventing.Storage.RavenDB.Tests
                     return false;
                 }
                 bool result = EventIdentifier.Equals(other.EventIdentifier)
-                       && AggregateRootId.Equals(other.AggregateRootId)
+                       && EventSourceId.Equals(other.EventSourceId)
                        && EventSequence.Equals(other.EventSequence)
                        //&& EventTimeStamp.Equals(other.EventTimeStamp)
                        && CustomerId.Equals(other.CustomerId)
@@ -96,7 +97,7 @@ namespace Ncqrs.Eventing.Storage.RavenDB.Tests
 
             int sequenceCounter = 0;
 
-            var events = new ISourcedEvent[]
+            var events = new SourcedEvent[]
                              {
                                  new CustomerCreatedEvent(Guid.NewGuid(), id, sequenceCounter++, DateTime.UtcNow, "Foo",
                                                           35),
@@ -109,7 +110,7 @@ namespace Ncqrs.Eventing.Storage.RavenDB.Tests
                              };
 
             var eventSource = MockRepository.GenerateMock<IEventSource>();
-            eventSource.Stub(e => e.Id).Return(id);
+            eventSource.Stub(e => e.EventSourceId).Return(id);
             eventSource.Stub(e => e.InitialVersion).Return(0);
             eventSource.Stub(e => e.Version).Return(events.Length);
             eventSource.Stub(e => e.GetUncommittedEvents()).Return(events);
@@ -125,7 +126,7 @@ namespace Ncqrs.Eventing.Storage.RavenDB.Tests
 
             int sequenceCounter = 0;
 
-            var events = new ISourcedEvent[]
+            var events = new SourcedEvent[]
                              {
                                  new CustomerCreatedEvent(Guid.NewGuid(), id, sequenceCounter++, DateTime.UtcNow, "Foo",
                                                           35),
@@ -134,7 +135,7 @@ namespace Ncqrs.Eventing.Storage.RavenDB.Tests
                              };
             
             var eventSource = MockRepository.GenerateMock<IEventSource>();
-            eventSource.Stub(e => e.Id).Return(id).Repeat.Any();
+            eventSource.Stub(e => e.EventSourceId).Return(id).Repeat.Any();
             eventSource.Stub(e => e.InitialVersion).Return(0).Repeat.Any();
             eventSource.Stub(e => e.Version).Return(events.Length).Repeat.Any();
             eventSource.Stub(e => e.GetUncommittedEvents()).Return(events).Repeat.Any();
@@ -153,7 +154,7 @@ namespace Ncqrs.Eventing.Storage.RavenDB.Tests
 
             int sequenceCounter = 0;
 
-            var events = new ISourcedEvent[]
+            var events = new SourcedEvent[]
                              {
                                  new CustomerCreatedEvent(Guid.NewGuid(), id, sequenceCounter++, DateTime.UtcNow, "Foo",
                                                           35),
@@ -166,7 +167,7 @@ namespace Ncqrs.Eventing.Storage.RavenDB.Tests
                              };
 
             var eventSource = MockRepository.GenerateMock<IEventSource>();
-            eventSource.Stub(e => e.Id).Return(id);
+            eventSource.Stub(e => e.EventSourceId).Return(id);
             eventSource.Stub(e => e.InitialVersion).Return(0);
             eventSource.Stub(e => e.Version).Return(events.Length);
             eventSource.Stub(e => e.GetUncommittedEvents()).Return(events);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using MongoDB.Driver;
+using Ncqrs.Eventing.Sourcing;
 
 namespace Ncqrs.Eventing.Storage.MongoDB
 {
@@ -27,19 +28,19 @@ namespace Ncqrs.Eventing.Storage.MongoDB
             database = Mongo.GetDatabase(databaseUri);
         }
 
-        public IEnumerable<ISourcedEvent> GetAllEventsSinceVersion(Guid id, long version)
+        public IEnumerable<SourcedEvent> GetAllEventsSinceVersion(Guid id, long version)
         {
             IDBCollection eventSources = database.GetCollection("Events");
 
             var query = new DBQuery("_SourceId", id.ToString());
             IDocument source = eventSources.FindOne();
 
-            if (source == null) return new ISourcedEvent[] { };
+            if (source == null) return new SourcedEvent[] { };
 
             var eventsAsDbObjects = ((DBObjectArray)source["_Events"]).Values.Cast<IDBObject>();
 
             //no benefit yield now we have single doc - might confused people due to lazy style invocation - esp if exception thrown
-            var events = new List<ISourcedEvent>();
+            var events = new List<SourcedEvent>();
 
             foreach (var eventDbObject in eventsAsDbObjects)
             {
@@ -54,14 +55,14 @@ namespace Ncqrs.Eventing.Storage.MongoDB
             return events.OrderBy(evnt => evnt.EventSequence);
         }
 
-        public IEnumerable<ISourcedEvent> GetAllEvents(Guid id)
+        public IEnumerable<SourcedEvent> GetAllEvents(Guid id)
         {
             return GetAllEventsSinceVersion(id, 0);
         }
 
         public virtual void Save(IEventSource source)
         {
-            IEnumerable<ISourcedEvent> eventsToSave = source.GetUncommittedEvents();
+            IEnumerable<SourcedEvent> eventsToSave = source.GetUncommittedEvents();
 
             IDBCollection sources = database.GetCollection("Events");
 
@@ -77,12 +78,12 @@ namespace Ncqrs.Eventing.Storage.MongoDB
             }
         }
 
-        private void InsertNewEventSource(IEventSource source, IEnumerable<ISourcedEvent> eventsToSave, IDBCollection sources)
+        private void InsertNewEventSource(IEventSource source, IEnumerable<SourcedEvent> eventsToSave, IDBCollection sources)
         {
             var arrayOfEventsAsIdbObjects = GetArrayOfEventsAsIDBObjects(source, eventsToSave);
             var doc = new Document
                           {
-                              {"_SourceId", source.Id.ToString()},
+                              {"_SourceId", source.EventSourceId.ToString()},
                               {"_Events", arrayOfEventsAsIdbObjects},
                               {"_Version", arrayOfEventsAsIdbObjects.Length} 
                           };
@@ -92,12 +93,12 @@ namespace Ncqrs.Eventing.Storage.MongoDB
             VerifyInsertSuccessful(source);
         }
 
-        private void PushOptimisticUpdate(IEventSource source, IEnumerable<ISourcedEvent> eventsToSave, IDBCollection sources)
+        private void PushOptimisticUpdate(IEventSource source, IEnumerable<SourcedEvent> eventsToSave, IDBCollection sources)
         {
             var arrayOfEventsAsIdbObjects = GetArrayOfEventsAsIDBObjects(source, eventsToSave);
             sources.Update(new DBQuery()
                                {
-                                   {"_SourceId", source.Id.ToString()},
+                                   {"_SourceId", source.EventSourceId.ToString()},
                                    {"_Version", source.InitialVersion}
                                }
                            , Do.AddEachToSet("Events", arrayOfEventsAsIdbObjects
@@ -123,11 +124,11 @@ namespace Ncqrs.Eventing.Storage.MongoDB
             var isUpdated = (bool)(lastErrorData["updatedExisting"]);
             if (!isUpdated)
             {
-                throw new ConcurrencyException(source.Id, source.Version);
+                throw new ConcurrencyException(source.EventSourceId, source.Version);
             }
         }
 
-        protected IDBObject[] GetArrayOfEventsAsIDBObjects(IEventSource source, IEnumerable<ISourcedEvent> eventsToSave)
+        protected IDBObject[] GetArrayOfEventsAsIDBObjects(IEventSource source, IEnumerable<SourcedEvent> eventsToSave)
         {
             return eventsToSave.Select(ue => ConvertEventToIDBObject(source, ue)).ToArray();
         }
@@ -143,7 +144,7 @@ namespace Ncqrs.Eventing.Storage.MongoDB
             PropertyInfo[] properties = @event.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public);
 
             var dbObject = new DBObject();
-            dbObject["_SourceId"] = eventSource.Id.ToString();
+            dbObject["_SourceId"] = eventSource.EventSourceId.ToString();
             dbObject["_TimeStamp"] = DateTime.UtcNow;
             dbObject["_AssemblyQualifiedEventTypeName"] = @event.GetType().AssemblyQualifiedName;
 
@@ -158,13 +159,13 @@ namespace Ncqrs.Eventing.Storage.MongoDB
             return dbObject;
         }
 
-        protected static ISourcedEvent DeserializeToEventIDBObject(IDBObject dbObject)
+        protected static SourcedEvent DeserializeToEventIDBObject(IDBObject dbObject)
         {
             Type eventType = Type.GetType((string)dbObject["_AssemblyQualifiedEventTypeName"]);
 
             var sourceId = Guid.Parse(dbObject["_SourceId"].ToString());
 
-            var deserializedEvent = Activator.CreateInstance(eventType) as ISourcedEvent;
+            var deserializedEvent = Activator.CreateInstance(eventType) as SourcedEvent;
 
             foreach (string key in dbObject.Keys)
             {

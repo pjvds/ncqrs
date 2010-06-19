@@ -1,6 +1,7 @@
 ﻿using System;
 using Raven.Client;
 using Raven.Client.Document;
+using Ncqrs.Eventing.Sourcing.Snapshotting;
 
 namespace Ncqrs.Eventing.Storage.RavenDB
 {

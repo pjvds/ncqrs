@@ -32,17 +32,17 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Ncqrs">
-      <HintPath>..\lib\Ncqrs\Ncqrs.dll</HintPath>
+      <HintPath>..\..\lib\Ncqrs\Ncqrs.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\lib\RavenDB\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\lib\RavenDB\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Raven.Client">
-      <HintPath>..\lib\RavenDB\Raven.Client.dll</HintPath>
+      <HintPath>..\..\lib\RavenDB\Raven.Client.dll</HintPath>
     </Reference>
     <Reference Include="Raven.Database, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\RavenDB\Raven.Database.dll</HintPath>
+      <HintPath>..\..\lib\RavenDB\Raven.Database.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

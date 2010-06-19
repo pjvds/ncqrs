@@ -1,5 +1,6 @@
 ﻿using System;
 using FluentAssertions;
+using Ncqrs.Eventing.Sourcing.Snapshotting;
 using NUnit.Framework;
 
 namespace Ncqrs.Eventing.Storage.RavenDB.Tests

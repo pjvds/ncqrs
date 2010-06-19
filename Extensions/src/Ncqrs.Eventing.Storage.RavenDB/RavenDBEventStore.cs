@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using Ncqrs.Domain;
 using Raven.Client;
 using Raven.Client.Document;
+using Ncqrs.Eventing.Sourcing;
 
 namespace Ncqrs.Eventing.Storage.RavenDB
 {
@@ -49,7 +46,7 @@ namespace Ncqrs.Eventing.Storage.RavenDB
             return null;
         }      
 
-        public IEnumerable<ISourcedEvent> GetAllEvents(Guid id)
+        public IEnumerable<SourcedEvent> GetAllEvents(Guid id)
         {
             using (var session = _documentStore.OpenSession())
             {
@@ -61,7 +58,7 @@ namespace Ncqrs.Eventing.Storage.RavenDB
             }
         }
 
-        public IEnumerable<ISourcedEvent> GetAllEventsSinceVersion(Guid id, long version)
+        public IEnumerable<SourcedEvent> GetAllEventsSinceVersion(Guid id, long version)
         {
             using (var session = _documentStore.OpenSession())
             {
@@ -96,7 +93,7 @@ namespace Ncqrs.Eventing.Storage.RavenDB
             }
             catch (Raven.Database.Exceptions.ConcurrencyException)
             {
-                throw new ConcurrencyException(source.Id, source.Version);
+                throw new ConcurrencyException(source.EventSourceId, source.Version);
             }
         }        
     }
