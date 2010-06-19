@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using Microsoft.WindowsAzure.StorageClient;
+using Ncqrs.Eventing.Sourcing;
 
 namespace Ncqrs.Eventing.Storage.WindowsAzure
 {
@@ -22,7 +23,7 @@ namespace Ncqrs.Eventing.Storage.WindowsAzure
 
             return new EventSourceEntity
             {
-                RowKey = source.Id.ToString(),
+                RowKey = source.EventSourceId.ToString(),
                 PartitionKey = source.GetType().FullName,
                 Version = source.Version
             };

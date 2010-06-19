@@ -1,8 +1,5 @@
 ﻿using System;
 using FluentAssertions;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Ncqrs.Commanding;
 using Ncqrs.Commanding.CommandExecution;
 using Ncqrs.Commanding.CommandExecution.Mapping.Attributes;

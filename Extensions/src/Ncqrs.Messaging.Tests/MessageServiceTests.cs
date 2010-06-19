@@ -4,6 +4,7 @@ using Ncqrs.Eventing;
 using Ncqrs.Eventing.Storage;
 using NUnit.Framework;
 using Rhino.Mocks;
+using Ncqrs.Eventing.Sourcing;
 
 namespace Ncqrs.Messaging.Tests
 {
@@ -72,7 +73,7 @@ namespace Ncqrs.Messaging.Tests
         private void ExpectToFindExistingAggregate()
         {
             _eventStore.Expect(x => x.GetAllEvents(Guid.Empty))
-               .Return(new ISourcedEvent[] { new TestEvent(Guid.NewGuid(), _aggregateRootId, 1, DateTime.Now) })
+               .Return(new SourcedEvent[] { new TestEvent(Guid.NewGuid(), _aggregateRootId, 1, DateTime.Now) })
                .IgnoreArguments()
                .Repeat.Any();
         }
@@ -81,7 +82,7 @@ namespace Ncqrs.Messaging.Tests
         {
             ResolveInvalidReceiver();
             _eventStore.Expect(x => x.GetAllEvents(Guid.Empty))
-               .Return(new ISourcedEvent[] { new TestEvent(Guid.NewGuid(), _aggregateRootId, 1, DateTime.Now) })
+               .Return(new SourcedEvent[] { new TestEvent(Guid.NewGuid(), _aggregateRootId, 1, DateTime.Now) })
                .IgnoreArguments()
                .Repeat.Any();
         }
@@ -89,7 +90,7 @@ namespace Ncqrs.Messaging.Tests
         private void ExpectNotToFindExistingAggregate()
         {
             _eventStore.Expect(x => x.GetAllEvents(Guid.Empty))
-               .Return(new ISourcedEvent[] { })
+               .Return(new SourcedEvent[] { })
                .IgnoreArguments()
                .Repeat.Any();
         }
@@ -144,7 +145,7 @@ namespace Ncqrs.Messaging.Tests
         {            
         }
 
-        public class TestEvent : DomainEvent
+        public class TestEvent : SourcedEvent
         {
             public TestEvent(Guid eventIdentifier, Guid aggregateRootId, long eventSequence, DateTime eventTimeStamp)
                 : base(eventIdentifier, aggregateRootId, eventSequence, eventTimeStamp)

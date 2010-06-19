@@ -36,7 +36,7 @@ namespace Ncqrs.Messaging
             var message = new OutgoingMessage
                               {
                                   Payload = payload,
-                                  SenderId = Id,
+                                  SenderId = EventSourceId,
                                   SenderType = GetType(),
                                   MessageId = NcqrsEnvironment.Get<IUniqueIdentifierGenerator>().GenerateNewId(),
                                   ReceiverId = MessagingContext.MessageBeingProcessed.SenderId,
@@ -47,7 +47,7 @@ namespace Ncqrs.Messaging
 
         protected ISetMessageDestination To()
         {
-            return new FluentMessageSender(Id, x => ApplyEvent(new MessageSentEvent(DateTime.Now, x)));
+            return new FluentMessageSender(EventSourceId, x => ApplyEvent(new MessageSentEvent(DateTime.Now, x)));
         }
 
         protected void OnMessageReceivedEvent(MessageReceivedEvent @event)

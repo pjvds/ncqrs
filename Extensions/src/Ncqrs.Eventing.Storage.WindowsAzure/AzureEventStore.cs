@@ -6,6 +6,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using Microsoft.WindowsAzure;
 using Microsoft.WindowsAzure.StorageClient;
 using System.Data.Services.Client;
+using Ncqrs.Eventing.Sourcing;
 
 namespace Ncqrs.Eventing.Storage.WindowsAzure
 {
@@ -45,10 +46,10 @@ namespace Ncqrs.Eventing.Storage.WindowsAzure
         /// <returns>
         /// All the events from the event source.
         /// </returns>
-        public IEnumerable<ISourcedEvent> GetAllEvents(Guid eventSourceId)
+        public IEnumerable<SourcedEvent> GetAllEvents(Guid eventSourceId)
         {
             var context = _tableClient.GetDataServiceContext();
-            var result = new List<ISourcedEvent>();
+            var result = new List<SourcedEvent>();
 
             var eventsFromSource =
                 context.CreateQuery<SourcedEventEntity>(EVENTS_TABLE_NAME).Where(
@@ -63,10 +64,10 @@ namespace Ncqrs.Eventing.Storage.WindowsAzure
             return result;
         }
 
-        public IEnumerable<ISourcedEvent> GetAllEventsSinceVersion(Guid eventSourceId, long version)
+        public IEnumerable<SourcedEvent> GetAllEventsSinceVersion(Guid eventSourceId, long version)
         {
             var context = _tableClient.GetDataServiceContext();
-            var result = new List<ISourcedEvent>();
+            var result = new List<SourcedEvent>();
 
             var eventsFromSource =
                 context.CreateQuery<SourcedEventEntity>(EVENTS_TABLE_NAME).Where(
@@ -81,7 +82,7 @@ namespace Ncqrs.Eventing.Storage.WindowsAzure
             return result;
         }
 
-        private ISourcedEvent DeserializeEventEntity(SourcedEventEntity sourcedEventEntity)
+        private SourcedEvent DeserializeEventEntity(SourcedEventEntity sourcedEventEntity)
         {
             // Create formatter that can deserialize our events.
             var formatter = new BinaryFormatter();
@@ -95,7 +96,7 @@ namespace Ncqrs.Eventing.Storage.WindowsAzure
             using (var dataStream = new MemoryStream(rawData))
             {
                 // Deserialize event and return it.
-                return (ISourcedEvent)formatter.Deserialize(dataStream);
+                return (SourcedEvent)formatter.Deserialize(dataStream);
             }
         }
 
@@ -111,7 +112,7 @@ namespace Ncqrs.Eventing.Storage.WindowsAzure
         public void Save(IEventSource source)
         {
             var context = _tableClient.GetDataServiceContext();
-            var sourceInStore = GetSourceFromStore(context, source.Id);
+            var sourceInStore = GetSourceFromStore(context, source.EventSourceId);
             var uncommitedEvents = source.GetUncommittedEvents();
 
             if (sourceInStore == null)
@@ -121,7 +122,7 @@ namespace Ncqrs.Eventing.Storage.WindowsAzure
             else
             {
                 if (source.Version != sourceInStore.Version)
-                    throw new ConcurrencyException(source.Id, source.Version);
+                    throw new ConcurrencyException(source.EventSourceId, source.Version);
             }
 
             // Update version.
@@ -129,7 +130,7 @@ namespace Ncqrs.Eventing.Storage.WindowsAzure
             context.UpdateObject(sourceInStore);
             context.SaveChanges(SaveChangesOptions.Batch); // TODO: Validate response.
 
-            PushEventToStore(context, source.Id, uncommitedEvents);
+            PushEventToStore(context, source.EventSourceId, uncommitedEvents);
 
             // TODO: Validate response.
             var response = context.SaveChanges(SaveChangesOptions.Batch);
@@ -153,7 +154,7 @@ namespace Ncqrs.Eventing.Storage.WindowsAzure
             return query.FirstOrDefault();
         }
 
-        private void PushEventToStore(TableServiceContext context, Guid eventSourceId, IEnumerable<ISourcedEvent> events)
+        private void PushEventToStore(TableServiceContext context, Guid eventSourceId, IEnumerable<SourcedEvent> events)
         {
             var formatter = new BinaryFormatter();
             var blobClient = _account.CreateCloudBlobClient();

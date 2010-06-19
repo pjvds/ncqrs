@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using Microsoft.WindowsAzure.StorageClient;
+using Ncqrs.Eventing.Sourcing;
 
 namespace Ncqrs.Eventing.Storage.WindowsAzure
 {
@@ -17,7 +18,7 @@ namespace Ncqrs.Eventing.Storage.WindowsAzure
             RowKey = Guid.NewGuid().ToString();
         }
 
-        public static SourcedEventEntity FromEventSource(ISourcedEvent evnt)
+        public static SourcedEventEntity FromEventSource(Ncqrs.Eventing.Sourcing.SourcedEvent evnt)
         {
             Contract.Requires<ArgumentNullException>(evnt != null, "The evnt cannot be null.");
 

@@ -2,6 +2,7 @@
 using Ncqrs.Domain;
 using Ncqrs.Eventing.ServiceModel.Bus;
 using NUnit.Framework;
+using Ncqrs.Eventing.Sourcing;
 
 namespace Ncqrs.Messaging.Tests
 {
@@ -109,7 +110,7 @@ namespace Ncqrs.Messaging.Tests
 
             private void OnHandlingEventRegistered(HandlingEventRegistered @event)
             {
-                Id = @event.Id;
+                EventSourceId = @event.Id;
                 _cargoId = @event.CargoId;
             }
         }
@@ -135,7 +136,7 @@ namespace Ncqrs.Messaging.Tests
 
             private void OnCargoBooked(CargoBooked @event)
             {
-                Id = @event.Id;
+                EventSourceId = @event.Id;
             }
 
             public void Handle(CargoWasHandledMessage message)
@@ -149,18 +150,18 @@ namespace Ncqrs.Messaging.Tests
             }
         }
 
-        public class HandlingEventRegistered : DomainEvent
+        public class HandlingEventRegistered : SourcedEvent
         {
             public Guid Id { get; set; }
             public Guid CargoId { get; set; }
         }
 
-        public class CargoBooked : DomainEvent
+        public class CargoBooked : SourcedEvent
         {
             public Guid Id { get; set; }
         }
 
-        public class CargoHandled : DomainEvent
+        public class CargoHandled : SourcedEvent
         {
         }
     }

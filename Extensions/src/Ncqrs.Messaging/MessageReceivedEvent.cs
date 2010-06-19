@@ -1,10 +1,10 @@
 ﻿using System;
-using Ncqrs.Domain;
+using Ncqrs.Eventing.Sourcing;
 
 namespace Ncqrs.Messaging
 {
    [Serializable]
-   public class MessageReceivedEvent : DomainEvent
+   public class MessageReceivedEvent : SourcedEvent
    {      
       public DateTime ReceiveTime { get; set; }
       public IncomingMessage Message { get; set; }
