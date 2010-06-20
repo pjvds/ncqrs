@@ -24,6 +24,7 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Actions
                 var targetMethod = GetTargetMethodBasedOnCommandTypeName(info, command);
 
                 var parameterValues = CommandMappingConfiguration.GetParameterValues(command, targetMethod.GetParameters());
+                //TODO: i suppose null check here is necessary (otherwise - just throws "Non-static method requires a target.")
                 var targetAggregateRoot = work.GetById(info.AggregateType, info.AggregateRootIdValue);
 
                 targetMethod.Invoke(targetAggregateRoot, parameterValues);
