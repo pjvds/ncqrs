@@ -28,9 +28,9 @@ namespace Ncqrs.Eventing.Storage.SQL
 
         private const String SelectVersionQuery = "SELECT [Version] FROM [EventSources] WHERE [Id] = @id";
 
-        private const String UpdateEventSourceVersionQuery = "UPDATE [EventSources] SET [Version] = (SELECT Count(*) FROM [Events] WHERE [EventSourceId] = @Id) WHERE [Id] = @id";
+        private const String UpdateEventSourceVersionQuery = "UPDATE [EventSources] SET [Version] = @NewVersion WHERE [Id] = @id";
 
-        private const String InsertSnapshot = "DELETE FROM [Snapshots] WHERE [EventSourceId]=@EventSourceId; INSERT INTO [Snapshots]([EventSourceId], [Version], [SnapshotType], [SnapshotData]) VALUES (@EventSourceId, @Version, @SnapshotType, @SnapshotData)";
+        private const String InsertSnapshot = "DELETE FROM [Snapshots] WHERE [EventSourceId]=@EventSourceId; INSERT INTO [Snapshots]([EventSourceId], [Timestamp], [Version], [Type], [Data]) VALUES (@EventSourceId, GETDATE(), @Version, @Type, @Data)";
 
         private const String SelectLatestSnapshot = "SELECT TOP 1 * FROM [Snapshots] WHERE [EventSourceId]=@EventSourceId ORDER BY Version DESC";
         #endregion
@@ -179,8 +179,8 @@ namespace Ncqrs.Eventing.Storage.SQL
                                 command.Transaction = transaction;
                                 command.Parameters.AddWithValue("EventSourceId", snapshot.EventSourceId);
                                 command.Parameters.AddWithValue("Version", snapshot.EventSourceVersion);
-                                command.Parameters.AddWithValue("SnapshotType", snapshot.GetType().AssemblyQualifiedName);
-                                command.Parameters.AddWithValue("SnapshotData", data);
+                                command.Parameters.AddWithValue("Type", snapshot.GetType().AssemblyQualifiedName);
+                                command.Parameters.AddWithValue("Data", data);
                                 command.ExecuteNonQuery();
                             }
                         }
@@ -219,8 +219,7 @@ namespace Ncqrs.Eventing.Storage.SQL
                     {
                         if (reader.Read())
                         {
-                            var version = (long) reader["Version"];
-                            var snapshotData = (byte[]) reader["SnapshotData"];
+                            var snapshotData = (byte[]) reader["Data"];
                             using (var buffer = new MemoryStream(snapshotData))
                             {
                                 var formatter = new BinaryFormatter();
@@ -280,6 +279,7 @@ namespace Ncqrs.Eventing.Storage.SQL
             {
                 command.Transaction = transaction;
                 command.Parameters.AddWithValue("Id", eventSource.EventSourceId);
+                command.Parameters.AddWithValue("NewVersion", eventSource.Version);
                 command.ExecuteNonQuery();
             }
         }

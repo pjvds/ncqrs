@@ -16,6 +16,10 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
         [Serializable]
         public class CustomerCreatedEvent : SourcedEvent
         {
+            protected CustomerCreatedEvent()
+            {
+            }
+
             public CustomerCreatedEvent(Guid eventIdentifier, Guid aggregateRootId, long eventSequence, DateTime eventTimeStamp, string name, int age)
                 : base(eventIdentifier, aggregateRootId, eventSequence, eventTimeStamp)
             {
@@ -46,6 +50,11 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
 
             public string NewName
             { get; set; }
+
+            protected CustomerNameChanged()
+            {
+                
+            }
 
             public CustomerNameChanged(Guid eventIdentifier, Guid aggregateRootId, long eventSequence, DateTime eventTimeStamp, string newName)
                 : base(eventIdentifier, aggregateRootId, eventSequence, eventTimeStamp)
@@ -147,8 +156,7 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
             var targetStore = new MsSqlServerEventStore(DEFAULT_CONNECTION);
             var id = Guid.NewGuid();
 
-            int sequenceCounter = 0;
-
+            int sequenceCounter = 1;
             var events = new SourcedEvent[]
                              {
                                  new CustomerCreatedEvent(Guid.NewGuid(), id, sequenceCounter++, DateTime.UtcNow, "Foo",
