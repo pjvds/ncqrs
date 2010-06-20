@@ -76,19 +76,20 @@ namespace Ncqrs.Eventing.Storage
 
         private object CreateInstanceOfType(Type targetType)
         {
-            try
-            {
-                var publicAndPrivate = BindingFlags.Public | BindingFlags.NonPublic;
-                return Activator.CreateInstance(targetType, publicAndPrivate, null, null, null);
-            }
-            catch (MissingMemberException caught)
+            var flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+            var noArgs = new object[0];
+            var defaultCtor = targetType.GetConstructor(flags, null, Type.EmptyTypes, null);
+
+            if(defaultCtor == null)
             {
                 var msg = String.Format("Could not create object of target type {0} since it does " +
-                                        "the required default constructor. Add an at least protected " +
-                                        "parameterless constructor to this type.", targetType.FullName);
+                        "the required default constructor. Add an at least protected " +
+                        "parameterless constructor to this type.", targetType.FullName);
 
-                throw new PropertyBagConvertionException(msg, caught);
+                throw new PropertyBagConvertionException(msg);
             }
+
+            return defaultCtor.Invoke(noArgs);
         }
 
         private Type GetDestinationType(PropertyBag bag)
