@@ -60,7 +60,7 @@ namespace Ncqrs.Eventing.Storage
         public object Convert(PropertyBag propertyBag)
         {
             Type targetType = GetDestinationType(propertyBag);
-            object instance = Activator.CreateInstance(targetType);
+            object instance = CreateInstanceOfType(targetType);
 
             bool allPropertiesInitialized = InitializeInstancePropertiesFrom(propertyBag, instance);
             bool executedPostConversion = InvokePostConverter(instance, propertyBag);
@@ -72,6 +72,23 @@ namespace Ncqrs.Eventing.Storage
             }
 
             return instance;
+        }
+
+        private object CreateInstanceOfType(Type targetType)
+        {
+            try
+            {
+                var publicAndPrivate = BindingFlags.Public | BindingFlags.NonPublic;
+                return Activator.CreateInstance(targetType, publicAndPrivate, null, null, null);
+            }
+            catch (MissingMemberException caught)
+            {
+                var msg = String.Format("Could not create object of target type {0} since it does " +
+                                        "the required default constructor. Add an at least protected " +
+                                        "parameterless constructor to this type.", targetType.FullName);
+
+                throw new PropertyBagConvertionException(msg, caught);
+            }
         }
 
         private Type GetDestinationType(PropertyBag bag)

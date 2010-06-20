@@ -165,6 +165,7 @@
     <Compile Include="Eventing\Storage\ISnapshotStore.cs" />
     <Compile Include="Eventing\Storage\PropertyBag.cs" />
     <Compile Include="Eventing\Storage\PropertyBagConverter.cs" />
+    <Compile Include="Eventing\Storage\PropertyBagConvertionException.cs" />
     <Compile Include="IClock.cs" />
     <Compile Include="ILog.cs" />
     <Compile Include="InternalExtensions.cs" />
