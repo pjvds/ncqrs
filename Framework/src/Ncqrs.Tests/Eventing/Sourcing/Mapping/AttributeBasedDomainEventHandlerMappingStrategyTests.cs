@@ -6,7 +6,7 @@ using Ncqrs.Eventing.Sourcing.Mapping;
 using NUnit.Framework;
 using Ncqrs.Domain;
 
-namespace Ncqrs.Tests.Domain.Mapping
+namespace Ncqrs.Tests.Eventing.Sourcing.Mapping
 {
     public class AttributeBasedDomainEventHandlerMappingStrategyTests
     {

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Linq;
 using FluentAssertions;
-using Ncqrs.Domain;
-using Ncqrs.Eventing;
 using Ncqrs.Eventing.Sourcing;
 using Ncqrs.Eventing.Sourcing.Snapshotting;
 using Ncqrs.Eventing.Storage.SQL;
@@ -13,7 +11,7 @@ using Ncqrs.Eventing.Storage;
 
 namespace Ncqrs.Tests.Eventing.Storage.SQL
 {
-    public class SimpleMicrosoftSqlServerEventStoreTests
+    public class MsSqlServerEventStoreTests
     {
         [Serializable]
         public class CustomerCreatedEvent : SourcedEvent
@@ -61,7 +59,7 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
         {
         }
 
-        private const string DEFAULT_CONNECTION = "Data Source=.\\sqlexpress;Initial Catalog=NcqrsSampleEventStore;Integrated Security=True";
+        private const string DEFAULT_CONNECTION = "Data Source=.\\sqlexpress;Initial Catalog=MsSqlServerEventStoreTestEventStore;Integrated Security=True";
 
         [SetUp]
         public void Verify_sql_connection()

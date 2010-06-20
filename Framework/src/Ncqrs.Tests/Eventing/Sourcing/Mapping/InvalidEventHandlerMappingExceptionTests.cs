@@ -5,7 +5,7 @@ using FluentAssertions;
 using Ncqrs.Eventing.Sourcing.Mapping;
 using NUnit.Framework;
 
-namespace Ncqrs.Tests.Domain.Mapping
+namespace Ncqrs.Tests.Eventing.Sourcing.Mapping
 {
     public class InvalidEventHandlerMappingExceptionTests
     {
