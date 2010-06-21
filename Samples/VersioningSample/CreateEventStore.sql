@@ -1,6 +1,10 @@
 USE [master]
 GO
 
+IF EXISTS(SELECT name FROM sys.databases WHERE name = 'VersioningEventStore')
+	DROP DATABASE [VersioningEventStore]
+GO
+
 CREATE DATABASE [VersioningEventStore]
 GO
 
