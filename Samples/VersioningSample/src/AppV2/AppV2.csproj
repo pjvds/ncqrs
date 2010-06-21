@@ -49,11 +49,13 @@
     <Compile Include="Commands\ChangeNameCommand.cs" />
     <Compile Include="Commands\CreatePersonCommand.cs" />
     <Compile Include="Domain\Person.cs" />
+    <Compile Include="Events\AppV2EventsTypeResolver.cs" />
     <Compile Include="Events\NameChangedEvent.cs" />
     <Compile Include="Events\PersonCreatedEvent.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

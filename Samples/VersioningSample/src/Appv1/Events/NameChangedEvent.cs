@@ -9,6 +9,10 @@ namespace AwesomeApp.Events
         public string Forename { get; private set; }
         public string Surname { get; private set; }
 
+        public NameChangedEvent()
+        {
+        }
+
         public NameChangedEvent(string forename, string surname)
         {
             Forename = forename;

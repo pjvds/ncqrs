@@ -1,5 +1,6 @@
 ﻿using System;
 using AwesomeAppRefactored.Commands;
+using AwesomeAppRefactored.Events;
 using Ncqrs;
 using Ncqrs.Commanding.CommandExecution.Mapping;
 using Ncqrs.Commanding.ServiceModel;
@@ -23,7 +24,12 @@ namespace AwesomeAppRefactored
 
         private static IEventStore InitializeEventStore()
         {
-            var eventStore = new MsSqlServerEventStore("Data Source=.\\sqlexpress; Initial Catalog=VersioningEventStore; Integrated Security=SSPI;");
+            var propertyBagConverter = new PropertyBagConverter();
+
+            // Register type converter.
+            propertyBagConverter.TypeResolver = new AppV2EventsTypeResolver();
+
+            var eventStore = new MsSqlServerEventStore("Data Source=.\\sqlexpress; Initial Catalog=VersioningEventStore; Integrated Security=SSPI;", propertyBagConverter);
             return eventStore;
         }
 

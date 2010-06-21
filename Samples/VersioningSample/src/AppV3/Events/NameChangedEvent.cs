@@ -6,7 +6,7 @@ namespace AwesomeAppRefactored.Events
     [Serializable]
     public class NameChangedEvent : SourcedEvent
     {
-        public string Name { get; private set; }
+        public string Name { get; set; }
 
         public NameChangedEvent()
         {

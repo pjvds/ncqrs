@@ -46,11 +46,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\AppV2\Events\AppV2EventsTypeResolver.cs">
+      <Link>Events\AppV2EventsTypeResolver.cs</Link>
+    </Compile>
     <Compile Include="Commands\ChangeNameCommand.cs" />
     <Compile Include="Commands\CreatePersonCommand.cs" />
     <Compile Include="Domain\Person.cs" />
     <Compile Include="Events\NameChangedEvent.cs" />
+    <Compile Include="Events\NameChangedEventPostConverter.cs" />
     <Compile Include="Events\PersonCreatedEvent.cs" />
+    <Compile Include="Events\PersonCreatedEventPostConverter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
