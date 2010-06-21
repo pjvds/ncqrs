@@ -5,7 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{2489CF5D-6CEE-44C7-825D-521383275DB7}</ProjectGuid>
+    <ProjectGuid>{7A3419B2-588C-416B-A9F3-BFAE77C22D77}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>AwesomeAppRefactored</RootNamespace>
@@ -35,7 +35,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Ncqrs">
-      <HintPath>..\libs\Ncqrs.dll</HintPath>
+      <HintPath>..\..\lib\Ncqrs.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
