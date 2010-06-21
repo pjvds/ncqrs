@@ -18,16 +18,13 @@ namespace AwesomeApp
             var commandService = NcqrsEnvironment.Get<ICommandService>();
             var id = new Guid("AE6920ED-381A-467D-8DB2-EE91E851F431");
 
-            //using (var session = NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork()) {
-                commandService.Execute(new CreatePersonCommand(id,  "John", "Smith"));
-                commandService.Execute(new ChangeNameCommand(id, "Jane", "Smith"));
-                //session.Accept();
-            //}
+            commandService.Execute(new CreatePersonCommand(id, "John", "Smith"));
+            commandService.Execute(new ChangeNameCommand(id, "Jane", "Smith"));
         }
 
         private static IEventStore InitializeEventStore()
         {
-            var eventStore = new SimpleMicrosoftSqlServerEventStore("Data Source=.; Initial Catalog=VersioningEventStore; Integrated Security=SSPI;");
+            var eventStore = new MsSqlServerEventStore("Data Source=.; Initial Catalog=VersioningEventStore; Integrated Security=SSPI;");
             return eventStore;
         }
 
