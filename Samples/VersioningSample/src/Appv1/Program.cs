@@ -20,6 +20,9 @@ namespace AwesomeApp
 
             commandService.Execute(new CreatePersonCommand(id, "John", "Smith"));
             commandService.Execute(new ChangeNameCommand(id, "Jane", "Smith"));
+
+            Console.WriteLine("If you see this message and no exception occurred, it had probably worked. Now you can run AppV2.");
+            Console.ReadKey(true);
         }
 
         private static IEventStore InitializeEventStore()

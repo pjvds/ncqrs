@@ -20,6 +20,9 @@ namespace AwesomeAppRefactored
             var id = new Guid("AE6920ED-381A-467D-8DB2-EE91E851F431");
 
             commandService.Execute(new ChangeNameCommand(id, "Jane", "Doe"));
+
+            Console.WriteLine("If you see this message and no exception occurred, it had probably worked. Now you can run AppV2.");
+            Console.ReadLine();
         }
 
         private static IEventStore InitializeEventStore()
