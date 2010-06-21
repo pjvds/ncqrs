@@ -31,14 +31,19 @@ namespace CommandService
             var service = new Ncqrs.Commanding.ServiceModel.CommandService();
             service.RegisterExecutor(new MappedCommandExecutor<CreateNewNote>());
             service.RegisterExecutor(new MappedCommandExecutor<ChangeNoteText>());
-            //TODO: service.RegisterExecutorForAllMappedCommandsInAssembly(typeof(CreateNewNote).Assembly););
+            // TODO: service.RegisterExecutorForAllMappedCommandsInAssembly(typeof(CreateNewNote).Assembly););
 
             return service;
         }
 
         private static IEventStore InitializeEventStore()
         {
-            var store = new MsSqlServerEventStore(Settings.Default.SqlEventStoreConnectionString);
+
+
+            var converter = new PropertyBagConverter();
+            converter.AddPostConversion();
+
+            var store = new MsSqlServerEventStore(Settings.Default.SqlEventStoreConnectionString, );
             return store;
         }
 

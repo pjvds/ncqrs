@@ -114,7 +114,7 @@ namespace Ncqrs.Eventing.Sourcing
         /// </summary>
         /// <exception cref="ArgumentNullException">Occurs when <paramref name="sourcedEvent"/> is null.</exception>
         /// <exception cref="ArgumentException">Occurs when <paramref name="sourcedEvent.EventSourceId"/> is not owned set to the <see cref="EventSourceId"/> property of this stream.</exception>
-        /// <exception cref="ArgumentException">Occurs when <paramref name="sourcedEvent.Sequence"/> is not set to LastSequence+1.</exception>
+        /// <exception cref="ArgumentException">Occurs when <paramref name="sourcedEvent.Sequence"/> is not set to <see cref="LastSequence"/><c>+1</c>.</exception>
         /// <param name="sourcedEvent">The sourced event.</param>
         public void Append(SourcedEvent sourcedEvent)
         {
@@ -148,7 +148,6 @@ namespace Ncqrs.Eventing.Sourcing
             }
 
             long requiredSequence = LastSequence + 1;
-
             if (sourcedEvent.EventSequence != requiredSequence)
             {
 
@@ -156,7 +155,7 @@ namespace Ncqrs.Eventing.Sourcing
                                         "The sequence number of the event is {0} while {1} was required.",
                                         sourcedEvent.EventSequence, requiredSequence);
 
-                throw new ArgumentException("Cannot apply event with incorrect sequence number. The sequence number of the event is {0} while {1} was required.");
+                throw new ArgumentException(msg, "sourcedEvent");
             }
         }
 
