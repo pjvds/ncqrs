@@ -38,12 +38,7 @@ namespace CommandService
 
         private static IEventStore InitializeEventStore()
         {
-
-
-            var converter = new PropertyBagConverter();
-            converter.AddPostConversion();
-
-            var store = new MsSqlServerEventStore(Settings.Default.SqlEventStoreConnectionString, );
+            var store = new MsSqlServerEventStore(Settings.Default.SqlEventStoreConnectionString);
             return store;
         }
 
