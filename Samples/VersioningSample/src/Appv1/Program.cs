@@ -24,7 +24,7 @@ namespace AwesomeApp
 
         private static IEventStore InitializeEventStore()
         {
-            var eventStore = new MsSqlServerEventStore("Data Source=.; Initial Catalog=VersioningEventStore; Integrated Security=SSPI;");
+            var eventStore = new MsSqlServerEventStore("Data Source=.\\sqlexpress; Initial Catalog=VersioningEventStore; Integrated Security=SSPI;");
             return eventStore;
         }
 
