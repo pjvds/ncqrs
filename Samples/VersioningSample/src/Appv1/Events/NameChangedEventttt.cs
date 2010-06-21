@@ -4,16 +4,16 @@ using Ncqrs.Eventing.Sourcing;
 namespace AwesomeApp.Events
 {
     [Serializable]
-    public class NameChangedEvent : SourcedEvent
+    public class NameChangedEventttt : SourcedEvent
     {
         public string Forename { get; private set; }
         public string Surname { get; private set; }
 
-        public NameChangedEvent()
+        public NameChangedEventttt()
         {
         }
 
-        public NameChangedEvent(string forename, string surname)
+        public NameChangedEventttt(string forename, string surname)
         {
             Forename = forename;
             Surname = surname;

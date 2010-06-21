@@ -48,7 +48,7 @@
   <ItemGroup>
     <Compile Include="Commands\ChangeNameCommand.cs" />
     <Compile Include="Commands\CreatePersonCommand.cs" />
-    <Compile Include="Events\NameChangedEvent.cs" />
+    <Compile Include="Events\NameChangedEventttt.cs" />
     <Compile Include="Events\PersonCreatedEvent.cs" />
     <Compile Include="Domain\Person.cs" />
     <Compile Include="Program.cs" />

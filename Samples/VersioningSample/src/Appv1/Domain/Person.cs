@@ -22,7 +22,7 @@ namespace AwesomeApp.Domain
 
         public void ChangeName(string forename, string surname)
         {
-            var e = new NameChangedEvent(forename, surname);
+            var e = new NameChangedEventttt(forename, surname);
             ApplyEvent(e);
         }
 
@@ -32,7 +32,7 @@ namespace AwesomeApp.Domain
             surname = e.Surname;
         }
 
-        protected void OnNameChanged(NameChangedEvent e)
+        protected void OnNameChanged(NameChangedEventttt e)
         {
             forename = e.Forename;
             surname = e.Surname;

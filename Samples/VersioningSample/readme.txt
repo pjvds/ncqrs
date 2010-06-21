@@ -11,9 +11,6 @@ event sourcing with ncqrs.
   This is to test that the old events can de-serialize correctly despite the
   namespace change.
 
-  TODO: Also need to investigate a change to the event name (eg for correcting
-  typeos)
-
 
 * AppV3 represents a change to the event, this would be considered a new
   version of the event.

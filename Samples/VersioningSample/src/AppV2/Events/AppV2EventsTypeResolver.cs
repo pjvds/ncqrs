@@ -14,8 +14,11 @@ namespace AwesomeAppRefactored.Events
                 // We have an event of the old namespace here.
                 switch (className)
                 {
-                    case "NameChangedEvent":
+                    // Fix typo of event class name.
+                    case "NameChangedEventttt":
                         return typeof (NameChangedEvent);
+                    
+                    // Only fix namespace move.
                     case "PersonCreatedEvent":
                         return typeof (PersonCreatedEvent);
                 }
