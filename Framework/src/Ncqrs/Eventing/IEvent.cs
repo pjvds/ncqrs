@@ -58,5 +58,10 @@ namespace Ncqrs.Eventing
                 return default(DateTime);
             }
         }
+
+        public Version EventVersion
+        {
+            get { return default(Version); }
+        }
     }
 }
