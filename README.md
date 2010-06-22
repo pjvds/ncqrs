@@ -16,9 +16,9 @@ Discussion and feedback
 The best source for discussion is the [Ncqrs-dev group][1]. You could
 also use [twitter][2] or use the [issue tracker][3].
 
-	[1]: <http://groups.google.com/group/ncqrs-dev>
-	[2]: <http://twitter.com/ncqrs/>
-	[3]: <http://github.com/ncqrs/ncqrs/issues>
+[1]: <http://groups.google.com/group/ncqrs-dev> "Ncqrs-dev group"
+[2]: <http://twitter.com/ncqrs/> "@Ncqrs at twitter"
+[3]: <http://github.com/ncqrs/ncqrs/issues> "Ncqrs issue tracker"
 
 Code contribution
 -----------------
@@ -27,8 +27,8 @@ The code base of Ncqrs will never be complete. We encourage users to
 [fork][4] Ncqrs code, make changes, commit them to your forked repository, and 
 submit [pull requests][5].
 
-	[4]: <http://help.github.com/forking/>
-	[5]: <http://github.com/guides/pull-requests>
+[4]: <http://help.github.com/forking/> "Fork guide"
+[5]: <http://github.com/guides/pull-requests> "Pull request guide"
 
 License
 -------
