@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using AwesomeApp.Commands;
 using Ncqrs;
 using Ncqrs.Commanding.CommandExecution.Mapping;
@@ -27,7 +28,7 @@ namespace AwesomeApp
 
         private static IEventStore InitializeEventStore()
         {
-            var eventStore = new MsSqlServerEventStore("Data Source=.\\sqlexpress; Initial Catalog=VersioningEventStore; Integrated Security=SSPI;");
+            var eventStore = new MsSqlServerEventStore(ConfigurationManager.ConnectionStrings["EventStore"].ConnectionString);
             return eventStore;
         }
 

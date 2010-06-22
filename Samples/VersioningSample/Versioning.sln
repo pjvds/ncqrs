@@ -9,6 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppV3", "src\AppV3\AppV3.cs
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{31722300-C646-4F62-BD32-F7BE572B9A6E}"
 	ProjectSection(SolutionItems) = preProject
+		src\App.config = src\App.config
 		CreateEventStore.sql = CreateEventStore.sql
 		readme.txt = readme.txt
 	EndProjectSection

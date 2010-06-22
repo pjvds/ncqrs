@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using AwesomeAppRefactored.Commands;
 using AwesomeAppRefactored.Events;
 using Ncqrs;
@@ -32,7 +33,7 @@ namespace AwesomeAppRefactored
             // Register type converter.
             propertyBagConverter.TypeResolver = new AppV2EventsTypeResolver();
 
-            var eventStore = new MsSqlServerEventStore("Data Source=.\\sqlexpress; Initial Catalog=VersioningEventStore; Integrated Security=SSPI;", propertyBagConverter);
+            var eventStore = new MsSqlServerEventStore(ConfigurationManager.ConnectionStrings["EventStore"].ConnectionString, propertyBagConverter);
             return eventStore;
         }
 
