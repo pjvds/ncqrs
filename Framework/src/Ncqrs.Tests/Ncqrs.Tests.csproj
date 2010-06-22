@@ -95,7 +95,6 @@
     <Compile Include="Domain\NoUnitOfWorkAvailableInThisContextExceptionTests.cs" />
     <Compile Include="Domain\Storage\AggregateLoaderExceptionTests.cs" />
     <Compile Include="Domain\Storage\DomainRepositoryTests.cs" />
-    <Compile Include="Eventing\Conversion\EventConverterTests.cs" />
     <Compile Include="Eventing\Sourcing\SourcedEventStreamTests.cs" />
     <Compile Include="Eventing\Storage\ConcurrencyExceptionSpecs.cs" />
     <Compile Include="Eventing\Storage\SQL\MsSqlServerEventStoreTests.cs" />

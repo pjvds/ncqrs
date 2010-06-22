@@ -1,7 +1,5 @@
 ﻿using System;
-using FluentAssertions;
 using Ncqrs.Eventing;
-using Ncqrs.Eventing.Conversion;
 using Ncqrs.Eventing.Sourcing;
 using Ncqrs.Eventing.Sourcing.Mapping;
 using NUnit.Framework;
@@ -67,31 +65,6 @@ namespace Ncqrs.Tests.Domain.Storage
             [EventHandler]
             private void CatchAllHandler(SourcedEvent e)
             {}
-        }
-
-        [Test]
-        public void It_should_call_the_converter_for_each_event()
-        {
-            var store = MockRepository.GenerateMock<IEventStore>();
-            var bus = MockRepository.GenerateMock<IEventBus>();
-            var converter = MockRepository.GenerateMock<IEventConverter<SourcedEvent, SourcedEvent>>();
-
-            Func<SourcedEvent, SourcedEvent> returnFirstParam = (x) => x;
-            converter.Stub(c => c.Convert(null)).IgnoreArguments().Do(returnFirstParam);
-
-            var aggId = Guid.NewGuid();
-            var eventsInTheStore = new SourcedEvent[]
-            {
-                new FooEvent(Guid.NewGuid(), aggId, 1, DateTime.UtcNow), 
-                new BarEvent(Guid.NewGuid(), aggId, 2, DateTime.UtcNow)
-            };
-            store.Expect(s => s.GetAllEvents(aggId)).Return(eventsInTheStore);
-
-            var repository = new DomainRepository(store, bus, null, converter);
-
-            repository.GetById<MyAggregateRoot>(aggId);
-
-            converter.AssertWasCalled(c => c.Convert(null),options => options.IgnoreArguments().Repeat.Twice());
         }
 
         [Test]

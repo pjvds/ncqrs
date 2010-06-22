@@ -140,10 +140,7 @@
     <Compile Include="Domain\NoUnitOfWorkAvailableInThisContextException.cs" />
     <Compile Include="Eventing\Sourcing\EventSource.cs" />
     <Compile Include="Eventing\Sourcing\TypeThresholdedActionBasedSourcedEventHandler.cs" />
-    <Compile Include="Eventing\Conversion\DelegateBasedConverter.cs" />
     <Compile Include="Eventing\Event.cs" />
-    <Compile Include="Eventing\Conversion\EventConverter.cs" />
-    <Compile Include="Eventing\Conversion\IEventConverter.cs" />
     <Compile Include="Eventing\Sourcing\IEventSource.cs" />
     <Compile Include="Eventing\Sourcing\ISourcedEvent.cs" />
     <Compile Include="Eventing\Sourcing\ISourcedEventHandler.cs" />

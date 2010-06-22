@@ -2,8 +2,6 @@
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
-using Ncqrs.Eventing;
-using Ncqrs.Eventing.Conversion;
 using Ncqrs.Eventing.ServiceModel.Bus;
 using Ncqrs.Eventing.Sourcing.Snapshotting;
 using Ncqrs.Eventing.Storage;
@@ -19,16 +17,14 @@ namespace Ncqrs.Domain.Storage
         private readonly IEventBus _eventBus;
         private readonly IEventStore _store;
         private readonly ISnapshotStore _snapshotStore;
-        private readonly IEventConverter<SourcedEvent, SourcedEvent> _converter;
 
-        public DomainRepository(IEventStore store, IEventBus eventBus, ISnapshotStore snapshotStore = null, IEventConverter<SourcedEvent, SourcedEvent> converter = null)
+        public DomainRepository(IEventStore store, IEventBus eventBus, ISnapshotStore snapshotStore = null)
         {
             Contract.Requires<ArgumentNullException>(store != null);
             Contract.Requires<ArgumentNullException>(eventBus != null);
 
             _store = store;
             _eventBus = eventBus;
-            _converter = converter;
             _snapshotStore = snapshotStore;
         }
 
@@ -87,7 +83,6 @@ namespace Ncqrs.Domain.Storage
             AggregateRoot aggregateRoot = null;
 
             var events = _store.GetAllEvents(id);
-            events = ConvertEvents(events);
 
             if (events.Count() > 0)
             {
@@ -124,21 +119,6 @@ namespace Ncqrs.Domain.Storage
             var aggregateRoot = (AggregateRoot) ctor.Invoke(null);
 
             return aggregateRoot;
-        }
-
-        protected IEnumerable<SourcedEvent> ConvertEvents(IEnumerable<SourcedEvent> events)
-        {
-            if (_converter == null) return events;
-
-            var result = new List<SourcedEvent>(events.Count());
-
-            foreach (var evnt in events)
-            {
-                var convertedEvent = _converter.Convert(evnt);
-                result.Add(convertedEvent);
-            }
-
-            return result;
         }
 
         public T GetById<T>(Guid id) where T : AggregateRoot
