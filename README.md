@@ -14,11 +14,11 @@ Discussion and feedback
 -----------------------
 
 The best source for discussion is the [Ncqrs-dev group][ncqrs-dev]. You could
-also use [twitter @ncqrs][twtr] or use the [issue tracker][issue]
+also use [twitter @ncqrs][twtr] or use the [issue tracker][issue].
 
-	[ncqrs-dev]: http://groups.google.com/group/ncqrs-dev
-	[twtr]: http://twitter.com/ncqrs/
-	[issue]: http://github.com/ncqrs/ncqrs/issues
+	[ncqrs-dev]: <http://groups.google.com/group/ncqrs-dev>
+	[twtr]: <http://twitter.com/ncqrs/>
+	[issue]: <http://github.com/ncqrs/ncqrs/issues>
 
 Code contribution
 -----------------
