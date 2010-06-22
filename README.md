@@ -23,16 +23,13 @@ alive and on the path of progress.
 Please consider contributing to the project in one or more of the ways outlined 
 below.
 
-### Feedback ###
-One of the key drivers for us is feedback. We take all feedback serious and it 
-help us in the decisions we make, to choose the parts where we spent our time on
-and sometime just puts a smile on our faces. And yes, bugs submission are also
-feedback.
+### Discussion and feedback ###
+The best source for discussion is the [Ncqrs-dev group][ncqrs-dev]. You could
+also use [twitter @ncqrs][twtr] or use the [issue tracker][issue]
 
-* Twitter: [@ncqrs](http://twitter.com/ncqrs/)
-* Mail: [feedback@ncqrs.org](mailto:feedback@ncqrs.org)
-* Discussions: [Ncqrs-dev](http://groups.google.com/group/ncqrs-dev)
-* Issue tracker: [Issue tracker](http://github.com/ncqrs/ncqrs/issues)
+	[ncqrs-dev]: http://groups.google.com/group/ncqrs-dev
+	[twtr]: http://twitter.com/ncqrs/
+	[issue]: http://github.com/ncqrs/ncqrs/issues
 
 ### Code contribution ###
 The code base of Ncqrs will never be complete. We encourage users to 
