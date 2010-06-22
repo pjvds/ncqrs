@@ -47,8 +47,15 @@ namespace Ncqrs.Eventing.Storage
             get { return _properties; }
         }
 
+        /// <summary>
+        /// Adds a property value to this bag.
+        /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
+        /// <param name="value">The value.</param>
         public void AddPropertyValue(string propertyName, object value)
         {
+            if(propertyName.IsNullOrEmpty()) throw new ArgumentNullException("propertyName");
+
             _properties.Add(propertyName, value);
         }
     }
