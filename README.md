@@ -1,5 +1,5 @@
 The Ncqrs Framework
--------------------
+===================
 
 Ncqrs is a framework for .NET helps build scalable, extensible and maintainable
 applications by supporting developers apply the Command Query Responsibility
@@ -10,20 +10,9 @@ help you to focus on the code that adds business value. They come with
 annotation, convention and configuration support and help you to write isolated
 and testable.
 
-Contributing to Ncqrs
----------------------
+Discussion and feedback
+-----------------------
 
-Ncqrs is an open source project that is driven by software developers that love 
-to make the world just a little bit better. The project is driven by the 
-contribution of people. Whether it is that they give feedback, make a bug 
-report, fixing some code or add some documentation. The project would not be a 
-success without the people that are contributing. It keeps the project vibrant, 
-alive and on the path of progress.
-
-Please consider contributing to the project in one or more of the ways outlined 
-below.
-
-### Discussion and feedback ###
 The best source for discussion is the [Ncqrs-dev group][ncqrs-dev]. You could
 also use [twitter @ncqrs][twtr] or use the [issue tracker][issue]
 
@@ -31,8 +20,20 @@ also use [twitter @ncqrs][twtr] or use the [issue tracker][issue]
 	[twtr]: http://twitter.com/ncqrs/
 	[issue]: http://github.com/ncqrs/ncqrs/issues
 
-### Code contribution ###
+Code contribution
+-----------------
+
 The code base of Ncqrs will never be complete. We encourage users to 
 [fork](http://help.github.com/forking/) Ncqrs code, make changes, commit them 
 to your forked repository, and submit 
 [pull requests](http://github.com/guides/pull-requests).
+
+License
+-------
+
+The Ncqrs framework and its documentation are licensed under the Apache License,
+Version 2.0 (the “License”); you may not use this file except in compliance with
+the License. You may obtain a copy of the License at 
+<http://www.apache.org/licenses/LICENSE-2.0>.
+
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an “AS IS” BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
