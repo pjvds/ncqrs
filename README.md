@@ -16,9 +16,9 @@ Discussion and feedback
 The best source for discussion is the [Ncqrs-dev group][1]. You could
 also use [twitter][2] or use the [issue tracker][3].
 
-[1]: <http://groups.google.com/group/ncqrs-dev> "Ncqrs-dev group"
-[2]: <http://twitter.com/ncqrs/> "@Ncqrs at twitter"
-[3]: <http://github.com/ncqrs/ncqrs/issues> "Ncqrs issue tracker"
+[1]: http://groups.google.com/group/ncqrs-dev "Ncqrs-dev group"
+[2]: http://twitter.com/ncqrs/ "@Ncqrs at twitter"
+[3]: http://github.com/ncqrs/ncqrs/issues "Ncqrs issue tracker"
 
 Code contribution
 -----------------
@@ -27,18 +27,18 @@ The code base of Ncqrs will never be complete. We encourage users to
 [fork][4] Ncqrs code, make changes, commit them to your forked repository, and 
 submit [pull requests][5].
 
-[4]: <http://help.github.com/forking/> "Fork guide"
-[5]: <http://github.com/guides/pull-requests> "Pull request guide"
+[4]: http://help.github.com/forking/ "Fork guide"
+[5]: http://github.com/guides/pull-requests "Pull request guide"
 
 License
 -------
 
 The Ncqrs framework and its documentation are licensed under the Apache License,
-Version 2.0 (the ‚ÄúLicense‚Äù); you may not use this file except in compliance with
+Version 2.0 (the ìLicenseî); you may not use this file except in compliance with
 the License. You may obtain a copy of the License at 
 <http://www.apache.org/licenses/LICENSE-2.0>.
 
 Unless required by applicable law or agreed to in writing, software distributed 
-under the License is distributed on an ‚ÄúAS IS‚Äù BASIS, WITHOUT WARRANTIES OR 
+under the License is distributed on an ìAS ISî BASIS, WITHOUT WARRANTIES OR 
 CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 specific language governing permissions and limitations under the License.
