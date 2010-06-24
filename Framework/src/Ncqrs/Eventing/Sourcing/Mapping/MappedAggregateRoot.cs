@@ -17,7 +17,7 @@ namespace Ncqrs.Eventing.Sourcing.Mapping
             InitializeHandlers();
         }
 
-        private void InitializeHandlers()
+        protected void InitializeHandlers()
         {
             foreach (var handler in _mappingStrategy.GetEventHandlersFromAggregateRoot(this))
                 RegisterHandler(handler);

@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using Ncqrs.Eventing;
+using System.Collections.Generic;
 using Ncqrs.Eventing.Sourcing.Mapping;
 
 namespace Ncqrs.Domain
@@ -33,12 +33,13 @@ namespace Ncqrs.Domain
              * method isn't (and shouldn't be) using any derived resources
             **/
             InitializeEventHandlers();
+            InitializeHandlers();
         }
         
         /// <summary>
         /// Maps the given generic eventtype to the expressed handler.
         /// </summary>
-        /// <typeparam name="T">This should always be a <see cref="SourcedEvent"/>.</typeparam>
+        /// <typeparam name="T">This should always be a <see cref="IEvent"/>.</typeparam>
         /// <returns>An <see cref="ExpressionHandler{T}"/>which allows us to define the mapping to a handler.</returns>
         protected ExpressionHandler<T> Map<T>() where T : IEvent
         {

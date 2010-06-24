@@ -43,9 +43,7 @@ namespace Ncqrs.Eventing.Sourcing.Mapping
             Contract.Requires<ArgumentNullException>(eventSource != null, "The eventSource cannot be null.");
 
             if(!(eventSource is AggregateRootMappedWithExpressions))
-            {
                 throw new ArgumentException("aggregateRoot need to be of type AggregateRootMappedWithExpressions to be used in a ExpressionBasedSourcedEventHandlerMappingStrategy.");
-            }
 
             var handlers = new List<ISourcedEventHandler>();
 
@@ -67,7 +65,7 @@ namespace Ncqrs.Eventing.Sourcing.Mapping
         /// <summary>
         /// Converts the given method into an <see cref="ISourcedEventHandler"/> object.
         /// </summary>
-        /// <param name="aggregateRoot">The event source from which we want to invoke the method.</param>
+        /// <param name="eventSource">The event source from which we want to invoke the method.</param>
         /// <param name="method">The method to invoke</param>
         /// <param name="exact"><b>True</b> if we need to have an exact match, otherwise <b>False</b>.</param>
         /// <returns>An <see cref="ISourcedEventHandler"/> that handles the execution of the given method.</returns>
