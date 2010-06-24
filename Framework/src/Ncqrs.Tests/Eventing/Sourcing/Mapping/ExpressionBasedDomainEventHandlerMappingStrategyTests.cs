@@ -116,10 +116,7 @@ namespace Ncqrs.Tests.Eventing.Sourcing.Mapping
         [Test]
         public void It_should_throw_an_exception_when_mapped_method_is_static()
         {
-            var aggregate = new IlligalStaticMethodTarget();
-            var mapping = new ExpressionBasedSourcedEventHandlerMappingStrategy();
-
-            Action act = () => mapping.GetEventHandlersFromAggregateRoot(aggregate);
+            Action act = () => new IlligalStaticMethodTarget();
             act.ShouldThrow<InvalidEventHandlerMappingException>();
         }
 
