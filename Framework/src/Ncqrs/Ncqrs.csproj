@@ -101,20 +101,21 @@
   <ItemGroup>
     <Compile Include="Commanding\CommandBase.cs" />
     <Compile Include="Commanding\CommandExecution\DirectActionOnAggregateRootCommandExecutor.cs" />
+    <Compile Include="Commanding\CommandExecution\ICommandExecutorExtensions.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\ActionFactory.cs" />
-    <Compile Include="Commanding\CommandExecution\Mapping\Actions\DirectMethodCommandExecutor.cs" />
-    <Compile Include="Commanding\CommandExecution\Mapping\Actions\DirectMethodCommandInfo.cs" />
-    <Compile Include="Commanding\CommandExecution\Mapping\Actions\ObjectCreationCommandExecutor.cs" />
-    <Compile Include="Commanding\CommandExecution\Mapping\Actions\ObjectCreationCommandInfo.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\Fluent\MappedCommand.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\Fluent\MappedCommandToAggregateRoot.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\Fluent\MappedCommandToAggregateRootConstructor.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\Fluent\MappedCommandToAggregateRootMethod.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\Map.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\Reflection\AttributeMappedCommandExecutor.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\Reflection\DirectMethodCommandExecutor.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\Reflection\DirectMethodCommandInfo.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\Reflection\ObjectCreationCommandExecutor.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\Reflection\ObjectCreationCommandInfo.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\CommandMappingConfiguration.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\MappedCommandExecutor.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\CommandMappingException.cs" />
-    <Compile Include="Commanding\CommandExecution\Mapping\Fluent\FluentAndWord.cs" />
-    <Compile Include="Commanding\CommandExecution\Mapping\Fluent\FluentCommandExecutorBuilderThatMapsTo.cs" />
-    <Compile Include="Commanding\CommandExecution\Mapping\Fluent\FluentCommandExecutorBuilderWithAggregateRootSource.cs" />
-    <Compile Include="Commanding\CommandExecution\Mapping\Fluent\FluentDirectMethodCommandExecutorBuilderWithClosure.cs" />
-    <Compile Include="Commanding\CommandExecution\Mapping\Fluent\FluentWhereWord.cs" />
-    <Compile Include="Commanding\CommandExecution\Mapping\Fluent\Mapping.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\MappingForCommandNotFoundException.cs" />
     <Compile Include="Commanding\CommandExecution\CommandExecutorBase.cs" />
     <Compile Include="Commanding\CommandExecution\CommandExecutorNotFoundException.cs" />
@@ -124,11 +125,11 @@
     <Compile Include="Commanding\ServiceModel\ICommandService.cs" />
     <Compile Include="Commanding\ServiceModel\ICommandServiceInterceptor.cs" />
     <Compile Include="Commanding\CommandExecution\TransactionalCommandExecutorWrapper.cs" />
-    <Compile Include="Commanding\CommandExecution\Mapping\Attributes\AggregateRootIdAttribute.cs" />
-    <Compile Include="Commanding\CommandExecution\Mapping\Attributes\ExcludeInMappingAttribute.cs" />
-    <Compile Include="Commanding\CommandExecution\Mapping\Attributes\MapsToAggregateRootConstructorAttribute.cs" />
-    <Compile Include="Commanding\CommandExecution\Mapping\Attributes\MapsToAggregateRootMethodAttribute.cs" />
-    <Compile Include="Commanding\CommandExecution\Mapping\Attributes\TransactionalAttribute.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\Reflection\AggregateRootIdAttribute.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\Reflection\ExcludeInMappingAttribute.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\Reflection\MapsToAggregateRootConstructorAttribute.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\Reflection\MapsToAggregateRootMethodAttribute.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\Reflection\TransactionalAttribute.cs" />
     <Compile Include="Commanding\ICommand.cs" />
     <Compile Include="Config\InstanceNotFoundInEnvironment.cs" />
     <Compile Include="DateTimeBasedClock.cs" />
@@ -200,6 +201,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TraceLogger.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>

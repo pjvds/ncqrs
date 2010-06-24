@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
+namespace Ncqrs.Commanding.CommandExecution.Mapping.Reflection
 {
     /// <summary>
     /// Defines that a property should be excluded in the auto mapping process.

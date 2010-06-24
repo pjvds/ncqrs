@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
+namespace Ncqrs.Commanding.CommandExecution.Mapping.Reflection
 {
     /// <summary>
     /// Defines that the command maps directly to a method on an aggregate root.

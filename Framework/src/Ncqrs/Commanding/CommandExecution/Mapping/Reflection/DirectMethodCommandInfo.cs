@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
-using Ncqrs.Commanding.CommandExecution.Mapping.Attributes;
 
-namespace Ncqrs.Commanding.CommandExecution.Mapping.Actions
+namespace Ncqrs.Commanding.CommandExecution.Mapping.Reflection
 {
     internal class DirectMethodCommandInfo
     {

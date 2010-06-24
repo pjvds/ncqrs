@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
-using Ncqrs.Commanding.CommandExecution.Mapping.Actions;
-using Ncqrs.Commanding.CommandExecution.Mapping.Attributes;
+using Ncqrs.Commanding.CommandExecution.Mapping.Reflection;
 
 namespace Ncqrs.Commanding.CommandExecution.Mapping
 {

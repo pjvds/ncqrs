@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
+namespace Ncqrs.Commanding.CommandExecution.Mapping.Reflection
 {
     /// <summary>
     /// Marks a property as the property that contains the aggregate root id.
