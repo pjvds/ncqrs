@@ -1,6 +1,7 @@
 ﻿using System;
 using Ncqrs.Eventing;
 using System.Collections.Generic;
+using Ncqrs.Eventing.Sourcing;
 using Ncqrs.Eventing.Sourcing.Mapping;
 
 namespace Ncqrs.Domain
@@ -39,9 +40,9 @@ namespace Ncqrs.Domain
         /// <summary>
         /// Maps the given generic eventtype to the expressed handler.
         /// </summary>
-        /// <typeparam name="T">This should always be a <see cref="IEvent"/>.</typeparam>
+        /// <typeparam name="T">This should always be a <see cref="SourcedEvent"/>.</typeparam>
         /// <returns>An <see cref="ExpressionHandler{T}"/>which allows us to define the mapping to a handler.</returns>
-        protected ExpressionHandler<T> Map<T>() where T : IEvent
+        protected ExpressionHandler<T> Map<T>() where T : SourcedEvent
         {
             var handler = new ExpressionHandler<T>();
             _mappinghandlers.Add(handler);
