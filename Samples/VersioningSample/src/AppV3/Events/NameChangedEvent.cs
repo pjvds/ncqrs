@@ -5,17 +5,18 @@ using Ncqrs.Eventing.Storage;
 namespace AwesomeAppRefactored.Events
 {
     [Serializable]
-    [EventName("MyCompany:AwesomeApp:Events:NameChanged@2")]
-    [EventNameAlias("MyCompany:AwesomeApp:Events:NameChanged@1")]
+    [EventName("MyCompany:AwesomeApp:Events:NameChanged")]
+    [EventNameAlias("MyCompany:AwesomeApp:NameChangedEventttt")]
     public class NameChangedEvent : SourcedEvent
     {
         public string Name { get; set; }
 
         public NameChangedEvent()
         {
+            EventVersion = new Version(2, 0);
         }
 
-        public NameChangedEvent(string name)
+        public NameChangedEvent(string name) : this()
         {
             Name = name;
         }

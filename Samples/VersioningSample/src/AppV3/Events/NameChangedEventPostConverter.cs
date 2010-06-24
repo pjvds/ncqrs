@@ -1,15 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
 using Ncqrs.Eventing.Storage;
+using Ncqrs.Eventing.Storage.Serialization;
+using Newtonsoft.Json.Linq;
 
 namespace AwesomeAppRefactored.Events
 {
-    public class NameChangedEventPostConverter : IPropertyBagPostConverter
+    public class NameChangedEventPostConverter : IEventConverter
     {
-        public void ApplyConversion(object target, Type targetType, IDictionary<string, object> propertyData)
+        private static readonly Version V2 = new Version(2, 0);
+
+        public void Upgrade(StoredEvent<JObject> theEvent)
         {
-            NameChangedEvent evnt = (NameChangedEvent)target;
-            evnt.Name = string.Format("{0} {1}", propertyData["Forename"], propertyData["Surname"]);
+            if (theEvent.EventVersion < V2) {
+                var obj = theEvent.Data;
+
+                var name = string.Format("{0} {1}",
+                    obj.Property("Forename").Value,
+                    obj.Property("Surname").Value);
+
+                obj.Remove("Forename");
+                obj.Remove("Surname");
+                obj.Add("Name", name);
+
+                theEvent.EventVersion = V2;
+            }
         }
     }
 }

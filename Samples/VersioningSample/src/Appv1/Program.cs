@@ -31,10 +31,7 @@ namespace AwesomeApp
             var typeResolver = new AttributeEventTypeResolver();
             typeResolver.AddAllEventsInAssembly(typeof(Program).Assembly);
             
-            var converter = new PropertyBagConverter();
-            converter.TypeResolver = typeResolver;
-
-            var eventStore = new MsSqlServerEventStore(ConfigurationManager.ConnectionStrings["EventStore"].ConnectionString, converter);
+            var eventStore = new MsSqlServerEventStore(ConfigurationManager.ConnectionStrings["EventStore"].ConnectionString, typeResolver, null);
             return eventStore;
         }
 

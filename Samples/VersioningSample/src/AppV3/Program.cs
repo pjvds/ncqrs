@@ -6,6 +6,7 @@ using Ncqrs;
 using Ncqrs.Commanding.CommandExecution.Mapping.Attributes;
 using Ncqrs.Commanding.ServiceModel;
 using Ncqrs.Eventing.Storage;
+using Ncqrs.Eventing.Storage.Serialization;
 using Ncqrs.Eventing.Storage.SQL;
 
 namespace AwesomeAppRefactored
@@ -31,13 +32,11 @@ namespace AwesomeAppRefactored
             var typeResolver = new AttributeEventTypeResolver();
             typeResolver.AddAllEventsInAssembly(typeof(Program).Assembly);
             
-            var converter = new PropertyBagConverter();
-            converter.TypeResolver = typeResolver;
+            var converter = new EventConverter(typeResolver);
+            converter.AddConverter(typeof(NameChangedEvent), new NameChangedEventPostConverter());
+            converter.AddConverter(typeof(PersonCreatedEvent), new PersonCreatedEventPostConverter());
 
-            converter.AddPostConversion(typeof(NameChangedEvent), new NameChangedEventPostConverter());
-            converter.AddPostConversion(typeof(PersonCreatedEvent), new PersonCreatedEventPostConverter());
-
-            var eventStore = new MsSqlServerEventStore(ConfigurationManager.ConnectionStrings["EventStore"].ConnectionString, converter);
+            var eventStore = new MsSqlServerEventStore(ConfigurationManager.ConnectionStrings["EventStore"].ConnectionString, typeResolver, converter);
             return eventStore;
         }
 
