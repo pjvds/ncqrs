@@ -1,7 +1,15 @@
 ﻿CREATE TABLE [dbo].[Events]
 (
-	[Id] [uniqueidentifier] NOT NULL, [EventSourceId] [uniqueidentifier] NOT NULL, [Sequence] [bigint], 
-	[TimeStamp] [datetime] NOT NULL, [Data] [varbinary](max) NOT NULL, [Name] [varchar](max) NOT NULL
+	[Id] [uniqueidentifier] NOT NULL,
+	[TimeStamp] [datetime] NOT NULL,
+
+	[Name] [varchar](max) NOT NULL,
+	[Version] [varchar](max) NOT NULL,
+
+	[EventSourceId] [uniqueidentifier] NOT NULL,
+	[Sequence] [bigint], 
+
+	[Data] [varbinary](max) NOT NULL
 ) ON [PRIMARY]
 GO
 

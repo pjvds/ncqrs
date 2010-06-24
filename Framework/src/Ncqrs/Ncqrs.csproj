@@ -89,6 +89,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\log4net\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\lib\json.net\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
@@ -163,10 +166,18 @@
     <Compile Include="Eventing\Storage\IPropertyBagConverter.cs" />
     <Compile Include="Eventing\Storage\IPropertyBagPostConverter.cs" />
     <Compile Include="Eventing\Storage\ISnapshotStore.cs" />
+    <Compile Include="Eventing\Storage\Serialization\EventConverter.cs" />
+    <Compile Include="Eventing\Storage\Serialization\IEventConverter.cs" />
+    <Compile Include="Eventing\Storage\Serialization\JsonEventFormatter.cs" />
     <Compile Include="Eventing\Storage\PropertyBag.cs" />
     <Compile Include="Eventing\Storage\PropertyBagConverter.cs" />
     <Compile Include="Eventing\Storage\PropertyBagConvertionException.cs" />
+    <Compile Include="Eventing\Storage\Serialization\NullEventConverter.cs" />
     <Compile Include="Eventing\Storage\SimpleEventTypeResolver.cs" />
+    <Compile Include="Eventing\Storage\Serialization\IEventTranslator.cs" />
+    <Compile Include="Eventing\Storage\Serialization\IEventFormatter.cs" />
+    <Compile Include="Eventing\Storage\Serialization\StringEventTranslator.cs" />
+    <Compile Include="Eventing\Storage\StoredEvent.cs" />
     <Compile Include="IClock.cs" />
     <Compile Include="ILog.cs" />
     <Compile Include="InternalExtensions.cs" />

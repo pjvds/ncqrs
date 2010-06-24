@@ -5,8 +5,12 @@ using System.Diagnostics.Contracts;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Reflection;
+using System.Text;
 using Ncqrs.Eventing.Sourcing;
 using Ncqrs.Eventing.Sourcing.Snapshotting;
+using Ncqrs.Eventing.Storage.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Ncqrs.Eventing.Storage.SQL
 {
@@ -18,11 +22,11 @@ namespace Ncqrs.Eventing.Storage.SQL
         #region Queries
         private const String DeleteUnusedProviders = "DELETE FROM [EventSources] WHERE (SELECT Count(EventSourceId) FROM [Events] WHERE [EventSourceId]=[EventSources].[Id]) = 0";
 
-        private const String InsertNewEventQuery = "INSERT INTO [Events]([Id], [EventSourceId], [Name], [Data], [Sequence], [TimeStamp]) VALUES (@EventId, @EventSourceId, @Name, @Data, @Sequence, getDate())";
+        private const String InsertNewEventQuery = "INSERT INTO [Events]([Id], [EventSourceId], [Name], [Version], [Data], [Sequence], [TimeStamp]) VALUES (@EventId, @EventSourceId, @Name, @Version, @Data, @Sequence, @TimeStamp)";
 
         private const String InsertNewProviderQuery = "INSERT INTO [EventSources](Id, Type, Version) VALUES (@Id, @Type, @Version)";
 
-        private const String SelectAllEventsQuery = "SELECT [TimeStamp], [Data], [Sequence] FROM [Events] WHERE [EventSourceId] = @EventSourceId AND [Sequence] > @EventSourceVersion ORDER BY [Sequence]";
+        private const String SelectAllEventsQuery = "SELECT [Id], [EventSourceId], [Name], [Version], [TimeStamp], [Data], [Sequence] FROM [Events] WHERE [EventSourceId] = @EventSourceId AND [Sequence] > @EventSourceVersion ORDER BY [Sequence]";
 
         private const String SelectAllIdsForTypeQuery = "SELECT [Id] FROM [EventSources] WHERE [Type] = @Type";
 
@@ -37,17 +41,22 @@ namespace Ncqrs.Eventing.Storage.SQL
 
         private static int FirstVersion = 0;
         private readonly String _connectionString;
-        private readonly IPropertyBagConverter _converter;
 
-        public MsSqlServerEventStore(String connectionString) : this(connectionString, null)
+        private IEventFormatter<JObject> _formatter;
+        private IEventTranslator<string> _translator;
+        private IEventConverter _converter;
+
+        public MsSqlServerEventStore(String connectionString) : this(connectionString, null, null)
         {}
 
-        public MsSqlServerEventStore(String connectionString, IPropertyBagConverter converter)
+        public MsSqlServerEventStore(String connectionString, IEventTypeResolver typeResolver, IEventConverter converter)
         {
             if (String.IsNullOrEmpty(connectionString)) throw new ArgumentNullException("connectionString");
 
             _connectionString = connectionString;
-            _converter = converter ?? new PropertyBagConverter();
+            _converter = converter ?? new NullEventConverter();
+            _formatter = new JsonEventFormatter(typeResolver ?? new SimpleEventTypeResolver());
+            _translator = new StringEventTranslator();
         }
 
         /// <summary>
@@ -81,21 +90,20 @@ namespace Ncqrs.Eventing.Storage.SQL
                 // Execute query and create reader.
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
-                    // Create formatter that can deserialize our events.
-                    var formatter = new BinaryFormatter();
-
                     while (reader.Read())
                     {
-                        // Get event details.
-                        var rawData = (Byte[])reader["Data"];
+                        StoredEvent<string> rawEvent = ReadEvent(reader);
 
-                        using (var dataStream = new MemoryStream(rawData))
-                        {
-                            var bag = (PropertyBag)formatter.Deserialize(dataStream);
-                            var evnt = (SourcedEvent)_converter.Convert(bag);
+                        var document = _translator.TranslateToCommon(rawEvent);
+                        _converter.Upgrade(document);
 
-                            result.Add(evnt);
-                        }
+                        var evnt = (SourcedEvent) _formatter.Deserialize(document);
+                        evnt.EventIdentifier = document.EventIdentifier;
+                        evnt.EventTimeStamp = document.EventTimeStamp;
+                        evnt.EventVersion = document.EventVersion;
+                        evnt.EventSourceId = document.EventSourceId;
+                        evnt.EventSequence = document.EventSequence;
+                        result.Add(evnt);
                     }
                 }
             }
@@ -284,6 +292,26 @@ namespace Ncqrs.Eventing.Storage.SQL
             }
         }
 
+        private StoredEvent<string> ReadEvent(SqlDataReader reader)
+        {
+            var eventIdentifier = (Guid)reader["Id"];
+            var eventTimeStamp = (DateTime)reader["TimeStamp"];
+            var eventName = (string)reader["Name"];
+            var eventVersion = Version.Parse((string)reader["Version"]);
+            var eventSourceId = (Guid)reader["EventSourceId"];
+            var eventSequence = (long)reader["Sequence"];
+            var data = Encoding.UTF8.GetString((Byte[])reader["Data"]);
+
+            return new StoredEvent<string>(
+                eventIdentifier,
+                eventTimeStamp,
+                eventName,
+                eventVersion,
+                eventSourceId,
+                eventSequence,
+                data);
+        }
+
         /// <summary>
         /// Saves the events to the event store.
         /// </summary>
@@ -312,33 +340,22 @@ namespace Ncqrs.Eventing.Storage.SQL
             Contract.Requires<ArgumentNullException>(evnt != null, "The argument evnt could not be null.");
             Contract.Requires<ArgumentNullException>(transaction != null, "The argument transaction could not be null.");
 
-            var bag = _converter.Convert(evnt);
-            byte[] data = ToBinary(bag);
+            var document = _formatter.Serialize(evnt);
+            var raw = _translator.TranslateToRaw(document);
+            var data = Encoding.UTF8.GetBytes(raw.Data);
 
             using (var command = new SqlCommand(InsertNewEventQuery, transaction.Connection))
             {
                 command.Transaction = transaction;
-                command.Parameters.AddWithValue("EventId", evnt.EventIdentifier);
-                command.Parameters.AddWithValue("EventSourceId", evnt.EventSourceId);
-                command.Parameters.AddWithValue("Name", bag.EventName);
-                command.Parameters.AddWithValue("Sequence", evnt.EventSequence);
+                command.Parameters.AddWithValue("EventId", raw.EventIdentifier);
+                command.Parameters.AddWithValue("TimeStamp", raw.EventTimeStamp);
+                command.Parameters.AddWithValue("EventSourceId", raw.EventSourceId);
+                command.Parameters.AddWithValue("Name", raw.EventName);
+                command.Parameters.AddWithValue("Version", raw.EventVersion.ToString());
+                command.Parameters.AddWithValue("Sequence", raw.EventSequence);
                 command.Parameters.AddWithValue("Data", data);
                 command.ExecuteNonQuery();
             }
-        }
-
-        private byte[] ToBinary(object obj)
-        {
-            byte[] result;
-
-            using (var dataStream = new MemoryStream())
-            {
-                var formatter = new BinaryFormatter();
-                formatter.Serialize(dataStream, obj);
-                result = dataStream.ToArray();
-            }
-
-            return result;
         }
 
         /// <summary>
