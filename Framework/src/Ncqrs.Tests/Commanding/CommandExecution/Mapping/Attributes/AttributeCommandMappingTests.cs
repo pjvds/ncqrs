@@ -2,7 +2,8 @@
 using Ncqrs.Commanding;
 using Ncqrs.Commanding.CommandExecution;
 using Ncqrs.Commanding.CommandExecution.Mapping;
-using Ncqrs.Commanding.CommandExecution.Mapping.Reflection;
+using Ncqrs.Commanding.CommandExecution.Mapping.Actions;
+using Ncqrs.Commanding.CommandExecution.Mapping.Attributes;
 using Ncqrs.Commanding.ServiceModel;
 using Ncqrs.Domain;
 using Ncqrs.Eventing.Sourcing;

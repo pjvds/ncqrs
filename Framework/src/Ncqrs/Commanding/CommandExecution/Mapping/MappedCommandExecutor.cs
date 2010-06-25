@@ -1,5 +1,5 @@
 ﻿using System;
-using Ncqrs.Commanding.CommandExecution.Mapping.Reflection;
+using Ncqrs.Commanding.CommandExecution.Mapping.Attributes;
 
 namespace Ncqrs.Commanding.CommandExecution.Mapping
 {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using Ncqrs.Domain;
 
-namespace Ncqrs.Commanding.CommandExecution.Mapping.Reflection
+namespace Ncqrs.Commanding.CommandExecution.Mapping.Actions
 {
     /// <summary>
     /// An auto mapped action that executes a method on an aggregate root based on the mapping specified on the command.

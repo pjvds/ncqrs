@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Ncqrs.Commanding.CommandExecution.Mapping.Reflection;
+using Ncqrs.Commanding.CommandExecution.Mapping.Attributes;
 
 namespace Ncqrs.Commanding.CommandExecution.Mapping
 {

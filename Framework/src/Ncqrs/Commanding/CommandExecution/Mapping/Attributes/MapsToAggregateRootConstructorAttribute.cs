@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Ncqrs.Commanding.CommandExecution.Mapping.Reflection
+namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
 {
     /// <summary>
     /// Defines that the command maps directly to a constructor on an aggregate root.

@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
+using Ncqrs.Commanding.CommandExecution.Mapping.Attributes;
 
-namespace Ncqrs.Commanding.CommandExecution.Mapping.Reflection
+namespace Ncqrs.Commanding.CommandExecution.Mapping.Actions
 {
     internal class ObjectCreationCommandInfo
     {

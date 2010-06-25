@@ -1,5 +1,5 @@
-﻿using Ncqrs.Commanding.CommandExecution.Mapping.Fluent;
-using Ncqrs.Commanding.CommandExecution.Mapping.Reflection;
+﻿using Ncqrs.Commanding.CommandExecution.Mapping.Actions;
+using Ncqrs.Commanding.CommandExecution.Mapping.Fluent;
 
 namespace Ncqrs.Commanding.CommandExecution.Mapping
 {

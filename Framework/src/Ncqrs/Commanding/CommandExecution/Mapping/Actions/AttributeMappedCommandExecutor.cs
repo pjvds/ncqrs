@@ -1,6 +1,7 @@
 ﻿using System;
+using Ncqrs.Commanding.CommandExecution.Mapping.Attributes;
 
-namespace Ncqrs.Commanding.CommandExecution.Mapping.Reflection
+namespace Ncqrs.Commanding.CommandExecution.Mapping.Actions
 {
     /// <summary>
     /// A command handler that execute an action based on the mapping of a command.
