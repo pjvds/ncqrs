@@ -10,20 +10,20 @@ namespace Ncqrs.Domain.Storage
     public interface IDomainRepository
     {
         /// <summary>
-        /// Gets aggregate root by id.
+        /// Gets aggregate root by eventSourceId.
         /// </summary>
         /// <param name="aggregateRootType">Type of the aggregate root.</param>
-        /// <param name="id">The id of the aggregate root.</param>
+        /// <param name="eventSourceId">The eventSourceId of the aggregate root.</param>
         /// <returns>A new instance of the aggregate root that contains the latest known state.</returns>
-        AggregateRoot GetById(Type aggregateRootType, Guid id);
+        AggregateRoot GetById(Type aggregateRootType, Guid eventSourceId);
 
         /// <summary>
-        /// Gets aggregate root by id.
+        /// Gets aggregate root by eventSourceId.
         /// </summary>
         /// <typeparam name="T">The type of the aggregate root.</typeparam>
-        /// <param name="id">The id of the aggregate root.</param>
+        /// <param name="eventSourceId">The eventSourceId of the aggregate root.</param>
         /// <returns>A new instance of the aggregate root that contains the latest known state.</returns>
-        T GetById<T>(Guid id) where T : AggregateRoot;
+        T GetById<T>(Guid eventSourceId) where T : AggregateRoot;
 
         /// <summary>
         /// Saves the specified aggregate root.
@@ -35,14 +35,14 @@ namespace Ncqrs.Domain.Storage
     [ContractClassFor(typeof(IDomainRepository))]
     internal sealed class IDomainRepositoryContracts : IDomainRepository
     {
-        public AggregateRoot GetById(Type aggregateRootType, Guid id)
+        public AggregateRoot GetById(Type aggregateRootType, Guid eventSourceId)
         {
             Contract.Requires<ArgumentNullException>(aggregateRootType != null);
 
             return default(AggregateRoot);
         }
 
-        public T GetById<T>(Guid id) where T : AggregateRoot
+        public T GetById<T>(Guid eventSourceId) where T : AggregateRoot
         {
             return default(T);
         }

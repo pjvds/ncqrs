@@ -5,8 +5,6 @@ using System.Reflection;
 using Ncqrs.Eventing.ServiceModel.Bus;
 using Ncqrs.Eventing.Sourcing.Snapshotting;
 using Ncqrs.Eventing.Storage;
-using System.Collections.Generic;
-using Ncqrs.Eventing.Sourcing;
 
 namespace Ncqrs.Domain.Storage
 {
@@ -33,13 +31,38 @@ namespace Ncqrs.Domain.Storage
             return (_snapshotStore != null)&&(aggregateRoot.Version % SnapshotIntervalInEvents) == 0;
         }
 
-        public AggregateRoot GetById(Type aggregateRootType, Guid id)
+        /// <summary>
+        /// Gets aggregate root by eventSourceId.
+        /// </summary>
+        /// <typeparam name="T">The type of the aggregate root.</typeparam>
+        /// <param name="eventSourceId">The eventSourceId of the aggregate root.</param>
+        /// <exception cref="AggregateRootNotFoundException">Occurs when the aggregate root with the 
+        /// specified event source id could not be found.</exception>
+        /// <returns>
+        /// A new instance of the aggregate root that contains the latest known state.
+        /// </returns>
+        public T GetById<T>(Guid eventSourceId) where T : AggregateRoot
+        {
+            return (T)GetById(typeof(T), eventSourceId);
+        }
+
+        /// <summary>
+        /// Gets aggregate root by <see cref="AggregateRoot.EventSourcId">event source id</see>.
+        /// </summary>
+        /// <param name="aggregateRootType">Type of the aggregate root.</param>
+        /// <param name="eventSourceId">The eventSourceId of the aggregate root.</param>
+        /// <exception cref="AggregateRootNotFoundException">Occurs when the aggregate root with the 
+        /// specified event source id could not be found.</exception>
+        /// <returns>
+        /// A new instance of the aggregate root that contains the latest known state.
+        /// </returns>
+        public AggregateRoot GetById(Type aggregateRootType, Guid eventSourceId)
         {
             AggregateRoot aggregate = null;
 
             if(_snapshotStore != null)
             {
-                var snapshot = _snapshotStore.GetSnapshot(id);
+                var snapshot = _snapshotStore.GetSnapshot(eventSourceId);
 
                 if (snapshot != null)
                 {
@@ -49,7 +72,15 @@ namespace Ncqrs.Domain.Storage
 
             if(aggregate == null)
             {
-                aggregate = GetByIdFromScratch(aggregateRootType, id);
+                aggregate = GetByIdFromScratch(aggregateRootType, eventSourceId);
+            }
+
+            if(aggregate == null)
+            {
+                var msg = string.Format("Aggregate root with EventSourceId {0} does not exist.",
+                                        eventSourceId);
+
+                throw new AggregateRootNotFoundException(msg);
             }
 
             return aggregate;
@@ -121,29 +152,24 @@ namespace Ncqrs.Domain.Storage
             return aggregateRoot;
         }
 
-        public T GetById<T>(Guid id) where T : AggregateRoot
-        {
-            return (T)GetById(typeof(T), id);
-        }
-
         public void Save(AggregateRoot aggregateRoot)
         {
             var events = aggregateRoot.GetUncommittedEvents();
 
             _store.Save(aggregateRoot);
 
-            // TODO: Snapshot should not effect saving.
-            if(ShouldCreateSnapshot(aggregateRoot))
-            {
-                var snapshot = GetSnapshot(aggregateRoot);
-
-                if(snapshot != null) _snapshotStore.SaveShapshot(snapshot);
-            }
-
             _eventBus.Publish(events);
 
             // Accept the changes.
             aggregateRoot.AcceptChanges();
+
+            // TODO: Snapshot should not effect saving.
+            if (ShouldCreateSnapshot(aggregateRoot))
+            {
+                var snapshot = GetSnapshot(aggregateRoot);
+
+                if (snapshot != null) _snapshotStore.SaveShapshot(snapshot);
+            }
         }
 
         private ISnapshot GetSnapshot(AggregateRoot aggregateRoot)
@@ -167,8 +193,8 @@ namespace Ncqrs.Domain.Storage
             // Query all ISnapshotable interfaces. We only allow only
             // one ISnapshotable interface per aggregate root type.
             var snapshotables = from i in aggType.GetInterfaces()
-                               where i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ISnapshotable<>)
-                               select i;
+                                where i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ISnapshotable<>)
+                                select i;
 
             // Aggregate does not implement any ISnapshotable interface.
             if (snapshotables.Count() == 0)

@@ -134,6 +134,7 @@
     <Compile Include="Config\InstanceNotFoundInEnvironment.cs" />
     <Compile Include="DateTimeBasedClock.cs" />
     <Compile Include="Domain\AggregateRootMappedWithExpressions.cs" />
+    <Compile Include="Domain\Storage\AggregateRootNotFoundException.cs" />
     <Compile Include="Eventing\EventNotHandledException.cs" />
     <Compile Include="Eventing\Sourcing\Mapping\ExpressionHandler.cs" />
     <Compile Include="Domain\IUnitOfWorkContext.cs" />
