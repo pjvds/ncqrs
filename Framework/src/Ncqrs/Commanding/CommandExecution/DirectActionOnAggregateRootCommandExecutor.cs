@@ -7,12 +7,12 @@ namespace Ncqrs.Commanding.CommandExecution
         where TCommand : ICommand
         where TAggregateRoot : AggregateRoot
     {
-        private readonly Func<TCommand, Guid> _aggregateRootIdOnCommandLocator;
+        private readonly Func<TCommand, Guid> _aggregateRootIdLocator;
         private readonly Action<TCommand, TAggregateRoot> _action;
 
-        public DirectActionOnAggregateRootCommandExecutor(Func<TCommand, Guid> aggregateRootIdOnCommandLocator, Action<TCommand, TAggregateRoot> action)
+        public DirectActionOnAggregateRootCommandExecutor(Func<TCommand, Guid> aggregateRootIdLocator, Action<TCommand, TAggregateRoot> action)
         {
-            _aggregateRootIdOnCommandLocator = aggregateRootIdOnCommandLocator;
+            _aggregateRootIdLocator = aggregateRootIdLocator;
             _action = action;
         }
 
@@ -21,7 +21,7 @@ namespace Ncqrs.Commanding.CommandExecution
             var unitOfWorkFactory = NcqrsEnvironment.Get<IUnitOfWorkFactory>();
             using (var work = unitOfWorkFactory.CreateUnitOfWork())
             {
-                var id = _aggregateRootIdOnCommandLocator.Invoke(command);
+                var id = _aggregateRootIdLocator.Invoke(command);
                 var targetAggregateRoot = work.GetById<TAggregateRoot>(id);
 
                 _action.Invoke(command, targetAggregateRoot);

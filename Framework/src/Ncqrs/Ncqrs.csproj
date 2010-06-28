@@ -178,8 +178,8 @@
     <Compile Include="Domain\AggregateRootMappedByConvention.cs" />
     <Compile Include="Domain\AggregateRootMappedWithAttributes.cs" />
     <Compile Include="Domain\IUnitOfWorkFactory.cs" />
-    <Compile Include="Eventing\Sourcing\Mapping\AttributeBasedDomainSourcedEventHandlerMappingStrategy.cs" />
-    <Compile Include="Eventing\Sourcing\Mapping\ConventionBasedDomainSourcedEventHandlerMappingStrategy.cs" />
+    <Compile Include="Eventing\Sourcing\Mapping\AttributeBasedSourcedEventHandlerMappingStrategy.cs" />
+    <Compile Include="Eventing\Sourcing\Mapping\ConventionBasedSourcedEventHandlerMappingStrategy.cs" />
     <Compile Include="Eventing\Sourcing\Mapping\EventHandlerAttribute.cs" />
     <Compile Include="Eventing\Sourcing\Mapping\ISourcedEventHandlerMappingStrategy.cs" />
     <Compile Include="Eventing\Sourcing\Mapping\InvalidEventHandlerMappingException.cs" />
