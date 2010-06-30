@@ -45,9 +45,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\AppV2\Events\AppV2EventsTypeResolver.cs">
-      <Link>Events\AppV2EventsTypeResolver.cs</Link>
-    </Compile>
     <Compile Include="Commands\ChangeNameCommand.cs" />
     <Compile Include="Commands\CreatePersonCommand.cs" />
     <Compile Include="Domain\Person.cs" />

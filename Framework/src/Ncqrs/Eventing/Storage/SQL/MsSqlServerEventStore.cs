@@ -39,15 +39,15 @@ namespace Ncqrs.Eventing.Storage.SQL
         private readonly String _connectionString;
         private readonly IPropertyBagConverter _converter;
 
-        public MsSqlServerEventStore(String connectionString) : this(connectionString, new PropertyBagConverter())
+        public MsSqlServerEventStore(String connectionString) : this(connectionString, null)
         {}
 
-        public MsSqlServerEventStore(String connectionString, IPropertyBagConverter converter = null)
+        public MsSqlServerEventStore(String connectionString, IPropertyBagConverter converter)
         {
             if (String.IsNullOrEmpty(connectionString)) throw new ArgumentNullException("connectionString");
 
             _connectionString = connectionString;
-            _converter = converter;
+            _converter = converter ?? new PropertyBagConverter();
         }
 
         /// <summary>
@@ -320,7 +320,7 @@ namespace Ncqrs.Eventing.Storage.SQL
                 command.Transaction = transaction;
                 command.Parameters.AddWithValue("EventId", evnt.EventIdentifier);
                 command.Parameters.AddWithValue("EventSourceId", evnt.EventSourceId);
-                command.Parameters.AddWithValue("Name", evnt.GetType().FullName);
+                command.Parameters.AddWithValue("Name", bag.EventName);
                 command.Parameters.AddWithValue("Sequence", evnt.EventSequence);
                 command.Parameters.AddWithValue("Data", data);
                 command.ExecuteNonQuery();

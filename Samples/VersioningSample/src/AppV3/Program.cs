@@ -28,8 +28,11 @@ namespace AwesomeAppRefactored
 
         private static IEventStore InitializeEventStore()
         {
+            var typeResolver = new AttributeEventTypeResolver();
+            typeResolver.AddAllEventsInAssembly(typeof(Program).Assembly);
+            
             var converter = new PropertyBagConverter();
-            converter.TypeResolver = new AppV2EventsTypeResolver();
+            converter.TypeResolver = typeResolver;
 
             converter.AddPostConversion(typeof(NameChangedEvent), new NameChangedEventPostConverter());
             converter.AddPostConversion(typeof(PersonCreatedEvent), new PersonCreatedEventPostConverter());

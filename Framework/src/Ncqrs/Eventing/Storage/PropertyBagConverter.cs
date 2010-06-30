@@ -12,14 +12,18 @@ namespace Ncqrs.Eventing.Storage
     {
         private const BindingFlags PublicInstanceProperties = BindingFlags.Public | BindingFlags.Instance;
         private readonly Dictionary<Type, IPropertyBagPostConverter> _converters = new Dictionary<Type, IPropertyBagPostConverter>();
+        private IEventTypeResolver _typeResolver;
 
         /// <summary>
-        /// Gets or sets an optional custom class that resolves types that have (re)moved into their current type.
+        /// Gets or sets a resolver that maps between types and event names.
         /// </summary>
-        public IPropertyBagTypeResolver TypeResolver
+        /// <remarks>
+        /// The default implementation is to use the type's assembly qualified name.
+        /// </remarks>
+        public IEventTypeResolver TypeResolver
         {
-            get;
-            set;
+            get { return _typeResolver; }
+            set { _typeResolver = value ?? new SimpleEventTypeResolver(); }
         }
 
         /// <summary>
@@ -39,7 +43,8 @@ namespace Ncqrs.Eventing.Storage
         public PropertyBag Convert(object obj)
         {
             Type type = obj.GetType();
-            var document = new PropertyBag(type);
+            var eventName = TypeResolver.EventNameFor(type);
+            var document = new PropertyBag(eventName);
 
             foreach (PropertyInfo propertyInfo in type.GetProperties(PublicInstanceProperties))
             {
@@ -55,7 +60,7 @@ namespace Ncqrs.Eventing.Storage
         /// <remarks>
         /// If a post conversion was registered using <see cref="AddPostConversion"/>, it will be invoked after
         /// the default conversion has completed. Moreover, the actual type created can be overridden by
-        /// providing a custom <see cref="IPropertyBagTypeResolver"/> through the <see cref="TypeResolver"/> property.
+        /// providing a custom <see cref="IEventTypeResolver"/> through the <see cref="TypeResolver"/> property.
         /// </remarks>
         public object Convert(PropertyBag propertyBag)
         {
@@ -68,7 +73,7 @@ namespace Ncqrs.Eventing.Storage
             if (!allPropertiesInitialized && !executedPostConversion)
             {
                 throw new SerializationException(
-                    "Not all properties of " + propertyBag.Namespace + " could be deserialized");
+                    "Not all properties of " + propertyBag.EventName + " could be deserialized");
             }
 
             return instance;
@@ -94,18 +99,7 @@ namespace Ncqrs.Eventing.Storage
 
         private Type GetDestinationType(PropertyBag bag)
         {
-            Type destinationType = null;
-
-            if (TypeResolver != null)
-            {
-                destinationType = TypeResolver.Resolve(bag.TypeName, bag.Namespace, bag.AssemblyName);
-            }
-
-            if (destinationType == null)
-            {
-                destinationType = Type.GetType(bag.AssemblyQualfiedName);
-            }
-
+            Type destinationType = TypeResolver.ResolveType(bag.EventName);
             return destinationType;
         }
 

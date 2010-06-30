@@ -28,12 +28,13 @@ namespace AwesomeAppRefactored
 
         private static IEventStore InitializeEventStore()
         {
-            var propertyBagConverter = new PropertyBagConverter();
+            var typeResolver = new AttributeEventTypeResolver();
+            typeResolver.AddAllEventsInAssembly(typeof(Program).Assembly);
+            
+            var converter = new PropertyBagConverter();
+            converter.TypeResolver = typeResolver;
 
-            // Register type converter.
-            propertyBagConverter.TypeResolver = new AppV2EventsTypeResolver();
-
-            var eventStore = new MsSqlServerEventStore(ConfigurationManager.ConnectionStrings["EventStore"].ConnectionString, propertyBagConverter);
+            var eventStore = new MsSqlServerEventStore(ConfigurationManager.ConnectionStrings["EventStore"].ConnectionString, converter);
             return eventStore;
         }
 

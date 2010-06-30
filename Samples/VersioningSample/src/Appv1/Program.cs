@@ -28,7 +28,13 @@ namespace AwesomeApp
 
         private static IEventStore InitializeEventStore()
         {
-            var eventStore = new MsSqlServerEventStore(ConfigurationManager.ConnectionStrings["EventStore"].ConnectionString);
+            var typeResolver = new AttributeEventTypeResolver();
+            typeResolver.AddAllEventsInAssembly(typeof(Program).Assembly);
+            
+            var converter = new PropertyBagConverter();
+            converter.TypeResolver = typeResolver;
+
+            var eventStore = new MsSqlServerEventStore(ConfigurationManager.ConnectionStrings["EventStore"].ConnectionString, converter);
             return eventStore;
         }
 

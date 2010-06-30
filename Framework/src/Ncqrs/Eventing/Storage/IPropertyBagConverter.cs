@@ -28,7 +28,7 @@ namespace Ncqrs.Eventing.Storage
         /// <remarks>
         /// If a post conversion was registered using <see cref="AddPostConversion"/>, it will be invoked after
         /// the default conversion has completed. Moreover, the actual type created can be overridden by
-        /// providing a custom <see cref="IPropertyBagTypeResolver"/> through the <see cref="TypeResolver"/> property.
+        /// providing a custom <see cref="IEventTypeResolver"/> through the <see cref="TypeResolver"/> property.
         /// </remarks>
         object Convert(PropertyBag propertyBag);
     }
