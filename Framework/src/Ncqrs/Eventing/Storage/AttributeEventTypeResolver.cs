@@ -79,7 +79,7 @@ namespace Ncqrs.Eventing.Storage
         public void AddEvent(Type type)
         {
             Contract.Requires<ArgumentNullException>(type != null, "type cannot be null");
-            Contract.Requires<ArgumentException>(typeof(IEvent).IsAssignableFrom(type));
+            Contract.Requires<ArgumentException>(typeof(IEvent).IsAssignableFrom(type), "type must inherit IEvent");
 
             if (_eventNames.ContainsKey(type))
                 return;
@@ -89,7 +89,7 @@ namespace Ncqrs.Eventing.Storage
 
             if (name.Length == 0) {
                 string message = string.Format("Type {0} does not have a name", type);
-                throw new ArgumentException("Type {0}");
+                throw new ArgumentException(message);
             }
 
             ThrowIfNameExists(type, name);
@@ -139,12 +139,12 @@ namespace Ncqrs.Eventing.Storage
 
             if (names.Length == 0) {
                 var message = string.Format("No name found for event {0}, specify an EventNameAttribute.", type);
-                throw new ArgumentException();
+                throw new ArgumentException(message);
             }
 
             if (names.Length > 1) {
                 var message = string.Format("Multiple names found on event {0}, use EventNameAliasAttribute instead.", type);
-                throw new ArgumentException();
+                throw new ArgumentException(message);
             }
 
             return names[0].Name;
