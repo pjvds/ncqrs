@@ -35,13 +35,12 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
         }
 
         /// <summary>
-        /// Get or sets the full qualified name of the target method.
+        /// Get or sets the full qualified name of the target method. Leave this null or empty to automap the target method based on the command name.
         /// </summary>
-        /// <remarks>Leave this null or empty to automap the target method based on the command name.</remarks>
         public String MethodName
         {
             get;
-            private set;
+            set;
         }
 
         /// <summary>
