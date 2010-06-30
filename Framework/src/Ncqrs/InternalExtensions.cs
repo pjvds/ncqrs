@@ -22,5 +22,10 @@ namespace Ncqrs
         {
             return String.IsNullOrEmpty(target);
         }
+
+        public static List<T> Clone<T>(this List<T> target)
+        {
+            return new List<T>(target);
+        }
     }
 }

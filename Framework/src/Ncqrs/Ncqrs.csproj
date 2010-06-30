@@ -100,9 +100,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commanding\CommandBase.cs" />
+    <Compile Include="Commanding\CommandExecution\AggregateRootCreationCommandExecutor.cs" />
     <Compile Include="Commanding\CommandExecution\DirectActionOnAggregateRootCommandExecutor.cs" />
     <Compile Include="Commanding\CommandExecution\ICommandExecutorExtensions.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\ActionFactory.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\Attributes\AttributeBasedMappingFactory.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\Attributes\CommandMappingAttribute.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\Attributes\ParameterAttribute.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\DirectMethodCommandExecutor.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Fluent\MappedCommand.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Fluent\MappedCommandToAggregateRoot.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Fluent\MappedCommandToAggregateRootConstructor.cs" />
@@ -180,8 +185,8 @@
     <Compile Include="Domain\AggregateRootMappedByConvention.cs" />
     <Compile Include="Domain\AggregateRootMappedWithAttributes.cs" />
     <Compile Include="Domain\IUnitOfWorkFactory.cs" />
-    <Compile Include="Eventing\Sourcing\Mapping\AttributeBasedDomainSourcedEventHandlerMappingStrategy.cs" />
-    <Compile Include="Eventing\Sourcing\Mapping\ConventionBasedDomainSourcedEventHandlerMappingStrategy.cs" />
+    <Compile Include="Eventing\Sourcing\Mapping\AttributeBasedSourcedEventHandlerMappingStrategy.cs" />
+    <Compile Include="Eventing\Sourcing\Mapping\ConventionBasedSourcedEventHandlerMappingStrategy.cs" />
     <Compile Include="Eventing\Sourcing\Mapping\EventHandlerAttribute.cs" />
     <Compile Include="Eventing\Sourcing\Mapping\ISourcedEventHandlerMappingStrategy.cs" />
     <Compile Include="Eventing\Sourcing\Mapping\InvalidEventHandlerMappingException.cs" />

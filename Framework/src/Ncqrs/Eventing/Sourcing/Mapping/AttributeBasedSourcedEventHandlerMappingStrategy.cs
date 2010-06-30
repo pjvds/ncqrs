@@ -27,13 +27,13 @@ namespace Ncqrs.Eventing.Sourcing.Mapping
     /// }</code>
     /// </remarks>
     /// </summary>
-    public class AttributeBasedDomainSourcedEventHandlerMappingStrategy : ISourcedEventHandlerMappingStrategy
+    public class AttributeBasedSourcedEventHandlerMappingStrategy : ISourcedEventHandlerMappingStrategy
     {
         /// <summary>
         /// Gets the event handlers from aggregate root based on attributes.
         /// </summary>
         /// <param name="eventSource">The aggregate root.</param>
-        /// <see cref="AttributeBasedDomainSourcedEventHandlerMappingStrategy"/>
+        /// <see cref="AttributeBasedSourcedEventHandlerMappingStrategy"/>
         /// <returns>All the <see cref="IDomainEventHandler"/>'s created based on attribute mapping.</returns>
         public IEnumerable<ISourcedEventHandler> GetEventHandlersFromAggregateRoot(IEventSource eventSource)
         {

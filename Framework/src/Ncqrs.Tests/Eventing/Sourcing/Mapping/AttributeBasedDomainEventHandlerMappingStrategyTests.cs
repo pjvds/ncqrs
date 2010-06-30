@@ -90,7 +90,7 @@ namespace Ncqrs.Tests.Eventing.Sourcing.Mapping
         public void It_should_throw_an_exception_when_mapped_method_is_static()
         {
             var aggregate = new IlligalStaticMethodTarget();
-            var mapping = new AttributeBasedDomainSourcedEventHandlerMappingStrategy();
+            var mapping = new AttributeBasedSourcedEventHandlerMappingStrategy();
 
             Action act = () => mapping.GetEventHandlersFromAggregateRoot(aggregate);
 
@@ -101,7 +101,7 @@ namespace Ncqrs.Tests.Eventing.Sourcing.Mapping
         public void It_should_throw_an_exception_when_mapped_method_does_not_have_a_parameter()
         {
             var aggregate = new NoParameterMethodTarget();
-            var mapping = new AttributeBasedDomainSourcedEventHandlerMappingStrategy();
+            var mapping = new AttributeBasedSourcedEventHandlerMappingStrategy();
 
             Action act = () => mapping.GetEventHandlersFromAggregateRoot(aggregate);
 
@@ -112,7 +112,7 @@ namespace Ncqrs.Tests.Eventing.Sourcing.Mapping
         public void It_should_throw_an_exception_when_mapped_method_does_have_more_then_one_parameter()
         {
             var aggregate = new MoreThenOneParameterMethodTarget();
-            var mapping = new AttributeBasedDomainSourcedEventHandlerMappingStrategy();
+            var mapping = new AttributeBasedSourcedEventHandlerMappingStrategy();
 
             Action act = () => mapping.GetEventHandlersFromAggregateRoot(aggregate);
 
@@ -123,7 +123,7 @@ namespace Ncqrs.Tests.Eventing.Sourcing.Mapping
         public void It_should_throw_an_exception_when_mapped_method_does_not_have_a_DomainEvent_as_parameter()
         {
             var aggregate = new NotADomainEventTarget();
-            var mapping = new AttributeBasedDomainSourcedEventHandlerMappingStrategy();
+            var mapping = new AttributeBasedSourcedEventHandlerMappingStrategy();
 
             Action act = () => mapping.GetEventHandlersFromAggregateRoot(aggregate);
 
@@ -134,7 +134,7 @@ namespace Ncqrs.Tests.Eventing.Sourcing.Mapping
         public void It_should_map_the_mapped_events()
         {
             var aggregate = new GoodTarget();
-            var mapping = new AttributeBasedDomainSourcedEventHandlerMappingStrategy();
+            var mapping = new AttributeBasedSourcedEventHandlerMappingStrategy();
 
             var handlers = mapping.GetEventHandlersFromAggregateRoot(aggregate);
 
@@ -145,7 +145,7 @@ namespace Ncqrs.Tests.Eventing.Sourcing.Mapping
         public void It_should_create_the_correct_event_handlers()
         {
             var aggregate = new GoodTarget();
-            var mapping = new AttributeBasedDomainSourcedEventHandlerMappingStrategy();
+            var mapping = new AttributeBasedSourcedEventHandlerMappingStrategy();
 
             var handlers = mapping.GetEventHandlersFromAggregateRoot(aggregate);
 
