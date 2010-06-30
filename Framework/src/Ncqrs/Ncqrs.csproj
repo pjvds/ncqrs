@@ -103,6 +103,8 @@
     <Compile Include="Commanding\CommandExecution\DirectActionOnAggregateRootCommandExecutor.cs" />
     <Compile Include="Commanding\CommandExecution\ICommandExecutorExtensions.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\ActionFactory.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\Attributes\AttributeBasedMappingFactory.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\Attributes\CommandMappingAttribute.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Attributes\ParameterAttribute.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\DirectMethodCommandExecutor.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Fluent\MappedCommand.cs" />

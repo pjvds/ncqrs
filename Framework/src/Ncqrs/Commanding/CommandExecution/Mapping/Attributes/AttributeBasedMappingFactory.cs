@@ -12,11 +12,11 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
 
             if(IsMappedToCtor(commandType))
             {
-                
+                CreateForMappedToCtor(commandType);
             }
             else if(IsMappedToMethod(commandType))
             {
-                
+                CreateForMappedToMethod(commandType);
             }
             else
             {
@@ -26,6 +26,16 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
 
                 throw new CommandMappingException(msg);
             }
+        }
+
+        private void CreateForMappedToMethod(Type commandType)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void CreateForMappedToCtor(Type commandType)
+        {
+            throw new NotImplementedException();
         }
 
         private static bool IsMappedToCtor(Type commandType)
