@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.Contracts;
 
 namespace Ncqrs.Eventing.Storage
 {
@@ -14,6 +15,7 @@ namespace Ncqrs.Eventing.Storage
     /// you have an event directory for all your SOA services with a common naming schema).
     /// </remarks>
     /// <seealso cref="AttributeEventTypeResolver"/>
+    [ContractClass(typeof(IEventTypeResolverContracts))]
     public interface IEventTypeResolver
     {
         /// <summary>
@@ -41,5 +43,23 @@ namespace Ncqrs.Eventing.Storage
         /// when loading the event.
         /// </remarks>
         string EventNameFor(Type type);
+    }
+
+    [ContractClassFor(typeof(IEventTypeResolver))]
+    internal sealed class IEventTypeResolverContracts : IEventTypeResolver
+    {
+        public Type ResolveType(string eventName)
+        {
+            Contract.Requires(eventName != null);
+            Contract.Ensures(Contract.Result<Type>() != null);
+            return default(Type);
+        }
+
+        public string EventNameFor(Type type)
+        {
+            Contract.Requires(type != null);
+            Contract.Ensures(Contract.Result<string>() != null);
+            return default(string);
+        }
     }
 }

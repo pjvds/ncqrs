@@ -99,8 +99,10 @@
     <Compile Include="Domain\Storage\AggregateLoaderExceptionTests.cs" />
     <Compile Include="Domain\Storage\DomainRepositoryTests.cs" />
     <Compile Include="Eventing\Sourcing\SourcedEventStreamTests.cs" />
+    <Compile Include="Eventing\Storage\AttributeEventTypeResolverTests.cs" />
     <Compile Include="Eventing\Storage\ConcurrencyExceptionSpecs.cs" />
     <Compile Include="Eventing\Storage\PropertyBagTests.cs" />
+    <Compile Include="Eventing\Storage\SimpleEventTypeResolverTests.cs" />
     <Compile Include="Eventing\Storage\SQL\MsSqlServerEventStoreTests.cs" />
     <Compile Include="NcqrsEnvironmentConfigurationExceptionSpecs.cs" />
     <Compile Include="NcqrsEnvironmentSpecs.cs" />
