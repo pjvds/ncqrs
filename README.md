@@ -30,6 +30,16 @@ submit [pull requests][5].
 [4]: http://help.github.com/forking/ "Fork guide"
 [5]: http://github.com/guides/pull-requests "Pull request guide"
 
+Why does `git status` show that all of my files are modified?
+-------------------------------------------------------------
+Ncqrs is built by Windows users, so all of the text files have CRLF line endings. These line endings are stored as-is in git (which means we all have autocrlf turned off).
+If you have autocrlf enabled, when you retrieve files from git, it will modify all of your files. Your best bet is to turn off autocrlf, and re-create your clone of Ncqrs.
+
+1. Delete your local clone of the Ncqrs repository
+1. Type: `git config --global core.autocrlf false`
+1. Type: `git config --system core.autocrlf false`
+1. Clone the Ncqrs repository again
+
 License
 -------
 
