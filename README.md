@@ -30,10 +30,14 @@ submit [pull requests][5].
 [4]: http://help.github.com/forking/ "Fork guide"
 [5]: http://github.com/guides/pull-requests "Pull request guide"
 
-Why does `git status` show that all of my files are modified?
--------------------------------------------------------------
-Ncqrs is built by Windows users, so all of the text files have CRLF line endings. These line endings are stored as-is in git (which means we all have autocrlf turned off).
-If you have autocrlf enabled, when you retrieve files from git, it will modify all of your files. Your best bet is to turn off autocrlf, and re-create your clone of Ncqrs.
+Why does git show that all of my files are modified?
+----------------------------------------------------	
+Ncqrs is built by Windows users, so all of the text files have CRLF line 
+endings. These line endings are stored as-is in git (which means we all have 
+autocrlf turned off).
+If you have autocrlf enabled, when you retrieve files from git, it will modify
+all of your files. Your best bet is to turn off autocrlf, and re-create your
+clone of Ncqrs.
 
 1. Delete your local clone of the Ncqrs repository
 1. Type: `git config --global core.autocrlf false`
@@ -44,11 +48,11 @@ License
 -------
 
 The Ncqrs framework and its documentation are licensed under the Apache License,
-Version 2.0 (the “License”); you may not use this file except in compliance with
+Version 2.0 (the "License"); you may not use this file except in compliance with
 the License. You may obtain a copy of the License at 
 <http://www.apache.org/licenses/LICENSE-2.0>.
 
 Unless required by applicable law or agreed to in writing, software distributed 
-under the License is distributed on an “AS IS” BASIS, WITHOUT WARRANTIES OR 
+under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 specific language governing permissions and limitations under the License.
