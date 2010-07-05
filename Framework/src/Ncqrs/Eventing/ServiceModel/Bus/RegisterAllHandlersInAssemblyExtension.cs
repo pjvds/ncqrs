@@ -10,9 +10,14 @@ namespace Ncqrs.Eventing.ServiceModel.Bus
 
         public static void RegisterAllHandlersInAssembly(this InProcessEventBus target, Assembly asm)
         {
+            target.RegisterAllHandlersInAssembly(asm, CreateInstance);
+        }
+
+        public static void RegisterAllHandlersInAssembly(this InProcessEventBus target, Assembly asm, Func<Type, object> handlerFactory)
+        {
             foreach(var type in asm.GetTypes().Where(ImplementsAtLeastOneIEventHandlerInterface))
             {
-                var handler = CreateInstance(type);
+                var handler = handlerFactory(type);
 
                 foreach(var handlerInterfaceType in type.GetInterfaces().Where(IsIEventHandlerInterface))
                 {
