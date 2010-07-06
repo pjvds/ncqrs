@@ -22,5 +22,10 @@ namespace Ncqrs
         {
             return String.IsNullOrEmpty(target);
         }
+
+        public static bool IsNullable(this Type type)
+        {
+            return !type.IsValueType || (type.IsGenericType && (type.GetGenericTypeDefinition() == typeof(Nullable<>)));
+        }
     }
 }
