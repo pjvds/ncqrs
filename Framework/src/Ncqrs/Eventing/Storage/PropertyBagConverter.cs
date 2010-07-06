@@ -13,7 +13,11 @@ namespace Ncqrs.Eventing.Storage
     {
         private const BindingFlags PublicInstanceProperties = BindingFlags.Public | BindingFlags.Instance;
         private readonly Dictionary<Type, IPropertyBagPostConverter> _converters = new Dictionary<Type, IPropertyBagPostConverter>();
-        private IEventTypeResolver _typeResolver;
+
+        public PropertyBagConverter()
+        {
+            TypeResolver = new SimpleEventTypeResolver();
+        }
 
         /// <summary>
         /// Gets or sets a resolver that maps between types and event names.
@@ -23,8 +27,8 @@ namespace Ncqrs.Eventing.Storage
         /// </remarks>
         public IEventTypeResolver TypeResolver
         {
-            get { return _typeResolver; }
-            set { _typeResolver = value ?? new SimpleEventTypeResolver(); }
+            get; 
+            set;
         }
 
         /// <summary>
