@@ -82,8 +82,8 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
 
             if(potentialCtorTargets.Count == 0)
             {
-                var msg = string.Format("Command {0} contains {1} to map, but the target "+
-                                        "{2} does not contain any ctor that accepts {1} parameters.",
+                var msg = string.Format("Command {0} contains {1} properties to map, but the target "+
+                                        "{2} does not contain any ctor that accepts that ({1}) number of parameters.",
                                         commandType.FullName, propertiesToMap.Count, TypeName);
                 throw new CommandMappingException(msg);
             }
@@ -237,11 +237,13 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
 
         private List<ConstructorInfo> GetProtentialsTargetsOnCount(Type targetType, int parameterCount)
         {
-            var all = BindingFlags.Public | BindingFlags.NonPublic;
+            var all = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
+         
             return targetType.GetConstructors(all).Where
             (
                 c => c.GetParameters().Length == parameterCount
-            ).ToList();
+            )
+            .ToList();
         }
 
         private List<PropertyInfo> GetPropertiesToMap(Type commandType)
@@ -249,7 +251,7 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
             // TODO: At support for both: exclude and include strategy.
             return commandType.GetProperties().Where
             (
-                p => p.IsDefined(typeof (ExcludeInMappingAttribute), false)
+                p => !p.IsDefined(typeof (ExcludeInMappingAttribute), false)
             ).ToList();
         }
 
