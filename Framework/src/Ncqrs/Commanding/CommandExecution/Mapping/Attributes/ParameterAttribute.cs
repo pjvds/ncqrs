@@ -7,7 +7,7 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
     /// maps to. This can be either by ordinal or by name. Where if ordinal 
     /// is used, name will be ignored.
     /// </summary>
-    public class ParameterAttribute
+    public class ParameterAttribute : Attribute
     {
         private int? _ordinal;
         private string _name;
