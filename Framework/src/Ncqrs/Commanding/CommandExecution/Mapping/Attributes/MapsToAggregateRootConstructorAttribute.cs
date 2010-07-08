@@ -80,9 +80,9 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
             var mappedProps = new PropertyInfo[propertiesToMap.Count];
             var potentialCtorTargets = GetProtentialsTargetsOnCount(Type, propertiesToMap.Count);
 
-            if(potentialCtorTargets.Count == 0)
+            if (potentialCtorTargets.Count == 0)
             {
-                var msg = string.Format("Command {0} contains {1} properties to map, but the target "+
+                var msg = string.Format("Command {0} contains {1} properties to map, but the target " +
                                         "{2} does not contain any ctor that accepts that ({1}) number of parameters.",
                                         commandType.FullName, propertiesToMap.Count, TypeName);
                 throw new CommandMappingException(msg);
@@ -95,29 +95,23 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
 
             FilterCtorTargetsOnMappedProperties(potentialCtorTargets, mappedProps);
 
-            if(potentialCtorTargets.Count == 0)
+            if (potentialCtorTargets.Count == 0)
             {
                 // TODO: Throw proper ex.
-                throw new CommandMappingException("No ctor on "+TypeName+" found that matches the mapping.");
+                throw new CommandMappingException("No ctor on " + TypeName + " found that matches the mapping.");
             }
 
             var matches = FilterCtorTargetsOnNameMappedProperties(potentialCtorTargets, mappedProps, propertiesToMap);
-        
-            if(matches.Count()==0)
+
+            if (matches.Count() == 0)
             {
-                if (potentialCtorTargets.Count == 0)
-                {
-                    // TODO: Throw proper ex.
-                    throw new CommandMappingException("No ctor on " + TypeName + " found that matches the mapping.");
-                }
+                // TODO: Throw proper ex.
+                throw new CommandMappingException("No ctor on " + TypeName + " found that matches the mapping.");
             }
-            else if(matches.Count()>1)
+            else if (matches.Count() > 1)
             {
-                if (potentialCtorTargets.Count == 0)
-                {
-                    // TODO: Throw proper ex.
-                    throw new CommandMappingException("Multi ctor on " + TypeName + " found that matches the mapping.");
-                }
+                // TODO: Throw proper ex.
+                throw new CommandMappingException("Multi ctor on " + TypeName + " found that matches the mapping.");
             }
 
             return matches.Single();
