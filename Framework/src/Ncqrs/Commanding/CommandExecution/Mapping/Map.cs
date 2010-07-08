@@ -1,4 +1,5 @@
-﻿using Ncqrs.Commanding.CommandExecution.Mapping.Actions;
+﻿using System;
+using Ncqrs.Commanding.CommandExecution.Mapping.Attributes;
 using Ncqrs.Commanding.CommandExecution.Mapping.Fluent;
 
 namespace Ncqrs.Commanding.CommandExecution.Mapping

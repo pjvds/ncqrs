@@ -103,7 +103,6 @@
     <Compile Include="Commanding\CommandExecution\AggregateRootCreationCommandExecutor.cs" />
     <Compile Include="Commanding\CommandExecution\DirectActionOnAggregateRootCommandExecutor.cs" />
     <Compile Include="Commanding\CommandExecution\ICommandExecutorExtensions.cs" />
-    <Compile Include="Commanding\CommandExecution\Mapping\ActionFactory.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Attributes\AttributeBasedMappingFactory.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Attributes\CommandMappingAttribute.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Attributes\ParameterAttribute.cs" />
@@ -113,13 +112,12 @@
     <Compile Include="Commanding\CommandExecution\Mapping\Fluent\MappedCommandToAggregateRootConstructor.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Fluent\MappedCommandToAggregateRootMethod.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Map.cs" />
-    <Compile Include="Commanding\CommandExecution\Mapping\Actions\AttributeMappedCommandExecutor.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\Attributes\AttributeMappedCommandExecutor.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Actions\DirectMethodCommandExecutor.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Actions\DirectMethodCommandInfo.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Actions\ObjectCreationCommandExecutor.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Actions\ObjectCreationCommandInfo.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\CommandMappingConfiguration.cs" />
-    <Compile Include="Commanding\CommandExecution\Mapping\MappedCommandExecutor.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\CommandMappingException.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\MappingForCommandNotFoundException.cs" />
     <Compile Include="Commanding\CommandExecution\CommandExecutorBase.cs" />
