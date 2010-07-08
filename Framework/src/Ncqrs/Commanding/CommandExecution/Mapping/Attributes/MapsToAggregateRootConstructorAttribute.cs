@@ -91,6 +91,7 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
             AddOrdinalMappedProperties(mappedProps, propertiesToMap);
 
             MakeSureAllPropertiesToMapOnNameHaveUniqueNames(propertiesToMap);
+            MakeSureAllPropertieOrdinalsAreUnique(propertiesToMap);
 
             FilterCtorTargetsOnMappedProperties(potentialCtorTargets, mappedProps);
 
@@ -118,9 +119,25 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
                     throw new CommandMappingException("Multi ctor on " + TypeName + " found that matches the mapping.");
                 }
             }
-            else
+
+            return matches.Single();
+        }
+
+        private void MakeSureAllPropertieOrdinalsAreUnique(List<PropertyInfo> propertiesToMap)
+        {
+            var query = from p in propertiesToMap
+                        let attr = GetParameterAttribute(p)
+                        where attr != null
+                        group p by attr.Ordinal
+                        into g
+                        where g.Count() > 1
+                        select g.First();
+
+            if(query.Count() > 0)
             {
-                return matches.Single();
+                var firstDuplicate = query.First();
+
+                throw new CommandMappingException("Cannot map multiple properties with the same name " + firstDuplicate.Name + ".");
             }
         }
 
@@ -136,7 +153,7 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
             {
                 var firstDuplicate = query.First();
                 // TODO: Better exception.)
-                throw new CommandMappingException("Cannot map multiple properties with the same name " + firstDuplicate +
+                throw new CommandMappingException("Cannot map multiple properties with the same name " + firstDuplicate.Name +
                                                   ".");
             }
         }
@@ -144,7 +161,7 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
         private List<Tuple<T, PropertyInfo[]>> FilterCtorTargetsOnNameMappedProperties<T>(List<T> potentialTargets, PropertyInfo[] mappedProps, List<PropertyInfo> propertiesToMap)
             where T : MethodBase
         {
-            var result = new List<Tuple<MethodBase, PropertyInfo[]>>();
+            var result = new List<Tuple<T, PropertyInfo[]>>();
 
             foreach(var method in potentialTargets)
             {
@@ -172,11 +189,13 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
                     }
                 }
 
-                if(!mapped.Exists((p) => p == null))
+                if(!mapped.Exists(p => p == null))
                 {
-                    result.Add(new Tuple<MethodBase, PropertyInfo[]>(method, mapped));
+                    result.Add(new Tuple<T, PropertyInfo[]>(method, mapped.ToArray()));
                 }
             }
+
+            return result;
         }
 
         private string GetParameterName(PropertyInfo prop)
