@@ -235,11 +235,6 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
             });
         }
 
-        private void AddNameMappedProperties(List<ConstructorInfo> potentialCtorTargets, PropertyInfo[] mappedProps, List<PropertyInfo> propertiesToMap)
-        {
-
-        }
-
         private List<ConstructorInfo> GetProtentialsTargetsOnCount(Type targetType, int parameterCount)
         {
             var all = BindingFlags.Public | BindingFlags.NonPublic;
