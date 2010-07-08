@@ -23,15 +23,15 @@ namespace Ncqrs
             return String.IsNullOrEmpty(target);
         }
 
+<<<<<<< HEAD
         public static List<T> Clone<T>(this List<T> target)
         {
             return new List<T>(target);
-        }
-
+=======
         public static bool IsNullable(this Type type)
         {
             return !type.IsValueType || (type.IsGenericType && (type.GetGenericTypeDefinition() == typeof(Nullable<>)));
+>>>>>>> origin/development
         }
-
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.Serialization;
+using Ncqrs;
 
 namespace Ncqrs.Eventing.Storage
 {
@@ -12,7 +13,11 @@ namespace Ncqrs.Eventing.Storage
     {
         private const BindingFlags PublicInstanceProperties = BindingFlags.Public | BindingFlags.Instance;
         private readonly Dictionary<Type, IPropertyBagPostConverter> _converters = new Dictionary<Type, IPropertyBagPostConverter>();
-        private IEventTypeResolver _typeResolver;
+
+        public PropertyBagConverter()
+        {
+            TypeResolver = new SimpleEventTypeResolver();
+        }
 
         /// <summary>
         /// Gets or sets a resolver that maps between types and event names.
@@ -22,8 +27,8 @@ namespace Ncqrs.Eventing.Storage
         /// </remarks>
         public IEventTypeResolver TypeResolver
         {
-            get { return _typeResolver; }
-            set { _typeResolver = value ?? new SimpleEventTypeResolver(); }
+            get; 
+            set;
         }
 
         /// <summary>
@@ -149,7 +154,7 @@ namespace Ncqrs.Eventing.Storage
 
         private static bool RequiresConversion(PropertyInfo targetProperty, object value)
         {
-            return targetProperty.PropertyType != value.GetType();
+            return value == null ? !targetProperty.PropertyType.IsNullable() : targetProperty.PropertyType != value.GetType();
         }
 
         private bool InvokePostConverter(object instance, PropertyBag bag)
