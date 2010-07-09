@@ -11,7 +11,6 @@ namespace Ncqrs.Eventing.Storage.Serialization
     {
         private readonly IEventTypeResolver _typeResolver;
         private readonly JsonSerializer _serializer;
-        private readonly JsonSerializerSettings _serializerSettings;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="JsonEventFormatter"/> class

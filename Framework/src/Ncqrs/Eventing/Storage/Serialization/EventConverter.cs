@@ -12,8 +12,8 @@ namespace Ncqrs.Eventing.Storage.Serialization
     /// <seealso cref="NullEventConverter"/>
     public class EventConverter : IEventConverter
     {
-        private Dictionary<string, IEventConverter> _converters;
-        private IEventTypeResolver _typeResolver;
+        private readonly Dictionary<string, IEventConverter> _converters;
+        private readonly IEventTypeResolver _typeResolver;
 
 
         /// <summary>

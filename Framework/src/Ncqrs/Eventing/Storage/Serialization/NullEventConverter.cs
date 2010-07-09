@@ -1,4 +1,3 @@
-using System;
 using Newtonsoft.Json.Linq;
 
 namespace Ncqrs.Eventing.Storage.Serialization
