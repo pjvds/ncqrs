@@ -23,7 +23,7 @@ namespace Ncqrs.Eventing.Storage.Serialization
         /// <exception cref="ArgumentNullException"><paramref name="typeResolver"/> is <value>null</value>.</exception>
         public EventConverter(IEventTypeResolver typeResolver)
         {
-            Contract.Requires<ArgumentNullException>(typeResolver != null, "typeResolver cannot be null");
+            Contract.Requires<ArgumentNullException>(typeResolver != null, "typeResolver");
 
             _converters = new Dictionary<string, IEventConverter>();
             _typeResolver = typeResolver;
@@ -63,8 +63,8 @@ namespace Ncqrs.Eventing.Storage.Serialization
         /// <exception cref="ArgumentException">If a converter for <paramref name="eventType"/> has already been added.</exception>
         public void AddConverter(Type eventType, IEventConverter converter)
         {
-            Contract.Requires<ArgumentNullException>(eventType != null, "eventType cannot be null");
-            Contract.Requires<ArgumentNullException>(converter != null, "converter cannot be null");
+            Contract.Requires<ArgumentNullException>(eventType != null, "eventType");
+            Contract.Requires<ArgumentNullException>(converter != null, "converter");
 
             string name = _typeResolver.EventNameFor(eventType);
             AddConverter(name, converter);
@@ -83,8 +83,8 @@ namespace Ncqrs.Eventing.Storage.Serialization
         /// <exception cref="ArgumentException">If a converter for <paramref name="eventName"/> has already been added.</exception>
         public void AddConverter(string eventName, IEventConverter converter)
         {
-            Contract.Requires<ArgumentNullException>(eventName != null, "eventName cannot be null");
-            Contract.Requires<ArgumentNullException>(converter != null, "converter cannot be null");
+            Contract.Requires<ArgumentNullException>(eventName != null, "eventName");
+            Contract.Requires<ArgumentNullException>(converter != null, "converter");
 
             ThrowIfNameExists(eventName);
             _converters.Add(eventName, converter);

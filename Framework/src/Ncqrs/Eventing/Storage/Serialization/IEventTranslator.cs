@@ -34,14 +34,14 @@ namespace Ncqrs.Eventing.Storage.Serialization
     {
         public StoredEvent<JObject> TranslateToCommon(StoredEvent<T> obj)
         {
-            Contract.Requires<ArgumentNullException>(obj != null, "obj cannot be null");
+            Contract.Requires<ArgumentNullException>(obj != null, "obj");
             Contract.Ensures(Contract.Result<StoredEvent<JObject>>() != null);
             return default(StoredEvent<JObject>);
         }
 
         public StoredEvent<T> TranslateToRaw(StoredEvent<JObject> obj)
         {
-            Contract.Requires<ArgumentNullException>(obj != null, "obj cannot be null");
+            Contract.Requires<ArgumentNullException>(obj != null, "obj");
             Contract.Ensures(Contract.Result<StoredEvent<T>>() != null);
             return default(StoredEvent<T>);
         }

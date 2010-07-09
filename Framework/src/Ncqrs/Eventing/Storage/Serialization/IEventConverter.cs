@@ -41,7 +41,7 @@ namespace Ncqrs.Eventing.Storage.Serialization
     {
         public void Upgrade(StoredEvent<JObject> theEvent)
         {
-            Contract.Requires<ArgumentNullException>(theEvent != null, "theEvent cannot be null");
+            Contract.Requires<ArgumentNullException>(theEvent != null, "theEvent");
         }
     }
 }

@@ -43,14 +43,14 @@ namespace Ncqrs.Eventing.Storage.Serialization
     {
         public StoredEvent<T> Serialize(ISourcedEvent theEvent)
         {
-            Contract.Requires<ArgumentNullException>(theEvent != null, "theEvent cannot be null");
+            Contract.Requires<ArgumentNullException>(theEvent != null, "theEvent");
             Contract.Ensures(Contract.Result<StoredEvent<T>>() != null);
             return default(StoredEvent<T>);
         }
 
         public ISourcedEvent Deserialize(StoredEvent<T> obj)
         {
-            Contract.Requires<ArgumentNullException>(obj != null, "obj cannot be null");
+            Contract.Requires<ArgumentNullException>(obj != null, "obj");
             Contract.Ensures(Contract.Result<ISourcedEvent>() != null);
             return default(ISourcedEvent);
         }
