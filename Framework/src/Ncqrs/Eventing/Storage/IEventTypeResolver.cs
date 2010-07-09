@@ -31,6 +31,7 @@ namespace Ncqrs.Eventing.Storage
         /// would be the final type that the converter returns, i.e. the target type registered with
         /// <see cref="IPropertyBagConverter.AddPostConversion"/>.
         /// </remarks>
+        /// <exception cref="ArgumentNullException">If <paramref name="eventName"/> is <value>null</value>.</exception>
         Type ResolveType(string eventName);
 
         /// <summary>
@@ -42,6 +43,7 @@ namespace Ncqrs.Eventing.Storage
         /// This name will be used when storing the event and used with <see cref="ResolveType"/>
         /// when loading the event.
         /// </remarks>
+        /// <exception cref="ArgumentNullException">If <paramref name="type"/> is <value>null</value>.</exception>
         string EventNameFor(Type type);
     }
 

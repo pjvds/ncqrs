@@ -4,6 +4,9 @@ using Newtonsoft.Json.Linq;
 
 namespace Ncqrs.Eventing.Storage.Serialization
 {
+    /// <summary>
+    /// Translates a <see cref="JObject"/> to a <see cref="string"/> for storage.
+    /// </summary>
     public class StringEventTranslator : IEventTranslator<string>
     {
         public StoredEvent<JObject> TranslateToCommon(StoredEvent<string> obj)

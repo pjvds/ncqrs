@@ -4,12 +4,21 @@ using Newtonsoft.Json.Linq;
 
 namespace Ncqrs.Eventing.Storage.Serialization
 {
+    /// <summary>
+    /// Serializes events to <see cref="JObject"/>.
+    /// </summary>
     public class JsonEventFormatter : IEventFormatter<JObject>
     {
         private readonly IEventTypeResolver _typeResolver;
         private readonly JsonSerializer _serializer;
         private readonly JsonSerializerSettings _serializerSettings;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="JsonEventFormatter"/> class
+        /// with a given type resolver.
+        /// </summary>
+        /// <param name="typeResolver">The <see cref="IEventTypeResolver"/> to use
+        /// when resolving event types/names.</param>
         public JsonEventFormatter(IEventTypeResolver typeResolver)
         {
             _typeResolver = typeResolver;
