@@ -61,6 +61,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\log4net\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=3.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\json.net\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework, Version=2.5.3.9345, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Nunit\nunit.framework.dll</HintPath>
@@ -103,6 +107,9 @@
     <Compile Include="Eventing\Storage\ConcurrencyExceptionSpecs.cs" />
     <Compile Include="Eventing\Storage\PropertyBagConverterTests.cs" />
     <Compile Include="Eventing\Storage\PropertyBagTests.cs" />
+    <Compile Include="Eventing\Storage\Serialization\EventConverterTests.cs" />
+    <Compile Include="Eventing\Storage\Serialization\JsonEventFormatterTests.cs" />
+    <Compile Include="Eventing\Storage\Serialization\StringEventTranslatorTests.cs" />
     <Compile Include="Eventing\Storage\SimpleEventTypeResolverTests.cs" />
     <Compile Include="Eventing\Storage\SQL\MsSqlServerEventStoreTests.cs" />
     <Compile Include="NcqrsEnvironmentConfigurationExceptionSpecs.cs" />
