@@ -1,4 +1,6 @@
-﻿using Ncqrs.Eventing.Sourcing;
+﻿using System;
+using System.Diagnostics.Contracts;
+using Ncqrs.Eventing.Sourcing;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -18,8 +20,11 @@ namespace Ncqrs.Eventing.Storage.Serialization
         /// </summary>
         /// <param name="typeResolver">The <see cref="IEventTypeResolver"/> to use
         /// when resolving event types/names.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="typeResolver"/> is <value>null</value>.</exception>
         public JsonEventFormatter(IEventTypeResolver typeResolver)
         {
+            Contract.Requires<ArgumentNullException>(typeResolver != null, "typeResolver cannot be null");
+
             _typeResolver = typeResolver;
             _serializer = new JsonSerializer();
         }

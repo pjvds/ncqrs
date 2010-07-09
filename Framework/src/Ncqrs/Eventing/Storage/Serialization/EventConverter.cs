@@ -20,6 +20,7 @@ namespace Ncqrs.Eventing.Storage.Serialization
         /// Initializes a new instance of the <see cref="EventConverter"/> class with a given type resolver.
         /// </summary>
         /// <param name="typeResolver">The type resolver to use when looking up event names for a specific event type.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="typeResolver"/> is <value>null</value>.</exception>
         public EventConverter(IEventTypeResolver typeResolver)
         {
             Contract.Requires<ArgumentNullException>(typeResolver != null, "typeResolver cannot be null");
@@ -62,6 +63,9 @@ namespace Ncqrs.Eventing.Storage.Serialization
         /// <exception cref="ArgumentException">If a converter for <paramref name="eventType"/> has already been added.</exception>
         public void AddConverter(Type eventType, IEventConverter converter)
         {
+            Contract.Requires<ArgumentNullException>(eventType != null, "eventType cannot be null");
+            Contract.Requires<ArgumentNullException>(converter != null, "converter cannot be null");
+
             string name = _typeResolver.EventNameFor(eventType);
             AddConverter(name, converter);
         }
@@ -79,6 +83,9 @@ namespace Ncqrs.Eventing.Storage.Serialization
         /// <exception cref="ArgumentException">If a converter for <paramref name="eventName"/> has already been added.</exception>
         public void AddConverter(string eventName, IEventConverter converter)
         {
+            Contract.Requires<ArgumentNullException>(eventName != null, "eventName cannot be null");
+            Contract.Requires<ArgumentNullException>(converter != null, "converter cannot be null");
+
             ThrowIfNameExists(eventName);
             _converters.Add(eventName, converter);
         }
