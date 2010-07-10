@@ -66,7 +66,7 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
             ValidateCommandType(commandType);
 
             var match = GetMatchingConstructor(commandType);
-            return new AggregateRootCreationCommandExecutor<TCommand>((c) =>
+            return new CreatingCommandExecutor<TCommand>((c) =>
             {
                 var parameter = match.Item2.Select(p => p.GetValue(c, null));
                 match.Item1.Invoke(parameter.ToArray());

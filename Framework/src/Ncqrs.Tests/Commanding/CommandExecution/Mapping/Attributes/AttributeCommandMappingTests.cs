@@ -1,8 +1,6 @@
 ﻿using System;
 using Ncqrs.Commanding;
 using Ncqrs.Commanding.CommandExecution;
-using Ncqrs.Commanding.CommandExecution.Mapping;
-using Ncqrs.Commanding.CommandExecution.Mapping.Actions;
 using Ncqrs.Commanding.CommandExecution.Mapping.Attributes;
 using Ncqrs.Commanding.ServiceModel;
 using Ncqrs.Domain;
@@ -112,9 +110,8 @@ namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Attributes
         public void Setup()
         {
             var service = new CommandService();
-
-            Map.Command(new AttributeMappedCommandExecutor<AggregateRootTargetUpdateTitleCommand>()).RegisterWith(service);
-            Map.Command(new AttributeMappedCommandExecutor<AggregateRootTargetCreateNewCommand>()).RegisterWith(service);
+            service.RegisterExecutor(new AttributeMappedCommandExecutor<AggregateRootTargetUpdateTitleCommand>());
+            service.RegisterExecutor(new AttributeMappedCommandExecutor<AggregateRootTargetCreateNewCommand>());
 
             TheService = service;
         }

@@ -2,6 +2,7 @@
 using Ncqrs.Commanding;
 using Ncqrs.Commanding.CommandExecution;
 using Ncqrs.Commanding.CommandExecution.Mapping;
+using Ncqrs.Commanding.CommandExecution.Mapping.Fluent;
 using Ncqrs.Commanding.ServiceModel;
 using Ncqrs.Domain;
 using Ncqrs.Eventing.Sourcing;

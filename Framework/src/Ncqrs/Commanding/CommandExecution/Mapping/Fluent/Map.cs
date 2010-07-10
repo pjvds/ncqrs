@@ -1,8 +1,6 @@
-﻿using System;
-using Ncqrs.Commanding.CommandExecution.Mapping.Attributes;
-using Ncqrs.Commanding.CommandExecution.Mapping.Fluent;
+﻿using Ncqrs.Commanding.CommandExecution.Mapping.Attributes;
 
-namespace Ncqrs.Commanding.CommandExecution.Mapping
+namespace Ncqrs.Commanding.CommandExecution.Mapping.Fluent
 {
     /// <summary>
     /// Static Map class that defines easy to use command mapping methods.

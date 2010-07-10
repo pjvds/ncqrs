@@ -96,7 +96,7 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
 
             var match = GetMatchingMethod(commandType);
 
-            return new AggregateRootDirectActionCommandExecutor<TCommand, TAggregateRoot>(
+            return new DirectActionCommandExecutor<TCommand, TAggregateRoot>(
                 GetAggregateRootId,
                 (agg, cmd) =>
                     {

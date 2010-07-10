@@ -1,14 +1,14 @@
 ﻿using System;
 using Ncqrs.Domain;
 
-namespace Ncqrs.Commanding.CommandExecution
+namespace Ncqrs.Commanding.CommandExecution.Mapping
 {
-    public class AggregateRootCreationCommandExecutor<TCommand> : ICommandExecutor<TCommand>
+    public class CreatingCommandExecutor<TCommand> : ICommandExecutor<TCommand>
         where TCommand : ICommand
     {
         private readonly Action<TCommand> _action;
 
-        public AggregateRootCreationCommandExecutor(Action<TCommand> action)
+        public CreatingCommandExecutor(Action<TCommand> action)
         {
             _action = action;
         }

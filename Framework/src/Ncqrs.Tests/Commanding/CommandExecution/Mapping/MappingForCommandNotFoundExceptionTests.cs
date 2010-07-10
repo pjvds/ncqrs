@@ -17,7 +17,7 @@ namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping
             String message = "Hello world";
             ICommand aCommand = MockRepository.GenerateMock<ICommand>();
 
-            var target = new MappingForCommandNotFoundException(message, aCommand);
+            var target = new MappingNotFoundException(message, aCommand);
 
             target.Message.Should().Be(message);
         }
@@ -28,7 +28,7 @@ namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping
             String aMessage = "Hello world";
             ICommand theCommand = MockRepository.GenerateMock<ICommand>();
 
-            var target = new MappingForCommandNotFoundException(aMessage, theCommand);
+            var target = new MappingNotFoundException(aMessage, theCommand);
 
             target.Command.Should().Be(theCommand);
         }
@@ -40,7 +40,7 @@ namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping
             ICommand theCommand = MockRepository.GenerateMock<ICommand>();            
             var theInnerException = new Exception();
 
-            var target = new MappingForCommandNotFoundException(aMessage, theCommand, theInnerException);
+            var target = new MappingNotFoundException(aMessage, theCommand, theInnerException);
 
             target.InnerException.Should().Be(theInnerException);
         }
@@ -50,8 +50,8 @@ namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping
         {
             var aMessage = "Hello world";
             ICommand aCommand = MockRepository.GenerateMock<ICommand>();
-            var theException = new MappingForCommandNotFoundException(aMessage, aCommand);
-            MappingForCommandNotFoundException deserializedException = null;
+            var theException = new MappingNotFoundException(aMessage, aCommand);
+            MappingNotFoundException deserializedException = null;
 
             using (var buffer = new MemoryStream())
             {
@@ -59,7 +59,7 @@ namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping
                 formatter.Serialize(buffer, theException);
 
                 buffer.Seek(0, SeekOrigin.Begin);
-                deserializedException = (MappingForCommandNotFoundException)formatter.Deserialize(buffer);
+                deserializedException = (MappingNotFoundException)formatter.Deserialize(buffer);
             }
 
             deserializedException.Should().NotBeNull();

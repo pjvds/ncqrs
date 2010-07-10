@@ -1,16 +1,16 @@
 ﻿using System;
 using Ncqrs.Domain;
 
-namespace Ncqrs.Commanding.CommandExecution
+namespace Ncqrs.Commanding.CommandExecution.Mapping
 {
-    public class AggregateRootDirectActionCommandExecutor<TCommand, TAggregateRoot> : ICommandExecutor<TCommand>
+    public class DirectActionCommandExecutor<TCommand, TAggregateRoot> : ICommandExecutor<TCommand>
         where TCommand : ICommand
         where TAggregateRoot : AggregateRoot
     {
         private readonly Func<TCommand, Guid> _getId;
         private readonly Action<TAggregateRoot, TCommand> _action;
 
-        public AggregateRootDirectActionCommandExecutor(Func<TCommand, Guid> getId, Action<TAggregateRoot, TCommand> action)
+        public DirectActionCommandExecutor(Func<TCommand, Guid> getId, Action<TAggregateRoot, TCommand> action)
         {
             _getId = getId;
             _action = action;
