@@ -101,9 +101,11 @@
   <ItemGroup>
     <Compile Include="Commanding\CommandBase.cs" />
     <Compile Include="Commanding\CommandExecution\AggregateRootCreationCommandExecutor.cs" />
+    <Compile Include="Commanding\CommandExecution\AggregateRootDirectActionCommandExecutor.cs" />
     <Compile Include="Commanding\CommandExecution\DirectActionOnAggregateRootCommandExecutor.cs" />
     <Compile Include="Commanding\CommandExecution\ICommandExecutorExtensions.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Attributes\AttributeBasedMappingFactory.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\ClassToMethodMapper.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Attributes\CommandMappingAttribute.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Attributes\ParameterAttribute.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\DirectMethodCommandExecutor.cs" />

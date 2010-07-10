@@ -8,7 +8,7 @@ namespace Ncqrs.Commanding.CommandExecution
     /// executes the correct action based on the command.
     /// </summary>
     [ContractClass(typeof(ICommandExecutorContracts<>))]
-    public interface ICommandExecutor<TCommand> where TCommand : ICommand
+    public interface ICommandExecutor<in TCommand> where TCommand : ICommand
     {
         /// <summary>
         /// Executes the command.

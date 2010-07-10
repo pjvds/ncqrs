@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Linq;
+using System.Reflection;
+using Ncqrs.Domain;
 
 namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
 {
@@ -6,7 +9,7 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
     /// Defines that the command maps directly to a method on an aggregate root.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-    public class MapsToAggregateRootMethodAttribute : Attribute
+    public class MapsToAggregateRootMethodAttribute : CommandMappingAttribute
     {
         private Type _type;
 
@@ -74,6 +77,56 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
             _type = type;
             TypeName = type.AssemblyQualifiedName;
             MethodName = methodName;
+        }
+
+        public override ICommandExecutor<TCommand> CreateExecutor<TCommand>()
+        {
+            var prvt = BindingFlags.NonPublic | BindingFlags.Instance;
+            var methodInfo = GetType().GetMethod("CreateExecutor", prvt, null,
+                                             Type.EmptyTypes, null);
+
+            var genericMethod = methodInfo.MakeGenericMethod(typeof (TCommand), Type);
+            return (ICommandExecutor<TCommand>)genericMethod.Invoke(this, null);
+        }
+
+        private ICommandExecutor<TCommand> CreateExecutor<TCommand, TAggregateRoot>() where TCommand : ICommand where TAggregateRoot : AggregateRoot
+        {
+            var commandType = typeof (TCommand);
+            ValidateCommandType(commandType);
+
+            var match = GetMatchingMethod(commandType);
+
+            return new AggregateRootDirectActionCommandExecutor<TCommand, TAggregateRoot>(
+                GetAggregateRootId,
+                (agg, cmd) =>
+                    {
+                        var parameter = match.Item2.Select(p => p.GetValue(cmd, null));
+                        match.Item1.Invoke(agg, parameter.ToArray());
+                    }
+                );
+        }
+
+        private Tuple<MethodInfo, PropertyInfo[]> GetMatchingMethod(Type commandType)
+        {
+            return ClassToMethodMapper.GetMethod(commandType, Type);
+        }
+
+        private Guid GetAggregateRootId<TCommand>(TCommand cmd)
+        {
+            var all = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
+
+            var commandType = typeof (TCommand);
+            var idProp = commandType.GetProperties(all).Single(p => p.IsDefined(typeof (AggregateRootIdAttribute), false));
+            return (Guid)idProp.GetValue(cmd, null);
+        }
+
+        private void ValidateCommandType(Type mappedCommandType)
+        {
+            bool containsThisAttribute = mappedCommandType.IsDefined(GetType(), false);
+
+            if (!containsThisAttribute) throw new ArgumentException("The given command type does not contain " +
+                                                                    "MapsToAggregateRootConstructorAttribute.",
+                                                                    "mappedCommandType");
         }
     }
 }
