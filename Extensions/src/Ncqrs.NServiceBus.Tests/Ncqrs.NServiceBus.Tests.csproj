@@ -39,7 +39,7 @@
       <HintPath>..\..\lib\Ncqrs\Ncqrs.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
-      <HintPath>..\..\..\Framework\bin\Nunit\nunit.framework.dll</HintPath>
+      <HintPath>..\..\lib\NUnit\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="Rhino.Mocks">
       <HintPath>..\..\lib\RhinoMocks\Rhino.Mocks.dll</HintPath>
