@@ -1,7 +1,7 @@
 ﻿using System;
 using Ncqrs.Domain;
 
-namespace Ncqrs.Commanding.CommandExecution.Mapping
+namespace Ncqrs.Commanding.CommandExecution
 {
     public class CreatingCommandExecutor<TCommand> : ICommandExecutor<TCommand>
         where TCommand : ICommand
