@@ -6,26 +6,26 @@ using Ncqrs.Commanding.CommandExecution.Mapping.Attributes;
 
 namespace Ncqrs.Commanding.CommandExecution.Mapping
 {
-    public class ClassToMethodMapper
+    public class PropertiesToMethodMapper
     {
         private static BindingFlags All = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
 
-        public static Tuple<ConstructorInfo, PropertyInfo[]> GetConstructor(Type sourceType, Type targetType)
+        public static Tuple<ConstructorInfo, PropertyInfo[]> GetConstructor(PropertyToParameterMappingInfo[] sources, Type targetType)
         {
             var potentialTargets = targetType.GetConstructors(All);
-            return GetMethodBase(sourceType, potentialTargets);
+            return GetMethodBase(sources, potentialTargets);
         }
 
-        public static Tuple<MethodInfo, PropertyInfo[]> GetMethod(Type sourceType, Type targetType)
+        public static Tuple<MethodInfo, PropertyInfo[]> GetMethod(PropertyToParameterMappingInfo[] sources, Type targetType)
         {
             var potentialTargets = targetType.GetMethods(All);
-            return GetMethodBase(sourceType, potentialTargets);
+            return GetMethodBase(sources, potentialTargets);
         }
 
-        public static Tuple<TMethodBase, PropertyInfo[]> GetMethodBase<TMethodBase>(Type sourceType, TMethodBase[] potentialTargets)
+        private static Tuple<TMethodBase, PropertyInfo[]> GetMethodBase<TMethodBase>(PropertyToParameterMappingInfo[] sources, TMethodBase[] potentialTargets)
             where TMethodBase : MethodBase
         {
-            var propertiesToMap = GetPropertiesToMap(sourceType);
+            var propertiesToMap = new List<PropertyToParameterMappingInfo>(sources);
             var mappedProps = new PropertyInfo[propertiesToMap.Count];
             var targets = new List<MethodBase>(potentialTargets);
 
@@ -69,12 +69,10 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping
             return new Tuple<TMethodBase, PropertyInfo[]>((TMethodBase)match.Item1, match.Item2);
         }
 
-        private static void MakeSureAllPropertieOrdinalsAreUnique(List<PropertyInfo> propertiesToMap)
+        private static void MakeSureAllPropertieOrdinalsAreUnique(List<PropertyToParameterMappingInfo> propertiesToMap)
         {
             var query = from p in propertiesToMap
-                        let attr = GetParameterAttribute(p)
-                        where attr != null
-                        group p by attr.Ordinal
+                        group p by p.Ordinal
                         into g
                         where g.Count() > 1
                         select g.First();
@@ -83,14 +81,14 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping
             {
                 var firstDuplicate = query.First();
 
-                throw new CommandMappingException("Cannot map multiple properties with the same name " + firstDuplicate.Name + ".");
+                throw new CommandMappingException("Cannot map multiple properties with the same name " + firstDuplicate.TargetName + ".");
             }
         }
 
-        private static void MakeSureAllPropertiesToMapOnNameHaveUniqueNames(List<PropertyInfo> propertiesToMap)
+        private static void MakeSureAllPropertiesToMapOnNameHaveUniqueNames(List<PropertyToParameterMappingInfo> propertiesToMap)
         {
             var query = from p in propertiesToMap
-                        group p by GetParameterName(p)
+                        group p by p.TargetName
                         into g
                         where g.Count() > 1
                         select g.First();
@@ -99,12 +97,12 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping
             {
                 var firstDuplicate = query.First();
                 // TODO: Better exception.)
-                throw new CommandMappingException("Cannot map multiple properties with the same name " + firstDuplicate.Name +
+                throw new CommandMappingException("Cannot map multiple properties with the same name " + firstDuplicate.TargetName +
                                                   ".");
             }
         }
 
-        private static List<Tuple<MethodBase, PropertyInfo[]>> FilterCtorTargetsOnNameMappedProperties(List<MethodBase> potentialTargets, PropertyInfo[] mappedProps, List<PropertyInfo> propertiesToMap)
+        private static List<Tuple<MethodBase, PropertyInfo[]>> FilterCtorTargetsOnNameMappedProperties(List<MethodBase> potentialTargets, PropertyInfo[] mappedProps, List<PropertyToParameterMappingInfo> propertiesToMap)
         {
             var result = new List<Tuple<MethodBase, PropertyInfo[]>>();
 
@@ -123,12 +121,12 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping
                     {
                         var matchedOnName = toMap.SingleOrDefault
                             (
-                                p => GetParameterName(p).Equals(param.Name, StringComparison.InvariantCultureIgnoreCase)
+                                p => p.TargetName.Equals(param.Name, StringComparison.InvariantCultureIgnoreCase)
                             );
 
                         if (matchedOnName != null)
                         {
-                            mapped[i] = matchedOnName;
+                            mapped[i] = matchedOnName.Property;
                             toMap.Remove(matchedOnName);
                         }
                     }
@@ -141,20 +139,6 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping
             }
 
             return result;
-        }
-
-        private static string GetParameterName(PropertyInfo prop)
-        {
-            var mapping = GetParameterAttribute(prop);
-
-            if (mapping != null && string.IsNullOrEmpty(mapping.Name))
-            {
-                return mapping.Name;
-            }
-            else
-            {
-                return prop.Name;
-            }
         }
 
         private static bool IsTargetInvokableFromKnownProperties(MethodBase target, PropertyInfo[] mappedProps)
@@ -182,31 +166,21 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping
             return target.GetParameters().Length == parameterCount;
         }
 
-        private static List<PropertyInfo> GetPropertiesToMap(Type commandType)
-        {
-            // TODO: At support for both: exclude and include strategy.
-            return commandType.GetProperties().Where
-                (
-                    p => !p.IsDefined(typeof(ExcludeInMappingAttribute), false)
-                ).ToList();
-        }
-
-        private static void AddOrdinalMappedProperties(PropertyInfo[] mappedProps, List<PropertyInfo> propertiesToMap)
+        private static void AddOrdinalMappedProperties(PropertyInfo[] mappedProps, List<PropertyToParameterMappingInfo> propertiesToMap)
         {
             for (int i = 0; i < propertiesToMap.Count; i++)
             {
                 var prop = propertiesToMap[i];
-                var attr = GetParameterAttribute(prop);
 
-                if (attr != null && attr.Ordinal.HasValue)
+                if (prop.Ordinal.HasValue)
                 {
                     // TODO: Throw ordinal out of range exception if needed.
-                    int idx = attr.Ordinal.Value - 1;
+                    int idx = prop.Ordinal.Value - 1;
 
                     if (mappedProps[idx] != null)
                         throw new ApplicationException(); // TODO: Throw if already mapped.
 
-                    mappedProps[idx] = prop;
+                    mappedProps[idx] = prop.Property;
 
                     // Remove property since we mapped it and decrease index 
                     // variables so that the next property will also be mapped.

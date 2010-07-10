@@ -75,7 +75,10 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
 
         private Tuple<ConstructorInfo, PropertyInfo[]> GetMatchingConstructor(Type commandType)
         {
-            return ClassToMethodMapper.GetConstructor(commandType, Type);
+            var strategy = new AttributePropertyMappingStrategy();
+            var sources = strategy.GetMappedProperties(commandType);
+
+            return PropertiesToMethodMapper.GetConstructor(sources, Type);
         }
 
         private void ValidateCommandType(Type mappedCommandType)

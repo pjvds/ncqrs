@@ -108,7 +108,10 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
 
         private Tuple<MethodInfo, PropertyInfo[]> GetMatchingMethod(Type commandType)
         {
-            return ClassToMethodMapper.GetMethod(commandType, Type);
+            var strategy = new AttributePropertyMappingStrategy();
+            var sources = strategy.GetMappedProperties(commandType);
+
+            return PropertiesToMethodMapper.GetMethod(sources, Type);
         }
 
         private Guid GetAggregateRootId<TCommand>(TCommand cmd)

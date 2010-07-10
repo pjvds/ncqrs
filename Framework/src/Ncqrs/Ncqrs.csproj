@@ -105,7 +105,8 @@
     <Compile Include="Commanding\CommandExecution\DirectActionOnAggregateRootCommandExecutor.cs" />
     <Compile Include="Commanding\CommandExecution\ICommandExecutorExtensions.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Attributes\AttributeBasedMappingFactory.cs" />
-    <Compile Include="Commanding\CommandExecution\Mapping\ClassToMethodMapper.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\Attributes\AttributePropertyMappingStrategy.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\PropertiesToMethodMapper.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Attributes\CommandMappingAttribute.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Attributes\ParameterAttribute.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\DirectMethodCommandExecutor.cs" />
@@ -121,6 +122,7 @@
     <Compile Include="Commanding\CommandExecution\Mapping\Actions\ObjectCreationCommandInfo.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\CommandMappingConfiguration.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\CommandMappingException.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\PropertyToParameterMappingInfo.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\MappingForCommandNotFoundException.cs" />
     <Compile Include="Commanding\CommandExecution\CommandExecutorBase.cs" />
     <Compile Include="Commanding\CommandExecution\CommandExecutorNotFoundException.cs" />
