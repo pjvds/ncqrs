@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Ncqrs.Domain;
+using Ncqrs.Eventing.Sourcing;
 
 namespace Events
 {
    [Serializable]
-   public class SomePropertyChangedEvent : DomainEvent
+   public class SomePropertyChangedEvent : SourcedEvent
+
    {
       public string Value { get; set; }
    }

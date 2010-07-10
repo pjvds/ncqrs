@@ -9,8 +9,8 @@ namespace Client
    {
       public void Handle(EventMessage<SomePropertyChangedEvent> message)
       {
-         ClientEndpoint.AggregateId = message.Payload.AggregateRootId;
-         Console.WriteLine("Aggregate with ID={0} property changed to {1}", message.Payload.AggregateRootId, message.Payload.Value);         
+         ClientEndpoint.AggregateId = message.Payload.EventSourceId;
+         Console.WriteLine("Aggregate with ID={0} property changed to {1}", message.Payload.EventSourceId, message.Payload.Value);         
       }
    }
 }

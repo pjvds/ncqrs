@@ -1,10 +1,10 @@
 ﻿using System;
-using Ncqrs.Domain;
+using Ncqrs.Eventing.Sourcing;
 
 namespace Events
 {
    [Serializable]
-   public class SomeDomainObjectCreatedEvent : DomainEvent
+   public class SomeDomainObjectCreatedEvent : SourcedEvent
    {
       public Guid ObjectId { get; set; }
    }

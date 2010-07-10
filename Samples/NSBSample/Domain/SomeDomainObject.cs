@@ -28,7 +28,7 @@ namespace Domain
 
       public void DoSomething(string value)
       {
-         Console.WriteLine("Calling DoSomething on SomeDomainObject with ID={0}",Id);
+          Console.WriteLine("Calling DoSomething on SomeDomainObject with ID={0}", EventSourceId);
          ApplyEvent(new SomePropertyChangedEvent{Value = value});
       }
 
@@ -39,7 +39,7 @@ namespace Domain
 
       private void OnSomeDomainObjectCreatedEvent(SomeDomainObjectCreatedEvent @event)
       {
-         Id = @event.ObjectId;
+          EventSourceId = @event.ObjectId;
       }
    }
 }
