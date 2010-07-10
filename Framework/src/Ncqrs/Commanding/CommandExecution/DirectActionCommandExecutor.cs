@@ -1,7 +1,7 @@
 ﻿using System;
 using Ncqrs.Domain;
 
-namespace Ncqrs.Commanding.CommandExecution.Mapping
+namespace Ncqrs.Commanding.CommandExecution
 {
     public class DirectActionCommandExecutor<TCommand, TAggregateRoot> : ICommandExecutor<TCommand>
         where TCommand : ICommand

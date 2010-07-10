@@ -32,7 +32,7 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
                 name = prop.Name;
             }
 
-            return  new PropertyToParameterMappingInfo(ordinal, name, prop);
+            return new PropertyToParameterMappingInfo(ordinal, name, prop);
         }
     }
 }

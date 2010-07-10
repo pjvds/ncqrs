@@ -91,12 +91,14 @@ namespace Ncqrs.Eventing.Sourcing
         {
         }
 
-        public SourcedEventStream(Guid eventSourceId) : this(eventSourceId, 0)
+        public SourcedEventStream(Guid eventSourceId) : this(eventSourceId, sequenceOffset: 0)
         {
         }
 
         public SourcedEventStream(Guid eventSourceId, long sequenceOffset)
         {
+            Contract.Requires(sequenceOffset >= 0);
+
             _eventSourceId = eventSourceId;
             _sequenceOffset = sequenceOffset;
         }
@@ -123,13 +125,13 @@ namespace Ncqrs.Eventing.Sourcing
             _events.Add(sourcedEvent);
         }
 
-        public void Append(IEnumerable<SourcedEvent> eventDatas)
+        public void Append(IEnumerable<SourcedEvent> events)
         {
-            if(eventDatas == null) throw new ArgumentNullException("eventDatas");
+            if (events == null) throw new ArgumentNullException("events");
 
-            foreach (var data in eventDatas)
+            foreach (var evnt in events)
             {
-                Append(data);
+                Append(evnt);
             }
         }
 

@@ -14,7 +14,7 @@ namespace Ncqrs.Commanding
         /// <summary>
         /// Gets the unique identifier for this command.
         /// </summary>
-        [ExcludeInMapping] // TODO: Why do we need this when it is also declared in the ICommand interface?
+        [ExcludeInMapping]
         public Guid CommandIdentifier
         {
             get; private set;
