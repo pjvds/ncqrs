@@ -32,16 +32,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Castle.Core">
-      <HintPath>..\lib\CastleWindsor\Castle.Core.dll</HintPath>
+      <HintPath>..\..\lib\CastleWindsor\Castle.Core.dll</HintPath>
     </Reference>
     <Reference Include="Castle.DynamicProxy2">
-      <HintPath>..\lib\CastleWindsor\Castle.DynamicProxy2.dll</HintPath>
+      <HintPath>..\..\lib\CastleWindsor\Castle.DynamicProxy2.dll</HintPath>
     </Reference>
     <Reference Include="Castle.Windsor">
-      <HintPath>..\lib\CastleWindsor\Castle.Windsor.dll</HintPath>
+      <HintPath>..\..\lib\CastleWindsor\Castle.Windsor.dll</HintPath>
     </Reference>
     <Reference Include="Ncqrs">
-      <HintPath>..\lib\Ncqrs\Ncqrs.dll</HintPath>
+      <HintPath>..\..\lib\Ncqrs\Ncqrs.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
