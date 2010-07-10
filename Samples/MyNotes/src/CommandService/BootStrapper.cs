@@ -2,6 +2,7 @@
 using CommandService.Properties;
 using Ncqrs;
 using Ncqrs.Commanding.CommandExecution.Mapping;
+using Ncqrs.Commanding.CommandExecution.Mapping.Attributes;
 using Ncqrs.Commanding.ServiceModel;
 using Commands;
 using Ncqrs.Config.StructureMap;
@@ -28,9 +29,11 @@ namespace CommandService
 
         private static ICommandService InitializeCommandService()
         {
+            var factory = new AttributeBasedMappingFactory();
+
             var service = new Ncqrs.Commanding.ServiceModel.CommandService();
-            service.RegisterExecutor(new MappedCommandExecutor<CreateNewNote>());
-            service.RegisterExecutor(new MappedCommandExecutor<ChangeNoteText>());
+            service.RegisterExecutor(factory.CreateMappingForCommand<CreateNewNote>());
+            service.RegisterExecutor(factory.CreateMappingForCommand<ChangeNoteText>());
             // TODO: service.RegisterExecutorForAllMappedCommandsInAssembly(typeof(CreateNewNote).Assembly););
 
             return service;

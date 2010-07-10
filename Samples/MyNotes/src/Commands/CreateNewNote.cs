@@ -7,6 +7,7 @@ namespace Commands
     [MapsToAggregateRootConstructor("Domain.Note, Domain")]
     public class CreateNewNote : CommandBase
     {
+        [Parameter(1)]
         public String Text
         {
             get; set;
