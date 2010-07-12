@@ -1,4 +1,5 @@
 using System;
+using Ncqrs.Eventing.Storage;
 
 namespace Ncqrs.Eventing.Sourcing
 {
@@ -18,5 +19,7 @@ namespace Ncqrs.Eventing.Sourcing
         /// </remarks>
         /// <value>A number that represents the order of where this events occurred in the sequence.</value>
         long EventSequence { get; }
+
+        void InitializeFrom(StoredEvent stored);
     }
 }

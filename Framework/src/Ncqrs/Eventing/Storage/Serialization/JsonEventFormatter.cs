@@ -33,7 +33,9 @@ namespace Ncqrs.Eventing.Storage.Serialization
         {
             var eventType = _typeResolver.ResolveType(obj.EventName);
             var reader = obj.Data.CreateReader();
-            return (ISourcedEvent) _serializer.Deserialize(reader, eventType);
+            var theEvent = (ISourcedEvent) _serializer.Deserialize(reader, eventType);
+            theEvent.InitializeFrom(obj);
+            return theEvent;
         }
 
         public StoredEvent<JObject> Serialize(ISourcedEvent theEvent)

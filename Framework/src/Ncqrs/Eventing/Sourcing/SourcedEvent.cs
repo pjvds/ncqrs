@@ -1,4 +1,5 @@
 ﻿using System;
+using Ncqrs.Eventing.Storage;
 
 namespace Ncqrs.Eventing.Sourcing
 {
@@ -43,6 +44,15 @@ namespace Ncqrs.Eventing.Sourcing
         {
             EventSourceId = eventSourceId;
             EventSequence = eventSequence;
+        }
+
+
+        public virtual void InitializeFrom(StoredEvent stored)
+        {
+            EventIdentifier = stored.EventIdentifier;
+            EventSourceId = stored.EventSourceId;
+            EventSequence = stored.EventSequence;
+            EventTimeStamp = stored.EventTimeStamp;
         }
     }
 }

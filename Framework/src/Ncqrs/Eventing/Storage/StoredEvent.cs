@@ -2,9 +2,9 @@ using System;
 
 namespace Ncqrs.Eventing.Storage
 {
-    public class StoredEvent<T>
+    public abstract class StoredEvent
     {
-        public StoredEvent(Guid eventIdentifier, DateTime eventTimeStamp, string eventName, Version eventVersion, Guid eventSourceId, long eventSequence, T data)
+        public StoredEvent(Guid eventIdentifier, DateTime eventTimeStamp, string eventName, Version eventVersion, Guid eventSourceId, long eventSequence)
         {
             EventIdentifier = eventIdentifier;
             EventTimeStamp = eventTimeStamp;
@@ -12,7 +12,6 @@ namespace Ncqrs.Eventing.Storage
             EventVersion = eventVersion;
             EventSourceId = eventSourceId;
             EventSequence = eventSequence;
-            Data = data;
         }
 
         public Guid EventIdentifier { get; private set; }
@@ -26,9 +25,17 @@ namespace Ncqrs.Eventing.Storage
 
         public Guid EventSourceId { get; private set;}
         public long EventSequence { get; private set; }
+    }
+
+    public class StoredEvent<T> : StoredEvent
+    {
+        public StoredEvent(Guid eventIdentifier, DateTime eventTimeStamp, string eventName, Version eventVersion, Guid eventSourceId, long eventSequence, T data)
+            : base(eventIdentifier,eventTimeStamp,eventName,eventVersion,eventSourceId,eventSequence)
+        {
+            Data = data;
+        }
 
         public T Data { get; private set; }
-
 
         public StoredEvent<TOther> Clone<TOther>(TOther data)
         {
