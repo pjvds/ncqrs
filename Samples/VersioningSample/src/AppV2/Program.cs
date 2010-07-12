@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Configuration;
 using AwesomeAppRefactored.Commands;
-using AwesomeAppRefactored.Events;
 using Ncqrs;
-using Ncqrs.Commanding.CommandExecution.Mapping;
+using Ncqrs.Commanding.CommandExecution.Mapping.Attributes;
 using Ncqrs.Commanding.ServiceModel;
 using Ncqrs.Eventing.Storage;
 using Ncqrs.Eventing.Storage.SQL;
@@ -22,7 +21,7 @@ namespace AwesomeAppRefactored
 
             commandService.Execute(new ChangeNameCommand(id, "Jane", "Doe"));
 
-            Console.WriteLine("If you see this message and no exception occurred, it had probably worked. Now you can run AppV2.");
+            Console.WriteLine("If you see this message and no exception occurred, it had probably worked. Now you can run AppV3.");
             Console.ReadLine();
         }
 
@@ -41,8 +40,8 @@ namespace AwesomeAppRefactored
         private static ICommandService InitializeCommandService()
         {
             var service = new CommandService();
-            service.RegisterExecutor(new MappedCommandExecutor<CreatePersonCommand>());
-            service.RegisterExecutor(new MappedCommandExecutor<ChangeNameCommand>());
+            service.RegisterExecutor(new AttributeMappedCommandExecutor<CreatePersonCommand>());
+            service.RegisterExecutor(new AttributeMappedCommandExecutor<ChangeNameCommand>());
             return service;
         }
     }

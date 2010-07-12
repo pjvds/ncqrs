@@ -2,7 +2,7 @@
 using System.Configuration;
 using AwesomeApp.Commands;
 using Ncqrs;
-using Ncqrs.Commanding.CommandExecution.Mapping;
+using Ncqrs.Commanding.CommandExecution.Mapping.Attributes;
 using Ncqrs.Commanding.ServiceModel;
 using Ncqrs.Eventing.Storage;
 using Ncqrs.Eventing.Storage.SQL;
@@ -41,8 +41,8 @@ namespace AwesomeApp
         private static ICommandService InitializeCommandService()
         {
             var service = new CommandService();
-            service.RegisterExecutor(new MappedCommandExecutor<CreatePersonCommand>());
-            service.RegisterExecutor(new MappedCommandExecutor<ChangeNameCommand>());
+            service.RegisterExecutor(new AttributeMappedCommandExecutor<CreatePersonCommand>());
+            service.RegisterExecutor(new AttributeMappedCommandExecutor<ChangeNameCommand>());
             return service;
         }
     }
