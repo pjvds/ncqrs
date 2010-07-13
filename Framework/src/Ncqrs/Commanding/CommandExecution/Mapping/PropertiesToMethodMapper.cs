@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Ncqrs.Commanding.CommandExecution.Mapping.Attributes;
+using Ncqrs;
 
 namespace Ncqrs.Commanding.CommandExecution.Mapping
 {
@@ -72,6 +73,7 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping
         private static void MakeSureAllPropertieOrdinalsAreUnique(List<PropertyToParameterMappingInfo> propertiesToMap)
         {
             var query = from p in propertiesToMap
+                        where p.Ordinal.HasValue
                         group p by p.Ordinal
                         into g
                         where g.Count() > 1
@@ -88,6 +90,7 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping
         private static void MakeSureAllPropertiesToMapOnNameHaveUniqueNames(List<PropertyToParameterMappingInfo> propertiesToMap)
         {
             var query = from p in propertiesToMap
+                        where !p.TargetName.IsNullOrEmpty()
                         group p by p.TargetName
                         into g
                         where g.Count() > 1

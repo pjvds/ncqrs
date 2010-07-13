@@ -13,23 +13,20 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
         private string _name;
 
         /// <summary>
-        /// Gets or sets the ordinal of the parameter that is used. The ordinal numbers start by one (<c>1</c>).
+        /// Gets the ordinal of the parameter that is used. The ordinal numbers start by one (<c>1</c>).
         /// </summary>
         public int? Ordinal
         {
             get { return _ordinal; }
-            set { _ordinal = value; }
         }
 
         /// <summary>
-        /// Gets or sets the name of the parameter that the property maps to.
+        /// Gets the name of the parameter that the property maps to.
         /// </summary>
         /// <remarks>If <see cref="Ordinal"/> is set, this will be ignored.</remarks>
-        /// <value>The name.</value>
         public string Name
         {
             get { return _name; }
-            set { _name = value; }
         }
 
         public ParameterAttribute()
