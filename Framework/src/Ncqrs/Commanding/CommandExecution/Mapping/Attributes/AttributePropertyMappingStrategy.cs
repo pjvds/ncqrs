@@ -18,18 +18,14 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
         private PropertyToParameterMappingInfo FromPropertyInfo(PropertyInfo prop)
         {
             int? ordinal = null;
-            string name = null;
+            string name = prop.Name;
 
             var attr = (ParameterAttribute)prop.GetCustomAttributes(typeof(ParameterAttribute), false).FirstOrDefault();
 
             if(attr != null)
             {
                 ordinal = attr.Ordinal;
-                name = attr.Name;
-            }
-            else
-            {
-                name = prop.Name;
+                name = attr.Name ?? name;
             }
 
             return new PropertyToParameterMappingInfo(ordinal, name, prop);

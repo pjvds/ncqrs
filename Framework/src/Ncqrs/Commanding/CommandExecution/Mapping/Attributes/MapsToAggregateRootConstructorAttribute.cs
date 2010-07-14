@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using Ncqrs.Domain;
 
 namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
 {
@@ -66,11 +67,14 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
             ValidateCommandType(commandType);
 
             var match = GetMatchingConstructor(commandType);
-            return new CreatingCommandExecutor<TCommand>((c) =>
+            Func<TCommand, AggregateRoot> create = (c) =>
             {
                 var parameter = match.Item2.Select(p => p.GetValue(c, null));
-                match.Item1.Invoke(parameter.ToArray());
-            });
+                return
+                    (AggregateRoot) match.Item1.Invoke(parameter.ToArray());
+            };
+
+            return new CreatingCommandExecutor<TCommand, AggregateRoot>(create);
         }
 
         private Tuple<ConstructorInfo, PropertyInfo[]> GetMatchingConstructor(Type commandType)
