@@ -12,7 +12,7 @@ namespace Ncqrs.Eventing.Storage.SQLite
     {
         private readonly string _connectionString;
         private IPropertyBagConverter _converter;
-
+        
         public SQLiteEventStore(string connectionString) : this(connectionString, new PropertyBagConverter())
         {
         }
@@ -129,6 +129,7 @@ namespace Ncqrs.Eventing.Storage.SQLite
                         .AddParam("Id", eventSourceId)
                         .AddParam("Name", evnt.GetType().FullName)
                         .AddParam("Sequence", evnt.EventSequence)
+                        .AddParam("Timestamp", evnt.EventTimeStamp.Ticks)
                         .AddParam("Data", data);
                     cmd.ExecuteNonQuery();
                 }

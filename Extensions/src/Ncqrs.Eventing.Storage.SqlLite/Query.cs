@@ -3,7 +3,7 @@
     internal class Query {
         internal const string DeleteUnusedProviders="DELETE FROM [EventSources] WHERE (SELECT Count(EventSourceId) FROM [Events] WHERE [EventSourceId]=[EventSources].[Id]) = 0";
 
-        internal const string InsertNewEventQuery="INSERT INTO [Events]([EventSourceId], [Name], [Data], [Sequence], [TimeStamp]) VALUES (@Id, @Name, @Data, @Sequence, datetime('now'))";
+        internal const string InsertNewEventQuery="INSERT INTO [Events]([EventSourceId], [Name], [Data], [Sequence], [TimeStamp]) VALUES (@Id, @Name, @Data, @Sequence, @Timestamp)";
 
         internal const string InsertNewProviderQuery="INSERT INTO [EventSources](Id, Type, Version) VALUES (@Id, @Type, @Version)";
 
@@ -15,7 +15,7 @@
 
         internal const string UpdateEventSourceVersionQuery="UPDATE EventSources SET Version = (SELECT Count(*) FROM Events WHERE EventSourceId = @Id) WHERE Id = @Id";
 
-        internal const string InsertSnapshot="DELETE FROM [Snapshots] WHERE [EventSourceId]=@EventSourceId; INSERT INTO [Snapshots]([EventSourceId], [Version], [SnapshotType], [SnapshotData], [TimeStamp]) VALUES (@EventSourceId, @Version, @SnapshotType, @SnapshotData, datetime('now'))";
+        internal const string InsertSnapshot="DELETE FROM [Snapshots] WHERE [EventSourceId]=@EventSourceId; INSERT INTO [Snapshots]([EventSourceId], [Version], [SnapshotType], [SnapshotData], [TimeStamp]) VALUES (@EventSourceId, @Version, @SnapshotType, @SnapshotData, @Timestamp)";
 
         internal const string SelectLatestSnapshot="SELECT TOP 1 * FROM [Snapshots] WHERE [EventSourceId]=@EventSourceId ORDER BY Version DESC";
 
@@ -23,7 +23,7 @@
                       @"CREATE TABLE [Events] (
                             [EventSourceId] GUID  NOT NULL,
                             [Sequence] INTEGER  NOT NULL,
-                            [TimeStamp] TIMESTAMP NOT NULL,
+                            [TimeStamp] INTEGER NOT NULL,
                             [Data] BLOB  NOT NULL,
                             [Name] nvarchar(255)  NOT NULL);
 
@@ -33,7 +33,7 @@
 
                         CREATE TABLE Snapshots (EventSourceId GUID UNIQUE NOT NULL,
                                                  Version INTEGER,
-                                                 TimeStamp TIMESTAMP NOT NULL,
+                                                 TimeStamp INTEGER NOT NULL,
                                                  Data BLOB NOT NULL);";
     }
 }
