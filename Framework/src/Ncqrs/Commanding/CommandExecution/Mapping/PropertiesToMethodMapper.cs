@@ -30,7 +30,7 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping
             var targets = new List<MethodBase>(potentialTargets);
 
             MakeSureAllPropertiesToMapOnNameHaveUniqueNames(propertiesToMap);
-            MakeSureAllPropertiesOrdinalsAreUnique(propertiesToMap);
+            MakeSureAllPropertieOrdinalsAreUnique(propertiesToMap);
 
             // Remove all targets that do no match the parameter count.
             targets.RemoveAll(t=>!HasCorrectParameterCount(t, propertiesToMap.Count));
@@ -69,37 +69,36 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping
             return new Tuple<TMethodBase, PropertyInfo[]>((TMethodBase)match.Item1, match.Item2);
         }
 
-        private static void MakeSureAllPropertiesOrdinalsAreUnique(List<PropertyToParameterMappingInfo> propertiesToMap)
+        private static void MakeSureAllPropertieOrdinalsAreUnique(List<PropertyToParameterMappingInfo> propertiesToMap)
         {
             var query = from p in propertiesToMap
-                        where p.Ordinal.HasValue
                         group p by p.Ordinal
                         into g
                         where g.Count() > 1
                         select g.First();
 
-            var firstDuplicate = query.FirstOrDefault();
-            if (firstDuplicate != null)
+            if (query.Count() > 0)
             {
-                throw new CommandMappingException("Cannot map multiple properties with the same ordinal " + firstDuplicate.TargetName +
-                    " (" + firstDuplicate.Ordinal + ").");
+                var firstDuplicate = query.First();
+
+                throw new CommandMappingException("Cannot map multiple properties with the same name " + firstDuplicate.TargetName + ".");
             }
         }
 
         private static void MakeSureAllPropertiesToMapOnNameHaveUniqueNames(List<PropertyToParameterMappingInfo> propertiesToMap)
         {
             var query = from p in propertiesToMap
-                        where !p.Ordinal.HasValue
                         group p by p.TargetName
                         into g
                         where g.Count() > 1
                         select g.First();
 
-            var firstDuplicate = query.FirstOrDefault();
-            if (firstDuplicate != null)
+            if (query.Count() > 0)
             {
+                var firstDuplicate = query.First();
                 // TODO: Better exception.)
-                throw new CommandMappingException("Cannot map multiple properties with the same name " + firstDuplicate.TargetName + ".");
+                throw new CommandMappingException("Cannot map multiple properties with the same name " + firstDuplicate.TargetName +
+                                                  ".");
             }
         }
 
