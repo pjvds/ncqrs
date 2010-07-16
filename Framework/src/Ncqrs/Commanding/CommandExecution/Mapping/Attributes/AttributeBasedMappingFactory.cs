@@ -7,10 +7,20 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
     {
         public ICommandExecutor<TCommand> CreateMappingForCommand<TCommand>() where TCommand : ICommand
         {
-            var commandType = typeof (TCommand);
+            var commandType = typeof(TCommand);
+            return (ICommandExecutor<TCommand>)CreateMappingForCommand(commandType);
+        }
+
+        public ICommandExecutor<ICommand> CreateMappingForCommand(Type commandType)
+        {
             var mappingAttr = GetCommandMappingAttributeFromType(commandType);
 
-            return mappingAttr.CreateExecutor<TCommand>();
+            return mappingAttr.CreateExecutor(commandType);
+        }
+
+        public bool IsCommandMapped(Type target)
+        {
+            return target.IsDefined(typeof (CommandMappingAttribute), false);
         }
 
         private CommandMappingAttribute GetCommandMappingAttributeFromType(Type target)
