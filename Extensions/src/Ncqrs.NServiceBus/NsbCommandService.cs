@@ -2,6 +2,7 @@
 using Ncqrs.Commanding;
 using Ncqrs.Commanding.CommandExecution;
 using Ncqrs.Commanding.CommandExecution.Mapping;
+using Ncqrs.Commanding.CommandExecution.Mapping.Attributes;
 using Ncqrs.Commanding.ServiceModel;
 
 namespace Ncqrs.NServiceBus
@@ -23,7 +24,7 @@ namespace Ncqrs.NServiceBus
             var registeredExecutor = base.GetCommandExecutorForCommand(commandType);
             if (registeredExecutor == null)
             {
-                var factory = new ActionFactory();
+                var factory = new AttributeBasedMappingFactory();
                 if (factory.IsCommandMapped(commandType))
                 {
                     registeredExecutor = GetMappedExecutorAction(commandType);
@@ -48,7 +49,13 @@ namespace Ncqrs.NServiceBus
         private class MappedCommandExecutorProxy<T> : IMappedCommandExecutorProxy
            where T : ICommand
         {
-            private static readonly MappedCommandExecutor<T> _executor = new MappedCommandExecutor<T>();
+            private readonly ICommandExecutor<T> _executor;
+
+            public MappedCommandExecutorProxy()
+            {
+                var factory = new AttributeBasedMappingFactory();
+                _executor = factory.CreateMappingForCommand<T>();
+            }
 
             public void Execute(ICommand command)
             {
