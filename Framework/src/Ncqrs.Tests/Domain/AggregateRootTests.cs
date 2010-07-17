@@ -9,6 +9,7 @@ using NUnit.Framework;
 
 namespace Ncqrs.Tests.Domain
 {
+    [TestFixture]
     public class AggregateRootTests
     {
         public class HandledEvent : SourcedEvent

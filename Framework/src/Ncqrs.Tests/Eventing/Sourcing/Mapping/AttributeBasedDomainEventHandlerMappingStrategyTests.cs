@@ -8,6 +8,7 @@ using Ncqrs.Domain;
 
 namespace Ncqrs.Tests.Eventing.Sourcing.Mapping
 {
+    [TestFixture]
     public class AttributeBasedDomainEventHandlerMappingStrategyTests
     {
         public class IlligalStaticMethodTarget

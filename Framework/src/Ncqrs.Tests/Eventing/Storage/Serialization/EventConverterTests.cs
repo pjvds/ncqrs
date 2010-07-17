@@ -8,6 +8,7 @@ using Rhino.Mocks;
 
 namespace Ncqrs.Tests.Eventing.Storage.Serialization
 {
+    [TestFixture]
     public class EventConverterTests
     {
         private IEventTypeResolver _typeResolver;

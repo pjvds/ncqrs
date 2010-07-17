@@ -9,6 +9,7 @@ using Ncqrs.Eventing;
 
 namespace Ncqrs.Tests.Domain
 {
+    [TestFixture]
     public class EventNotHandledExceptionTests
     {
         public class FooEvent : Event
