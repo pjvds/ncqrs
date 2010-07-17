@@ -11,6 +11,7 @@ using Rhino.Mocks;
 
 namespace Ncqrs.Tests.Domain
 {
+    [TestFixture]
     public class AggregateRootMappedWithAttributesTests
     {
         [Test]

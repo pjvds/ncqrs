@@ -8,6 +8,7 @@ using System.Linq;
 
 namespace Ncqrs.Tests.Eventing.Sourcing.Mapping
 {
+    [TestFixture]
     public class ExpressionBasedDomainEventHandlerMappingStrategyTests
     {
         public class IlligalStaticMethodTarget : AggregateRootMappedWithExpressions

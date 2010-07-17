@@ -8,6 +8,7 @@ using Ncqrs.Commanding;
 
 namespace Ncqrs.Tests.Commanding.ServiceModel
 {
+    [TestFixture]
     public class CommandServiceBaseTests
     {
         public class CommandWithExecutor : CommandBase

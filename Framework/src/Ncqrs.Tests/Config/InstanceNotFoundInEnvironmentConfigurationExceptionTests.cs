@@ -7,6 +7,7 @@ using NUnit.Framework;
 
 namespace Ncqrs.Tests.Config
 {
+    [TestFixture]
     public class InstanceNotFoundInEnvironmentConfigurationExceptionTests
     {
         [Test]

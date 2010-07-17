@@ -11,6 +11,7 @@ using FluentAssertions;
 
 namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Fluent
 {
+    [TestFixture]
     public class FluentCommandMappingTests
     {
         private ICommandService TheService

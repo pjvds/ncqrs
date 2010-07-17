@@ -9,6 +9,7 @@ using Rhino.Mocks;
 
 namespace Ncqrs.Tests.Domain
 {
+    [TestFixture]
     public class AggregateRootMappedByConventionTests
     {
         public class EventForPublicMethod : SourcedEvent

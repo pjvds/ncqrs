@@ -12,6 +12,7 @@ using System.Collections.Generic;
 
 namespace Ncqrs.Tests.Domain.Storage
 {
+    [TestFixture]
     public class DomainRepositoryTests
     {
         public class FooEvent : SourcedEvent

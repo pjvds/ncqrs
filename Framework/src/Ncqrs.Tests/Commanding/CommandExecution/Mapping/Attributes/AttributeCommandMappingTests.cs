@@ -10,6 +10,7 @@ using FluentAssertions;
 
 namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Attributes
 {
+    [TestFixture]
     public class AttributeCommandMappingTests
     {
         private ICommandService TheService

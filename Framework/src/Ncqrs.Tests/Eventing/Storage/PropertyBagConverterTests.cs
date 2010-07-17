@@ -6,6 +6,7 @@ using FluentAssertions;
 
 namespace Ncqrs.Tests.Eventing.Storage
 {
+    [TestFixture]
     public class PropertyBagConverterTests
     {
         public class TestEvent : SourcedEvent

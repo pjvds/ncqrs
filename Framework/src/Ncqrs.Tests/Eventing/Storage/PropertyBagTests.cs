@@ -5,6 +5,7 @@ using NUnit.Framework;
 
 namespace Ncqrs.Tests.Eventing.Storage
 {
+    [TestFixture]
     public class PropertyBagTests
     {
         [Test]

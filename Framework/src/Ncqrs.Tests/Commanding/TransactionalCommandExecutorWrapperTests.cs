@@ -6,6 +6,7 @@ using NUnit.Framework;
 
 namespace Ncqrs.Tests.Commanding
 {
+    [TestFixture]
     public class TransactionalCommandExecutorWrapperTests
     {
         [Test]

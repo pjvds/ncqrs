@@ -8,6 +8,7 @@ using NUnit.Framework;
 
 namespace Ncqrs.Tests.Eventing.Storage.Serialization
 {
+    [TestFixture]
     public class JsonEventFormatterTests
     {
         private IEventTypeResolver _typeResolver;

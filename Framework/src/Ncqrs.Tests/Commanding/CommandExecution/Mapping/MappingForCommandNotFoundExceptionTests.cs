@@ -9,6 +9,7 @@ using Rhino.Mocks;
 
 namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping
 {
+    [TestFixture]
     public class MappingForCommandNotFoundExceptionTests
     {
         [Test]

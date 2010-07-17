@@ -17,6 +17,12 @@ namespace Ncqrs.Tests.Domain
         {
         }
 
+        [SetUp]
+        public void SetUp()
+        {
+            NcqrsEnvironment.Deconfigure();
+        }
+
         [Test]
         public void When_a_new_instance_is_initialized_with_a_type_that_is_not_of_an_event_it_should_throw_an_exception()
         {

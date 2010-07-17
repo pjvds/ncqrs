@@ -11,6 +11,7 @@ using Ncqrs.Eventing.Storage;
 
 namespace Ncqrs.Tests.Eventing.Storage.SQL
 {
+    [TestFixture]
     public class MsSqlServerEventStoreTests
     {
         [Serializable]

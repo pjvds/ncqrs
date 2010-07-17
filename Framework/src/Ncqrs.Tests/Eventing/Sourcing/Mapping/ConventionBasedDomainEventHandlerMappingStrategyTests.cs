@@ -8,6 +8,7 @@ using NUnit.Framework;
 
 namespace Ncqrs.Tests.Eventing.Sourcing.Mapping
 {
+    [TestFixture]
     public class ConventionBasedDomainEventHandlerMappingStrategyTests
     {
         public class IlligalStaticMethodTarget : AggregateRootMappedByConvention

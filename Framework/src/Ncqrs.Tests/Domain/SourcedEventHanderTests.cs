@@ -6,6 +6,7 @@ using Rhino.Mocks;
 
 namespace Ncqrs.Tests.Domain
 {
+    [TestFixture]
     public class SourcedEventHanderTests
     {
         public class FooDomainEvent : SourcedEvent

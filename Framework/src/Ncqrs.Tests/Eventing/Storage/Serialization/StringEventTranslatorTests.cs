@@ -7,6 +7,7 @@ using NUnit.Framework;
 
 namespace Ncqrs.Tests.Eventing.Storage.Serialization
 {
+    [TestFixture]
     public class StringEventTranslatorTests
     {
         private StringEventTranslator _translator;

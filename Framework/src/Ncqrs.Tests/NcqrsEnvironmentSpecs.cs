@@ -124,6 +124,8 @@ namespace Ncqrs.Tests
         [Test]
         public void When_get_is_called_but_the_source_did_not_return_an_intance_an_exception_should_be_thrown()
         {
+            NcqrsEnvironment.Deconfigure();
+
             // Arrange
             var repository = new MockRepository();
             NcqrsEnvironment.Configure(repository.StrictMock<IEnvironmentConfiguration>());

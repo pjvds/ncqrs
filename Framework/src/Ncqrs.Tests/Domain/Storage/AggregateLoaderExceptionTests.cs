@@ -7,6 +7,7 @@ using NUnit.Framework;
 
 namespace Ncqrs.Tests.Domain.Storage
 {
+    [TestFixture]
     public class AggregateLoaderExceptionTests
     {
         [Test]
