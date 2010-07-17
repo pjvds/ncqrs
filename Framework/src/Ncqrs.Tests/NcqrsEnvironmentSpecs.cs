@@ -18,6 +18,12 @@ namespace Ncqrs.Tests
         public interface IBar
         {}
 
+        [TearDown]
+        public void TearDown()
+        {
+            NcqrsEnvironment.Deconfigure();            
+        }
+
         [Test]
         public void When_get_is_called_when_the_environmemt_is_not_configured_defaults_should_still_be_returned()
         {
