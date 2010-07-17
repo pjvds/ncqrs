@@ -89,6 +89,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\log4net\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\lib\json.net\Newtonsoft.Json.dll</HintPath>
     </Reference>
