@@ -16,3 +16,6 @@ bin
 *.log
 *.swp
 *.user
+
+# Ncqrs in non framework solution
+/Extensions/lib/Ncqrs/*
