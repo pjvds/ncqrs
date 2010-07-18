@@ -10,9 +10,15 @@ help you to focus on the code that adds business value. They come with
 annotation, convention and configuration support and help you to write isolated
 and testable.
 
+
+Build locally
+-------------
+Run `BUILD.bat` to build the Ncqrs Framework. This will build the framework, run
+all the tests and updates all the lib folders of other solutions (extensions and
+sample) with the result.
+
 Discussion and feedback
 -----------------------
-
 The best source for discussion is the [Ncqrs-dev group][1]. You could
 also use [twitter][2] or use the [issue tracker][3].
 
@@ -22,7 +28,6 @@ also use [twitter][2] or use the [issue tracker][3].
 
 Code contribution
 -----------------
-
 The code base of Ncqrs will never be complete. We encourage users to 
 [fork][4] Ncqrs code, make changes, commit them to your forked repository, and 
 submit [pull requests][5].
@@ -46,7 +51,6 @@ clone of Ncqrs.
 
 License
 -------
-
 The Ncqrs framework and its documentation are licensed under the Apache License,
 Version 2.0 (the "License"); you may not use this file except in compliance with
 the License. You may obtain a copy of the License at 
