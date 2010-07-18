@@ -9,6 +9,7 @@ GETTING IT UP AND RUNNING
 
 Follow these steps to get the website running.
 
+0. Run BUILD.bat in the root folder (two up).
 1. Open MyNotes.sln with Visual Studio 2010.
 2. Run MyNotesEventStore.sql to create the event store database.
 3. Run MyNotesReadModel.sql to create the read model database.
