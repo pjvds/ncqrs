@@ -57,7 +57,15 @@
 
   <target name="UpdateLibForMyNotesSample" depends="BuildFramework">
     <echo message="Updating MyNotes lib folder" />
-    <copy file="${project.framework.bin}\Ncqrs.dll" todir="Samples\MyNotes\lib" overwrite="true" />
-    <copy file="${project.framework.bin}\Ncqrs.pdb" todir="Samples\MyNotes\lib" overwrite="true" />
+    <copy todir="Samples\MyNotes\lib\Ncqrs" flatten="false" overwrite="true">
+      <fileset basedir="Framework\src\Ncqrs\bin\${project.config}">
+        <include name="**/*" />
+      </fileset>
+    </copy>
+    <copy todir="Samples\MyNotes\lib\Ncqrs.Config.StructureMap" flatten="false" overwrite="true">
+      <fileset basedir="Extensions\src\Ncqrs.Config.StructureMap\bin\${project.config}">
+        <include name="**/*" />
+      </fileset>
+    </copy>
   </target>
 </project>

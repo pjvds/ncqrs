@@ -34,13 +34,18 @@
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Ncqrs">
-      <HintPath>..\..\lib\Ncqrs.dll</HintPath>
+      <HintPath>..\..\lib\Ncqrs\Ncqrs.dll</HintPath>
     </Reference>
-    <Reference Include="Ncqrs.Config.StructureMap">
-      <HintPath>..\..\lib\Ncqrs.Config.StructureMap.dll</HintPath>
+    <Reference Include="Ncqrs.Config.StructureMap, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\Ncqrs.Config.StructureMap\Ncqrs.Config.StructureMap.dll</HintPath>
     </Reference>
-    <Reference Include="StructureMap">
-      <HintPath>..\..\lib\StructureMap.dll</HintPath>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\lib\Ncqrs\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="StructureMap, Version=2.6.1.0, Culture=neutral, PublicKeyToken=e60ad81abae3c223, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\Ncqrs.Config.StructureMap\StructureMap.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />

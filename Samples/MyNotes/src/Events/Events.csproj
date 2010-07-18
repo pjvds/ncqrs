@@ -33,7 +33,7 @@
   <ItemGroup>
     <Reference Include="Ncqrs, Version=0.8.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\Ncqrs.dll</HintPath>
+      <HintPath>..\..\lib\Ncqrs\Ncqrs.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
