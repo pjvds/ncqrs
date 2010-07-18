@@ -11,6 +11,7 @@
     <call target="BuildFramework" />
     <call target="RunTestsForFramework" />
     <call target="UpdateAllLibFolders" />
+    <call target="BuildExtensions" />
   </target>
 
   <target name="BuildFramework">
