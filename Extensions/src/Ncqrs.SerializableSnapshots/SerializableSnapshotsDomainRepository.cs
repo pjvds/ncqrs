@@ -6,7 +6,6 @@ using System.Reflection;
 using Ncqrs.Domain;
 using Ncqrs.Domain.Storage;
 using Ncqrs.Eventing;
-using Ncqrs.Eventing.Conversion;
 using Ncqrs.Eventing.ServiceModel.Bus;
 using Ncqrs.Eventing.Sourcing;
 using Ncqrs.Eventing.Storage;
@@ -20,9 +19,8 @@ namespace Ncqrs.SerializableSnapshots
         private readonly IEventBus _eventBus;
         private readonly IEventStore _store;
         private readonly ISerializableSnapshotStore _snapshotStore;
-        private readonly IEventConverter<SourcedEvent, SourcedEvent> _converter;
 
-        public SerializableSnapshotsDomainRepository(IEventStore store, IEventBus eventBus, ISerializableSnapshotStore snapshotStore, IEventConverter<SourcedEvent, SourcedEvent> converter = null)
+        public SerializableSnapshotsDomainRepository(IEventStore store, IEventBus eventBus, ISerializableSnapshotStore snapshotStore)
         {
             Contract.Requires<ArgumentNullException>(store != null);
             Contract.Requires<ArgumentNullException>(eventBus != null);
@@ -30,7 +28,6 @@ namespace Ncqrs.SerializableSnapshots
 
             _store = store;
             _eventBus = eventBus;
-            _converter = converter;
             _snapshotStore = snapshotStore;
         }
 
@@ -68,7 +65,6 @@ namespace Ncqrs.SerializableSnapshots
             AggregateRoot aggregateRoot = null;
 
             var events = _store.GetAllEvents(id);
-            events = ConvertEvents(events);
 
             if (events.Count() > 0)
             {
@@ -99,13 +95,6 @@ namespace Ncqrs.SerializableSnapshots
             var aggregateRoot = (AggregateRoot)ctor.Invoke(null);
 
             return aggregateRoot;
-        }
-
-        protected IEnumerable<SourcedEvent> ConvertEvents(IEnumerable<SourcedEvent> events)
-        {
-            return _converter == null 
-                ? events : 
-                events.Select(evnt => _converter.Convert(evnt));
         }
 
         public T GetById<T>(Guid id) where T : AggregateRoot
