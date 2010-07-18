@@ -14,10 +14,17 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
 
         public ICommandExecutor<ICommand> CreateExecutorForCommand(Type commandType)
         {
-            dynamic mappingAttr = GetCommandMappingAttributeFromType(commandType);
-            dynamic executor = mappingAttr.CreateExecutor(commandType);
+            var mappingAttr = GetCommandMappingAttributeFromType(commandType);
 
-            return new CommandExecutorWrapper<ICommand>((c) => executor.Execute(c));
+            var method = mappingAttr.GetType().GetMethod("CreateExecutor", Type.EmptyTypes);
+            var genericMethod = method.MakeGenericMethod(commandType);
+
+            object executor = genericMethod.Invoke(mappingAttr, null);
+            var executeMethod = executor.GetType().GetMethod("Execute");
+
+            Action<ICommand> redirection = (cmd) => executeMethod.Invoke(executor, new object[] { cmd });
+
+            return new CommandExecutorWrapper<ICommand>(redirection);
         }
 
         public bool IsCommandMapped(Type target)
