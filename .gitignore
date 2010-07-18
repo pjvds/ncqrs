@@ -19,3 +19,5 @@ bin
 
 # Ncqrs in non framework solution
 /Extensions/lib/Ncqrs/*
+Samples/MyNotes/lib/Ncqrs.dll
+Samples/MyNotes/lib/Ncqrs.pdb
