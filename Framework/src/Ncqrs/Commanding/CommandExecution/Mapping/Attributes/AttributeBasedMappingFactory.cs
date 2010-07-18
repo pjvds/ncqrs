@@ -3,32 +3,16 @@ using System.Linq;
 
 namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
 {
-    public class CommandExecutorWrapper<TCommand> : ICommandExecutor<TCommand> where TCommand:ICommand
-    {
-        private readonly Action<TCommand> _action;
-
-        public CommandExecutorWrapper(Action<TCommand> action)
-        {
-            _action = action;
-        }
-
-
-        public void Execute(TCommand command)
-        {
-            _action(command);
-        }
-    }
-
     public class AttributeBasedMappingFactory
     {
-        public ICommandExecutor<TCommand> CreateMappingForCommand<TCommand>() where TCommand : ICommand
+        public ICommandExecutor<TCommand> CreateExecutorForCommand<TCommand>() where TCommand : ICommand
         {
             var commandType = typeof(TCommand);
             var mappingAttr = GetCommandMappingAttributeFromType(commandType);
             return mappingAttr.CreateExecutor<TCommand>();
         }
 
-        public ICommandExecutor<ICommand> CreateMappingForCommand(Type commandType)
+        public ICommandExecutor<ICommand> CreateExecutorForCommand(Type commandType)
         {
             dynamic mappingAttr = GetCommandMappingAttributeFromType(commandType);
             dynamic executor = mappingAttr.CreateExecutor(commandType);

@@ -54,7 +54,7 @@ namespace Ncqrs.NServiceBus
             public MappedCommandExecutorProxy()
             {
                 var factory = new AttributeBasedMappingFactory();
-                _executor = factory.CreateMappingForCommand<T>();
+                _executor = factory.CreateExecutorForCommand<T>();
             }
 
             public void Execute(ICommand command)

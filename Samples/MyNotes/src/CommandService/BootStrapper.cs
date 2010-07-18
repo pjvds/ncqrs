@@ -29,12 +29,10 @@ namespace CommandService
 
         private static ICommandService InitializeCommandService()
         {
-            var factory = new AttributeBasedMappingFactory();
+            var commandAssembly = typeof (CreateNewNote).Assembly;
 
             var service = new Ncqrs.Commanding.ServiceModel.CommandService();
-            service.RegisterExecutor(factory.CreateMappingForCommand<CreateNewNote>());
-            service.RegisterExecutor(factory.CreateMappingForCommand<ChangeNoteText>());
-            // TODO: service.RegisterExecutorForAllMappedCommandsInAssembly(typeof(CreateNewNote).Assembly););
+            service.RegisterExecutorsInAssembly(commandAssembly);
 
             return service;
         }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using Ncqrs.Commanding.CommandExecution;
+using System.Diagnostics.Contracts;
 
 namespace Ncqrs.Commanding.ServiceModel
 {
@@ -13,7 +14,7 @@ namespace Ncqrs.Commanding.ServiceModel
         private readonly List<ICommandServiceInterceptor> _interceptors = new List<ICommandServiceInterceptor>(0);
 
         /// <summary>
-        /// Execute a <see cref="ICommand"/> by giving it to the registered <see cref="ICommandExecutor"/>.
+        /// Execute a <see cref="ICommand"/> by giving it to the registered <see cref="ICommandExecutor{TCommand}"/>.
         /// </summary>
         /// <param name="command">The command to execute.</param>
         /// <exception cref="ArgumentNullException">Occurs when the <i>command</i> was a <c>null</c> dereference.</exception>
@@ -59,6 +60,19 @@ namespace Ncqrs.Commanding.ServiceModel
                 // Call OnAfterExecution on every interceptor.
                 _interceptors.ForEach(i=>i.OnAfterExecution(context));
             }
+        }
+
+        public virtual void RegisterExecutor(Type commandType, ICommandExecutor<ICommand> executor)
+        {
+            RegisterExecutor<ICommand>(commandType, executor);
+        }
+
+        public virtual void RegisterExecutor<TCommand>(Type commandType, ICommandExecutor<TCommand> executor) where TCommand : ICommand
+        {
+            Contract.Requires<ArgumentOutOfRangeException>(typeof(TCommand).IsAssignableFrom(commandType));
+
+            Action<ICommand> action = (cmd) => executor.Execute((TCommand) cmd);
+            _executors.Add(commandType, action);
         }
 
         /// <summary>

@@ -15,7 +15,7 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
         void ICommandExecutor<TCommand>.Execute(TCommand command)
         {
             var factory = new AttributeBasedMappingFactory();
-            var executor = factory.CreateMappingForCommand<TCommand>();
+            var executor = factory.CreateExecutorForCommand<TCommand>();
 
             if (command.GetType().GetCustomAttributes(typeof(TransactionalAttribute), true).Length > 0)
                 executor = new TransactionalCommandExecutorWrapper<TCommand>(executor);

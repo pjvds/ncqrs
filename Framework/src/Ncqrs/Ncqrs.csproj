@@ -104,11 +104,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commanding\CommandBase.cs" />
+    <Compile Include="Commanding\CommandExecution\CommandExecutorWrapper.cs" />
     <Compile Include="Commanding\CommandExecution\CreatingCommandExecutor.cs" />
     <Compile Include="Commanding\CommandExecution\DirectActionCommandExecutor.cs" />
     <Compile Include="Commanding\CommandExecution\ICommandExecutorExtensions.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Attributes\AttributeBasedMappingFactory.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Attributes\AttributePropertyMappingStrategy.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\Attributes\CommandServiceExtensions.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Fluent\Map.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\PropertiesToMethodMapper.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Attributes\CommandMappingAttribute.cs" />
