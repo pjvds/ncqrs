@@ -5,10 +5,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Eventing.Storage.Mong
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Config.StructureMap", "src\Ncqrs.Config.StructureMap\Ncqrs.Config.StructureMap.csproj", "{2558F4AD-8D5D-43A2-AAEA-75B966F9B4DE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Eventing.Storage.WindowsAzure", "src\Ncqrs.Eventing.Storage.WindowsAzure\Ncqrs.Eventing.Storage.WindowsAzure.csproj", "{F08BF370-18B8-4FDD-A169-C4F084A9F98D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Eventing.Storage.WindowsAzure.Tests", "src\Ncqrs.Eveting.Storage.WindowsAzure.Tests\Ncqrs.Eventing.Storage.WindowsAzure.Tests.csproj", "{E816439F-BA71-4EE9-9141-DBC3E5674ADE}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.NServiceBus", "src\Ncqrs.NServiceBus\Ncqrs.NServiceBus.csproj", "{9B796256-E9D6-4F21-BB89-C5333A880BFE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.NServiceBus.Tests", "src\Ncqrs.NServiceBus.Tests\Ncqrs.NServiceBus.Tests.csproj", "{86D87653-EC64-4388-A5F7-2F64F690C5F5}"
@@ -63,26 +59,6 @@ Global
 		{2558F4AD-8D5D-43A2-AAEA-75B966F9B4DE}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{2558F4AD-8D5D-43A2-AAEA-75B966F9B4DE}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{2558F4AD-8D5D-43A2-AAEA-75B966F9B4DE}.Release|x86.ActiveCfg = Release|Any CPU
-		{F08BF370-18B8-4FDD-A169-C4F084A9F98D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F08BF370-18B8-4FDD-A169-C4F084A9F98D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F08BF370-18B8-4FDD-A169-C4F084A9F98D}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{F08BF370-18B8-4FDD-A169-C4F084A9F98D}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{F08BF370-18B8-4FDD-A169-C4F084A9F98D}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{F08BF370-18B8-4FDD-A169-C4F084A9F98D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F08BF370-18B8-4FDD-A169-C4F084A9F98D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F08BF370-18B8-4FDD-A169-C4F084A9F98D}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{F08BF370-18B8-4FDD-A169-C4F084A9F98D}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{F08BF370-18B8-4FDD-A169-C4F084A9F98D}.Release|x86.ActiveCfg = Release|Any CPU
-		{E816439F-BA71-4EE9-9141-DBC3E5674ADE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E816439F-BA71-4EE9-9141-DBC3E5674ADE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E816439F-BA71-4EE9-9141-DBC3E5674ADE}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{E816439F-BA71-4EE9-9141-DBC3E5674ADE}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{E816439F-BA71-4EE9-9141-DBC3E5674ADE}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{E816439F-BA71-4EE9-9141-DBC3E5674ADE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E816439F-BA71-4EE9-9141-DBC3E5674ADE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E816439F-BA71-4EE9-9141-DBC3E5674ADE}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{E816439F-BA71-4EE9-9141-DBC3E5674ADE}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{E816439F-BA71-4EE9-9141-DBC3E5674ADE}.Release|x86.ActiveCfg = Release|Any CPU
 		{9B796256-E9D6-4F21-BB89-C5333A880BFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9B796256-E9D6-4F21-BB89-C5333A880BFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9B796256-E9D6-4F21-BB89-C5333A880BFE}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
