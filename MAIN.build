@@ -1,58 +1,62 @@
-<?xml version="1.0"?>
-<project name="NAnt Examples" default="build">
-	<property name="nant.settings.currentframework" value="net-4.0" />
-	<property name="root.dir" value="" />
-	<property name="project.config" value="debug" />
-	<property name="project.framework.bin" value="Framework\src\Ncqrs\bin\${project.config}" />
-	
-	<target name="build">
-		<call target="BuildFramework" />
-		<call target="RunTestsForFramework" />
-<!--		<call target="UpdateLibForExtensions" />
-		<call target="BuildExtensions" />-->
-	</target>
-	
-    <target name="BuildFramework">
-		<!--<solution solutionfile="Framework\NcqrsFramework.sln" configuration="debug" />-->
-		<exec program="msbuild">
-			<arg value="Framework\NcqrsFramework.sln" />
-			<arg value="/p:Configuration=${project.config}" />
-			<!--<arg value="/t:rebuild" />-->
-		</exec>
-    </target>
-    
-    <target name="BuildExtensions" depends="UpdateLibForExtensions">
-		<exec program="msbuild">
-		<arg value="Extensions\NcqrsExtensions.sln" />
-		<arg value="/p:Configuration=${project.config}" />
-		<!--<arg value="/t:rebuild" />-->
-		</exec>
-    </target>
-    
-    <target name="RunTestsForFramework" depends="BuildFramework">
-		<nunit2 verbose="false">
-			<formatter type="Plain" />
-			<test assemblyname="Framework\src\Ncqrs.Tests\bin\Debug\Ncqrs.Tests.dll" />
-		</nunit2>
-    </target>
-    
-    <target name="UpdateAllLibFolders" depends="BuildFramework">
-		<call target="UpdateLibForExtensions" />
-		<call target="UpdateLibForMyNotesSample" />
-    </target>
-    
-    <target name="UpdateLibForExtensions" depends="BuildFramework">
-		<echo message="Updating Extensions lib folder" />
-		<copy todir="Extensions\lib\Ncqrs" flatten="false" overwrite="true">
-			<fileset basedir="Framework\src\Ncqrs\bin\${project.config}">
-				<include name="**/*" />
-			</fileset>
-		</copy>
-    </target>
-    
-    <target name="UpdateLibForMyNotesSample" depends="BuildFramework">
-		<echo message="Updating MyNotes lib folder" />
-		<copy file="${project.framework.bin}\Ncqrs.dll" todir="Samples\MyNotes\lib" overwrite="true" />
-		<copy file="${project.framework.bin}\Ncqrs.pdb" todir="Samples\MyNotes\lib" overwrite="true" />
-    </target>
+<?xml version="1.0" ?>
+<project name="NAnt Examples" xmlns="http://nant.sf.net/release/0.91-alpha1/nant.xsd" default="build">
+
+  <property name="nant.settings.currentframework" value="net-4.0" />
+  <property name="root.dir" value="" />
+  <property name="project.config" value="debug" />
+  <property name="project.framework.bin" value="Framework\src\Ncqrs\bin\${project.config}" />
+  <property name="msbuild" value="${framework::get-framework-directory(framework::get-target-framework())}\msbuild.exe" dynamic="true" />
+
+  <target name="build">
+    <call target="BuildFramework" />
+    <call target="RunTestsForFramework" />
+    <call target="UpdateAllLibFolders" />
+  </target>
+
+  <target name="BuildFramework">
+    <echo message="START BUILDING FRAMEWORK" />
+    <!-- TODO: Solution target does not support 4.0 yet -->
+    <!-- <solution solutionfile="Framework\NcqrsFramework.sln" configuration="debug" />-->
+    <exec program="${msbuild}">
+      <arg value="Framework\NcqrsFramework.sln" />
+      <arg value="/p:Configuration=${project.config}" />
+    </exec>
+  </target>
+
+  <target name="BuildExtensions" depends="UpdateLibForExtensions">
+    <exec program="${msbuild}">
+      <arg value="Extensions\NcqrsExtensions.sln" />
+      <arg value="/p:Configuration=${project.config}" />
+      <!--<arg value="/t:rebuild" />-->
+    </exec>
+  </target>
+
+  <target name="RunTestsForFramework" depends="BuildFramework">
+    <echo message="START RUNNING TESTS FOR FRAMEWORK" />
+    <nunit2>
+      <formatter type="Plain" />
+      <test assemblyname="Framework\src\Ncqrs.Tests\bin\Debug\Ncqrs.Tests.dll" />
+    </nunit2>
+  </target>
+
+  <target name="UpdateAllLibFolders" depends="BuildFramework">
+    <echo message="UPDATING LIB FOLDERS WITH NEW BUILD OF FRAMEWORK" />
+    <call target="UpdateLibForExtensions" />
+    <call target="UpdateLibForMyNotesSample" />
+  </target>
+
+  <target name="UpdateLibForExtensions" depends="BuildFramework">
+    <echo message="Updating Extensions lib folder" />
+    <copy todir="Extensions\lib\Ncqrs" flatten="false" overwrite="true">
+      <fileset basedir="Framework\src\Ncqrs\bin\${project.config}">
+        <include name="**/*" />
+      </fileset>
+    </copy>
+  </target>
+
+  <target name="UpdateLibForMyNotesSample" depends="BuildFramework">
+    <echo message="Updating MyNotes lib folder" />
+    <copy file="${project.framework.bin}\Ncqrs.dll" todir="Samples\MyNotes\lib" overwrite="true" />
+    <copy file="${project.framework.bin}\Ncqrs.pdb" todir="Samples\MyNotes\lib" overwrite="true" />
+  </target>
 </project>
