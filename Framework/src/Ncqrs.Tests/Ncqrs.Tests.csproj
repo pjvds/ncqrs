@@ -83,6 +83,7 @@
   <ItemGroup>
     <Compile Include="BasicGuidGeneratorSpecs.cs" />
     <Compile Include="Commanding\CommandBasedTests.cs" />
+    <Compile Include="Commanding\CommandExecution\CommandExecutorWrapperTests.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Attributes\AttributeBasedMappingFactoryTests.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Attributes\AttributeCommandMappingTests.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Fluent\FluentCommandMappingTests.cs" />
