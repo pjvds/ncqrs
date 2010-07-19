@@ -18,7 +18,7 @@ namespace Ncqrs.Commanding.ServiceModel
         /// </summary>
         /// <param name="command">The command to execute.</param>
         /// <exception cref="ArgumentNullException">Occurs when the <i>command</i> was a <c>null</c> dereference.</exception>
-        /// <exception cref="CommandExecutorNotFoundException">Occurs when the <see cref="ICommandExecutor{TCommand}"/> was not found for on the given <see cref="ICommand"/>.</exception>
+        /// <exception cref="ExecutorForCommandNotFoundException">Occurs when the <see cref="ICommandExecutor{TCommand}"/> was not found for on the given <see cref="ICommand"/>.</exception>
         public virtual void Execute(ICommand command)
         {
             Type commandType = command.GetType();
@@ -39,7 +39,7 @@ namespace Ncqrs.Commanding.ServiceModel
                 // When we couldn't find an executore, throw exception.
                 if (executor == null)
                 {
-                    throw new CommandExecutorNotFoundException(commandType);
+                    throw new ExecutorForCommandNotFoundException(commandType);
                 }
 
                 // Set mark that the command executor has been called for this command.

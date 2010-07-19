@@ -124,7 +124,7 @@
     <Compile Include="Commanding\CommandExecution\Mapping\PropertyToParameterMappingInfo.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\MappingNotFoundException.cs" />
     <Compile Include="Commanding\CommandExecution\CommandExecutorBase.cs" />
-    <Compile Include="Commanding\CommandExecution\CommandExecutorNotFoundException.cs" />
+    <Compile Include="Commanding\CommandExecution\ExecutorForCommandNotFoundException.cs" />
     <Compile Include="Commanding\CommandExecution\ICommandExecutor.cs" />
     <Compile Include="Commanding\ServiceModel\CommandService.cs" />
     <Compile Include="Commanding\ServiceModel\CommandContext.cs" />
