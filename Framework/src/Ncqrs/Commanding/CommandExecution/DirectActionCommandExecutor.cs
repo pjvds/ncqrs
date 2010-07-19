@@ -1,5 +1,6 @@
 ﻿using System;
 using Ncqrs.Domain;
+using System.Diagnostics.Contracts;
 
 namespace Ncqrs.Commanding.CommandExecution
 {
@@ -9,17 +10,27 @@ namespace Ncqrs.Commanding.CommandExecution
     {
         private readonly Func<TCommand, Guid> _getId;
         private readonly Action<TAggregateRoot, TCommand> _action;
+        private readonly IUnitOfWorkFactory _uowFactory;
 
-        public DirectActionCommandExecutor(Func<TCommand, Guid> getId, Action<TAggregateRoot, TCommand> action)
+        public DirectActionCommandExecutor(Func<TCommand, Guid> getId, Action<TAggregateRoot, TCommand> action) : this(getId, action, NcqrsEnvironment.Get<IUnitOfWorkFactory>())
         {
+            
+        }
+
+        public DirectActionCommandExecutor(Func<TCommand, Guid> getId, Action<TAggregateRoot, TCommand> action, IUnitOfWorkFactory uowFactory)
+        {
+            Contract.Requires<ArgumentNullException>(getId != null, "The getId parameter cannot be null.");
+            Contract.Requires<ArgumentNullException>(action != null, "The action parameter cannot be null.");
+            Contract.Requires<ArgumentNullException>(uowFactory != null, "The uowFactory parameter cannot be null.");
+
             _getId = getId;
             _action = action;
+            _uowFactory = uowFactory;
         }
 
         public void Execute(TCommand command)
         {
-            var unitOfWorkFactory = NcqrsEnvironment.Get<IUnitOfWorkFactory>();
-            using (var work = unitOfWorkFactory.CreateUnitOfWork())
+            using (var work = _uowFactory.CreateUnitOfWork())
             {
                 var id = _getId(command);
                 var aggRoot = work.GetById<TAggregateRoot>(id);
