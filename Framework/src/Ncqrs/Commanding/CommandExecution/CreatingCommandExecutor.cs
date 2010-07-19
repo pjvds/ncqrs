@@ -15,22 +15,27 @@ namespace Ncqrs.Commanding.CommandExecution
         where TAggregateRoot : AggregateRoot
     {
         private readonly Func<TCommand, TAggregateRoot> _create;
+        private readonly IUnitOfWorkFactory _uowFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CreatingCommandExecutor&lt;TCommand, TAggregateRoot&gt;"/> class.
         /// </summary>
         /// <param name="create">The create func that creates the object based on the command.</param>
-        public CreatingCommandExecutor(Func<TCommand, TAggregateRoot> create)
+        public CreatingCommandExecutor(Func<TCommand, TAggregateRoot> create) : this(create, NcqrsEnvironment.Get<IUnitOfWorkFactory>())
         {
             Contract.Requires<ArgumentNullException>(create != null, "The action cannot be null.");
+        }
 
+        public CreatingCommandExecutor(Func<TCommand, TAggregateRoot> create, IUnitOfWorkFactory uowFactory)
+        {
+            Contract.Requires<ArgumentNullException>(create != null, "The action cannot be null.");
             _create = create;
+            _uowFactory = uowFactory;
         }
 
         public void Execute(TCommand command)
         {
-            var unitOfWorkFactory = NcqrsEnvironment.Get<IUnitOfWorkFactory>();
-            using (var work = unitOfWorkFactory.CreateUnitOfWork())
+            using (var work = _uowFactory.CreateUnitOfWork())
             {
                 _create(command);
                 work.Accept();
