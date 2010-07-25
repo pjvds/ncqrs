@@ -84,6 +84,28 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
             {
                 Assert.Ignore("No connection could be made with SQL server: " + caught.Message);            
             }
+            finally
+            {
+                connection.Dispose();
+            }
+        }
+
+        [TearDown]
+        public void Clean()
+        {
+            using (var connection = new SqlConnection(DEFAULT_CONNECTION))
+            {
+                connection.Open();
+                var cmd = connection.CreateCommand();
+                cmd.CommandText = "TRUNCATE TABLE [Events]";
+                cmd.ExecuteNonQuery();
+
+                cmd.CommandText = "TRUNCATE TABLE [EventSources]";
+                cmd.ExecuteNonQuery();
+
+                cmd.CommandText = "TRUNCATE TABLE [Snapshots]";
+                cmd.ExecuteNonQuery();
+            }
         }
 
         [Test]
