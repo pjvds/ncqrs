@@ -162,10 +162,10 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
                              };
 
             var eventSource = MockRepository.GenerateMock<IEventSource>();
-            eventSource.Stub(e => e.EventSourceId).Return(id).Repeat.Twice();
-            eventSource.Stub(e => e.InitialVersion).Return(0).Repeat.Twice();
-            eventSource.Stub(e => e.Version).Return(events.Length).Repeat.Twice();
-            eventSource.Stub(e => e.GetUncommittedEvents()).Return(events).Repeat.Twice();
+            eventSource.Stub(e => e.EventSourceId).Return(id).Repeat.Any();
+            eventSource.Stub(e => e.InitialVersion).Return(0).Repeat.Any();
+            eventSource.Stub(e => e.Version).Return(events.Length).Repeat.Any();
+            eventSource.Stub(e => e.GetUncommittedEvents()).Return(events).Repeat.Any();
 
             targetStore.Save(eventSource);
 
