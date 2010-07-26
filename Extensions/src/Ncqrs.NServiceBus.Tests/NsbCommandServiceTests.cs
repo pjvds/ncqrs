@@ -17,7 +17,7 @@ namespace Ncqrs.NServiceBus.Tests
         {
             var sut = new NsbCommandService();
             Action act = () => sut.Execute(new NotMappedCommand());
-            act.ShouldThrow<CommandExecutorNotFoundException>();
+            act.ShouldThrow<ExecutorForCommandNotFoundException>();
         }
 
         [Test]

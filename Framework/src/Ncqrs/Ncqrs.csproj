@@ -124,7 +124,7 @@
     <Compile Include="Commanding\CommandExecution\Mapping\PropertyToParameterMappingInfo.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\MappingNotFoundException.cs" />
     <Compile Include="Commanding\CommandExecution\CommandExecutorBase.cs" />
-    <Compile Include="Commanding\CommandExecution\CommandExecutorNotFoundException.cs" />
+    <Compile Include="Commanding\CommandExecution\ExecutorForCommandNotFoundException.cs" />
     <Compile Include="Commanding\CommandExecution\ICommandExecutor.cs" />
     <Compile Include="Commanding\ServiceModel\CommandService.cs" />
     <Compile Include="Commanding\ServiceModel\CommandContext.cs" />
@@ -180,6 +180,7 @@
     <Compile Include="Eventing\Storage\Serialization\IEventTranslator.cs" />
     <Compile Include="Eventing\Storage\Serialization\IEventFormatter.cs" />
     <Compile Include="Eventing\Storage\Serialization\StringEventTranslator.cs" />
+    <Compile Include="Eventing\Storage\SQL\Queries.cs" />
     <Compile Include="Eventing\Storage\StoredEvent.cs" />
     <Compile Include="IClock.cs" />
     <Compile Include="ILog.cs" />

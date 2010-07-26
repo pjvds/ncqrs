@@ -19,26 +19,6 @@ namespace Ncqrs.Eventing.Storage.SQL
     /// </summary>
     public class MsSqlServerEventStore : IEventStore, ISnapshotStore
     {
-        #region Queries
-        private const String DeleteUnusedProviders = "DELETE FROM [EventSources] WHERE (SELECT Count(EventSourceId) FROM [Events] WHERE [EventSourceId]=[EventSources].[Id]) = 0";
-
-        private const String InsertNewEventQuery = "INSERT INTO [Events]([Id], [EventSourceId], [Name], [Version], [Data], [Sequence], [TimeStamp]) VALUES (@EventId, @EventSourceId, @Name, @Version, @Data, @Sequence, @TimeStamp)";
-
-        private const String InsertNewProviderQuery = "INSERT INTO [EventSources](Id, Type, Version) VALUES (@Id, @Type, @Version)";
-
-        private const String SelectAllEventsQuery = "SELECT [Id], [EventSourceId], [Name], [Version], [TimeStamp], [Data], [Sequence] FROM [Events] WHERE [EventSourceId] = @EventSourceId AND [Sequence] > @EventSourceVersion ORDER BY [Sequence]";
-
-        private const String SelectAllIdsForTypeQuery = "SELECT [Id] FROM [EventSources] WHERE [Type] = @Type";
-
-        private const String SelectVersionQuery = "SELECT [Version] FROM [EventSources] WHERE [Id] = @id";
-
-        private const String UpdateEventSourceVersionQuery = "UPDATE [EventSources] SET [Version] = @NewVersion WHERE [Id] = @id";
-
-        private const String InsertSnapshot = "DELETE FROM [Snapshots] WHERE [EventSourceId]=@EventSourceId; INSERT INTO [Snapshots]([EventSourceId], [Timestamp], [Version], [Type], [Data]) VALUES (@EventSourceId, GETDATE(), @Version, @Type, @Data)";
-
-        private const String SelectLatestSnapshot = "SELECT TOP 1 * FROM [Snapshots] WHERE [EventSourceId]=@EventSourceId ORDER BY Version DESC";
-        #endregion
-
         private static int FirstVersion = 0;
         private readonly String _connectionString;
 
@@ -80,7 +60,7 @@ namespace Ncqrs.Eventing.Storage.SQL
 
             // Create connection and command.
             using (var connection = new SqlConnection(_connectionString))
-            using (var command = new SqlCommand(SelectAllEventsQuery, connection))
+            using (var command = new SqlCommand(Queries.SelectAllEventsQuery, connection))
             {
                 // Add EventSourceId parameter and open connection.
                 command.Parameters.AddWithValue("EventSourceId", id);
@@ -182,7 +162,7 @@ namespace Ncqrs.Eventing.Storage.SQL
                             formatter.Serialize(dataStream, snapshot);
                             byte[] data = dataStream.ToArray();
 
-                            using (var command = new SqlCommand(InsertSnapshot, transaction.Connection))
+                            using (var command = new SqlCommand(Queries.InsertSnapshot, transaction.Connection))
                             {
                                 command.Transaction = transaction;
                                 command.Parameters.AddWithValue("EventSourceId", snapshot.EventSourceId);
@@ -219,7 +199,7 @@ namespace Ncqrs.Eventing.Storage.SQL
                 // commit or rollback all the changes that has been made.
                 connection.Open();
 
-                using (var command = new SqlCommand(SelectLatestSnapshot, connection))
+                using (var command = new SqlCommand(Queries.SelectLatestSnapshot, connection))
                 {
                     command.Parameters.AddWithValue("@EventSourceId", eventSourceId);
 
@@ -246,7 +226,7 @@ namespace Ncqrs.Eventing.Storage.SQL
             var ids = new List<Guid>();
 
             using (var connection = new SqlConnection(_connectionString))
-            using (var command = new SqlCommand(SelectAllIdsForTypeQuery, connection))
+            using (var command = new SqlCommand(Queries.SelectAllIdsForTypeQuery, connection))
             {
                 command.Parameters.AddWithValue("Type", eventProviderType.FullName);
                 connection.Open();
@@ -266,7 +246,7 @@ namespace Ncqrs.Eventing.Storage.SQL
         public void RemoveUnusedProviders()
         {
             using (var connection = new SqlConnection(_connectionString))
-            using (var command = new SqlCommand(DeleteUnusedProviders, connection))
+            using (var command = new SqlCommand(Queries.DeleteUnusedProviders, connection))
             {
                 connection.Open();
 
@@ -283,7 +263,7 @@ namespace Ncqrs.Eventing.Storage.SQL
 
         private void UpdateEventSourceVersion(IEventSource eventSource, SqlTransaction transaction)
         {
-            using (var command = new SqlCommand(UpdateEventSourceVersionQuery, transaction.Connection))
+            using (var command = new SqlCommand(Queries.UpdateEventSourceVersionQuery, transaction.Connection))
             {
                 command.Transaction = transaction;
                 command.Parameters.AddWithValue("Id", eventSource.EventSourceId);
@@ -344,7 +324,7 @@ namespace Ncqrs.Eventing.Storage.SQL
             var raw = _translator.TranslateToRaw(document);
             var data = Encoding.UTF8.GetBytes(raw.Data);
 
-            using (var command = new SqlCommand(InsertNewEventQuery, transaction.Connection))
+            using (var command = new SqlCommand(Queries.InsertNewEventQuery, transaction.Connection))
             {
                 command.Transaction = transaction;
                 command.Parameters.AddWithValue("EventId", raw.EventIdentifier);
@@ -365,7 +345,7 @@ namespace Ncqrs.Eventing.Storage.SQL
         /// <param name="transaction">The transaction.</param>
         private static void AddEventSource(IEventSource eventSource, SqlTransaction transaction)
         {
-            using (var command = new SqlCommand(InsertNewProviderQuery, transaction.Connection))
+            using (var command = new SqlCommand(Queries.InsertNewProviderQuery, transaction.Connection))
             {
                 command.Transaction = transaction;
                 command.Parameters.AddWithValue("Id", eventSource.EventSourceId);
@@ -384,7 +364,7 @@ namespace Ncqrs.Eventing.Storage.SQL
         /// it contains the version number.</returns>
         private static int? GetVersion(Guid providerId, SqlTransaction transaction)
         {
-            using (var command = new SqlCommand(SelectVersionQuery, transaction.Connection))
+            using (var command = new SqlCommand(Queries.SelectVersionQuery, transaction.Connection))
             {
                 command.Transaction = transaction;
                 command.Parameters.AddWithValue("id", providerId);

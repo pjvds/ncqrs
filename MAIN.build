@@ -35,7 +35,7 @@
   <target name="RunTestsForFramework" depends="BuildFramework">
     <echo message="START RUNNING TESTS FOR FRAMEWORK" />
     <nunit2>
-      <formatter type="Plain" />
+      <formatter type="Xml" />
       <test assemblyname="Framework\src\Ncqrs.Tests\bin\Debug\Ncqrs.Tests.dll" />
     </nunit2>
   </target>

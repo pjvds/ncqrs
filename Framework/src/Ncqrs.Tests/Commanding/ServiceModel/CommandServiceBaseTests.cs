@@ -87,7 +87,7 @@ namespace Ncqrs.Tests.Commanding.ServiceModel
         public void Executing_command_with_no_handler_should_cause_exception()
         {
             Action act = () => TheService.Execute(new CommandWithoutExecutor());
-            act.ShouldThrow<CommandExecutorNotFoundException>();
+            act.ShouldThrow<ExecutorForCommandNotFoundException>();
         }
 
         [Test]

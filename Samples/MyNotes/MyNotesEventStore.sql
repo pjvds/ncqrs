@@ -19,12 +19,15 @@ CREATE TABLE [dbo].[EventSources](
 	[Version] [int] NOT NULL
 ) ON [PRIMARY]
 
-CREATE TABLE [dbo].[Events](
+
+CREATE TABLE [dbo].[Events]
+(
 	[Id] [uniqueidentifier] PRIMARY KEY,
-	[EventSourceId] [uniqueidentifier] NOT NULL,
-	[Sequence] [bigint] NOT NULL,
 	[TimeStamp] [datetime] NOT NULL,
-	[Data] [varbinary](max) NOT NULL,
-	[Name] [varchar](max) NOT NULL
+	[Name] [varchar](max) NOT NULL,
+	[Version] [varchar](max) NOT NULL,
+	[EventSourceId] [uniqueidentifier] NOT NULL,
+	[Sequence] [bigint], 
+	[Data] [varbinary](max) NOT NULL
 ) ON [PRIMARY]
 GO

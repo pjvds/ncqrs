@@ -126,7 +126,7 @@ namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Fluent
             var command = new AggregateRootTargetNotAMappedCommand { Title = "AggregateRootTargetNotAMappedCommand" };
 
             Action act = () => TheService.Execute(command);
-            act.ShouldThrow<CommandExecutorNotFoundException>();
+            act.ShouldThrow<ExecutorForCommandNotFoundException>();
         }
 
         [Test]

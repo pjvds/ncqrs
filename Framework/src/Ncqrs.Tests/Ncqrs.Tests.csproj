@@ -83,10 +83,14 @@
   <ItemGroup>
     <Compile Include="BasicGuidGeneratorSpecs.cs" />
     <Compile Include="Commanding\CommandBasedTests.cs" />
+    <Compile Include="Commanding\CommandExecution\CommandExecutorWrapperTests.cs" />
+    <Compile Include="Commanding\CommandExecution\CreatingCommandExecutorTests.cs" />
+    <Compile Include="Commanding\CommandExecution\DirectActionCommandExecutorTests.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Attributes\AttributeBasedMappingFactoryTests.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Attributes\AttributeCommandMappingTests.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Fluent\FluentCommandMappingTests.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\MappingForCommandNotFoundExceptionTests.cs" />
+    <Compile Include="Commanding\ExecutorForCommandNotFoundExceptionTests.cs" />
     <Compile Include="Commanding\ServiceModel\CommandServiceBaseTests.cs" />
     <Compile Include="Commanding\TransactionalCommandExecutorWrapperTests.cs" />
     <Compile Include="Config\InstanceNotFoundInEnvironmentConfigurationExceptionTests.cs" />
