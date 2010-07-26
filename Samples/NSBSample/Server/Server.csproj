@@ -34,7 +34,8 @@
     <Reference Include="log4net">
       <HintPath>..\..\..\Extensions\lib\NServiceBus\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="Ncqrs">
+    <Reference Include="Ncqrs, Version=0.8.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Extensions\lib\Ncqrs\Ncqrs.dll</HintPath>
     </Reference>
     <Reference Include="Ncqrs.NServiceBus, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">

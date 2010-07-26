@@ -18,14 +18,10 @@ namespace Domain
 
       public SomeDomainObject()
       {
+          Console.WriteLine("SomeDomainObject with ID={0} created!", EventSourceId);
+          ApplyEvent(new SomeDomainObjectCreatedEvent() { ObjectId = EventSourceId });
       }
-
-      public SomeDomainObject(Guid objectId)
-      {
-         Console.WriteLine("SomeDomainObject with ID={0} created!", objectId);
-         ApplyEvent(new SomeDomainObjectCreatedEvent() { ObjectId = objectId });
-      }
-
+      
       public void DoSomething(string value)
       {
           Console.WriteLine("Calling DoSomething on SomeDomainObject with ID={0}", EventSourceId);

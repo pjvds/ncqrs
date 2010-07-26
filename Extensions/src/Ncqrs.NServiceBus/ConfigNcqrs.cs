@@ -24,7 +24,7 @@ namespace Ncqrs.NServiceBus
             _inProcessEventBus = new InProcessEventBus(false);
             compositeBus.AddBus(new NsbEventBus());
             compositeBus.AddBus(_inProcessEventBus);
-            NcqrsEnvironment.SetDefault(compositeBus);
+            NcqrsEnvironment.SetDefault<IEventBus>(compositeBus);
             _commandService = new NsbCommandService();
             config.Configurer.RegisterSingleton(typeof(ICommandService),
                                                 _commandService);

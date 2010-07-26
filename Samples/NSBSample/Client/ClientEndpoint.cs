@@ -7,34 +7,34 @@ using NServiceBus;
 
 namespace Client
 {
-   public class ClientEndpoint : IWantToRunAtStartup
-   {
-      public static Guid AggregateId = Guid.NewGuid();
+    public class ClientEndpoint : IWantToRunAtStartup
+    {
+        public static Guid AggregateId;
 
-      public IBus Bus { get; set; }
+        public IBus Bus { get; set; }
 
-      public void Run()
-      {         
-         Console.WriteLine("Press 'Enter' to send a message to create a new Aggregate.To exit, Ctrl + C");
-         Console.ReadLine();
+        public void Run()
+        {
+            Console.WriteLine("Press 'Enter' to send a message to create a new Aggregate.To exit, Ctrl + C");
+            Console.ReadLine();
 
-         Bus.Send("ServerQueue", new CommandMessage{Payload = new CreateSomeObjectCommand {ObjectId = AggregateId}});            
+            Bus.Send("ServerQueue", new CommandMessage { Payload = new CreateSomeObjectCommand () });
 
-         string line;
-         while ((line = Console.ReadLine()) != null)
-         {
-            ICommand payload = new DoSomethingCommand {Value = line, ObjectId = AggregateId};
-            var command = new CommandMessage
-                             {
-                                Payload = payload
-                             };
-            Bus.Send("ServerQueue",command);            
-         }
-      }
+            string line;
+            while ((line = Console.ReadLine()) != null)
+            {
+                ICommand payload = new DoSomethingCommand { Value = line, ObjectId = AggregateId };
+                var command = new CommandMessage
+                                 {
+                                     Payload = payload
+                                 };
+                Bus.Send("ServerQueue", command);
+            }
+        }
 
-      public void Stop()
-      {
+        public void Stop()
+        {
 
-      }      
-   }
+        }
+    }
 }

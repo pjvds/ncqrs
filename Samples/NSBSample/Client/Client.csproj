@@ -37,8 +37,7 @@
     <Reference Include="Ncqrs">
       <HintPath>..\..\..\Extensions\lib\Ncqrs\Ncqrs.dll</HintPath>
     </Reference>
-    <Reference Include="Ncqrs.NServiceBus, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Ncqrs.NServiceBus">
       <HintPath>..\..\..\Extensions\src\Ncqrs.NServiceBus\bin\Debug\Ncqrs.NServiceBus.dll</HintPath>
     </Reference>
     <Reference Include="NServiceBus">
@@ -62,6 +61,7 @@
     <Compile Include="ClientEndpoint.cs" />
     <Compile Include="EndpointConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SomeDomainObjectCreatedEventHandler.cs" />
     <Compile Include="SomePropertyChangedEventHandler.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -8,6 +8,5 @@ namespace Commands
    [MapsToAggregateRootConstructor("Domain.SomeDomainObject, Domain")]
    public class CreateSomeObjectCommand : CommandBase
    {
-      public Guid ObjectId { get; set; }
    }
 }
