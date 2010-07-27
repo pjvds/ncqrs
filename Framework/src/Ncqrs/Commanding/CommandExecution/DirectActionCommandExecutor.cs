@@ -14,7 +14,8 @@ namespace Ncqrs.Commanding.CommandExecution
 
         public DirectActionCommandExecutor(Func<TCommand, Guid> getId, Action<TAggregateRoot, TCommand> action) : this(getId, action, NcqrsEnvironment.Get<IUnitOfWorkFactory>())
         {
-            
+            Contract.Requires<ArgumentNullException>(getId != null, "The getId parameter cannot be null.");
+            Contract.Requires<ArgumentNullException>(action != null, "The action parameter cannot be null.");
         }
 
         public DirectActionCommandExecutor(Func<TCommand, Guid> getId, Action<TAggregateRoot, TCommand> action, IUnitOfWorkFactory uowFactory)

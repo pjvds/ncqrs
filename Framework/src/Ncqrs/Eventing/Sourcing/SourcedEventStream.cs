@@ -58,6 +58,8 @@ namespace Ncqrs.Eventing.Sourcing
             set
             {
                 Contract.Requires<InvalidOperationException>(IsEmpty);
+                Contract.Requires<ArgumentOutOfRangeException>(value >= 0);
+
                 _sequenceOffset = value;
             }
         }

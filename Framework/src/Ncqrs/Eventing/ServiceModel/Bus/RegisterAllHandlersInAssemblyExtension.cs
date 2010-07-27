@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
 
@@ -29,6 +30,7 @@ namespace Ncqrs.Eventing.ServiceModel.Bus
 
         private static object CreateInstance(Type type)
         {
+            Contract.Requires<ArgumentNullException>(type != null);
             return Activator.CreateInstance(type);
         }
 

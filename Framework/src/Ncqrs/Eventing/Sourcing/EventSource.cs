@@ -67,6 +67,7 @@ namespace Ncqrs.Eventing.Sourcing
             protected set
             {
                 Contract.Requires<InvalidOperationException>(Version == InitialVersion);
+                Contract.Requires<ArgumentOutOfRangeException>(value >= 0);
 
                 _initialVersion = value;
                 _uncommittedEvents.SequenceOffset = value;

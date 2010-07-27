@@ -39,7 +39,7 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Fluent
         /// <param name="command">The <see cref="TCommand"/> to execute.</param>
         internal override void Execute(TCommand command)
         {
-            Contract.Requires(command != null, "command can not be null.");
+            Contract.Requires<ArgumentNullException>(command != null, "command can not be null.");
             
             _mappedaggregaterootmethod.Execute(command);
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
 using System.Transactions;
@@ -57,6 +58,8 @@ namespace Ncqrs.Eventing.ServiceModel.Bus
 
         private static void TransactionallyPublishToHandlers(IEvent eventMessage, Type eventMessageType, IEnumerable<Action<IEvent>> handlers)
         {
+            Contract.Requires<ArgumentNullException>(handlers != null);
+
             using (var transaction = new TransactionScope())
             {
                 PublishToHandlers(eventMessage, eventMessageType, handlers);
@@ -66,6 +69,8 @@ namespace Ncqrs.Eventing.ServiceModel.Bus
 
         private static void PublishToHandlers(IEvent eventMessage, Type eventMessageType, IEnumerable<Action<IEvent>> handlers)
         {
+            Contract.Requires<ArgumentNullException>(handlers != null);
+
             Log.DebugFormat("Found {0} handlers for event {1}.", handlers.Count(), eventMessageType.FullName);
 
             foreach (var handler in handlers)
