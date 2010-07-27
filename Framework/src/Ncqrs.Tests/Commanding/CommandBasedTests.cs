@@ -9,29 +9,58 @@ namespace Ncqrs.Tests.Commanding
     [TestFixture]
     public class CommandBasedTests
     {
-        [Test]
-        public void Constructing_a_new_event_base_it_should_call_the_GenerateNewId_method_from_the_generator_that_has_been_set_in_the_environment()
+        public class FooCommand : CommandBase
         {
-            var generator = MockRepository.GenerateMock<IUniqueIdentifierGenerator>();
-            NcqrsEnvironment.SetDefault<IUniqueIdentifierGenerator>(generator);
+            public FooCommand(Guid commandIdentifier) : base(commandIdentifier)
+            {
+            }
 
-            var mock = MockRepository.GenerateStub<CommandBase>();
+            public FooCommand()
+            {
+            }
 
-            generator.AssertWasCalled(g => g.GenerateNewId());
+            public FooCommand(IUniqueIdentifierGenerator idGenerator)
+                : base(idGenerator)
+            {
+            }
         }
 
         [Test]
-        public void Constructing_a_new_event_base_it_should_set_the_event_identifier_to_identifier_that_has_been_given_from_the_IUniqueIdentifierGenerator_from_the_NcqrsEnvironment()
+        public void Constructing_without_any_parameters_should_use_IUniqueIdentifierGenerator_to_generate_id()
         {
-            var identiefier = Guid.NewGuid();
-
-            var generator = MockRepository.GenerateStrictMock<IUniqueIdentifierGenerator>();
-            generator.Stub(g => g.GenerateNewId()).Return(identiefier);
+            var generatedId = Guid.NewGuid();
+            var generator = MockRepository.GenerateMock<IUniqueIdentifierGenerator>();
+            generator.Stub(t => t.GenerateNewId()).Return(generatedId);
 
             NcqrsEnvironment.SetDefault<IUniqueIdentifierGenerator>(generator);
 
-            var mock = MockRepository.GenerateStub<CommandBase>();
-            mock.CommandIdentifier.Should().Be(identiefier);
+            var command = new FooCommand();
+
+            generator.VerifyAllExpectations();
+            command.CommandIdentifier.Should().Be(generatedId);
+
+            NcqrsEnvironment.Deconfigure();
+        }
+
+        [Test]
+        public void Constructing_with_custom_generator_should_it_to_generate_id()
+        {
+            var identifier = Guid.NewGuid();
+            var generator = MockRepository.GenerateMock<IUniqueIdentifierGenerator>();
+            generator.Expect(t => t.GenerateNewId()).Return(identifier);
+
+            var command = new FooCommand(generator);
+
+            generator.VerifyAllExpectations();
+            command.CommandIdentifier.Should().Be(identifier);
+        }
+
+        [Test]
+        public void Constructing_with_a_direct_id_should_set_the_given_value()
+        {
+            var identifier = Guid.NewGuid();
+            var command = new FooCommand(identifier);
+            command.CommandIdentifier.Should().Be(identifier);
         }
     }
 }
