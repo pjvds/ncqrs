@@ -19,7 +19,7 @@ namespace Ncqrs.Eventing.Storage
     }
 
     [ContractClassFor(typeof(ISnapshotStore))]
-    internal class ISnapshotStoreContracts : ISnapshotStore
+    internal abstract class ISnapshotStoreContracts : ISnapshotStore
     {
         public void SaveShapshot(ISnapshot source)
         {

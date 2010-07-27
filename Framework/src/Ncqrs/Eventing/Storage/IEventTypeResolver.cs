@@ -48,7 +48,7 @@ namespace Ncqrs.Eventing.Storage
     }
 
     [ContractClassFor(typeof(IEventTypeResolver))]
-    internal sealed class IEventTypeResolverContracts : IEventTypeResolver
+    internal abstract class IEventTypeResolverContracts : IEventTypeResolver
     {
         public Type ResolveType(string eventName)
         {

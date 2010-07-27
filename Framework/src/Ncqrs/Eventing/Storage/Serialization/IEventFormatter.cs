@@ -39,7 +39,7 @@ namespace Ncqrs.Eventing.Storage.Serialization
     }
 
     [ContractClassFor(typeof(IEventFormatter<>))]
-    internal class IEventFormatterContracts<T> : IEventFormatter<T>
+    internal abstract class IEventFormatterContracts<T> : IEventFormatter<T>
     {
         public StoredEvent<T> Serialize(ISourcedEvent theEvent)
         {

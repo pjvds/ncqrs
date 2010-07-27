@@ -30,7 +30,7 @@ namespace Ncqrs.Eventing.Storage.Serialization
     }
 
     [ContractClassFor(typeof(IEventTranslator<>))]
-    internal class IEventTranslatorContracts<T> : IEventTranslator<T>
+    internal abstract class IEventTranslatorContracts<T> : IEventTranslator<T>
     {
         public StoredEvent<JObject> TranslateToCommon(StoredEvent<T> obj)
         {

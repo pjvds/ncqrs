@@ -19,7 +19,7 @@ namespace Ncqrs.Commanding.CommandExecution
     }
 
     [ContractClassFor(typeof(ICommandExecutor<>))]
-    internal class ICommandExecutorContracts<TCommand> : ICommandExecutor<TCommand> where TCommand : ICommand
+    internal abstract class ICommandExecutorContracts<TCommand> : ICommandExecutor<TCommand> where TCommand : ICommand
     {
         public void Execute(TCommand command)
         {

@@ -19,7 +19,7 @@ namespace Ncqrs.Config
     }
 
     [ContractClassFor(typeof(IEnvironmentConfiguration))]
-    internal sealed class IEnvironmentConfigurationContracts : IEnvironmentConfiguration
+    internal abstract class IEnvironmentConfigurationContracts : IEnvironmentConfiguration
     {
         public T Get<T>() where T : class
         {

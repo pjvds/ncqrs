@@ -25,7 +25,7 @@ namespace Ncqrs.Eventing.Sourcing.Snapshotting
     }
 
     [ContractClassFor(typeof(ISnapshotable<>))]
-    public class SnapshotableContracts<TSnapshot> : ISnapshotable<TSnapshot> where TSnapshot : ISnapshot
+    internal abstract class SnapshotableContracts<TSnapshot> : ISnapshotable<TSnapshot> where TSnapshot : ISnapshot
     {
         public void RestoreFromSnapshot(TSnapshot snapshot)
         {

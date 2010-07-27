@@ -35,7 +35,7 @@ namespace Ncqrs.Eventing.Storage
     }
 
     [ContractClassFor(typeof(IEventStore))]
-    internal class IEventStoreContracts : IEventStore
+    internal abstract class IEventStoreContracts : IEventStore
     {
         public IEnumerable<SourcedEvent> GetAllEvents(Guid id)
         {

@@ -39,7 +39,7 @@ namespace Ncqrs.Eventing
     }
 
     [ContractClassFor(typeof(IEvent))]
-    internal sealed class IEventContracts : IEvent
+    internal abstract class IEventContracts : IEvent
     {
         public Guid EventIdentifier
         {

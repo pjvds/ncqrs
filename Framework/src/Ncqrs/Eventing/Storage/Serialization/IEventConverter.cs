@@ -37,7 +37,7 @@ namespace Ncqrs.Eventing.Storage.Serialization
     }
 
     [ContractClassFor(typeof(IEventConverter))]
-    internal class IEventConverterContracts : IEventConverter
+    internal abstract class IEventConverterContracts : IEventConverter
     {
         public void Upgrade(StoredEvent<JObject> theEvent)
         {

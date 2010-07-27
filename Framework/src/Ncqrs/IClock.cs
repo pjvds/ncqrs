@@ -17,7 +17,7 @@ namespace Ncqrs
     }
 
     [ContractClassFor(typeof(IClock))]
-    internal sealed class IClockContracts : IClock
+    internal abstract class IClockContracts : IClock
     {
         public DateTime UtcNow()
         {

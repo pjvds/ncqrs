@@ -20,7 +20,7 @@ namespace Ncqrs.Eventing.Sourcing
     }
 
     [ContractClassFor(typeof(ISourcedEventHandler))]
-    public class IEventSourcedHandlerContracts : ISourcedEventHandler
+    internal abstract class IEventSourcedHandlerContracts : ISourcedEventHandler
     {
         public bool HandleEvent(SourcedEvent sourcedEvent)
         {
