@@ -6,6 +6,8 @@
   <property name="project.config" value="debug" />
   <property name="project.framework.bin" value="Framework\src\Ncqrs\bin\${project.config}" />
   <property name="msbuild" value="${framework::get-framework-directory(framework::get-target-framework())}\msbuild.exe" dynamic="true" />
+  <property name="project.platform" value="x86" />
+  <property name="project.platformtarget" value="x86" />
 
   <target name="build">
     <call target="BuildFramework" />
@@ -20,14 +22,14 @@
     <!-- <solution solutionfile="Framework\NcqrsFramework.sln" configuration="debug" />-->
     <exec program="${msbuild}">
       <arg value="Framework\NcqrsFramework.sln" />
-      <arg value="/p:Configuration=${project.config}" />
+      <arg value="/p:Configuration=${project.config};Platform=${project.platform};PlatFormTarget=${project.platformtarget}" />
     </exec>
   </target>
 
   <target name="BuildExtensions" depends="UpdateLibForExtensions">
     <exec program="${msbuild}">
       <arg value="Extensions\NcqrsExtensions.sln" />
-      <arg value="/p:Configuration=${project.config}" />
+      <arg value="/p:Configuration=${project.config};Platform=${project.platform};PlatFormTarget=${project.platformtarget}" />
       <!--<arg value="/t:rebuild" />-->
     </exec>
   </target>
