@@ -40,7 +40,8 @@ namespace Ncqrs
         public void InfoFormat(string format, params object[] args)
         {
             if(_switch.TraceInfo)
-                Trace.TraceInformation(format, args);        }
+                Trace.TraceInformation(format, args);
+        }
 
         public void Warn(object message)
         {

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Runtime.CompilerServices;
-using Ncqrs.Domain;
-using Ncqrs.Domain.Storage;
+﻿using System.Runtime.CompilerServices;
 
 namespace Ncqrs
 {
