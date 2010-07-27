@@ -1,6 +1,4 @@
 ﻿using System;
-using Ncqrs.Domain.Storage;
-using Ncqrs.Eventing;
 
 namespace Ncqrs.Domain
 {

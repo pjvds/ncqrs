@@ -1,5 +1,4 @@
 ﻿using System;
-using Ncqrs.Eventing;
 using System.Collections.Generic;
 using Ncqrs.Eventing.Sourcing;
 using Ncqrs.Eventing.Sourcing.Mapping;

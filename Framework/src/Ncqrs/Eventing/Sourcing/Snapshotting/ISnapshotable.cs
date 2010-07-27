@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Ncqrs.Domain;
 using System.Diagnostics.Contracts;
 
 namespace Ncqrs.Eventing.Sourcing.Snapshotting

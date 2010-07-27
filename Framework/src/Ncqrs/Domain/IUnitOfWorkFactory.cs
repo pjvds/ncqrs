@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Ncqrs.Domain
+﻿namespace Ncqrs.Domain
 {
     public interface IUnitOfWorkFactory
     {

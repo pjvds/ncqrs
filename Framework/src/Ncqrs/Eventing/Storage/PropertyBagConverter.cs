@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.Serialization;
-using Ncqrs;
 
 namespace Ncqrs.Eventing.Storage
 {

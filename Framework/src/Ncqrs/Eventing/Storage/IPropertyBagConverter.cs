@@ -1,5 +1,4 @@
 ﻿using System;
-using Ncqrs.Commanding;
 
 namespace Ncqrs.Eventing.Storage
 {

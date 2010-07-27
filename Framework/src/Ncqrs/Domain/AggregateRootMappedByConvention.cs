@@ -1,5 +1,4 @@
-﻿using System;
-using Ncqrs.Eventing.Sourcing.Mapping;
+﻿using Ncqrs.Eventing.Sourcing.Mapping;
 
 namespace Ncqrs.Domain
 {

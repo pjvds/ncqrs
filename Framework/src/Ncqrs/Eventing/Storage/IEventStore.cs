@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using Ncqrs.Domain;
 using Ncqrs.Eventing.Sourcing;
 
 namespace Ncqrs.Eventing.Storage

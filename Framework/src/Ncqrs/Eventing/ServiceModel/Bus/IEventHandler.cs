@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Ncqrs.Eventing.ServiceModel.Bus
+﻿namespace Ncqrs.Eventing.ServiceModel.Bus
 {
     public interface IEventHandler<TEvent> where TEvent : IEvent
     {
