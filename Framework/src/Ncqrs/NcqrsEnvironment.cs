@@ -19,6 +19,14 @@ namespace Ncqrs
 
         static NcqrsEnvironment()
         {
+            InitDefaults();
+        }
+
+        /// <summary>
+        /// Initialize defaults with default components.
+        /// </summary>
+        private static void InitDefaults()
+        {
             // Initialize defaults.
             SetDefault<IClock>(new DateTimeBasedClock());
             SetDefault<IUniqueIdentifierGenerator>(new BasicGuidGenerator());
@@ -126,6 +134,9 @@ namespace Ncqrs
         public static void Deconfigure()
         {
             _instance = null;
+            _defaults.Clear();
+
+            InitDefaults();
         }
 
         /// <summary>
