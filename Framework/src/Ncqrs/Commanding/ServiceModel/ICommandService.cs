@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Ncqrs.Commanding.ServiceModel
+﻿namespace Ncqrs.Commanding.ServiceModel
 {
     public interface ICommandService
     {

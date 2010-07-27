@@ -1,5 +1,4 @@
-﻿using System;
-using Ncqrs.Domain;
+﻿using Ncqrs.Domain;
 
 namespace Ncqrs.Commanding.CommandExecution.Mapping.Fluent
 {

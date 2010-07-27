@@ -1,6 +1,6 @@
 ﻿using System;
-using Ncqrs.Domain;
 using System.Diagnostics.Contracts;
+using Ncqrs.Domain;
 
 namespace Ncqrs.Commanding.CommandExecution
 {

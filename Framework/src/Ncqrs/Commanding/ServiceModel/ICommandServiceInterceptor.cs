@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Ncqrs.Commanding.ServiceModel
+﻿namespace Ncqrs.Commanding.ServiceModel
 {
     /// <summary>
     /// Allows users to intercept commands before or after they has been

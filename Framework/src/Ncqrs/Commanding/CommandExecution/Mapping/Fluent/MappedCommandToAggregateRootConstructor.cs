@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
-using System.Linq.Expressions;
 using Ncqrs.Domain;
 
 namespace Ncqrs.Commanding.CommandExecution.Mapping.Fluent

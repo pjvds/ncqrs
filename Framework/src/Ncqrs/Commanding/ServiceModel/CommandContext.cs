@@ -1,5 +1,4 @@
 ﻿using System;
-using Ncqrs.Commanding.CommandExecution;
 using System.Diagnostics.Contracts;
 
 namespace Ncqrs.Commanding.ServiceModel

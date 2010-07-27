@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Reflection;
 using Ncqrs.Commanding.CommandExecution;
-using System.Diagnostics.Contracts;
 
 namespace Ncqrs.Commanding.ServiceModel
 {
