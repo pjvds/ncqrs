@@ -103,6 +103,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CombGuidGenerator.cs" />
     <Compile Include="Commanding\CommandBase.cs" />
     <Compile Include="Commanding\CommandExecution\CommandExecutorWrapper.cs" />
     <Compile Include="Commanding\CommandExecution\CreatingCommandExecutor.cs" />
