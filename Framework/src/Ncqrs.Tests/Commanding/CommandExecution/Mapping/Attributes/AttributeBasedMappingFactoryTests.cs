@@ -10,6 +10,28 @@ namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Attributes
     [TestFixture]
     public class AttributeBasedMappingFactoryTests
     {
+        [MapsToAggregateRootConstructor("foo")]
+        public class NonCommandTypeButWithCorrectAttribute
+        {
+        }
+
+        public class CommandTypeButWithoutAttribute : ICommand
+        {
+            public Guid CommandIdentifier
+            {
+                get { throw new NotImplementedException(); }
+            }
+        }
+
+        [MapsToAggregateRootConstructor("foo")]
+        public class CommandTypeAndWithAttribute : ICommand
+        {
+            public Guid CommandIdentifier
+            {
+                get { throw new NotImplementedException(); }
+            }
+        }
+
         public class TargetAggRoot : AggregateRootMappedByConvention
         {
             public static string FooValue;
@@ -61,6 +83,34 @@ namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Attributes
 
             TargetAggRoot.FooValue.Should().Be(command.Foo);
             TargetAggRoot.BarValue.Should().Be(command.Bar);
+        }
+
+        [Test]
+        public void IsCommandMapped_should_return_false_for_non_command_types()
+        {
+            var factory = new AttributeBasedMappingFactory();
+            factory.IsCommandMapped(typeof(string)).Should().BeFalse();
+        }
+
+        [Test]
+        public void IsCommandMapped_should_return_false_for_non_command_types_that_do_have_the_required_attribute()
+        {
+            var factory = new AttributeBasedMappingFactory();
+            factory.IsCommandMapped(typeof(NonCommandTypeButWithCorrectAttribute)).Should().BeFalse();
+        }
+
+        [Test]
+        public void IsCommandMapped_should_return_false_for_correct_command_types_but_that_does__not_have_the_required_attribute()
+        {
+            var factory = new AttributeBasedMappingFactory();
+            factory.IsCommandMapped(typeof(CommandTypeButWithoutAttribute)).Should().BeFalse();
+        }
+
+        [Test]
+        public void IsCommandMapped_should_return_true_for_correct_command_types_with_correct_attribute()
+        {
+            var factory = new AttributeBasedMappingFactory();
+            factory.IsCommandMapped(typeof(CommandTypeAndWithAttribute)).Should().BeTrue();
         }
     }
 }
