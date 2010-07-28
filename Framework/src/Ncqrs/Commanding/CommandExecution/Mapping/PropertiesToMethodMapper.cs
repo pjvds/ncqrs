@@ -17,13 +17,22 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping
             return GetMethodBase(sources, potentialTargets);
         }
 
-        public static Tuple<MethodInfo, PropertyInfo[]> GetMethod(PropertyToParameterMappingInfo[] sources, Type targetType)
+        public static Tuple<MethodInfo, PropertyInfo[]> GetMethod(PropertyToParameterMappingInfo[] sources, Type targetType, string methodName = null)
         {
-            var potentialTargets = targetType.GetMethods(All);
+            IEnumerable<MethodInfo> potentialTargets = targetType.GetMethods(All);
+
+            if(methodName != null)
+            {
+                potentialTargets = potentialTargets.Where
+                (
+                    method => method.Name.Equals(methodName, StringComparison.InvariantCultureIgnoreCase)
+                );
+            }
+
             return GetMethodBase(sources, potentialTargets);
         }
 
-        private static Tuple<TMethodBase, PropertyInfo[]> GetMethodBase<TMethodBase>(PropertyToParameterMappingInfo[] sources, TMethodBase[] potentialTargets)
+        private static Tuple<TMethodBase, PropertyInfo[]> GetMethodBase<TMethodBase>(PropertyToParameterMappingInfo[] sources, IEnumerable<TMethodBase> potentialTargets)
             where TMethodBase : MethodBase
         {
             var propertiesToMap = new List<PropertyToParameterMappingInfo>(sources);
@@ -58,12 +67,12 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping
             if (matches.Count() == 0)
             {
                 // TODO: Throw proper ex.
-                throw new CommandMappingException("No ctor on found that matches the mapping.");
+                throw new CommandMappingException("No target on found that matches the mapping.");
             }
             else if (matches.Count() > 1)
             {
                 // TODO: Throw proper ex.
-                throw new CommandMappingException("Multi ctor on found that matches the mapping.");
+                throw new CommandMappingException("Multi targets on found that matches the mapping.");
             }
 
             var match = matches.Single();

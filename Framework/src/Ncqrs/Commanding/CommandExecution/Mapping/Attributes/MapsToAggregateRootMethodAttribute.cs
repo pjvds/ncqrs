@@ -94,7 +94,7 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
             var commandType = typeof (TCommand);
             ValidateCommandType(commandType);
 
-            var match = GetMatchingMethod(commandType);
+            var match = GetMatchingMethod(commandType, MethodName);
 
             return new DirectActionCommandExecutor<TCommand, TAggregateRoot>(
                 GetAggregateRootId,
@@ -106,12 +106,12 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
                 );
         }
 
-        private Tuple<MethodInfo, PropertyInfo[]> GetMatchingMethod(Type commandType)
+        private Tuple<MethodInfo, PropertyInfo[]> GetMatchingMethod(Type commandType, string methodName)
         {
             var strategy = new AttributePropertyMappingStrategy();
             var sources = strategy.GetMappedProperties(commandType);
 
-            return PropertiesToMethodMapper.GetMethod(sources, Type);
+            return PropertiesToMethodMapper.GetMethod(sources, Type, methodName);
         }
 
         private Guid GetAggregateRootId<TCommand>(TCommand cmd)
