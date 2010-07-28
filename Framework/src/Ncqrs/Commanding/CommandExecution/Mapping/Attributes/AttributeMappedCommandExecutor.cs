@@ -1,4 +1,6 @@
-﻿namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
+﻿using System;
+
+namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
 {
     /// <summary>
     /// A command handler that execute an action based on the mapping of a command.
@@ -15,8 +17,10 @@
             var factory = new AttributeBasedMappingFactory();
             var executor = factory.CreateExecutorForCommand<TCommand>();
 
-            if (command.GetType().GetCustomAttributes(typeof(TransactionalAttribute), true).Length > 0)
+            if (command.GetType().IsDefined(typeof(TransactionalAttribute), true))
+            {
                 executor = new TransactionalCommandExecutorWrapper<TCommand>(executor);
+            }
 
             executor.Execute(command);
         }

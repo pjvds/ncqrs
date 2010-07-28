@@ -91,6 +91,7 @@
     <Compile Include="Commanding\CommandExecution\DirectActionCommandExecutorTests.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Attributes\AttributeBasedMappingFactoryTests.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Attributes\AttributeCommandMappingTests.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\Attributes\AggregateRootIdAttributeTests.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Fluent\FluentCommandMappingTests.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\MappingForCommandNotFoundExceptionTests.cs" />
     <Compile Include="Commanding\ExecutorForCommandNotFoundExceptionTests.cs" />

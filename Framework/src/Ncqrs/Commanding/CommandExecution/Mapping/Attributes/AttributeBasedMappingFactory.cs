@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Diagnostics.Contracts;
 
 namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
 {
@@ -7,6 +8,8 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
     {
         public ICommandExecutor<TCommand> CreateExecutorForCommand<TCommand>() where TCommand : ICommand
         {
+            Contract.Ensures(Contract.Result <ICommandExecutor<TCommand>>() != null);
+
             var commandType = typeof(TCommand);
             var mappingAttr = GetCommandMappingAttributeFromType(commandType);
             return mappingAttr.CreateExecutor<TCommand>();
