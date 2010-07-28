@@ -23,6 +23,23 @@ namespace Ncqrs
             return (source.Count() == 0);
         }
 
+        public static bool Implements<TInterfaceType>(this Type source)
+        {
+            Type interfaceType = typeof (TInterfaceType);
+            return Implements(source, interfaceType);
+        }
+
+        public static bool Implements(this Type source, Type interfaceType)
+        {
+            if (source == null) throw new ArgumentNullException("source");
+            if (interfaceType == null) throw new ArgumentNullException("interfaceType");
+            
+            if (!interfaceType.IsInterface)
+                throw new ArgumentException("The provided interface type is not an interface.", "interfaceType");
+
+            return interfaceType.IsAssignableFrom(source);
+        }
+
         /// <summary>
         /// Determines whether a string is <c>null</c> or <see cref="String.Empty"/>
         /// </summary>

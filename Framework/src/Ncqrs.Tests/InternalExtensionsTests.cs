@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using FluentAssertions;
 using NUnit.Framework;
-using System.Collections;
+using System.IO;
 
 namespace Ncqrs.Tests
 {
@@ -95,11 +95,81 @@ namespace Ncqrs.Tests
         }
 
         [Test]
-        public void Clone_should_throw_ArgumentNullException_when_target_is_null()
+        public void Clone_should_throw_ArgumentNullException_when_source_is_null()
         {
             List<string> nullTarget = null;
             Action act = ()=> InternalExtensions.Clone(nullTarget);
             act.ShouldThrow<ArgumentNullException>().And.ParamName.Should().Be("source");
+        }
+
+        [Test]
+        public void Implements_should_throw_when_source_is_null()
+        {
+            var interfaceType = typeof (IDisposable);
+            Action act = () => InternalExtensions.Implements(null, interfaceType);
+
+            act.ShouldThrow<ArgumentNullException>().And.ParamName.Should().Be("source");
+        }
+
+        [Test]
+        public void Implements_should_throw_when_interfaceType_is_null()
+        {
+            var source = typeof(Stream);
+            Action act = () => InternalExtensions.Implements(source, null);
+
+            act.ShouldThrow<ArgumentNullException>().And.ParamName.Should().Be("interfaceType");
+        }
+
+        [Test]
+        public void Implements_should_throw_when_interfaceType_is_not_an_interface_type()
+        {
+            var source = typeof(Stream);
+            var wrongInterfaceType = typeof (String);
+
+            Action act = () => InternalExtensions.Implements(source, wrongInterfaceType);
+
+            act.ShouldThrow<ArgumentException>().And.ParamName.Should().Be("interfaceType");
+        }
+
+        [Test]
+        public void Implements_should_return_false_when_source_does_not_implement_the_interface()
+        {
+            var source = typeof (Stream);
+            var interfaceType = typeof (IDisposable);
+
+            InternalExtensions.Implements(source, interfaceType).Should().BeTrue();
+        }
+
+        [Test]
+        public void Implements_should_return_true_when_source_does_implement_the_interface()
+        {
+            var source = typeof(String);
+            var interfaceType = typeof(IDisposable);
+
+            InternalExtensions.Implements(source, interfaceType).Should().BeFalse();
+        }
+
+        [Test]
+        public void Implements_generic_should_throw_when_interfaceType_is_not_an_interface_type()
+        {
+            var source = typeof(Stream);
+            Action act = () => InternalExtensions.Implements<String>(source);
+
+            act.ShouldThrow<ArgumentException>().And.ParamName.Should().Be("interfaceType");
+        }
+
+        [Test]
+        public void Implements_generic_should_return_false_when_source_does_not_implement_the_interface()
+        {
+            var source = typeof(Stream);
+            InternalExtensions.Implements<IDisposable>(source).Should().BeTrue();
+        }
+
+        [Test]
+        public void Implements_generic_should_return_true_when_source_does_implement_the_interface()
+        {
+            var source = typeof(String);
+            InternalExtensions.Implements<IDisposable>(source).Should().BeFalse();
         }
     }
 }
