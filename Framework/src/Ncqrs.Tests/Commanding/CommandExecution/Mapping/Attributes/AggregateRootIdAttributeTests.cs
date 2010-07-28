@@ -12,7 +12,7 @@ namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Attributes
         public void It_should_be_a_subclass_of_ExcludeInMappingAttribute()
         {
             var type = typeof (AggregateRootIdAttribute);
-            type.Should().BeOfType<ExcludeInMappingAttribute>();
+            typeof (ExcludeInMappingAttribute).IsAssignableFrom(type).Should().BeTrue();
         }
     }
 }
