@@ -1,25 +1,22 @@
 ﻿using System;
+using System.Diagnostics.Contracts;
 
 namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
 {
-    public class ActionBasedCommandExecutor<TCommand> : ICommandExecutor<TCommand> where TCommand : ICommand
-    {
-        private readonly Action<ICommand> _action;
-
-        public ActionBasedCommandExecutor(Action<ICommand> action)
-        {
-            _action = action;
-        }
-
-        public void Execute(TCommand command)
-        {
-            _action(command);
-        }
-    }
-
+    [ContractClass(typeof(CommandMappingAttributeContracts))]
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
     public abstract class CommandMappingAttribute : Attribute
     {
         public abstract ICommandExecutor<TCommand> CreateExecutor<TCommand>() where TCommand : ICommand;
+    }
+
+    [ContractClassFor(typeof(CommandMappingAttribute))]
+    internal class CommandMappingAttributeContracts : CommandMappingAttribute
+    {
+        public override ICommandExecutor<TCommand> CreateExecutor<TCommand>()
+        {
+            Contract.Ensures(Contract.Result<ICommandExecutor<TCommand>>() != null);
+            return default(ICommandExecutor<TCommand>);
+        }
     }
 }
