@@ -27,7 +27,7 @@
   <target name="BuildExtensions" depends="UpdateLibForExtensions">
     <exec program="${msbuild}">
       <arg value="Extensions\NcqrsExtensions.sln" />
-      <arg value="/p:Configuration=${project.config};" />
+      <arg value="/p:Configuration=${project.config}" />
       <!--<arg value="/t:rebuild" />-->
     </exec>
   </target>
