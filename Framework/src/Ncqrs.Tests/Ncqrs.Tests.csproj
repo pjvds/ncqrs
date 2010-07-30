@@ -104,12 +104,13 @@
     <Compile Include="Domain\AggregateRootMappedByExpressionTests.cs" />
     <Compile Include="Domain\SourcedEventHanderTests.cs" />
     <Compile Include="Domain\EventNotHandledExceptionTests.cs" />
+    <Compile Include="Domain\Storage\SimpleAggregateRootCreationStrategyTests.cs" />
     <Compile Include="Eventing\Sourcing\Mapping\AttributeBasedDomainEventHandlerMappingStrategyTests.cs" />
     <Compile Include="Eventing\Sourcing\Mapping\ConventionBasedDomainEventHandlerMappingStrategyTests.cs" />
     <Compile Include="Eventing\Sourcing\Mapping\ExpressionBasedDomainEventHandlerMappingStrategyTests.cs" />
     <Compile Include="Eventing\Sourcing\Mapping\InvalidEventHandlerMappingExceptionTests.cs" />
     <Compile Include="Domain\NoUnitOfWorkAvailableInThisContextExceptionTests.cs" />
-    <Compile Include="Domain\Storage\AggregateLoaderExceptionTests.cs" />
+    <Compile Include="Domain\Storage\AggregateRootCreationExceptionTests.cs" />
     <Compile Include="Domain\Storage\DomainRepositoryTests.cs" />
     <Compile Include="Eventing\Sourcing\SourcedEventStreamTests.cs" />
     <Compile Include="Eventing\Storage\AttributeEventTypeResolverTests.cs" />

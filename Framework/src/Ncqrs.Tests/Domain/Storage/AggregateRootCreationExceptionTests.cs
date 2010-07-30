@@ -8,14 +8,14 @@ using NUnit.Framework;
 namespace Ncqrs.Tests.Domain.Storage
 {
     [TestFixture]
-    public class AggregateLoaderExceptionTests
+    public class AggregateRootCreationExceptionTests
     {
         [Test]
         public void Constructing_an_instance_should_initialize_the_message()
         {
             String message = "Hello world";
 
-            var target = new AggregateLoaderException(message);
+            var target = new AggregateRootCreationException(message);
 
             target.Message.Should().Be(message);
         }
@@ -26,7 +26,7 @@ namespace Ncqrs.Tests.Domain.Storage
             String aMessage = "Hello world";
             var theInnerException = new Exception();
 
-            var target = new AggregateLoaderException(aMessage, theInnerException);
+            var target = new AggregateRootCreationException(aMessage, theInnerException);
 
             target.InnerException.Should().Be(theInnerException);
         }
@@ -36,8 +36,8 @@ namespace Ncqrs.Tests.Domain.Storage
         {
             var aMessage = "Hello world";
 
-            var theException = new AggregateLoaderException(aMessage);
-            AggregateLoaderException deserializedException = null;
+            var theException = new AggregateRootCreationException(aMessage);
+            AggregateRootCreationException deserializedException = null;
 
             using (var buffer = new MemoryStream())
             {
@@ -45,7 +45,7 @@ namespace Ncqrs.Tests.Domain.Storage
                 formatter.Serialize(buffer, theException);
 
                 buffer.Seek(0, SeekOrigin.Begin);
-                deserializedException = (AggregateLoaderException)formatter.Deserialize(buffer);
+                deserializedException = (AggregateRootCreationException)formatter.Deserialize(buffer);
             }
 
             deserializedException.Should().NotBeNull();
