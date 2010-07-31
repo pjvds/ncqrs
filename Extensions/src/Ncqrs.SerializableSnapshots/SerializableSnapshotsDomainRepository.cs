@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
-using System.Reflection;
 using Ncqrs.Domain;
 using Ncqrs.Domain.Storage;
 using Ncqrs.Eventing;
 using Ncqrs.Eventing.ServiceModel.Bus;
-using Ncqrs.Eventing.Sourcing;
 using Ncqrs.Eventing.Storage;
 
 namespace Ncqrs.SerializableSnapshots
@@ -19,8 +16,9 @@ namespace Ncqrs.SerializableSnapshots
         private readonly IEventBus _eventBus;
         private readonly IEventStore _store;
         private readonly ISerializableSnapshotStore _snapshotStore;
+        private readonly IAggregateRootCreationStrategy _aggregateCreator;
 
-        public SerializableSnapshotsDomainRepository(IEventStore store, IEventBus eventBus, ISerializableSnapshotStore snapshotStore)
+        public SerializableSnapshotsDomainRepository(IEventStore store, IEventBus eventBus, ISerializableSnapshotStore snapshotStore, IAggregateRootCreationStrategy aggregateCreator = null)
         {
             Contract.Requires<ArgumentNullException>(store != null);
             Contract.Requires<ArgumentNullException>(eventBus != null);
@@ -29,6 +27,7 @@ namespace Ncqrs.SerializableSnapshots
             _store = store;
             _eventBus = eventBus;
             _snapshotStore = snapshotStore;
+            _aggregateCreator = aggregateCreator ?? new SimpleAggregateRootCreationStrategy();
         }
 
         private static bool ShouldCreateSnapshot(AggregateRoot aggregateRoot)
@@ -75,26 +74,9 @@ namespace Ncqrs.SerializableSnapshots
             return aggregateRoot;
         }
 
-        private static AggregateRoot CreateEmptyAggRoot(Type aggType)
+        private AggregateRoot CreateEmptyAggRoot(Type aggType)
         {
-            // Flags to search for a public and non public contructor.
-            var flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
-
-            // Get the constructor that we want to invoke.
-            var ctor = aggType.GetConstructor(flags, null, Type.EmptyTypes, null);
-
-            // If there was no ctor found, throw exception.
-            if (ctor == null)
-            {
-                var message = String.Format("No constructor found on aggregate root type {0} that accepts " +
-                                            "no parameters.", aggType.AssemblyQualifiedName);
-                throw new AggregateLoaderException(message);
-            }
-
-            // There was a ctor found, so invoke it and return the instance.
-            var aggregateRoot = (AggregateRoot)ctor.Invoke(null);
-
-            return aggregateRoot;
+            return _aggregateCreator.CreateAggregateRoot(aggType);
         }
 
         public T GetById<T>(Guid id) where T : AggregateRoot
