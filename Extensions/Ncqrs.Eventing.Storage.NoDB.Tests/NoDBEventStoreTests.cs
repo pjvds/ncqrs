@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Xml.Serialization;
 using Ncqrs.Eventing.Sourcing;
 using Ncqrs.Eventing.Storage.NoDB.Tests.Fakes;
+using Ncqrs.Eventing.Storage.Serialization;
+using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -34,18 +38,44 @@ namespace Ncqrs.Eventing.Storage.NoDB.Tests
 
     public class when_saving_a_new_event_source : NoDBEventStoreTestFixture
     {
+        private string _foldername;
+        private string _filename;
+
         [SetUp]
         public void SetUp()
         {
+            _foldername = Source.EventSourceId.ToString().Substring(0, 2);
+            _filename = Source.EventSourceId.ToString().Substring(2);
             EventStore.Save(Source);
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            Directory.Delete(_foldername, true);
         }
 
         [Test]
         public void it_should_create_a_new_event_history_file()
         {
-            var foldername = Source.EventSourceId.ToString().Substring(0, 2);
-            var filename = Source.EventSourceId.ToString().Substring(2);
-            var file = File.Exists(Path.Combine(foldername, filename));
+            Assert.That(File.Exists(Path.Combine(_foldername, _filename)));
+        }
+
+        [Test]
+        public void it_should_serialize_the_uncommitted_events_to_the_file()
+        {
+            var formatter = new JsonEventFormatter(new SimpleEventTypeResolver());
+            using (var reader = new StreamReader(File.Open(Path.Combine(_foldername, _filename), FileMode.Open)))
+            {
+                var line = reader.ReadLine();
+                while (line != null)
+                {
+                    Console.WriteLine(line);
+                    var storedevent = line.ReadStoredEvent();
+                    Assert.That(storedevent, Is.Not.Null);
+                    line = reader.ReadLine();
+                }
+            }
         }
     }
 }
