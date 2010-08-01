@@ -24,7 +24,16 @@ namespace Ncqrs.Eventing.Storage.NoDB
 
         public IEnumerable<SourcedEvent> GetAllEvents(Guid id)
         {
-            throw new NotImplementedException();
+            var file = GetEventSourceFileInfo(id);
+            using (var reader = file.OpenText())
+            {
+                var line = reader.ReadLine();
+                while (line != null)
+                {
+                    yield return (SourcedEvent) _formatter.Deserialize(line.ReadStoredEvent());
+                    line = reader.ReadLine();
+                }
+            }
         }
 
         public IEnumerable<SourcedEvent> GetAllEventsSinceVersion(Guid id, long version)
@@ -34,11 +43,10 @@ namespace Ncqrs.Eventing.Storage.NoDB
 
         public void Save(IEventSource source)
         {
-            var foldername = source.EventSourceId.ToString().Substring(0, 2);
-            var filename = source.EventSourceId.ToString().Substring(2);
-            if (!Directory.Exists(Path.Combine(_path, foldername)))
-                Directory.CreateDirectory(Path.Combine(_path, foldername));
-            using (var writer = new StreamWriter(File.Open(Path.Combine(_path, foldername, filename), FileMode.OpenOrCreate)))
+            var file = GetEventSourceFileInfo(source.EventSourceId);
+            if (!file.Exists && !file.Directory.Exists)
+                file.Directory.Create();
+            using (var writer = file.AppendText())
             {
                 foreach (var sourcedEvent in source.GetUncommittedEvents())
                 {
@@ -46,6 +54,14 @@ namespace Ncqrs.Eventing.Storage.NoDB
                     writer.WriteLine(storedEvent.WriteLine()); 
                 }
             }
+        }
+
+        private FileInfo GetEventSourceFileInfo(Guid eventSourceId)
+        {
+            var foldername = eventSourceId.ToString().Substring(0, 2);
+            var filename = eventSourceId.ToString().Substring(2);
+            var path = Path.Combine(_path, foldername, filename);
+            return new FileInfo(path);
         }
     }
 

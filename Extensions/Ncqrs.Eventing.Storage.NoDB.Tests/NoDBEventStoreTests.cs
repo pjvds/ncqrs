@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Xml.Serialization;
+using System.Linq;
 using Ncqrs.Eventing.Sourcing;
 using Ncqrs.Eventing.Storage.NoDB.Tests.Fakes;
 using Ncqrs.Eventing.Storage.Serialization;
-using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -15,6 +13,7 @@ namespace Ncqrs.Eventing.Storage.NoDB.Tests
     {
         protected NoDBEventStore EventStore;
         protected IEventSource Source;
+        protected SourcedEvent[] Events;
 
         [SetUp]
         public void Setup()
@@ -23,59 +22,37 @@ namespace Ncqrs.Eventing.Storage.NoDB.Tests
             Source = MockRepository.GenerateMock<IEventSource>();
             Guid id = Guid.NewGuid();
             int sequenceCounter = 0;
-            var events = new SourcedEvent[]
+            Events = new SourcedEvent[]
                              {
-                                 new CustomerCreatedEvent(Guid.NewGuid(), id, sequenceCounter++, DateTime.UtcNow, "Foo",35),
-                                 new CustomerNameChanged(Guid.NewGuid(), id, sequenceCounter++, DateTime.UtcNow, "Name" + sequenceCounter),
-                                 new CustomerNameChanged(Guid.NewGuid(), id, sequenceCounter++, DateTime.UtcNow, "Name" + sequenceCounter)
+                                 new CustomerCreatedEvent(Guid.NewGuid(), id, sequenceCounter++, DateTime.UtcNow, "Foo",
+                                                          35),
+                                 new CustomerNameChanged(Guid.NewGuid(), id, sequenceCounter++, DateTime.UtcNow,
+                                                         "Name" + sequenceCounter),
+                                 new CustomerNameChanged(Guid.NewGuid(), id, sequenceCounter++, DateTime.UtcNow,
+                                                         "Name" + sequenceCounter)
                              };
             Source.Stub(e => e.EventSourceId).Return(id);
             Source.Stub(e => e.InitialVersion).Return(0);
-            Source.Stub(e => e.Version).Return(events.Length);
-            Source.Stub(e => e.GetUncommittedEvents()).Return(events);
+            Source.Stub(e => e.Version).Return(Events.Length);
+            Source.Stub(e => e.GetUncommittedEvents()).Return(Events);
         }
     }
 
-    public class when_saving_a_new_event_source : NoDBEventStoreTestFixture
+    public class when_getting_all_events_for_an_event_source : NoDBEventStoreTestFixture
     {
-        private string _foldername;
-        private string _filename;
+        private SourcedEvent[] _returnedEvents;
 
         [SetUp]
         public void SetUp()
         {
-            _foldername = Source.EventSourceId.ToString().Substring(0, 2);
-            _filename = Source.EventSourceId.ToString().Substring(2);
             EventStore.Save(Source);
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            Directory.Delete(_foldername, true);
+            _returnedEvents = EventStore.GetAllEvents(Source.EventSourceId).ToArray();
         }
 
         [Test]
-        public void it_should_create_a_new_event_history_file()
+        public void it_should_get_the_exact_same_events_that_were_committed()
         {
-            Assert.That(File.Exists(Path.Combine(_foldername, _filename)));
-        }
-
-        [Test]
-        public void it_should_serialize_the_uncommitted_events_to_the_file()
-        {
-            var formatter = new JsonEventFormatter(new SimpleEventTypeResolver());
-            using (var reader = new StreamReader(File.Open(Path.Combine(_foldername, _filename), FileMode.Open)))
-            {
-                var line = reader.ReadLine();
-                while (line != null)
-                {
-                    Console.WriteLine(line);
-                    var storedevent = line.ReadStoredEvent();
-                    Assert.That(storedevent, Is.Not.Null);
-                    line = reader.ReadLine();
-                }
-            }
+            Assert.That(_returnedEvents, Is.EqualTo(Events));
         }
     }
 }
