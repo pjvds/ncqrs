@@ -59,10 +59,6 @@
       <Project>{EFBEAD07-8682-48C4-B8EE-0999D0ED1449}</Project>
       <Name>Ncqrs.Eventing.Storage.NoDB</Name>
     </ProjectReference>
-    <ProjectReference Include="..\src\Ncqrs.Eventing.Storage.RavenDB.Tests\Ncqrs.Eventing.Storage.RavenDB.Tests.csproj">
-      <Project>{7714E2D3-372D-4B0A-9393-F7A0EDA331F5}</Project>
-      <Name>Ncqrs.Eventing.Storage.RavenDB.Tests</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

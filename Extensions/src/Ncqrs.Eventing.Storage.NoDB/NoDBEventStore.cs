@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using Ncqrs.Eventing.Sourcing;
@@ -27,7 +28,11 @@ namespace Ncqrs.Eventing.Storage.NoDB
 
         public void Save(IEventSource source)
         {
-            throw new NotImplementedException();
+            var foldername = source.EventSourceId.ToString().Substring(0, 2);
+            var filename = source.EventSourceId.ToString().Substring(2);
+            if (!Directory.Exists(Path.Combine(_path, foldername)))
+                Directory.CreateDirectory(Path.Combine(_path, foldername));
+            File.Create(Path.Combine(_path, foldername, filename));
         }
     }
 }
