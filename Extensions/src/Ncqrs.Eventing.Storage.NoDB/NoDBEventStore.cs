@@ -25,6 +25,7 @@ namespace Ncqrs.Eventing.Storage.NoDB
         public IEnumerable<SourcedEvent> GetAllEvents(Guid id)
         {
             var file = GetEventSourceFileInfo(id);
+            if (!file.Exists) yield break;
             using (var reader = file.OpenText())
             {
                 var line = reader.ReadLine();

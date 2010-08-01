@@ -54,6 +54,7 @@
     <Compile Include="Fakes\CustomerNameChanged.cs" />
     <Compile Include="NoDBEventStoreTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="when_getting_all_events_for_an_event_source.cs" />
     <Compile Include="when_saving_a_new_event_source.cs" />
   </ItemGroup>
   <ItemGroup>

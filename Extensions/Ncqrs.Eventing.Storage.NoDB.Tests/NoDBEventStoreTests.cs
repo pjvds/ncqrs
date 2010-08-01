@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Ncqrs.Eventing.Sourcing;
 using Ncqrs.Eventing.Storage.NoDB.Tests.Fakes;
 using Ncqrs.Eventing.Storage.Serialization;
@@ -15,8 +14,8 @@ namespace Ncqrs.Eventing.Storage.NoDB.Tests
         protected IEventSource Source;
         protected SourcedEvent[] Events;
 
-        [SetUp]
-        public void Setup()
+        [TestFixtureSetUp]
+        public void BaseSetup()
         {
             EventStore = new NoDBEventStore("./");
             Source = MockRepository.GenerateMock<IEventSource>();
@@ -35,24 +34,6 @@ namespace Ncqrs.Eventing.Storage.NoDB.Tests
             Source.Stub(e => e.InitialVersion).Return(0);
             Source.Stub(e => e.Version).Return(Events.Length);
             Source.Stub(e => e.GetUncommittedEvents()).Return(Events);
-        }
-    }
-
-    public class when_getting_all_events_for_an_event_source : NoDBEventStoreTestFixture
-    {
-        private SourcedEvent[] _returnedEvents;
-
-        [SetUp]
-        public void SetUp()
-        {
-            EventStore.Save(Source);
-            _returnedEvents = EventStore.GetAllEvents(Source.EventSourceId).ToArray();
-        }
-
-        [Test]
-        public void it_should_get_the_exact_same_events_that_were_committed()
-        {
-            Assert.That(_returnedEvents, Is.EqualTo(Events));
         }
     }
 }

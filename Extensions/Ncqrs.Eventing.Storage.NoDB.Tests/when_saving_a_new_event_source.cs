@@ -12,7 +12,7 @@ namespace Ncqrs.Eventing.Storage.NoDB.Tests
         private string _filename;
         private string _foldername;
 
-        [SetUp]
+        [TestFixtureSetUp]
         public void SetUp()
         {
             _foldername = Source.EventSourceId.ToString().Substring(0, 2);
@@ -20,7 +20,7 @@ namespace Ncqrs.Eventing.Storage.NoDB.Tests
             EventStore.Save(Source);
         }
 
-        [TearDown]
+        [TestFixtureTearDown]
         public void TearDown()
         {
             Directory.Delete(_foldername, true);
