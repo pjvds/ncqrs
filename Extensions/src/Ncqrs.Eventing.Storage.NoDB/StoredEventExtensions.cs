@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using System.Threading;
 using Newtonsoft.Json.Linq;
 
 namespace Ncqrs.Eventing.Storage.NoDB
@@ -39,6 +40,40 @@ namespace Ncqrs.Eventing.Storage.NoDB
             string foldername = eventSourceId.ToString().Substring(0, 2);
             string filename = eventSourceId.ToString().Substring(2);
             return Path.Combine(rootPath, foldername, filename);
+        }
+
+        const int maxReaders = 10;
+
+        public static void GetWriteLock(this Guid id, string name = "")
+        {
+            var mutex = new Mutex(false, id + name + "write");
+            mutex.WaitOne();
+            var sem = new Semaphore(maxReaders, maxReaders, id + name);
+            int readlocks = 0;
+            while (readlocks < maxReaders)
+            {
+                sem.WaitOne();
+                readlocks++;
+            }
+            mutex.ReleaseMutex();
+        }
+
+        public static void ReleaseWriteLock(this Guid id, string name = "")
+        {
+            var sem = new Semaphore(maxReaders, maxReaders, id + name);
+            sem.Release(maxReaders);
+        }
+
+        public static void GetReadLock(this Guid id, string name = "")
+        {
+            var sem = new Semaphore(maxReaders, maxReaders, id + name);
+            sem.WaitOne();
+        }
+
+        public static void ReleaseReadLock(this Guid id, string name = "")
+        {
+            var sem = new Semaphore(maxReaders, maxReaders, id + name);
+            sem.WaitOne();
         }
     }
 }

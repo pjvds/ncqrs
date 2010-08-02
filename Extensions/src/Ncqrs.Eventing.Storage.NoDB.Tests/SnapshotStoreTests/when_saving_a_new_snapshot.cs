@@ -25,6 +25,13 @@ namespace Ncqrs.Eventing.Storage.NoDB.Tests.SnapshotStoreTests
         {
             Assert.That(_retrieved, Is.EqualTo(Snapshot));
         }
+
+        [Test]
+        public void it_should_return_null_if_the_snapshot_does_not_exist()
+        {
+            var shouldbenull = SnapshotStore.GetSnapshot(Guid.NewGuid());
+            Assert.That(shouldbenull, Is.Null);
+        }
     }
 
     public class when_saving_a_new_snapshot : NoDBSnapshotStoreTestFixture
