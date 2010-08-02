@@ -16,7 +16,7 @@ namespace Domain
          get { return _value; }
       }
 
-      public SomeDomainObject()
+      public SomeDomainObject(int dummyValue)
       {
           Console.WriteLine("SomeDomainObject with ID={0} created!", EventSourceId);
           ApplyEvent(new SomeDomainObjectCreatedEvent() { ObjectId = EventSourceId });
@@ -37,5 +37,9 @@ namespace Domain
       {
           EventSourceId = @event.ObjectId;
       }
+
+       public SomeDomainObject()
+       {           
+       }
    }
 }
