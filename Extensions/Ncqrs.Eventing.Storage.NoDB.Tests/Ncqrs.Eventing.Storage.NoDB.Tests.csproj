@@ -57,6 +57,7 @@
     <Compile Include="when_getting_all_events_for_an_event_source.cs" />
     <Compile Include="when_getting_the_events_since_a_specific_version.cs" />
     <Compile Include="when_saving_a_new_event_source.cs" />
+    <Compile Include="when_saving_events_based_on_stale_state.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\src\Ncqrs.Eventing.Storage.NoDB\Ncqrs.Eventing.Storage.NoDB.csproj">

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading;
 using Ncqrs.Eventing.Sourcing;
 using Ncqrs.Eventing.Storage.Serialization;
 using Newtonsoft.Json.Linq;
@@ -30,6 +31,7 @@ namespace Ncqrs.Eventing.Storage.NoDB
         {
             FileInfo file = GetEventSourceFileInfo(id);
             if (!file.Exists) yield break;
+            GetReadLock(id);
             using (StreamReader reader = file.OpenText())
             {
                 reader.ReadLine(); //Throw away the version line
@@ -43,6 +45,7 @@ namespace Ncqrs.Eventing.Storage.NoDB
                     i++;
                 }
             }
+            ReleaseReadLock(id);
         }
 
         public void Save(IEventSource source)
@@ -50,6 +53,7 @@ namespace Ncqrs.Eventing.Storage.NoDB
             FileInfo file = GetEventSourceFileInfo(source.EventSourceId);
             if (!file.Exists && !file.Directory.Exists)
                 file.Directory.Create();
+            GetWriteLock(source.EventSourceId);
             if (file.Exists)
             {
                 if (GetVersion(file) > source.InitialVersion)
@@ -66,6 +70,7 @@ namespace Ncqrs.Eventing.Storage.NoDB
                 }
                 writer.Flush();
             }
+            ReleaseWriteLock(source.EventSourceId);
         }
 
         private void UpdateEventSourceVersion(StreamWriter writer, long version)
@@ -94,6 +99,40 @@ namespace Ncqrs.Eventing.Storage.NoDB
             string filename = eventSourceId.ToString().Substring(2);
             string path = Path.Combine(_path, foldername, filename);
             return new FileInfo(path);
+        }
+
+        const int maxReaders = 10;
+
+        private static void GetWriteLock(Guid id)
+        {
+            var mutex = new Mutex(false, id.ToString() + "write");
+            mutex.WaitOne();
+            var sem = new Semaphore(maxReaders, maxReaders, id.ToString());
+            int readlocks = 0;
+            while (readlocks < maxReaders)
+            {
+                sem.WaitOne();
+                readlocks++;
+            }
+            mutex.ReleaseMutex();
+        }
+
+        private static void ReleaseWriteLock(Guid id)
+        {
+            var sem = new Semaphore(maxReaders, maxReaders, id.ToString());
+            sem.Release(maxReaders);
+        }
+
+        private static void GetReadLock(Guid id)
+        {
+            var sem = new Semaphore(maxReaders, maxReaders, id.ToString());
+            sem.WaitOne();
+        }
+
+        private static void ReleaseReadLock(Guid id)
+        {
+            var sem = new Semaphore(maxReaders, maxReaders, id.ToString());
+            sem.WaitOne();
         }
     }
 
