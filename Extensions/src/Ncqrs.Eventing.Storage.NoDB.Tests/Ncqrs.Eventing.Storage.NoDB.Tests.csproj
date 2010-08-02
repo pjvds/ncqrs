@@ -57,11 +57,13 @@
     <Compile Include="EventStoreTests\when_saving_events_based_on_stale_state.cs" />
     <Compile Include="Fakes\CustomerCreatedEvent.cs" />
     <Compile Include="Fakes\CustomerNameChanged.cs" />
+    <Compile Include="Fakes\TestSnapshot.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SnapshotStoreTests\NoDBSnapshotStoreTestFixture.cs" />
+    <Compile Include="SnapshotStoreTests\when_saving_a_new_snapshot.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\src\Ncqrs.Eventing.Storage.NoDB\Ncqrs.Eventing.Storage.NoDB.csproj">
+    <ProjectReference Include="..\Ncqrs.Eventing.Storage.NoDB\Ncqrs.Eventing.Storage.NoDB.csproj">
       <Project>{EFBEAD07-8682-48C4-B8EE-0999D0ED1449}</Project>
       <Name>Ncqrs.Eventing.Storage.NoDB</Name>
     </ProjectReference>

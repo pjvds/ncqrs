@@ -29,7 +29,7 @@ namespace Ncqrs.Eventing.Storage.NoDB
 
         public IEnumerable<SourcedEvent> GetAllEventsSinceVersion(Guid id, long version)
         {
-            FileInfo file = GetEventSourceFileInfo(id);
+            FileInfo file = id.GetEventStoreFileInfo(_path);
             if (!file.Exists) yield break;
             GetReadLock(id);
             using (StreamReader reader = file.OpenText())
@@ -50,7 +50,7 @@ namespace Ncqrs.Eventing.Storage.NoDB
 
         public void Save(IEventSource source)
         {
-            FileInfo file = GetEventSourceFileInfo(source.EventSourceId);
+            FileInfo file = source.EventSourceId.GetEventStoreFileInfo(_path);
             if (!file.Exists && !file.Directory.Exists)
                 file.Directory.Create();
             GetWriteLock(source.EventSourceId);
@@ -93,14 +93,6 @@ namespace Ncqrs.Eventing.Storage.NoDB
 
         #endregion
 
-        private FileInfo GetEventSourceFileInfo(Guid eventSourceId)
-        {
-            string foldername = eventSourceId.ToString().Substring(0, 2);
-            string filename = eventSourceId.ToString().Substring(2);
-            string path = Path.Combine(_path, foldername, filename);
-            return new FileInfo(path);
-        }
-
         const int maxReaders = 10;
 
         private static void GetWriteLock(Guid id)
@@ -133,26 +125,6 @@ namespace Ncqrs.Eventing.Storage.NoDB
         {
             var sem = new Semaphore(maxReaders, maxReaders, id.ToString());
             sem.WaitOne();
-        }
-    }
-
-    public static class StoredEventExtensions
-    {
-        public static string WriteLine(this StoredEvent<JObject> storedEvent)
-        {
-            var sb = new StringBuilder();
-            sb.AppendFormat("{0};{1};{2};{3};{4};",
-                            storedEvent.EventIdentifier, storedEvent.EventTimeStamp.Ticks, storedEvent.EventName,
-                            storedEvent.EventVersion, storedEvent.Data.ToString().Replace("\n", "").Replace("\r", ""));
-            return sb.ToString();
-        }
-
-        public static StoredEvent<JObject> ReadStoredEvent(this string eventString, Guid id, long version)
-        {
-            string[] data = eventString.Split(';');
-            return new StoredEvent<JObject>(new Guid(data[0]), new DateTime(long.Parse(data[1]),DateTimeKind.Utc), data[2],
-                                            new Version(data[3]), id, version,
-                                            JObject.Parse(data[4]));
         }
     }
 }

@@ -45,7 +45,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="NoDBEventStore.cs" />
+    <Compile Include="NoDBSnapshotStore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StoredEventExtensions.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
