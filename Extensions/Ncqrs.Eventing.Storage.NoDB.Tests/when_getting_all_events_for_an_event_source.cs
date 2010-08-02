@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Ncqrs.Eventing.Sourcing;
 using NUnit.Framework;
@@ -12,7 +13,6 @@ namespace Ncqrs.Eventing.Storage.NoDB.Tests
         [TestFixtureSetUp]
         public void SetUp()
         {
-            EventStore.Save(Source);
             _returnedEvents = EventStore.GetAllEvents(Source.EventSourceId).ToArray();
         }
 

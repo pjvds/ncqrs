@@ -24,22 +24,26 @@ namespace Ncqrs.Eventing.Storage.NoDB
 
         public IEnumerable<SourcedEvent> GetAllEvents(Guid id)
         {
+            return GetAllEventsSinceVersion(id, 0);
+        }
+
+        public IEnumerable<SourcedEvent> GetAllEventsSinceVersion(Guid id, long version)
+        {
             var file = GetEventSourceFileInfo(id);
             if (!file.Exists) yield break;
             using (var reader = file.OpenText())
             {
                 var line = reader.ReadLine();
+                var i = 0;
                 while (line != null)
                 {
-                    yield return (SourcedEvent) _formatter.Deserialize(line.ReadStoredEvent());
+                    
+                    if (i >= version) 
+                        yield return (SourcedEvent)_formatter.Deserialize(line.ReadStoredEvent());
                     line = reader.ReadLine();
+                    i++;
                 }
             }
-        }
-
-        public IEnumerable<SourcedEvent> GetAllEventsSinceVersion(Guid id, long version)
-        {
-            throw new NotImplementedException();
         }
 
         public void Save(IEventSource source)

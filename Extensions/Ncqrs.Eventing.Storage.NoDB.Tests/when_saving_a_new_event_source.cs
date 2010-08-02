@@ -17,13 +17,6 @@ namespace Ncqrs.Eventing.Storage.NoDB.Tests
         {
             _foldername = Source.EventSourceId.ToString().Substring(0, 2);
             _filename = Source.EventSourceId.ToString().Substring(2);
-            EventStore.Save(Source);
-        }
-
-        [TestFixtureTearDown]
-        public void TearDown()
-        {
-            Directory.Delete(_foldername, true);
         }
 
         [Test]

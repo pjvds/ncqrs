@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using Ncqrs.Eventing.Sourcing;
 using Ncqrs.Eventing.Storage.NoDB.Tests.Fakes;
 using Ncqrs.Eventing.Storage.Serialization;
@@ -34,6 +35,14 @@ namespace Ncqrs.Eventing.Storage.NoDB.Tests
             Source.Stub(e => e.InitialVersion).Return(0);
             Source.Stub(e => e.Version).Return(Events.Length);
             Source.Stub(e => e.GetUncommittedEvents()).Return(Events);
+            EventStore.Save(Source);
         }
+
+        [TestFixtureTearDown]
+        public void TearDown()
+        {
+            Directory.Delete(Source.EventSourceId.ToString().Substring(0,2), true);
+        }
+
     }
 }
