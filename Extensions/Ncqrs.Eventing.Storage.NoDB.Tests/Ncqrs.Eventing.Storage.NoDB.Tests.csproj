@@ -50,14 +50,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EventStoreTests\NoDBEventStoreTests.cs" />
+    <Compile Include="EventStoreTests\when_getting_all_events_for_an_event_source.cs" />
+    <Compile Include="EventStoreTests\when_getting_the_events_since_a_specific_version.cs" />
+    <Compile Include="EventStoreTests\when_saving_a_new_event_source.cs" />
+    <Compile Include="EventStoreTests\when_saving_events_based_on_stale_state.cs" />
     <Compile Include="Fakes\CustomerCreatedEvent.cs" />
     <Compile Include="Fakes\CustomerNameChanged.cs" />
-    <Compile Include="NoDBEventStoreTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="when_getting_all_events_for_an_event_source.cs" />
-    <Compile Include="when_getting_the_events_since_a_specific_version.cs" />
-    <Compile Include="when_saving_a_new_event_source.cs" />
-    <Compile Include="when_saving_events_based_on_stale_state.cs" />
+    <Compile Include="SnapshotStoreTests\NoDBSnapshotStoreTestFixture.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\src\Ncqrs.Eventing.Storage.NoDB\Ncqrs.Eventing.Storage.NoDB.csproj">

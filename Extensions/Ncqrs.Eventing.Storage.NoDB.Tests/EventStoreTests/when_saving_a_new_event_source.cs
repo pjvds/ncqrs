@@ -5,7 +5,7 @@ using System.Linq;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 
-namespace Ncqrs.Eventing.Storage.NoDB.Tests
+namespace Ncqrs.Eventing.Storage.NoDB.Tests.EventStoreTests
 {
     public class when_saving_a_new_event_source : NoDBEventStoreTestFixture
     {

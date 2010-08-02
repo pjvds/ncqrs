@@ -2,7 +2,7 @@
 using Ncqrs.Eventing.Sourcing;
 using NUnit.Framework;
 
-namespace Ncqrs.Eventing.Storage.NoDB.Tests
+namespace Ncqrs.Eventing.Storage.NoDB.Tests.EventStoreTests
 {
     public class when_getting_the_events_since_a_specific_version : NoDBEventStoreTestFixture
     {

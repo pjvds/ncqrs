@@ -3,7 +3,7 @@ using System.Linq;
 using Ncqrs.Eventing.Sourcing;
 using NUnit.Framework;
 
-namespace Ncqrs.Eventing.Storage.NoDB.Tests
+namespace Ncqrs.Eventing.Storage.NoDB.Tests.EventStoreTests
 {
     public class when_getting_all_events_for_an_event_source : NoDBEventStoreTestFixture
     {

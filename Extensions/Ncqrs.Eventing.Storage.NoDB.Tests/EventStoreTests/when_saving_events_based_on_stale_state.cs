@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 
-namespace Ncqrs.Eventing.Storage.NoDB.Tests
+namespace Ncqrs.Eventing.Storage.NoDB.Tests.EventStoreTests
 {
     public class when_saving_events_based_on_stale_state : NoDBEventStoreTestFixture
     {

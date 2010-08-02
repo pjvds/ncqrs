@@ -1,12 +1,11 @@
 ﻿using System;
 using System.IO;
-using System.Threading;
 using Ncqrs.Eventing.Sourcing;
 using Ncqrs.Eventing.Storage.NoDB.Tests.Fakes;
 using NUnit.Framework;
 using Rhino.Mocks;
 
-namespace Ncqrs.Eventing.Storage.NoDB.Tests
+namespace Ncqrs.Eventing.Storage.NoDB.Tests.EventStoreTests
 {
     public class NoDBEventStoreTestFixture
     {

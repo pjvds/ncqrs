@@ -40,7 +40,7 @@ namespace Ncqrs.Eventing.Storage.NoDB
                 while (line != null)
                 {
                     if (i >= version)
-                        yield return (SourcedEvent) _formatter.Deserialize(line.ReadStoredEvent());
+                        yield return (SourcedEvent) _formatter.Deserialize(line.ReadStoredEvent(id, i));
                     line = reader.ReadLine();
                     i++;
                 }
@@ -141,19 +141,18 @@ namespace Ncqrs.Eventing.Storage.NoDB
         public static string WriteLine(this StoredEvent<JObject> storedEvent)
         {
             var sb = new StringBuilder();
-            sb.AppendFormat("{0};{1};{2};{3};{4};{5};{6}",
+            sb.AppendFormat("{0};{1};{2};{3};{4};",
                             storedEvent.EventIdentifier, storedEvent.EventTimeStamp.Ticks, storedEvent.EventName,
-                            storedEvent.EventVersion, storedEvent.EventSourceId, storedEvent.EventSequence,
-                            storedEvent.Data.ToString().Replace("\n", "").Replace("\r", ""));
+                            storedEvent.EventVersion, storedEvent.Data.ToString().Replace("\n", "").Replace("\r", ""));
             return sb.ToString();
         }
 
-        public static StoredEvent<JObject> ReadStoredEvent(this string eventString)
+        public static StoredEvent<JObject> ReadStoredEvent(this string eventString, Guid id, long version)
         {
             string[] data = eventString.Split(';');
             return new StoredEvent<JObject>(new Guid(data[0]), new DateTime(long.Parse(data[1])), data[2],
-                                            new Version(data[3]), new Guid(data[4]), long.Parse(data[5]),
-                                            JObject.Parse(data[6]));
+                                            new Version(data[3]), id, version,
+                                            JObject.Parse(data[4]));
         }
     }
 }
