@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
 using Ncqrs.Eventing.Sourcing;
 using Ncqrs.Eventing.Storage.NoDB.Tests.Fakes;
 using NUnit.Framework;
@@ -41,5 +42,11 @@ namespace Ncqrs.Eventing.Storage.NoDB.Tests
         {
             Directory.Delete(Source.EventSourceId.ToString().Substring(0, 2), true);
         }
+    }
+
+    public class when_saving_events_based_on_stale_state : NoDBEventStoreTestFixture
+    {
+        [Test, ExpectedException(typeof(ConcurrencyException))]
+        public void it_should_throw_a_concurrency_exception() { EventStore.Save(Source); }
     }
 }

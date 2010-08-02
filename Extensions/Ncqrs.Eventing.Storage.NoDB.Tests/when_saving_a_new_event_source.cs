@@ -30,6 +30,7 @@ namespace Ncqrs.Eventing.Storage.NoDB.Tests
         {
             using (var reader = new StreamReader(File.Open(Path.Combine(_foldername, _filename), FileMode.Open)))
             {
+                reader.ReadLine(); //Throw out version line
                 foreach (string line in GetEventStrings(reader))
                 {
                     Console.WriteLine(line);

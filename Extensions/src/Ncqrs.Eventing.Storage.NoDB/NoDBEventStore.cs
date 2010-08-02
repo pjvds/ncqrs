@@ -32,6 +32,7 @@ namespace Ncqrs.Eventing.Storage.NoDB
             if (!file.Exists) yield break;
             using (StreamReader reader = file.OpenText())
             {
+                reader.ReadLine(); //Throw away the version line
                 string line = reader.ReadLine();
                 int i = 0;
                 while (line != null)
@@ -49,13 +50,39 @@ namespace Ncqrs.Eventing.Storage.NoDB
             FileInfo file = GetEventSourceFileInfo(source.EventSourceId);
             if (!file.Exists && !file.Directory.Exists)
                 file.Directory.Create();
+            if (file.Exists)
+            {
+                if (GetVersion(file) > source.InitialVersion)
+                    throw new ConcurrencyException(source.EventSourceId, source.Version);
+            }
             using (StreamWriter writer = file.AppendText())
             {
+                writer.AutoFlush = false;
+                UpdateEventSourceVersion(writer, source.Version);
                 foreach (SourcedEvent sourcedEvent in source.GetUncommittedEvents())
                 {
                     StoredEvent<JObject> storedEvent = _formatter.Serialize(sourcedEvent);
                     writer.WriteLine(storedEvent.WriteLine());
                 }
+                writer.Flush();
+            }
+        }
+
+        private void UpdateEventSourceVersion(StreamWriter writer, long version)
+        {
+            var versionstring = version.ToString("00000000000000000000") + writer.NewLine;
+            Stream filestream = writer.BaseStream;
+            filestream.Position = 0;
+            filestream.Write(Encoding.UTF8.GetBytes(versionstring), 0, versionstring.Length);
+            filestream.Position = filestream.Length;
+        }
+
+        private static long GetVersion(FileInfo file)
+        {
+            using (var reader = file.OpenText())
+            {
+                string readLine = reader.ReadLine();
+                return long.Parse(readLine);
             }
         }
 
