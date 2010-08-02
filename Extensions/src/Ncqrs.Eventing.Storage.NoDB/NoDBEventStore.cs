@@ -36,13 +36,12 @@ namespace Ncqrs.Eventing.Storage.NoDB
             {
                 reader.ReadLine(); //Throw away the version line
                 string line = reader.ReadLine();
-                int i = 0;
+                int i = 1;
                 while (line != null)
                 {
                     if (i >= version)
-                        yield return (SourcedEvent) _formatter.Deserialize(line.ReadStoredEvent(id, i));
+                        yield return (SourcedEvent) _formatter.Deserialize(line.ReadStoredEvent(id, i++));
                     line = reader.ReadLine();
-                    i++;
                 }
             }
             id.ReleaseReadLock();
@@ -59,7 +58,7 @@ namespace Ncqrs.Eventing.Storage.NoDB
                 if (GetVersion(file) > source.InitialVersion)
                     throw new ConcurrencyException(source.EventSourceId, source.Version);
             }
-            using (StreamWriter writer = file.AppendText())
+            using (var writer = new StreamWriter(file.OpenWrite()))
             {
                 writer.AutoFlush = false;
                 UpdateEventSourceVersion(writer, source.Version);
