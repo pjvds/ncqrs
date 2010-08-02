@@ -14,7 +14,7 @@ namespace Ncqrs.Eventing.Storage.NoDB.Tests
             _returnedEvents = EventStore.GetAllEventsSinceVersion(Source.EventSourceId, version).ToArray();
             for (int i = 0; i < _returnedEvents.Length; i++)
             {
-                Assert.That(_returnedEvents[i], Is.EqualTo(Events[i+version]));    
+                Assert.That(_returnedEvents[i], Is.EqualTo(Events[i + version]));
             }
         }
     }

@@ -1,26 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Xml.Serialization;
 using Ncqrs.Eventing.Sourcing;
 using Ncqrs.Eventing.Storage.Serialization;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace Ncqrs.Eventing.Storage.NoDB
 {
     public class NoDBEventStore : IEventStore
     {
+        private readonly JsonEventFormatter _formatter;
         private readonly string _path;
-        private JsonEventFormatter _formatter;
 
         public NoDBEventStore(string path)
         {
             _path = path;
             _formatter = new JsonEventFormatter(new SimpleEventTypeResolver());
         }
+
+        #region IEventStore Members
 
         public IEnumerable<SourcedEvent> GetAllEvents(Guid id)
         {
@@ -29,17 +28,16 @@ namespace Ncqrs.Eventing.Storage.NoDB
 
         public IEnumerable<SourcedEvent> GetAllEventsSinceVersion(Guid id, long version)
         {
-            var file = GetEventSourceFileInfo(id);
+            FileInfo file = GetEventSourceFileInfo(id);
             if (!file.Exists) yield break;
-            using (var reader = file.OpenText())
+            using (StreamReader reader = file.OpenText())
             {
-                var line = reader.ReadLine();
-                var i = 0;
+                string line = reader.ReadLine();
+                int i = 0;
                 while (line != null)
                 {
-                    
-                    if (i >= version) 
-                        yield return (SourcedEvent)_formatter.Deserialize(line.ReadStoredEvent());
+                    if (i >= version)
+                        yield return (SourcedEvent) _formatter.Deserialize(line.ReadStoredEvent());
                     line = reader.ReadLine();
                     i++;
                 }
@@ -48,24 +46,26 @@ namespace Ncqrs.Eventing.Storage.NoDB
 
         public void Save(IEventSource source)
         {
-            var file = GetEventSourceFileInfo(source.EventSourceId);
+            FileInfo file = GetEventSourceFileInfo(source.EventSourceId);
             if (!file.Exists && !file.Directory.Exists)
                 file.Directory.Create();
-            using (var writer = file.AppendText())
+            using (StreamWriter writer = file.AppendText())
             {
-                foreach (var sourcedEvent in source.GetUncommittedEvents())
+                foreach (SourcedEvent sourcedEvent in source.GetUncommittedEvents())
                 {
-                    var storedEvent = _formatter.Serialize(sourcedEvent);
-                    writer.WriteLine(storedEvent.WriteLine()); 
+                    StoredEvent<JObject> storedEvent = _formatter.Serialize(sourcedEvent);
+                    writer.WriteLine(storedEvent.WriteLine());
                 }
             }
         }
 
+        #endregion
+
         private FileInfo GetEventSourceFileInfo(Guid eventSourceId)
         {
-            var foldername = eventSourceId.ToString().Substring(0, 2);
-            var filename = eventSourceId.ToString().Substring(2);
-            var path = Path.Combine(_path, foldername, filename);
+            string foldername = eventSourceId.ToString().Substring(0, 2);
+            string filename = eventSourceId.ToString().Substring(2);
+            string path = Path.Combine(_path, foldername, filename);
             return new FileInfo(path);
         }
     }
@@ -76,16 +76,18 @@ namespace Ncqrs.Eventing.Storage.NoDB
         {
             var sb = new StringBuilder();
             sb.AppendFormat("{0};{1};{2};{3};{4};{5};{6}",
-                            storedEvent.EventIdentifier,storedEvent.EventTimeStamp.Ticks, storedEvent.EventName,
-                            storedEvent.EventVersion, storedEvent.EventSourceId, storedEvent.EventSequence, 
-                            storedEvent.Data.ToString().Replace("\n", "").Replace("\r",""));
+                            storedEvent.EventIdentifier, storedEvent.EventTimeStamp.Ticks, storedEvent.EventName,
+                            storedEvent.EventVersion, storedEvent.EventSourceId, storedEvent.EventSequence,
+                            storedEvent.Data.ToString().Replace("\n", "").Replace("\r", ""));
             return sb.ToString();
         }
 
         public static StoredEvent<JObject> ReadStoredEvent(this string eventString)
         {
-            var data = eventString.Split(';');
-            return new StoredEvent<JObject>(new Guid(data[0]), new DateTime(long.Parse(data[1])), data[2], new Version(data[3]), new Guid(data[4]), long.Parse(data[5]), JObject.Parse(data[6]));
+            string[] data = eventString.Split(';');
+            return new StoredEvent<JObject>(new Guid(data[0]), new DateTime(long.Parse(data[1])), data[2],
+                                            new Version(data[3]), new Guid(data[4]), long.Parse(data[5]),
+                                            JObject.Parse(data[6]));
         }
     }
 }

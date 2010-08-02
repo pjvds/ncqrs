@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Ncqrs.Eventing.Sourcing;
 using NUnit.Framework;
@@ -25,7 +24,7 @@ namespace Ncqrs.Eventing.Storage.NoDB.Tests
         [Test]
         public void it_should_return_an_empty_result_for_a_non_existant_event_source()
         {
-            Assert.That(EventStore.GetAllEvents(Guid.NewGuid()), Is.Empty);  
+            Assert.That(EventStore.GetAllEvents(Guid.NewGuid()), Is.Empty);
         }
     }
 }

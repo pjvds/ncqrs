@@ -7,9 +7,11 @@ namespace Ncqrs.Eventing.Storage.NoDB.Tests.Fakes
     public class CustomerCreatedEvent : SourcedEvent
     {
         public CustomerCreatedEvent()
-        { }
+        {
+        }
 
-        public CustomerCreatedEvent(Guid eventIdentifier, Guid eventSourceId, long eventSequence, DateTime eventTimeStamp, string name, int age)
+        public CustomerCreatedEvent(Guid eventIdentifier, Guid eventSourceId, long eventSequence,
+                                    DateTime eventTimeStamp, string name, int age)
             : base(eventIdentifier, eventSourceId, eventSequence, eventTimeStamp)
         {
             Name = name;
@@ -24,11 +26,11 @@ namespace Ncqrs.Eventing.Storage.NoDB.Tests.Fakes
         {
             var other = obj as CustomerCreatedEvent;
             if (other == null) return false;
-            var result = EventIdentifier.Equals(other.EventIdentifier) &&
-                EventSourceId.Equals(other.EventSourceId) &&
-                EventSequence.Equals(other.EventSequence) &&
-                Name.Equals(other.Name) &&
-                Age.Equals(other.Age);
+            bool result = EventIdentifier.Equals(other.EventIdentifier) &&
+                          EventSourceId.Equals(other.EventSourceId) &&
+                          EventSequence.Equals(other.EventSequence) &&
+                          Name.Equals(other.Name) &&
+                          Age.Equals(other.Age);
             return result;
         }
     }
