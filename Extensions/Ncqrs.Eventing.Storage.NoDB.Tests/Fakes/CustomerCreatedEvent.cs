@@ -29,6 +29,7 @@ namespace Ncqrs.Eventing.Storage.NoDB.Tests.Fakes
             bool result = EventIdentifier.Equals(other.EventIdentifier) &&
                           EventSourceId.Equals(other.EventSourceId) &&
                           EventSequence.Equals(other.EventSequence) &&
+                          EventTimeStamp.Equals(other.EventTimeStamp) &&
                           Name.Equals(other.Name) &&
                           Age.Equals(other.Age);
             return result;

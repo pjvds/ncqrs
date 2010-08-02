@@ -150,7 +150,7 @@ namespace Ncqrs.Eventing.Storage.NoDB
         public static StoredEvent<JObject> ReadStoredEvent(this string eventString, Guid id, long version)
         {
             string[] data = eventString.Split(';');
-            return new StoredEvent<JObject>(new Guid(data[0]), new DateTime(long.Parse(data[1])), data[2],
+            return new StoredEvent<JObject>(new Guid(data[0]), new DateTime(long.Parse(data[1]),DateTimeKind.Utc), data[2],
                                             new Version(data[3]), id, version,
                                             JObject.Parse(data[4]));
         }

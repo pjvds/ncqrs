@@ -31,10 +31,12 @@ namespace Ncqrs.Eventing.Storage.NoDB.Tests.EventStoreTests
             using (var reader = new StreamReader(File.Open(Path.Combine(_foldername, _filename), FileMode.Open)))
             {
                 reader.ReadLine(); //Throw out version line
+                int i = 0;
                 foreach (string line in GetEventStrings(reader))
                 {
                     Console.WriteLine(line);
-                    StoredEvent<JObject> storedevent = line.ReadStoredEvent();
+                    StoredEvent<JObject> storedevent = line.ReadStoredEvent(Source.EventSourceId, i);
+                    i++;
                     Assert.That(storedevent, Is.Not.Null);
                     Assert.That(Events.Count(e => e.EventIdentifier == storedevent.EventIdentifier) == 1);
                 }
