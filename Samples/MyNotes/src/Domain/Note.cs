@@ -2,10 +2,11 @@
 using Ncqrs;
 using Events;
 using Ncqrs.Domain;
+using Ncqrs.Eventing.Sourcing.Snapshotting;
 
 namespace Domain
 {
-    public class Note : AggregateRootMappedByConvention
+    public class Note : AggregateRootMappedByConvention, ISnapshotable<NoteSnapshot>
     {
         private String _text;
         private DateTime _creationDate;
@@ -56,5 +57,31 @@ namespace Domain
         {
             _text = e.NewText;
         }
+
+        public NoteSnapshot CreateSnapshot()
+        {
+            return new NoteSnapshot
+                       {
+                           EventSourceId = EventSourceId,
+                           EventSourceVersion = Version,
+                           Text = _text,
+                           CreationDate = _creationDate
+                       };
+        }
+
+        public void RestoreFromSnapshot(NoteSnapshot snapshot)
+        {
+            EventSourceId = snapshot.EventSourceId;
+            InitialVersion = snapshot.EventSourceVersion;   
+            _text = snapshot.Text;
+            _creationDate = snapshot.CreationDate;
+        }
+    }
+
+    public class NoteSnapshot : Snapshot
+    {
+        public string Text { get; set; }
+
+        public DateTime CreationDate { get; set; }
     }
 }
