@@ -134,7 +134,10 @@ namespace Ncqrs.Domain.Storage
         private bool AggregateRootSupportsSnapshot(Type aggType, ISnapshot snapshot)
         {
             var memType = GetSnapshotInterfaceType(aggType);
-            return memType == typeof(ISnapshotable<>).MakeGenericType(memType);
+            var snapshotType = snapshot.GetType();
+
+            var expectedType = typeof (ISnapshotable<>).MakeGenericType(snapshotType);
+            return memType == expectedType;
         }
 
         public void Save(AggregateRoot aggregateRoot)
@@ -164,7 +167,6 @@ namespace Ncqrs.Domain.Storage
             if (memType != null)
             {
                 var createMethod = memType.GetMethod("CreateSnapshot");
-
                 return (ISnapshot)createMethod.Invoke(aggregateRoot, new object[0]);
             }
             else
