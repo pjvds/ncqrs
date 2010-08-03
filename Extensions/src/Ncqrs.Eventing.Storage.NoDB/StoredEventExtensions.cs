@@ -30,6 +30,11 @@ namespace Ncqrs.Eventing.Storage.NoDB
             return new FileInfo(GetPath(eventSourceId, rootPath));
         }
 
+        public static FileInfo GetVersionFile(this Guid eventSourceId, string rootPath)
+        {
+            return new FileInfo(GetPath(eventSourceId, rootPath) + ".ver");
+        }
+
         public static FileInfo GetSnapshotFileInfo(this Guid eventSourceId, string rootPath)
         {
             return new FileInfo(GetPath(eventSourceId, rootPath) + ".ss");
@@ -46,41 +51,41 @@ namespace Ncqrs.Eventing.Storage.NoDB
 
         public static void GetWriteLock(this Guid id, string name = "")
         {
-//            var mutex = new Mutex(false, id + name + "write");
-//            mutex.WaitOne();
-//            var sem = new Semaphore(maxReaders, maxReaders, id + name);
-//            int readlocks = 0;
-//            while (readlocks < maxReaders)
-//            {
-//                sem.WaitOne();
-//                readlocks++;
-//            }
-//            mutex.ReleaseMutex();
+            var mutex = new Mutex(false, id + name + "write");
+            mutex.WaitOne();
+            var sem = new Semaphore(maxReaders, maxReaders, id + name);
+            int readlocks = 0;
+            while (readlocks < maxReaders)
+            {
+                sem.WaitOne();
+                readlocks++;
+            }
+            mutex.ReleaseMutex();
         }
 
         public static void ReleaseWriteLock(this Guid id, string name = "")
         {
-//            var sem = new Semaphore(maxReaders, maxReaders, id + name);
-//            try
-//            {
-//                sem.Release(maxReaders);
-//            } catch (SemaphoreFullException) {}
+            var sem = new Semaphore(maxReaders, maxReaders, id + name);
+            try
+            {
+                sem.Release(maxReaders);
+            } catch (SemaphoreFullException) {}
         }
 
         public static void GetReadLock(this Guid id, string name = "")
         {
-//            var sem = new Semaphore(maxReaders, maxReaders, id + name);
-//            sem.WaitOne();
+            var sem = new Semaphore(maxReaders, maxReaders, id + name);
+            sem.WaitOne();
         }
 
         public static void ReleaseReadLock(this Guid id, string name = "")
         {
-//            var sem = new Semaphore(maxReaders, maxReaders, id + name);
-//            try
-//            {
-//                sem.Release();
-//            }
-//            catch (SemaphoreFullException) { }
+            var sem = new Semaphore(maxReaders, maxReaders, id + name);
+            try
+            {
+                sem.Release();
+            }
+            catch (SemaphoreFullException) { }
         }
     }
 }

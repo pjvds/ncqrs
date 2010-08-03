@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using Ncqrs.Eventing.Sourcing;
@@ -32,17 +33,11 @@ namespace Ncqrs.Eventing.Storage.NoDB
             FileInfo file = id.GetEventStoreFileInfo(_path);
             if (!file.Exists) yield break;
             id.GetReadLock();
-            using (StreamReader reader = file.OpenText())
+            var lines = File.ReadLines(file.FullName).ToArray();
+            for (int i = 0; i < lines.Length; i++)
             {
-                reader.ReadLine(); //Throw away the version line
-                string line = reader.ReadLine();
-                int i = 1;
-                while (line != null)
-                {
-                    if (i >= version)
-                        yield return (SourcedEvent) _formatter.Deserialize(line.ReadStoredEvent(id, i++));
-                    line = reader.ReadLine();
-                }
+                if (i+1 >= version)
+                    yield return (SourcedEvent)_formatter.Deserialize(lines[i].ReadStoredEvent(id, i+1));
             }
             id.ReleaseReadLock();
         }
@@ -55,39 +50,35 @@ namespace Ncqrs.Eventing.Storage.NoDB
             source.EventSourceId.GetWriteLock();
             if (file.Exists)
             {
-                if (GetVersion(file) > source.InitialVersion)
+                if (GetVersion(source.EventSourceId) > source.InitialVersion)
                     throw new ConcurrencyException(source.EventSourceId, source.Version);
             }
-            using (var writer = new StreamWriter(file.OpenWrite()))
+            using (var writer = file.AppendText())
             {
                 writer.AutoFlush = false;
-                UpdateEventSourceVersion(writer, source.Version);
                 foreach (SourcedEvent sourcedEvent in source.GetUncommittedEvents())
                 {
                     StoredEvent<JObject> storedEvent = _formatter.Serialize(sourcedEvent);
                     writer.WriteLine(storedEvent.WriteLine());
                 }
                 writer.Flush();
+                UpdateEventSourceVersion(source.EventSourceId, source.Version);
             }
             source.EventSourceId.ReleaseWriteLock();
         }
 
-        private void UpdateEventSourceVersion(StreamWriter writer, long version)
+        private void UpdateEventSourceVersion(Guid id, long version)
         {
-            var versionstring = version.ToString("00000000000000000000") + writer.NewLine;
-            Stream filestream = writer.BaseStream;
-            filestream.Position = 0;
-            filestream.Write(Encoding.UTF8.GetBytes(versionstring), 0, versionstring.Length);
-            filestream.Position = filestream.Length;
+            var file = id.GetVersionFile(_path);
+            var versionstring = version.ToString("00000000000000000000");
+            File.WriteAllText(file.FullName, versionstring);
         }
 
-        private static long GetVersion(FileInfo file)
+        private long GetVersion(Guid id)
         {
-            using (var reader = file.OpenText())
-            {
-                string readLine = reader.ReadLine();
-                return long.Parse(readLine);
-            }
+            var file = id.GetVersionFile(_path);
+            var version = File.ReadAllText(file.FullName);
+            return long.Parse(version);
         }
 
         #endregion
