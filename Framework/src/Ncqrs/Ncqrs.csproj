@@ -175,6 +175,7 @@
     <Compile Include="Eventing\Storage\IEventTypeResolver.cs" />
     <Compile Include="Eventing\Storage\IPropertyBagConverter.cs" />
     <Compile Include="Eventing\Storage\IPropertyBagPostConverter.cs" />
+    <Compile Include="Eventing\Storage\IReadableEventStore.cs" />
     <Compile Include="Eventing\Storage\ISnapshotStore.cs" />
     <Compile Include="Eventing\Storage\Serialization\EventConverter.cs" />
     <Compile Include="Eventing\Storage\Serialization\IEventConverter.cs" />
