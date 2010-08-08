@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace Ncqrs.EventBus
@@ -6,9 +7,10 @@ namespace Ncqrs.EventBus
     public class CursorPositionCalculator
     {
         private int _lastEventInSequence;
+        private Guid _lastEventInSequenceId;
         private int _count;
         private int _sequenceLength;
-        private readonly SortedSet<int> _eventsNotInSequence = new SortedSet<int>();
+        private readonly SortedDictionary<int, Guid> _eventsNotInSequence = new SortedDictionary<int, Guid>();
 
         public CursorPositionCalculator(int startingSequenceNumber)
         {
@@ -26,19 +28,25 @@ namespace Ncqrs.EventBus
             }
             else
             {
-                _eventsNotInSequence.Add(sequencedEvent.Sequence);
+                _eventsNotInSequence.Add(sequencedEvent.Sequence, sequencedEvent.Event.EventIdentifier);
             }
         }
 
         private void ProcessEventsNotInSequence()
         {
-            var enumerator = _eventsNotInSequence.GetEnumerator();
-            while (enumerator.MoveNext() && enumerator.Current == _lastEventInSequence + 1)
+            KeyValuePair<int, Guid> current;
+            while (_eventsNotInSequence.Count > 0 && (current = _eventsNotInSequence.First()).Key == GetNextInSequence())
             {
                 _lastEventInSequence++;
+                _lastEventInSequenceId = current.Value;
                 _sequenceLength++;
+                _eventsNotInSequence.Remove(current.Key);
             }            
-            _eventsNotInSequence.RemoveWhere(x => x <= _lastEventInSequence);
+        }
+
+        private int GetNextInSequence()
+        {
+            return _lastEventInSequence + 1;
         }
 
         public int Count
@@ -49,6 +57,11 @@ namespace Ncqrs.EventBus
         public int SequenceLength
         {
             get { return _sequenceLength;}
-        }        
+        }   
+     
+        public Guid LastEventInSequenceId
+        {
+            get { return _lastEventInSequenceId; }
+        }
     }
 }

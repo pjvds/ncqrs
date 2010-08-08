@@ -7,41 +7,25 @@ namespace Ncqrs.EventBus.Tests
     public class CursorPositionCalculatorSpecification
     {
         [Test]
-        public void When_event_does_not_lengthen_the_sequence_event_counter_is_incremented()
+        public void When_event_does_not_lengthen_the_sequence()
         {
             var sut = new CursorPositionCalculator(0);
             sut.Append(new SequencedEvent(2, new TestEvent()));
 
             sut.Count.Should().Be(1);
-        }
-
-        [Test]
-        public void When_event_does_not_lengthen_the_sequence_sequence_length_is_not_incremented()
-        {
-            var sut = new CursorPositionCalculator(0);
-            sut.Append(new SequencedEvent(2, new TestEvent()));
-
             sut.SequenceLength.Should().Be(0);
-        }
+        }        
 
         [Test]
-        public void When_event_lengthens_the_sequence_event_counter_is_incremented()
+        public void When_event_lengthens_the_sequence()
         {
             var sut = new CursorPositionCalculator(0);
             sut.Append(new SequencedEvent(1, new TestEvent()));
 
             sut.Count.Should().Be(1);
+            sut.SequenceLength.Should().Be(1);   
         }
-
-        [Test]
-        public void When_event_lengthens_the_sequence_sequence_length_is_incremented()
-        {
-            var sut = new CursorPositionCalculator(0);
-            sut.Append(new SequencedEvent(1, new TestEvent()));
-
-            sut.SequenceLength.Should().Be(1);            
-        }
-
+        
         [Test]
         public void When_event_fills_gap_in_sequence_sequence_length_is_incremented_by_gap_size()
         {
@@ -52,7 +36,8 @@ namespace Ncqrs.EventBus.Tests
 
             sut.Append(new SequencedEvent(1, new TestEvent()));
 
-            sut.SequenceLength.Should().Be(3);
+            sut.Count.Should().Be(4);
+            sut.SequenceLength.Should().Be(3);            
         } 
     }
 }
