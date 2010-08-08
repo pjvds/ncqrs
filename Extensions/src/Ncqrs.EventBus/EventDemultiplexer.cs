@@ -4,7 +4,7 @@ namespace Ncqrs.EventBus
 {
     public class EventDemultiplexer
     {
-        private readonly IEventStore _eventStore;
+        private readonly IEventStore _eventStore;        
 
         public EventDemultiplexer(IEventStore eventStore)
         {
@@ -13,7 +13,7 @@ namespace Ncqrs.EventBus
 
         public SequencedEvent GetNext()
         {
-            return null;
+            return _eventStore.GetNext();
         }
     }
 }
