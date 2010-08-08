@@ -53,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CursorPositionCalculatorSpecification.cs" />
+    <Compile Include="EventDemultiplexerSpecification.cs" />
     <Compile Include="TestEvent.cs" />
     <Compile Include="When_processing_fails.cs" />
     <Compile Include="When_processing_succeeds.cs" />
