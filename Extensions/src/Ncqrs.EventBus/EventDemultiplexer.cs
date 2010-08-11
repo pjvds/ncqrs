@@ -4,64 +4,63 @@ using System.Collections.Generic;
 
 namespace Ncqrs.EventBus
 {
-    public class EventDemultiplexer
+    public class EventDemultiplexer : IEventQueue
     {
-        private readonly IEventStore _eventStore;
-        private readonly List<EventDemultiplexerQueue> _queues = new List<EventDemultiplexerQueue>();        
+        private readonly Action<SequencedEvent> _enqueueToProcessingCallback;
+        private readonly IPipelineStateMonitor _stateMonitor;
+        private readonly List<EventDemultiplexerQueue> _queues = new List<EventDemultiplexerQueue>();
+        private readonly Dictionary<SequencedEvent, EventDemultiplexerQueue> _eventQueueMap = new Dictionary<SequencedEvent, EventDemultiplexerQueue>();
 
-        public EventDemultiplexer(IEventStore eventStore)
+        public EventDemultiplexer(Action<SequencedEvent> enqueueToProcessingCallback, IPipelineStateMonitor stateMonitor)
         {
-            _eventStore = eventStore;
+            _enqueueToProcessingCallback = enqueueToProcessingCallback;
+            _stateMonitor = stateMonitor;
         }
 
-        public SequencedEvent GetNext()
+        public void ProcessNext(SequencedEvent sequencedEvent)
         {
-            var queue = FindFirstUnblockedQueue();
+            var queue = FindQueueFor(sequencedEvent);
             if (queue != null)
             {
-                return DequeueFromExistingQueue(queue);
+                queue.Enqueue(sequencedEvent);                
             }
-            var fetchedEvent = FetchForNewQueue();
-            CreateQueueFor(fetchedEvent.Event.EventSourceId);
-            return fetchedEvent;
-        }
-
-        private SequencedEvent FetchForNewQueue()
-        {
-            bool enqueued;
-            SequencedEvent fetchedEvent;
-            do 
+            else
             {
-                fetchedEvent = _eventStore.GetNext();
-                enqueued = PlaceEventInQueue(fetchedEvent);
+                queue = CreateAndBlockQueueFor(sequencedEvent);
+                AssociateEventAndQueue(sequencedEvent, queue);
+                EnqueueToProcessing(sequencedEvent);
             }
-            while (enqueued);
-            return fetchedEvent;
+            _stateMonitor.OnDemultiplexed();
         }
 
-        private SequencedEvent DequeueFromExistingQueue(EventDemultiplexerQueue queue)
+        private void AssociateEventAndQueue(SequencedEvent sequencedEvent, EventDemultiplexerQueue queue)
         {
-            var result = queue.Dequeue();
-            if (queue.IsEmpty)
-            {
-                _queues.Remove(queue);
-            }
-            return result;
+            _eventQueueMap[sequencedEvent] = queue;
         }
 
-        private bool PlaceEventInQueue(SequencedEvent fetchedEvent)
+        public void MarkAsProcessed(SequencedEvent sequencedEvent)
         {
-            return _queues.FirstOrDefault(x => x.Accept(fetchedEvent)) != null;
+            var queue = _eventQueueMap[sequencedEvent];
+            queue.Unblock();
+            _stateMonitor.OnProcessed();
         }
 
-        private void CreateQueueFor(Guid eventSourceId)
+        private void EnqueueToProcessing(SequencedEvent sequencedEvent)
         {
-            _queues.Add(new EventDemultiplexerQueue(eventSourceId));
+            _enqueueToProcessingCallback(sequencedEvent);
         }
 
-        private EventDemultiplexerQueue FindFirstUnblockedQueue()
+        private EventDemultiplexerQueue CreateAndBlockQueueFor(SequencedEvent sequencedEvent)
         {
-            return _queues.FirstOrDefault(x => x.IsUnblocked);
+            var queue = new EventDemultiplexerQueue(sequencedEvent.Event.EventSourceId, _enqueueToProcessingCallback);
+            _queues.Add(queue);
+            return queue;
         }
+
+        private EventDemultiplexerQueue FindQueueFor(SequencedEvent sequencedEvent)
+        {
+            return _queues.FirstOrDefault(x => x.Accepts(sequencedEvent));
+        }
+                      
     }
 }

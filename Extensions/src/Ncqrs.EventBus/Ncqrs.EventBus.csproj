@@ -44,14 +44,25 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EventDemultiplexerQueue.cs" />
+    <Compile Include="FetchDirective.cs" />
+    <Compile Include="IEventFetchPolicy.cs" />
+    <Compile Include="IEventQueue.cs" />
     <Compile Include="IEventStore.cs" />
     <Compile Include="CursorPositionCalculator.cs" />
     <Compile Include="EventDemultiplexer.cs" />
     <Compile Include="IEventProcessor.cs" />
+    <Compile Include="IPipelineBackupQueue.cs" />
+    <Compile Include="IPipelineStateMonitor.cs" />
     <Compile Include="IPipelineStateStore.cs" />
+    <Compile Include="Pipeline.cs" />
     <Compile Include="PipelineProcessor.cs" />
+    <Compile Include="PipelineState.cs" />
+    <Compile Include="PipelineStateChangedEventArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SequencedEvent.cs" />
+    <Compile Include="ThresholdedEventFetchPolicy.cs" />
+    <Compile Include="ThresholdedPipelineStateStore.cs" />
+    <Compile Include="ThresholedPipelineStateMonitor.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

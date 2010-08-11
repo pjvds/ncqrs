@@ -4,30 +4,38 @@ namespace Ncqrs.EventBus
 {
     public class PipelineProcessor
     {
-        private readonly IEventStore _eventStore;
         private readonly IPipelineStateStore _pipelineStateStore;
+        private readonly IPipelineBackupQueue _pipelineBackupQueue;
         private readonly IEventProcessor _eventProcessor;
+        private readonly IEventQueue _eventQueue;
 
-        public PipelineProcessor(IEventStore eventStore, IPipelineStateStore pipelineStateStore, IEventProcessor eventProcessor)
+        public PipelineProcessor(
+            IPipelineBackupQueue pipelineBackupQueue, 
+            IPipelineStateStore pipelineStateStore, 
+            IEventProcessor eventProcessor,
+            IEventQueue eventQueue)
         {
-            _eventStore = eventStore;
+            _pipelineBackupQueue = pipelineBackupQueue;
             _eventProcessor = eventProcessor;
+            _eventQueue = eventQueue;
             _pipelineStateStore = pipelineStateStore;
         }
 
-        public void ProcessNext()
+        public void ProcessNext(SequencedEvent evnt)
         {
-            var evnt = _eventStore.GetNext();
             try
             {
                 _eventProcessor.Process(evnt.Event);
             }
             catch (Exception)
             {
-                _pipelineStateStore.EnqueueForLaterProcessing(evnt.Event);
+                _pipelineBackupQueue.EnqueueForLaterProcessing(evnt.Event);
             }
-            _pipelineStateStore.MarkLastProcessedEvent(evnt);
-            _eventStore.UnblockSource(evnt.Event.EventSourceId);
+            finally
+            {
+                _pipelineStateStore.MarkLastProcessedEvent(evnt);
+                _eventQueue.MarkAsProcessed(evnt);
+            }
         }
     }
 }

@@ -6,48 +6,31 @@ namespace Ncqrs.EventBus
     public class EventDemultiplexerQueue
     {
         private readonly Guid _eventSourceId;
-        private bool _blocked;
+        private readonly Action<SequencedEvent> _enqueueToProcessingCallback;
         private readonly Queue<SequencedEvent> _queue = new Queue<SequencedEvent>();
 
-        public EventDemultiplexerQueue(Guid eventSourceId)
+        public EventDemultiplexerQueue(Guid eventSourceId, Action<SequencedEvent> enqueueToProcessingCallback)
         {
             _eventSourceId = eventSourceId;
-            _blocked = true;
+            _enqueueToProcessingCallback = enqueueToProcessingCallback;
         }
-
-        public bool IsUnblocked
-        {
-            get { return !_blocked;}            
-        }
-
+        
         public void Unblock()
         {
-            _blocked = false;
-        }
-
-        public bool IsEmpty
-        {
-            get { return _queue.Count == 0; }
-        }
-
-        public SequencedEvent Dequeue()
-        {
-            if (_blocked)
+            if (_queue.Count > 0)
             {
-                throw new InvalidOperationException("Can't Dequeue from blocked queue");
+                _enqueueToProcessingCallback(_queue.Dequeue());
             }
-            _blocked = true;            
-            return _queue.Dequeue();
+        }
+                
+        public bool Accepts(SequencedEvent fetchedEvent)
+        {
+            return fetchedEvent.Event.EventSourceId == _eventSourceId;
         }
 
-        public bool Accept(SequencedEvent fetchedEvent)
+        public void Enqueue(SequencedEvent sequencedEvent)
         {
-            if (fetchedEvent.Event.EventSourceId != _eventSourceId)
-            {
-                return false;
-            }
-            _queue.Enqueue(fetchedEvent);
-            return true;
+            _queue.Enqueue(sequencedEvent);
         }
     }
 }

@@ -39,5 +39,19 @@ namespace Ncqrs.EventBus.Tests
             sut.Count.Should().Be(4);
             sut.SequenceLength.Should().Be(3);            
         } 
+
+        [Test]
+        public void When_clearing_sequence()
+        {
+            var sut = new CursorPositionCalculator(0);
+            sut.Append(new SequencedEvent(1, new TestEvent()));
+            sut.Append(new SequencedEvent(2, new TestEvent()));
+            sut.Append(new SequencedEvent(4, new TestEvent()));
+
+            sut.ClearSequence();
+
+            sut.Count.Should().Be(1);
+            sut.SequenceLength.Should().Be(0);            
+        }
     }
 }

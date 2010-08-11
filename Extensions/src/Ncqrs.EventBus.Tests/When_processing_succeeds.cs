@@ -14,8 +14,8 @@ namespace Ncqrs.EventBus.Tests
         [Test]
         public void Event_is_marked_as_processed()
         {
-            var sut = new PipelineProcessor(_eventStore, _pipelineStateStore, new SucceedingEventProcessor());
-            sut.ProcessNext();
+            var sut = CreateProcessor();
+            sut.ProcessNext(_event);
 
             _pipelineStateStore.AssertWasCalled(x => x.MarkLastProcessedEvent(_event));
         }
@@ -23,10 +23,19 @@ namespace Ncqrs.EventBus.Tests
         [Test]
         public void Event_source_is_unblocked()
         {
-            var sut = new PipelineProcessor(_eventStore, _pipelineStateStore, new SucceedingEventProcessor());
-            sut.ProcessNext();
+            var sut = CreateProcessor();
+            sut.ProcessNext(_event);
 
-            _eventStore.AssertWasCalled(x => x.UnblockSource(_event.Event.EventSourceId));
+            _eventQueue.AssertWasCalled(x => x.MarkAsProcessed(_event));
+        }
+
+        private PipelineProcessor CreateProcessor()
+        {
+            return new PipelineProcessor(
+                _pipelineBackupQueue,
+                _pipelineStateStore,
+                new SucceedingEventProcessor(),
+                _eventQueue);
         }
     }
 }

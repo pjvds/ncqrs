@@ -63,5 +63,11 @@ namespace Ncqrs.EventBus
         {
             get { return _lastEventInSequenceId; }
         }
+
+        public void ClearSequence()
+        {
+            _count -= _sequenceLength;
+            _sequenceLength = 0;
+        }
     }
 }

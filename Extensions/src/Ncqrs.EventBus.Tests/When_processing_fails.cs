@@ -9,19 +9,30 @@ namespace Ncqrs.EventBus.Tests
         [Test]
         public void Event_is_enqueue()
         {
-            var sut = new PipelineProcessor(_eventStore, _pipelineStateStore, new FailingEventProcessor());
-            sut.ProcessNext();
+            var sut = CreateProcessor();
 
-            _pipelineStateStore.AssertWasCalled(x => x.EnqueueForLaterProcessing(_event.Event));
-        }
+            sut.ProcessNext(_event);
+
+            _pipelineBackupQueue.AssertWasCalled(x => x.EnqueueForLaterProcessing(_event.Event));
+        }        
 
         [Test]
         public void Event_is_marked_as_processed()
         {
-            var sut = new PipelineProcessor(_eventStore, _pipelineStateStore, new FailingEventProcessor());
-            sut.ProcessNext();
+            var sut = CreateProcessor();
+
+            sut.ProcessNext(_event);
 
             _pipelineStateStore.AssertWasCalled(x => x.MarkLastProcessedEvent(_event));
+        }
+
+        private PipelineProcessor CreateProcessor()
+        {
+            return new PipelineProcessor(
+                _pipelineBackupQueue,
+                _pipelineStateStore,
+                new FailingEventProcessor(),
+                MockRepository.GenerateMock<IEventQueue>());
         }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using NUnit.Framework;
+using FluentAssertions;
 using Rhino.Mocks;
 
 namespace Ncqrs.EventBus.Tests
@@ -8,89 +9,50 @@ namespace Ncqrs.EventBus.Tests
     public class EventDemultiplexerSpecification
     {
         [Test]
-        public void When_all_queues_are_empty_event_is_fetched_from_store()
+        public void When_event_source_is_not_blocked_event_is_passed_through_system()
         {
             Guid eventSourceId = Guid.NewGuid();
-            var eventStore = new FakeEventStore(
-                CreateEvent(eventSourceId));
-            var sut = new EventDemultiplexer(eventStore);
+            int enqueuedToProcessingCount = 0;
 
-            sut.GetNext();
+            var sut = new EventDemultiplexer(x => { enqueuedToProcessingCount++; }, MockRepository.GenerateMock<IPipelineStateMonitor>());
+            sut.ProcessNext(CreateEvent(eventSourceId));
 
-            eventStore.AssertWasFetched(1);
+            enqueuedToProcessingCount.Should().Be(1);
+
         }
 
         [Test]
-        public void When_one_queue_is_blocked_event_is_fetched_to_another_queue()
-        {
-            Guid firstEventSourceId = Guid.NewGuid();
-            Guid secondEventSourceId = Guid.NewGuid();
-            var eventStore = new FakeEventStore(
-                CreateEvent(firstEventSourceId),
-                CreateEvent(secondEventSourceId));
-
-            var sut = new EventDemultiplexer(eventStore);
-            sut.GetNext();
-
-            sut.GetNext();
-
-            eventStore.AssertWasFetched(2);
-        }
-
-        [Test]
-        public void When_one_queue_is_blocked_and_next_event_belongs_to_same_aggregate_yet_another_event_is_fetched_to_another_queue()
+        public void Different_event_sources_does_not_block_each_other()
         {
             Guid firstEventSourceId = Guid.NewGuid();
             Guid secondEventSourceId = Guid.NewGuid();
 
-            var eventStore = new FakeEventStore(
-                CreateEvent(firstEventSourceId),
-                CreateEvent(firstEventSourceId),
-                CreateEvent(secondEventSourceId));
+            int enqueuedToProcessingCount = 0;
 
-            var sut = new EventDemultiplexer(eventStore);
-            sut.GetNext();
+            var sut = new EventDemultiplexer(x => { enqueuedToProcessingCount++; }, MockRepository.GenerateMock<IPipelineStateMonitor>());
+            sut.ProcessNext(CreateEvent(firstEventSourceId));
+            sut.ProcessNext(CreateEvent(secondEventSourceId));
 
-            sut.GetNext();
+            enqueuedToProcessingCount.Should().Be(2);
+        }
 
-            eventStore.AssertWasFetched(3);
+        [Test]
+        public void When_event_source_is_blocked_event_is_enqueued()
+        {
+            Guid eventSourceId = Guid.NewGuid();
+
+            int enqueuedToProcessingCount = 0;
+
+            var sut = new EventDemultiplexer(x => { enqueuedToProcessingCount++; }, MockRepository.GenerateMock<IPipelineStateMonitor>());
+            sut.ProcessNext(CreateEvent(eventSourceId));
+            sut.ProcessNext(CreateEvent(eventSourceId));
+
+            enqueuedToProcessingCount.Should().Be(1);
         }
 
         private static SequencedEvent CreateEvent(Guid sourceId)
         {
             return new SequencedEvent(0, new TestEvent(Guid.NewGuid(), sourceId, 0, DateTime.Now));
-        }
-
-        private class FakeEventStore : IEventStore
-        {
-            private readonly SequencedEvent[] _events;
-            private int _index = -1;
-
-            public FakeEventStore(params SequencedEvent[] events)
-            {
-                _events = events;
-            }
-
-            public void AssertWasFetched(int count)
-            {
-                Assert.IsTrue(_index+1 == count);
-            }
-
-            public void SetCursorPositionAfter(Guid lastEventId)
-            {
-                throw new NotImplementedException();
-            }
-
-            public SequencedEvent GetNext()
-            {
-                _index++;
-                return _events[_index];
-            }
-
-            public void UnblockSource(Guid eventSourceId)
-            {
-                throw new NotImplementedException();
-            }
         }
     }
 }
