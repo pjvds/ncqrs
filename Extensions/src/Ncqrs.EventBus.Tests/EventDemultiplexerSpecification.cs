@@ -10,21 +10,24 @@ namespace Ncqrs.EventBus.Tests
         [Test]
         public void When_all_queues_are_empty_event_is_fetched_from_store()
         {
-            var eventStore = MockRepository.GenerateMock<IEventStore>();
+            Guid eventSourceId = Guid.NewGuid();
+            var eventStore = new FakeEventStore(
+                CreateEvent(eventSourceId));
             var sut = new EventDemultiplexer(eventStore);
 
             sut.GetNext();
 
-            eventStore.AssertWasCalled(x => x.GetNext());
+            eventStore.AssertWasFetched(1);
         }
 
         [Test]
         public void When_one_queue_is_blocked_event_is_fetched_to_another_queue()
         {
-            Guid eventSourceId = Guid.NewGuid();
+            Guid firstEventSourceId = Guid.NewGuid();
+            Guid secondEventSourceId = Guid.NewGuid();
             var eventStore = new FakeEventStore(
-                CreateEvent(eventSourceId),
-                CreateEvent(eventSourceId));
+                CreateEvent(firstEventSourceId),
+                CreateEvent(secondEventSourceId));
 
             var sut = new EventDemultiplexer(eventStore);
             sut.GetNext();
@@ -42,8 +45,8 @@ namespace Ncqrs.EventBus.Tests
 
             var eventStore = new FakeEventStore(
                 CreateEvent(firstEventSourceId),
-                CreateEvent(secondEventSourceId),
-                CreateEvent(firstEventSourceId));
+                CreateEvent(firstEventSourceId),
+                CreateEvent(secondEventSourceId));
 
             var sut = new EventDemultiplexer(eventStore);
             sut.GetNext();

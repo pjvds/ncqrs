@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EventDemultiplexerQueue.cs" />
     <Compile Include="IEventStore.cs" />
     <Compile Include="CursorPositionCalculator.cs" />
     <Compile Include="EventDemultiplexer.cs" />
