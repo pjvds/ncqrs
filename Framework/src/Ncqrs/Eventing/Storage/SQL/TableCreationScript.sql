@@ -1,5 +1,6 @@
 ﻿CREATE TABLE [dbo].[Events]
 (
+	[SequentialId] [int] NOT NULL IDENTITY (1, 1)
 	[Id] [uniqueidentifier] NOT NULL,
 	[TimeStamp] [datetime] NOT NULL,
 
