@@ -30,9 +30,9 @@ namespace Ncqrs.EventBus.Tests
         {
             return new PipelineProcessor(
                 _pipelineBackupQueue,
-                _pipelineStateStore,
                 new FailingEventProcessor(),
-                MockRepository.GenerateMock<IEventQueue>());
+                MockRepository.GenerateMock<IEventQueue>(),
+                x => _pipelineStateStore.MarkLastProcessedEvent(x));
         }
     }
 }

@@ -1,6 +1,8 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Ncqrs.EventBus
@@ -9,7 +11,7 @@ namespace Ncqrs.EventBus
     {
         private const int MaxDegreeOfParallelismForProcessing = 10;
         private const int PipelineStateUpdateThreshold = 10;
-        private const int PipelineMonitorThreshold = 1;
+        private static readonly TimeSpan EventFetchPolicyUpdateInterval = TimeSpan.FromMilliseconds(100);
 
         private int _eventSequence;
 
@@ -19,26 +21,26 @@ namespace Ncqrs.EventBus
         private readonly IPipelineStateStore _pipelineStateStore;
         private readonly EventDemultiplexer _eventDemultiplexer;
         private readonly BlockingCollection<SequencedEvent> _preProcessingQueue = new BlockingCollection<SequencedEvent>();
+        private readonly BlockingCollection<SequencedEvent> _postProcessingQueue = new BlockingCollection<SequencedEvent>();
         private readonly BlockingCollection<SequencedEvent> _preDemultiplexingQueue = new BlockingCollection<SequencedEvent>();
-        private readonly IPipelineStateMonitor _stateMonitor;
         private readonly IPipelineBackupQueue _pipelineBackupQueue;
+        private Timer _eventFetchPolicyExecutor;
 
         public Pipeline(IEventProcessor eventProcessor, IPipelineBackupQueue pipelineBackupQueue, IPipelineStateStore pipelineStateStore, IEventStore eventStore, IEventFetchPolicy fetchPolicy)
         {
-            _stateMonitor = new ThresholedPipelineStateMonitor(PipelineMonitorThreshold);
-            _stateMonitor.StateChanged += OnPipelineStateChanged;
             _pipelineStateStore = new ThresholdedPipelineStateStore(pipelineStateStore, PipelineStateUpdateThreshold);
-            _eventDemultiplexer = new EventDemultiplexer(EnqueueToProcessing, _stateMonitor);
-            _processor = new PipelineProcessor(_pipelineBackupQueue, _pipelineStateStore, eventProcessor, _eventDemultiplexer);
+            _eventDemultiplexer = new EventDemultiplexer(EnqueueToProcessing);
+            _eventDemultiplexer.StateChanged += (sender, args) => EvaluateEventFetchPolicy();
+            _processor = new PipelineProcessor(_pipelineBackupQueue, eventProcessor, _eventDemultiplexer, EnqueueToPostProcessing);
             _pipelineBackupQueue = pipelineBackupQueue;
             _fetchPolicy = fetchPolicy;
             _eventStore = eventStore;
         }
 
-        private void OnPipelineStateChanged(object sender, PipelineStateChangedEventArgs e)
+        private void EvaluateEventFetchPolicy()
         {
-            var directive = _fetchPolicy.ShouldFetch(e.State);
-            if (directive.ShouldFetch)
+            var directive = _fetchPolicy.ShouldFetch(new PipelineState(_eventDemultiplexer.PendingEventCount));
+           if (directive.ShouldFetch)
            {
                FetchEvents(directive);
            }
@@ -62,6 +64,9 @@ namespace Ncqrs.EventBus
             _eventStore.SetCursorPositionAfter(_pipelineStateStore.GetLastProcessedEvent());
             StartProcessor();
             StartDemultiplexer();
+            StartPostProcessor();
+            FetchEvents(FetchDirective.FetchNow(10));
+            _eventFetchPolicyExecutor = new Timer(x => EvaluateEventFetchPolicy(), null, TimeSpan.Zero, EventFetchPolicyUpdateInterval);            
         }
 
         private void EnqueueToProcessing(SequencedEvent evnt)
@@ -69,16 +74,24 @@ namespace Ncqrs.EventBus
             _preProcessingQueue.Add(evnt);
         }
 
+        private void EnqueueToPostProcessing(SequencedEvent evnt)
+        {
+            _postProcessingQueue.Add(evnt);
+        }
+
         private void StartDemultiplexer()
         {
-            var processingTask = Task.Factory.StartNew(DemultiplexEvents);
-            processingTask.Wait();
+            Task.Factory.StartNew(DemultiplexEvents);
         }
 
         private void StartProcessor()
         {
-            var processingTask = Task.Factory.StartNew(ProcessEvents);
-            processingTask.Wait();
+            Task.Factory.StartNew(ProcessEvents);
+        }
+
+        private void StartPostProcessor()
+        {
+            Task.Factory.StartNew(PostProcessEvents);
         }
 
         private void DemultiplexEvents()
@@ -98,6 +111,15 @@ namespace Ncqrs.EventBus
                                           MaxDegreeOfParallelism = MaxDegreeOfParallelismForProcessing
                                       };
             Parallel.ForEach(eventStream, parallelOptions, x => _processor.ProcessNext(x));
+        }
+
+        private void PostProcessEvents()
+        {
+            var eventStream = _postProcessingQueue.GetConsumingEnumerable();
+            foreach (var evnt in eventStream)
+            {
+                _pipelineStateStore.MarkLastProcessedEvent(evnt);
+            }
         }
     }
 }

@@ -1,7 +1,6 @@
 using System;
 using NUnit.Framework;
 using FluentAssertions;
-using Rhino.Mocks;
 
 namespace Ncqrs.EventBus.Tests
 {
@@ -14,7 +13,7 @@ namespace Ncqrs.EventBus.Tests
             Guid eventSourceId = Guid.NewGuid();
             int enqueuedToProcessingCount = 0;
 
-            var sut = new EventDemultiplexer(x => { enqueuedToProcessingCount++; }, MockRepository.GenerateMock<IPipelineStateMonitor>());
+            var sut = new EventDemultiplexer(x => { enqueuedToProcessingCount++; });
             sut.ProcessNext(CreateEvent(eventSourceId));
 
             enqueuedToProcessingCount.Should().Be(1);
@@ -29,7 +28,7 @@ namespace Ncqrs.EventBus.Tests
 
             int enqueuedToProcessingCount = 0;
 
-            var sut = new EventDemultiplexer(x => { enqueuedToProcessingCount++; }, MockRepository.GenerateMock<IPipelineStateMonitor>());
+            var sut = new EventDemultiplexer(x => { enqueuedToProcessingCount++; });
             sut.ProcessNext(CreateEvent(firstEventSourceId));
             sut.ProcessNext(CreateEvent(secondEventSourceId));
 
@@ -43,7 +42,7 @@ namespace Ncqrs.EventBus.Tests
 
             int enqueuedToProcessingCount = 0;
 
-            var sut = new EventDemultiplexer(x => { enqueuedToProcessingCount++; }, MockRepository.GenerateMock<IPipelineStateMonitor>());
+            var sut = new EventDemultiplexer(x => { enqueuedToProcessingCount++; });
             sut.ProcessNext(CreateEvent(eventSourceId));
             sut.ProcessNext(CreateEvent(eventSourceId));
 

@@ -33,9 +33,9 @@ namespace Ncqrs.EventBus.Tests
         {
             return new PipelineProcessor(
                 _pipelineBackupQueue,
-                _pipelineStateStore,
                 new SucceedingEventProcessor(),
-                _eventQueue);
+                _eventQueue,
+                x => _pipelineStateStore.MarkLastProcessedEvent(x));
         }
     }
 }

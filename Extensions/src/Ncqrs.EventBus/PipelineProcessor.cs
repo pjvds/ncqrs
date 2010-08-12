@@ -4,21 +4,21 @@ namespace Ncqrs.EventBus
 {
     public class PipelineProcessor
     {
-        private readonly IPipelineStateStore _pipelineStateStore;
         private readonly IPipelineBackupQueue _pipelineBackupQueue;
         private readonly IEventProcessor _eventProcessor;
         private readonly IEventQueue _eventQueue;
+        private readonly Action<SequencedEvent> _postProcessingAction;
 
         public PipelineProcessor(
             IPipelineBackupQueue pipelineBackupQueue, 
-            IPipelineStateStore pipelineStateStore, 
             IEventProcessor eventProcessor,
-            IEventQueue eventQueue)
+            IEventQueue eventQueue,
+            Action<SequencedEvent> postProcessingAction)
         {
             _pipelineBackupQueue = pipelineBackupQueue;
             _eventProcessor = eventProcessor;
             _eventQueue = eventQueue;
-            _pipelineStateStore = pipelineStateStore;
+            _postProcessingAction = postProcessingAction;
         }
 
         public void ProcessNext(SequencedEvent evnt)
@@ -33,7 +33,7 @@ namespace Ncqrs.EventBus
             }
             finally
             {
-                _pipelineStateStore.MarkLastProcessedEvent(evnt);
+                _postProcessingAction(evnt);
                 _eventQueue.MarkAsProcessed(evnt);
             }
         }

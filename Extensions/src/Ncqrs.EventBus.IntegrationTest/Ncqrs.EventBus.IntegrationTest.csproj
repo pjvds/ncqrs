@@ -2,18 +2,21 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{CAF2E548-87C8-422B-A62C-8C3ED83FF3C3}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{DC0FB020-79D9-497E-8869-9508FCFA6537}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Ncqrs.EventBus</RootNamespace>
-    <AssemblyName>Ncqrs.EventBus</AssemblyName>
+    <RootNamespace>Ncqrs.EventBus.IntegrationTest</RootNamespace>
+    <AssemblyName>Ncqrs.EventBus.IntegrationTest</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,7 +25,8 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -43,27 +47,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EventDemultiplexerQueue.cs" />
-    <Compile Include="FetchDirective.cs" />
-    <Compile Include="IEventFetchPolicy.cs" />
-    <Compile Include="IEventQueue.cs" />
-    <Compile Include="IEventStore.cs" />
-    <Compile Include="CursorPositionCalculator.cs" />
-    <Compile Include="EventDemultiplexer.cs" />
-    <Compile Include="IEventProcessor.cs" />
-    <Compile Include="IPipelineBackupQueue.cs" />
-    <Compile Include="IPipelineMonitoringStrategy.cs" />
-    <Compile Include="IPipelineStateMonitor.cs" />
-    <Compile Include="IPipelineStateStore.cs" />
-    <Compile Include="Pipeline.cs" />
-    <Compile Include="PipelineProcessor.cs" />
-    <Compile Include="PipelineState.cs" />
-    <Compile Include="PipelineStateChangedEventArgs.cs" />
-    <Compile Include="PipelineStateMonitor.cs" />
+    <Compile Include="ConsoleEventProcessor.cs" />
+    <Compile Include="FakeEventStore.cs" />
+    <Compile Include="InMemoryPipelineBackupQueue.cs" />
+    <Compile Include="InMemoryPipelineStateStore.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SequencedEvent.cs" />
-    <Compile Include="ThresholdedEventFetchPolicy.cs" />
-    <Compile Include="ThresholdedPipelineStateStore.cs" />
+    <Compile Include="RandomEvent.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Ncqrs.EventBus\Ncqrs.EventBus.csproj">
+      <Project>{CAF2E548-87C8-422B-A62C-8C3ED83FF3C3}</Project>
+      <Name>Ncqrs.EventBus</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

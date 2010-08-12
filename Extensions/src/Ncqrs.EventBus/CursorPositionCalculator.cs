@@ -19,7 +19,7 @@ namespace Ncqrs.EventBus
 
         public void Append(SequencedEvent sequencedEvent)
         {
-            _count++;    
+            _count++;
             if (sequencedEvent.Sequence == _lastEventInSequence + 1)
             {
                 _lastEventInSequence++;

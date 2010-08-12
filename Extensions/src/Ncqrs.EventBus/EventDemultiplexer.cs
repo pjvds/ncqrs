@@ -1,20 +1,27 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace Ncqrs.EventBus
 {
     public class EventDemultiplexer : IEventQueue
     {
+        private int _pendingEventCount;
         private readonly Action<SequencedEvent> _enqueueToProcessingCallback;
-        private readonly IPipelineStateMonitor _stateMonitor;
         private readonly List<EventDemultiplexerQueue> _queues = new List<EventDemultiplexerQueue>();
         private readonly Dictionary<SequencedEvent, EventDemultiplexerQueue> _eventQueueMap = new Dictionary<SequencedEvent, EventDemultiplexerQueue>();
 
-        public EventDemultiplexer(Action<SequencedEvent> enqueueToProcessingCallback, IPipelineStateMonitor stateMonitor)
+        public EventDemultiplexer(Action<SequencedEvent> enqueueToProcessingCallback)
         {
             _enqueueToProcessingCallback = enqueueToProcessingCallback;
-            _stateMonitor = stateMonitor;
+        }
+
+        public event EventHandler StateChanged;
+
+        public int PendingEventCount
+        {
+            get { return _pendingEventCount; }
         }
 
         public void ProcessNext(SequencedEvent sequencedEvent)
@@ -30,7 +37,16 @@ namespace Ncqrs.EventBus
                 AssociateEventAndQueue(sequencedEvent, queue);
                 EnqueueToProcessing(sequencedEvent);
             }
-            _stateMonitor.OnDemultiplexed();
+            Interlocked.Increment(ref _pendingEventCount);
+            OnStateChanged();
+        }
+
+        private void OnStateChanged()
+        {
+            if (StateChanged != null)
+            {
+                StateChanged(this, new EventArgs());
+            }
         }
 
         private void AssociateEventAndQueue(SequencedEvent sequencedEvent, EventDemultiplexerQueue queue)
@@ -42,7 +58,8 @@ namespace Ncqrs.EventBus
         {
             var queue = _eventQueueMap[sequencedEvent];
             queue.Unblock();
-            _stateMonitor.OnProcessed();
+            Interlocked.Decrement(ref _pendingEventCount);
+            OnStateChanged();
         }
 
         private void EnqueueToProcessing(SequencedEvent sequencedEvent)
