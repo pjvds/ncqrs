@@ -24,7 +24,7 @@ namespace Ncqrs.EventBus
             }
         }
 
-        public Guid GetLastProcessedEvent()
+        public Guid? GetLastProcessedEvent()
         {
             return _wrappedStore.GetLastProcessedEvent();
         }

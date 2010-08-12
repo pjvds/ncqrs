@@ -13,6 +13,10 @@
 
         public FetchDirective ShouldFetch(PipelineState currentState)
         {
+            if (currentState.ActiveFetchRequests > 0)
+            {
+                return FetchDirective.DoNotFetchYet();
+            }
             if (currentState.PendingEventCount < _minimumPendingEvents)
             {
                 return FetchDirective.FetchNow(_batchSize);

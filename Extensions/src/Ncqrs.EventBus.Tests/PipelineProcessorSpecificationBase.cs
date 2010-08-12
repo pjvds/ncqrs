@@ -9,7 +9,7 @@ namespace Ncqrs.EventBus.Tests
     {        
         protected SequencedEvent _event;
         protected IEventQueue _eventQueue;
-        protected IEventStore _eventStore;
+        protected IBrowsableEventStore _eventStore;
         protected IPipelineStateStore _pipelineStateStore;
         protected IPipelineBackupQueue _pipelineBackupQueue;
 
@@ -17,7 +17,7 @@ namespace Ncqrs.EventBus.Tests
         public void SetUp()
         {
             _event = new SequencedEvent(1, new TestEvent());
-            _eventStore = MockRepository.GenerateMock<IEventStore>();
+            _eventStore = MockRepository.GenerateMock<IBrowsableEventStore>();
             _pipelineStateStore = MockRepository.GenerateMock<IPipelineStateStore>();
             _pipelineBackupQueue = MockRepository.GenerateMock<IPipelineBackupQueue>();
             _eventQueue = MockRepository.GenerateMock<IEventQueue>();

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 
@@ -11,9 +12,9 @@ namespace Ncqrs.EventBus.IntegrationTest
             var p = new Pipeline(
                 new ConsoleEventProcessor(), 
                 new InMemoryPipelineBackupQueue(), 
-                new InMemoryPipelineStateStore(), 
+                new MsSqlServerPipelineStateStore(ConfigurationManager.ConnectionStrings["Main"].ConnectionString), 
                 new FakeEventStore(), 
-                new ThresholdedEventFetchPolicy(10, 50));
+                new ThresholdedEventFetchPolicy(10, 20));
             p.Start();
 
             Console.WriteLine("Press any key");

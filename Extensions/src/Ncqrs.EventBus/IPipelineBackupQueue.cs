@@ -4,7 +4,6 @@ namespace Ncqrs.EventBus
 {
     public interface IPipelineBackupQueue
     {
-        void EnqueueForLaterProcessing(SourcedEvent evnt);
-        SourcedEvent Dequeue();
+        void EnqueueForLaterProcessing(SourcedEvent evnt);        
     }
 }

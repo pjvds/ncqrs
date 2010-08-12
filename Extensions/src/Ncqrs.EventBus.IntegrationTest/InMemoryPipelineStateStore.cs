@@ -9,9 +9,9 @@ namespace Ncqrs.EventBus.IntegrationTest
             Console.WriteLine("* Marking last processed event as {0}", evnt.Event.EventIdentifier);
         }
 
-        public Guid GetLastProcessedEvent()
+        public Guid? GetLastProcessedEvent()
         {
-            return Guid.Empty;
+            return null;
         }
     }
 }

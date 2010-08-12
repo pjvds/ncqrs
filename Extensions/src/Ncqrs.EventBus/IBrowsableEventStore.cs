@@ -4,9 +4,9 @@ using Ncqrs.Eventing.Sourcing;
 
 namespace Ncqrs.EventBus
 {    
-    public interface IEventStore
+    public interface IBrowsableEventStore
     {
-        void SetCursorPositionAfter(Guid lastEventId);
+        void SetCursorPositionAfter(Guid? lastEventId);
         IEnumerable<SourcedEvent> FetchEvents(int maxCount);
     }
 }

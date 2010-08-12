@@ -9,6 +9,7 @@ using System.Text;
 using Ncqrs.Eventing.Sourcing;
 using Ncqrs.Eventing.Sourcing.Snapshotting;
 using Ncqrs.Eventing.Storage.Serialization;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace Ncqrs.Eventing.Storage.SQL
@@ -43,7 +44,7 @@ namespace Ncqrs.Eventing.Storage.SQL
         /// </summary>
         /// <param name="id">The id of the event provider.</param>
         /// <returns>All events for the specified event provider.</returns>
-        public IEnumerable<ISourcedEvent> GetAllEvents(Guid id)
+        public IEnumerable<SourcedEvent> GetAllEvents(Guid id)
         {
             return GetAllEventsSinceVersion(id, FirstVersion);
         }
@@ -53,9 +54,9 @@ namespace Ncqrs.Eventing.Storage.SQL
         /// </summary>
         /// <param name="eventSourceId">The id of the event source that owns the events.</param>
         /// <returns>All the events from the event source.</returns>
-        public IEnumerable<ISourcedEvent> GetAllEventsSinceVersion(Guid id, long version)
+        public IEnumerable<SourcedEvent> GetAllEventsSinceVersion(Guid id, long version)
         {
-            var result = new List<ISourcedEvent>();
+            var result = new List<SourcedEvent>();
 
             // Create connection and command.
             using (var connection = new SqlConnection(_connectionString))
@@ -71,13 +72,7 @@ namespace Ncqrs.Eventing.Storage.SQL
                 {
                     while (reader.Read())
                     {
-                        StoredEvent<string> rawEvent = ReadEvent(reader);
-
-                        var document = _translator.TranslateToCommon(rawEvent);
-                        _converter.Upgrade(document);
-
-                        var evnt = (ISourcedEvent) _formatter.Deserialize(document);
-                        evnt.InitializeFrom(rawEvent);
+                        SourcedEvent evnt = ReadSourcedEvent(reader);
                         result.Add(evnt);
                     }
                 }
@@ -87,9 +82,63 @@ namespace Ncqrs.Eventing.Storage.SQL
         }
 
         /// <summary>
+        /// Get some events after specified event.
+        /// </summary>
+        /// <param name="eventId">The id of last event not to be included in result set.</param>
+        /// <param name="maxCount">Maximum numer of returned events</param>
+        /// <returns>A collection events starting right after <paramref name="eventId"/>.</returns>
+        public IEnumerable<SourcedEvent> GetEventsAfter(Guid? eventId, int maxCount)
+        {
+            var result = new List<SourcedEvent>();
+
+            // Create connection and command.
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                var query = eventId.HasValue 
+                    ? Queries.SelectEventsAfterQuery 
+                    : Queries.SelectEventsFromBeginningOfTime;
+
+                using (var command = new SqlCommand(string.Format(query, maxCount), connection))
+                {
+                    // Add EventSourceId parameter and open connection.
+                    command.Parameters.AddWithValue("EventId", eventId);
+                    connection.Open();
+
+                    // Execute query and create reader.
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            SourcedEvent evnt = ReadSourcedEvent(reader);
+                            result.Add(evnt);
+                        }
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        private SourcedEvent ReadSourcedEvent(SqlDataReader reader)
+        {
+            StoredEvent<string> rawEvent = ReadEvent(reader);
+
+            var document = _translator.TranslateToCommon(rawEvent);
+            _converter.Upgrade(document);
+
+            var evnt = (SourcedEvent) _formatter.Deserialize(document);
+            evnt.EventIdentifier = document.EventIdentifier;
+            evnt.EventTimeStamp = document.EventTimeStamp;
+            evnt.EventVersion = document.EventVersion;
+            evnt.EventSourceId = document.EventSourceId;
+            evnt.EventSequence = document.EventSequence;
+            return evnt;
+        }
+
+        /// <summary>
         /// Saves all events from an event provider.
         /// </summary>
-        /// <param name="provider">The eventsource.</param>
+        /// <param name="eventSource">The eventsource.</param>
         public void Save(IEventSource eventSource)
         {
             // Get all events.
@@ -124,6 +173,37 @@ namespace Ncqrs.Eventing.Storage.SQL
                         // Update the version of the provider.
                         UpdateEventSourceVersion(eventSource, transaction);
 
+                        // Everything is handled, commint transaction.
+                        transaction.Commit();
+                    }
+                    catch
+                    {
+                        // Something went wrong, rollback transaction.
+                        transaction.Rollback();
+                        throw;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Saves all events from a collection.
+        /// </summary>
+        /// <param name="events">The event collection.</param>
+        public void SaveEvents(IEnumerable<ISourcedEvent> events)
+        {
+            // Create new connection.
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                // Open connection and begin a transaction so we can
+                // commit or rollback all the changes that has been made.
+                connection.Open();
+                using (SqlTransaction transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        // Save all events to the store.
+                        SaveEvents(events, transaction);
                         // Everything is handled, commint transaction.
                         transaction.Commit();
                     }
@@ -275,7 +355,7 @@ namespace Ncqrs.Eventing.Storage.SQL
             var eventVersion = Version.Parse((string)reader["Version"]);
             var eventSourceId = (Guid)reader["EventSourceId"];
             var eventSequence = (long)reader["Sequence"];
-            var data = (String)reader["Data"];
+            var data = Encoding.UTF8.GetString((Byte[])reader["Data"]);
 
             return new StoredEvent<string>(
                 eventIdentifier,
@@ -317,6 +397,7 @@ namespace Ncqrs.Eventing.Storage.SQL
 
             var document = _formatter.Serialize(evnt);
             var raw = _translator.TranslateToRaw(document);
+            var data = Encoding.UTF8.GetBytes(raw.Data);
 
             using (var command = new SqlCommand(Queries.InsertNewEventQuery, transaction.Connection))
             {
@@ -327,7 +408,7 @@ namespace Ncqrs.Eventing.Storage.SQL
                 command.Parameters.AddWithValue("Name", raw.EventName);
                 command.Parameters.AddWithValue("Version", raw.EventVersion.ToString());
                 command.Parameters.AddWithValue("Sequence", raw.EventSequence);
-                command.Parameters.AddWithValue("Data", raw.Data);
+                command.Parameters.AddWithValue("Data", data);
                 command.ExecuteNonQuery();
             }
         }

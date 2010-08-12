@@ -14,6 +14,8 @@ namespace Ncqrs.Eventing.Storage.SQL
 
         public const String SelectEventsAfterQuery = "SELECT TOP {0} [Id], [EventSourceId], [Name], [Version], [TimeStamp], [Data], [Sequence] FROM [Events] WHERE [SequentialId] > (SELECT [SequentialId] FROM [Events] WHERE [Id] = @EventId) ORDER BY [SequentialId]";
 
+        public const String SelectEventsFromBeginningOfTime = "SELECT TOP {0} [Id], [EventSourceId], [Name], [Version], [TimeStamp], [Data], [Sequence] FROM [Events] ORDER BY [SequentialId]";
+
         public const String SelectAllIdsForTypeQuery = "SELECT [Id] FROM [EventSources] WHERE [Type] = @Type";
 
         public const String SelectVersionQuery = "SELECT [Version] FROM [EventSources] WHERE [Id] = @id";

@@ -13,20 +13,21 @@ namespace Ncqrs.EventBus
         private const int PipelineStateUpdateThreshold = 10;
         private static readonly TimeSpan EventFetchPolicyUpdateInterval = TimeSpan.FromMilliseconds(100);
 
-        private int _eventSequence;
+        private int _eventSequence = 1;
+        private int _activeFetchRequests;
 
         private readonly PipelineProcessor _processor;
         private readonly IEventFetchPolicy _fetchPolicy;
-        private readonly IEventStore _eventStore;
+        private readonly IBrowsableEventStore _eventStore;
         private readonly IPipelineStateStore _pipelineStateStore;
         private readonly EventDemultiplexer _eventDemultiplexer;
         private readonly BlockingCollection<SequencedEvent> _preProcessingQueue = new BlockingCollection<SequencedEvent>();
         private readonly BlockingCollection<SequencedEvent> _postProcessingQueue = new BlockingCollection<SequencedEvent>();
         private readonly BlockingCollection<SequencedEvent> _preDemultiplexingQueue = new BlockingCollection<SequencedEvent>();
-        private readonly IPipelineBackupQueue _pipelineBackupQueue;
+        private readonly IPipelineBackupQueue _pipelineBackupQueue;        
         private Timer _eventFetchPolicyExecutor;
 
-        public Pipeline(IEventProcessor eventProcessor, IPipelineBackupQueue pipelineBackupQueue, IPipelineStateStore pipelineStateStore, IEventStore eventStore, IEventFetchPolicy fetchPolicy)
+        public Pipeline(IEventProcessor eventProcessor, IPipelineBackupQueue pipelineBackupQueue, IPipelineStateStore pipelineStateStore, IBrowsableEventStore eventStore, IEventFetchPolicy fetchPolicy)
         {
             _pipelineStateStore = new ThresholdedPipelineStateStore(pipelineStateStore, PipelineStateUpdateThreshold);
             _eventDemultiplexer = new EventDemultiplexer(EnqueueToProcessing);
@@ -39,7 +40,7 @@ namespace Ncqrs.EventBus
 
         private void EvaluateEventFetchPolicy()
         {
-            var directive = _fetchPolicy.ShouldFetch(new PipelineState(_eventDemultiplexer.PendingEventCount));
+            var directive = _fetchPolicy.ShouldFetch(new PipelineState(_eventDemultiplexer.PendingEventCount, _activeFetchRequests));
            if (directive.ShouldFetch)
            {
                FetchEvents(directive);
@@ -50,11 +51,13 @@ namespace Ncqrs.EventBus
         {
             Task.Factory.StartNew(() =>
                                       {
+                                          Interlocked.Increment(ref _activeFetchRequests);
                                           var events = _eventStore.FetchEvents(directive.MaxCount);
                                           foreach (var evnt in events)
                                           {
                                               _preDemultiplexingQueue.Add(new SequencedEvent(_eventSequence++, evnt));
                                           }
+                                          Interlocked.Decrement(ref _activeFetchRequests);
                                       });
 
         }
