@@ -26,12 +26,12 @@ namespace Tests
         public void Test1000Commands()
         {
             var start = DateTime.Now;
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < 10000; i++)
             {
                 _service.Execute(new ChangeNoteText {NoteId= _guid, NewText = "SomeText"});
             }
             var end = DateTime.Now;
-            Console.Out.WriteLine("Processed 1000 commands in = {0}", (end-start).TotalMilliseconds);
+            Console.Out.WriteLine("Processed 10000 commands in = {0}", (end-start).TotalMilliseconds);
         }
 
         public void Handle(NewNoteAdded evnt)
