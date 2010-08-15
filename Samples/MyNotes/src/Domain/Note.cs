@@ -57,7 +57,7 @@ namespace Domain
         {
             _text = e.NewText;
         }
-
+        
         public NoteSnapshot CreateSnapshot()
         {
             return new NoteSnapshot
@@ -77,7 +77,7 @@ namespace Domain
             _creationDate = snapshot.CreationDate;
         }
     }
-
+    [Serializable]
     public class NoteSnapshot : Snapshot
     {
         public string Text { get; set; }
