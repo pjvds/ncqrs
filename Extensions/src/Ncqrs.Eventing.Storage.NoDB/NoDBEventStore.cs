@@ -36,7 +36,7 @@ namespace Ncqrs.Eventing.Storage.NoDB
             var lines = File.ReadLines(file.FullName).ToArray();
             for (int i = 0; i < lines.Length; i++)
             {
-                if (i+1 >= version)
+                if (i+1 > version)
                     yield return (SourcedEvent)_formatter.Deserialize(lines[i].ReadStoredEvent(id, i+1));
             }
             id.ReleaseReadLock();
