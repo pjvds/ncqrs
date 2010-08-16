@@ -32,7 +32,7 @@ namespace Ncqrs.Eventing.Storage.NoDB
         public IEnumerable<SourcedEvent> GetAllEventsSinceVersion(Guid id, long version)
         {
             FileInfo file = id.GetEventStoreFileInfo(_path);
-            if (!file.Exists) yield break;
+            if (!file.Exists || GetVersion(id) <= version) yield break;
             id.GetReadLock();
             using (var reader = file.OpenRead())
             {
