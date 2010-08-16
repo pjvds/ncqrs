@@ -14,7 +14,7 @@ namespace Tests
         private static ICommandService _service;
         private static Random _rand;
         private static Handler _handler;
-        const int AvgRatePerSecond = 200;
+        const int AvgRatePerSecond = 100;
 
         static void Main(string[] args)
         {
@@ -22,12 +22,13 @@ namespace Tests
             BootStrapper.BootUp(_handler, new TextChangedHandler());
             _service = NcqrsEnvironment.Get<ICommandService>();
             _service.Execute(new CreateNewNote());
-            ExecuteCommand(0);
             _rand = new Random(DateTime.Now.Millisecond);
+            ExecuteCommand(1);
             int i;
-            for (i = 0; i < 5000; i++)
+            for (i = 0; i < 10000; i++)
             {
-                ThreadPool.QueueUserWorkItem(cb => ExecuteCommand(0));
+                ThreadPool.QueueUserWorkItem(cb => ExecuteCommand(1));
+                //The wait time is exponentially distributed, meaning that commands are Poisson distributed.
                 var time = -(Math.Log(_rand.NextDouble()) * 1000) / AvgRatePerSecond;
                 Thread.Sleep((int)time);
             }
@@ -35,21 +36,16 @@ namespace Tests
 
         private static void ExecuteCommand(int times)
         {
-            bool executed = false;
-            while (!executed)
+            try
             {
-                try
-                {
-                    _service.Execute(new ChangeNoteText {NoteId = _handler.Guid, NewText = (times + 1).ToString()});
-                    executed = true;
-                }
-                catch (Exception ex)
-                {
-                    if (!(ex is ConcurrencyException) && !(ex.InnerException is ConcurrencyException))
-                        Console.WriteLine(ex.Message);
-                    times++;
-                    ThreadPool.QueueUserWorkItem(cb => ExecuteCommand(times));
-                }
+                _service.Execute(new ChangeNoteText {NoteId = _handler.Guid, NewText = times.ToString()});
+            }
+            catch (Exception ex)
+            {
+                if (!(ex is ConcurrencyException) && !(ex.InnerException is ConcurrencyException))
+                    Console.WriteLine(ex.Message);
+                times++;
+                ThreadPool.QueueUserWorkItem(cb => ExecuteCommand(times));
             }
         }
     }
@@ -72,10 +68,10 @@ namespace Tests
         public void Handle(NoteTextChanged evnt)
         {
             if (!_start.HasValue) _start = DateTime.Now;
+            _attempts += int.Parse(evnt.NewText);
             if ((evnt.EventSequence % 15) == 0)
             {
-                _attempts += int.Parse(evnt.NewText);
-                Console.WriteLine("{0} events/second, {1} attempts/command", evnt.EventSequence / (DateTime.Now - _start.Value).TotalSeconds, ((double)_attempts)/evnt.EventSequence);
+                Console.WriteLine("{0} events/second, {1} attempts/command", evnt.EventSequence / (DateTime.Now - _start.Value).TotalSeconds, ((double)_attempts)/(evnt.EventSequence-1));
             }
         }
     }
