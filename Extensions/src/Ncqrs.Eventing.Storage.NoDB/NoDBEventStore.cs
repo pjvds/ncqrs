@@ -33,21 +33,27 @@ namespace Ncqrs.Eventing.Storage.NoDB
         {
             FileInfo file = id.GetEventStoreFileInfo(_path);
             if (!file.Exists || GetVersion(id) <= version) yield break;
-            id.GetReadLock();
-            using (var reader = file.OpenRead())
+            try
             {
-                var indexBuf = new byte[4];
-                reader.Seek(GetEventSourceIndexForVersion(id, version), SeekOrigin.Begin);
-                var curVer = version + 1;
-                while (reader.Read(indexBuf, 0, 4) == 4)
+                id.GetReadLock();
+                using (var reader = file.OpenRead())
                 {
-                    var length = BitConverter.ToInt32(indexBuf, 0);
-                    var eventBytes = new byte[length];
-                    reader.Read(eventBytes, 0, length);
-                    yield return (SourcedEvent)_formatter.Deserialize(eventBytes.ReadStoredEvent(id, curVer++));
+                    var indexBuf = new byte[4];
+                    reader.Seek(GetEventSourceIndexForVersion(id, version), SeekOrigin.Begin);
+                    var curVer = version + 1;
+                    while (reader.Read(indexBuf, 0, 4) == 4)
+                    {
+                        var length = BitConverter.ToInt32(indexBuf, 0);
+                        var eventBytes = new byte[length];
+                        reader.Read(eventBytes, 0, length);
+                        yield return (SourcedEvent)_formatter.Deserialize(eventBytes.ReadStoredEvent(id, curVer++));
+                    }
                 }
             }
-            id.ReleaseReadLock();
+            finally
+            {
+                id.ReleaseReadLock();
+            }
         }
 
         public void Save(IEventSource source)
@@ -55,31 +61,39 @@ namespace Ncqrs.Eventing.Storage.NoDB
             FileInfo file = source.EventSourceId.GetEventStoreFileInfo(_path);
             if (!file.Exists && !file.Directory.Exists)
                 file.Directory.Create();
-            source.EventSourceId.GetWriteLock();
-            if (file.Exists)
+            try
             {
-                if (GetVersion(source.EventSourceId) > source.InitialVersion)
-                    throw new ConcurrencyException(source.EventSourceId, source.Version);
-            }
-            using (var writer = file.OpenWrite())
-            {
-                writer.Seek(0, SeekOrigin.End);
-                var indicies = new long[source.GetUncommittedEvents().Count()];
-                var i = 0;
-                var index = writer.Position;
-                foreach (SourcedEvent sourcedEvent in source.GetUncommittedEvents())
+                source.EventSourceId.GetWriteLock();
+                if (file.Exists)
                 {
-                    StoredEvent<JObject> storedEvent = _formatter.Serialize(sourcedEvent);
-                    var bytes = storedEvent.GetBytes();
-                    writer.Write(BitConverter.GetBytes(bytes.Length), 0, 4);
-                    writer.Write(bytes, 0, bytes.Length);
-                    indicies[i++] = index;
-                    index += bytes.Length;
+                    if (GetVersion(source.EventSourceId) > source.InitialVersion)
+                    {
+                        throw new ConcurrencyException(source.EventSourceId, source.Version);
+                    }
                 }
-                UpdateEventSourceIndexFile(source.EventSourceId, indicies);
-                writer.Flush();
+                using (var writer = file.OpenWrite())
+                {
+                    writer.Seek(0, SeekOrigin.End);
+                    var indicies = new long[source.GetUncommittedEvents().Count()];
+                    var i = 0;
+                    var index = writer.Position;
+                    foreach (SourcedEvent sourcedEvent in source.GetUncommittedEvents())
+                    {
+                        StoredEvent<JObject> storedEvent = _formatter.Serialize(sourcedEvent);
+                        var bytes = storedEvent.GetBytes();
+                        writer.Write(BitConverter.GetBytes(bytes.Length), 0, 4);
+                        writer.Write(bytes, 0, bytes.Length);
+                        indicies[i++] = index;
+                        index += bytes.Length;
+                    }
+                    UpdateEventSourceIndexFile(source.EventSourceId, indicies);
+                    writer.Flush();
+                }
             }
-            source.EventSourceId.ReleaseWriteLock();
+            finally
+            {
+                source.EventSourceId.ReleaseWriteLock();
+            }
         }
 
         private void UpdateEventSourceIndexFile(Guid id, params long[] indicies)

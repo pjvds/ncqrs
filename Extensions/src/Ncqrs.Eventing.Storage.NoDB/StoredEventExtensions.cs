@@ -74,7 +74,7 @@ namespace Ncqrs.Eventing.Storage.NoDB
             return Path.Combine(rootPath, foldername, filename);
         }
 
-        private const int maxReaders = 10;
+        private const int maxReaders = 30;
 
         public static void GetWriteLock(this Guid id, string name = "")
         {
