@@ -2,6 +2,8 @@
 using System.IO;
 using System.Text;
 using System.Threading;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Bson;
 using Newtonsoft.Json.Linq;
 
 namespace Ncqrs.Eventing.Storage.NoDB
@@ -17,10 +19,35 @@ namespace Ncqrs.Eventing.Storage.NoDB
             return sb.ToString();
         }
 
+        public static byte[] GetBytes(this StoredEvent<JObject> storedEvent)
+        {
+            var output = new MemoryStream();
+            var writer = new BinaryWriter(output);
+            writer.Write(storedEvent.EventIdentifier.ToByteArray());
+            writer.Write(storedEvent.EventTimeStamp.Ticks);
+            writer.Write(storedEvent.EventName);
+            writer.Write(storedEvent.EventVersion.ToString());
+            var bsonWriter = new BsonWriter(output);
+            storedEvent.Data.WriteTo(bsonWriter);
+            return output.ToArray();
+        }
+
+        public static StoredEvent<JObject> ReadStoredEvent(this byte[] eventBytes, Guid id, long version)
+        {
+            var input = new MemoryStream(eventBytes);
+            var reader = new BinaryReader(input);
+            var bsonReader = new BsonReader(input);
+            return new StoredEvent<JObject>(new Guid(reader.ReadBytes(16)), new DateTime(reader.ReadInt64()),
+                                            reader.ReadString(), new Version(reader.ReadString()), id, version,
+                                            JObject.Load(bsonReader));
+        }
+
+
         public static StoredEvent<JObject> ReadStoredEvent(this string eventString, Guid id, long version)
         {
             string[] data = eventString.Split(';');
-            return new StoredEvent<JObject>(new Guid(data[0]), new DateTime(long.Parse(data[1]),DateTimeKind.Utc), data[2],
+            return new StoredEvent<JObject>(new Guid(data[0]), new DateTime(long.Parse(data[1]), DateTimeKind.Utc),
+                                            data[2],
                                             new Version(data[3]), id, version,
                                             JObject.Parse(data[4]));
         }
@@ -47,7 +74,7 @@ namespace Ncqrs.Eventing.Storage.NoDB
             return Path.Combine(rootPath, foldername, filename);
         }
 
-        const int maxReaders = 10;
+        private const int maxReaders = 10;
 
         public static void GetWriteLock(this Guid id, string name = "")
         {
@@ -69,7 +96,10 @@ namespace Ncqrs.Eventing.Storage.NoDB
             try
             {
                 sem.Release(maxReaders);
-            } catch (SemaphoreFullException) {}
+            }
+            catch (SemaphoreFullException)
+            {
+            }
         }
 
         public static void GetReadLock(this Guid id, string name = "")
@@ -85,7 +115,9 @@ namespace Ncqrs.Eventing.Storage.NoDB
             {
                 sem.Release();
             }
-            catch (SemaphoreFullException) { }
+            catch (SemaphoreFullException)
+            {
+            }
         }
     }
 }

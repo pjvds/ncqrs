@@ -44,14 +44,14 @@ namespace Tests
 
         private static IEventStore InitializeEventStore()
         {
-            return new MsSqlServerEventStore(@"Data Source=.\sqlexpress;Initial Catalog=MsSqlServerEventStoreTestEventStore;Integrated Security=SSPI;");
-            //return new NoDBEventStore("TestStore");
+//            return new MsSqlServerEventStore(@"Data Source=.\sqlexpress;Initial Catalog=MsSqlServerEventStoreTestEventStore;Integrated Security=SSPI;");
+            return new NoDBEventStore("TestStore");
         }
 
         private static ISnapshotStore InitializeSnapshotStore()
         {
-            return new MsSqlServerEventStore(@"Data Source=.\sqlexpress;Initial Catalog=MsSqlServerEventStoreTestEventStore;Integrated Security=SSPI;");
-            //return new NoDBSnapshotStore("TestStore");
+//            return new MsSqlServerEventStore(@"Data Source=.\sqlexpress;Initial Catalog=MsSqlServerEventStoreTestEventStore;Integrated Security=SSPI;");
+            return new NoDBSnapshotStore("TestStore");
         }
 
 

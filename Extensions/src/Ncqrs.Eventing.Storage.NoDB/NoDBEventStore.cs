@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using Ncqrs.Eventing.Sourcing;
@@ -33,11 +34,18 @@ namespace Ncqrs.Eventing.Storage.NoDB
             FileInfo file = id.GetEventStoreFileInfo(_path);
             if (!file.Exists) yield break;
             id.GetReadLock();
-            var lines = File.ReadLines(file.FullName).ToArray();
-            for (int i = 0; i < lines.Length; i++)
+            using (var reader = file.OpenRead())
             {
-                if (i+1 > version)
-                    yield return (SourcedEvent)_formatter.Deserialize(lines[i].ReadStoredEvent(id, i+1));
+                var indexBuf = new byte[4];
+                reader.Seek(GetEventSourceIndexForVersion(id, version), SeekOrigin.Begin);
+                var curVer = version + 1;
+                while (reader.Read(indexBuf, 0, 4) == 4)
+                {
+                    var length = BitConverter.ToInt32(indexBuf, 0);
+                    var eventBytes = new byte[length];
+                    reader.Read(eventBytes, 0, length);
+                    yield return (SourcedEvent)_formatter.Deserialize(eventBytes.ReadStoredEvent(id, curVer++));
+                }
             }
             id.ReleaseReadLock();
         }
@@ -53,36 +61,69 @@ namespace Ncqrs.Eventing.Storage.NoDB
                 if (GetVersion(source.EventSourceId) > source.InitialVersion)
                     throw new ConcurrencyException(source.EventSourceId, source.Version);
             }
-            using (var writer = file.AppendText())
+            using (var writer = file.OpenWrite())
             {
-                writer.AutoFlush = false;
+                writer.Seek(0, SeekOrigin.End);
+                var indicies = new long[source.GetUncommittedEvents().Count()];
+                var i = 0;
+                var index = writer.Position;
                 foreach (SourcedEvent sourcedEvent in source.GetUncommittedEvents())
                 {
                     StoredEvent<JObject> storedEvent = _formatter.Serialize(sourcedEvent);
-                    writer.WriteLine(storedEvent.WriteLine());
+                    var bytes = storedEvent.GetBytes();
+                    writer.Write(BitConverter.GetBytes(bytes.Length), 0, 4);
+                    writer.Write(bytes, 0, bytes.Length);
+                    indicies[i++] = index;
+                    index += bytes.Length;
                 }
+                UpdateEventSourceIndexFile(source.EventSourceId, indicies);
                 writer.Flush();
-                UpdateEventSourceVersion(source.EventSourceId, source.Version);
             }
             source.EventSourceId.ReleaseWriteLock();
         }
 
-        private void UpdateEventSourceVersion(Guid id, long version)
+        private void UpdateEventSourceIndexFile(Guid id, params long[] indicies)
         {
             var file = id.GetVersionFile(_path);
-            var versionstring = version.ToString("00000000000000000000");
-            File.WriteAllText(file.FullName, versionstring);
+            var bytes = new byte[indicies.Length * 8];
+            for (int i = 0; i < indicies.Length * 8; i += 8)
+            {
+                var intbytes = BitConverter.GetBytes(indicies[i]);
+                bytes[i] = intbytes[0];
+                bytes[i + 1] = intbytes[1];
+                bytes[i + 2] = intbytes[2];
+                bytes[i + 3] = intbytes[3];
+                bytes[i + 3] = intbytes[4];
+                bytes[i + 3] = intbytes[5];
+                bytes[i + 3] = intbytes[6];
+                bytes[i + 3] = intbytes[7];
+            }
+            using (var writer = file.OpenWrite())
+            {
+                writer.Seek(0, SeekOrigin.End);
+                writer.Write(bytes, 0, 8);
+            }
+            
+        }
+
+        private long GetEventSourceIndexForVersion(Guid id, long version)
+        {
+            var file = id.GetVersionFile(_path);
+            using (var reader = file.OpenRead())
+            {
+                reader.Seek(version*8, SeekOrigin.Begin);
+                var indexBytes = new byte[8];
+                reader.Read(indexBytes, 0, 8);
+                return BitConverter.ToInt64(indexBytes, 0);
+            }
         }
 
         private long GetVersion(Guid id)
         {
             var file = id.GetVersionFile(_path);
-            var version = File.ReadAllText(file.FullName);
-            return long.Parse(version);
+            return file.Length/8;
         }
 
         #endregion
-
-
     }
 }
