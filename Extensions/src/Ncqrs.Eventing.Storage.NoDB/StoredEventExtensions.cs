@@ -74,20 +74,27 @@ namespace Ncqrs.Eventing.Storage.NoDB
             return Path.Combine(rootPath, foldername, filename);
         }
 
-        private const int maxReaders = 30;
+        private static readonly int maxReaders = 1;
 
         public static void GetWriteLock(this Guid id, string name = "")
         {
             var mutex = new Mutex(false, id + name + "write");
             mutex.WaitOne();
-            var sem = new Semaphore(maxReaders, maxReaders, id + name);
-            int readlocks = 0;
-            while (readlocks < maxReaders)
+            try
             {
-                sem.WaitOne();
-                readlocks++;
+                var sem = new Semaphore(maxReaders, maxReaders, id + name);
+                int readlocks = 0;
+                while (readlocks < maxReaders)
+                {
+                    sem.WaitOne();
+                    readlocks++;
+                }
             }
-            mutex.ReleaseMutex();
+            //Ensure we release the mutex, just in case we get a SemaforeFullException
+            finally
+            {
+                mutex.ReleaseMutex();
+            }
         }
 
         public static void ReleaseWriteLock(this Guid id, string name = "")
@@ -97,9 +104,7 @@ namespace Ncqrs.Eventing.Storage.NoDB
             {
                 sem.Release(maxReaders);
             }
-            catch (SemaphoreFullException)
-            {
-            }
+            catch (SemaphoreFullException) { }
         }
 
         public static void GetReadLock(this Guid id, string name = "")

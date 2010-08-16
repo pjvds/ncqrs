@@ -18,12 +18,12 @@ namespace Tests
 {
     public static class BootStrapper
     {
-        public static void BootUp(PerformanceTests handler)
+        public static void BootUp(IEventHandler<NewNoteAdded> handler, TextChangedHandler textChangedHandler)
         {
             var config = new StructureMapConfiguration(cfg =>
             {
                 cfg.For<ICommandService>().Use(InitializeCommandService);
-                cfg.For<IEventBus>().Use(InitializeEventBus(handler));
+                cfg.For<IEventBus>().Use(InitializeEventBus(handler, textChangedHandler));
                 cfg.For<IEventStore>().Use(InitializeEventStore);
                 cfg.For<ISnapshotStore>().Use(InitializeSnapshotStore);
                 cfg.For<IUnitOfWorkFactory>().Use(() => new SnapshottingUnitOfWorkFactory());
@@ -44,21 +44,22 @@ namespace Tests
 
         private static IEventStore InitializeEventStore()
         {
-//            return new MsSqlServerEventStore(@"Data Source=.\sqlexpress;Initial Catalog=MsSqlServerEventStoreTestEventStore;Integrated Security=SSPI;");
-            return new NoDBEventStore("TestStore");
+            return new MsSqlServerEventStore(@"Data Source=.\sqlexpress;Initial Catalog=MsSqlServerEventStoreTestEventStore;Integrated Security=SSPI;");
+//            return new NoDBEventStore("TestStore");
         }
 
         private static ISnapshotStore InitializeSnapshotStore()
         {
-//            return new MsSqlServerEventStore(@"Data Source=.\sqlexpress;Initial Catalog=MsSqlServerEventStoreTestEventStore;Integrated Security=SSPI;");
-            return new NoDBSnapshotStore("TestStore");
+            return new MsSqlServerEventStore(@"Data Source=.\sqlexpress;Initial Catalog=MsSqlServerEventStoreTestEventStore;Integrated Security=SSPI;");
+//            return new NoDBSnapshotStore("TestStore");
         }
 
 
-        private static IEventBus InitializeEventBus(IEventHandler<NewNoteAdded> handler)
+        private static IEventBus InitializeEventBus(IEventHandler<NewNoteAdded> newNoteHandler, TextChangedHandler textChangedHandler)
         {
             var bus = new InProcessEventBus();
-            bus.RegisterHandler(handler);
+            bus.RegisterHandler(newNoteHandler);
+            bus.RegisterHandler(textChangedHandler);
 
             return bus;
         }
