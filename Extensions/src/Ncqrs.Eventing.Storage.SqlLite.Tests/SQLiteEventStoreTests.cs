@@ -19,7 +19,7 @@ namespace Ncqrs.Eventing.Storage.SQLite.Tests{
             _connString = string.Format("Data Source={0};", _path);
             File.Delete(_path);
             SQLiteEventStore.EnsureDatabaseExists(_connString);
-            _store = new SQLiteEventStore(_connString);
+            _store = new SQLiteEventStore(new DefaultSQLiteContext(_connString));
         }
 
         [TearDown]
@@ -73,9 +73,8 @@ namespace Ncqrs.Eventing.Storage.SQLite.Tests{
             eventSource.Stub(e => e.InitialVersion).Return(0);
             eventSource.Stub(e => e.Version).Return(events.Length);
             eventSource.Stub(e => e.GetUncommittedEvents()).Return(events);
-
             _store.Save(eventSource);
-
+            
             var result=_store.GetAllEvents(id);
             result.Count().Should().Be(events.Length);
             result.First().EventIdentifier.Should().Be(events.First().EventIdentifier);

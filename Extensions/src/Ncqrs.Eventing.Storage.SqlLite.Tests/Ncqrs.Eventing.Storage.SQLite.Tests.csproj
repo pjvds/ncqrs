@@ -57,6 +57,7 @@
   <ItemGroup>
     <Compile Include="Fakes\CustomerCreatedEvent.cs" />
     <Compile Include="Fakes\CustomerNameChanged.cs" />
+    <Compile Include="ManualSQLiteContextTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLiteEventStoreTests.cs" />
   </ItemGroup>

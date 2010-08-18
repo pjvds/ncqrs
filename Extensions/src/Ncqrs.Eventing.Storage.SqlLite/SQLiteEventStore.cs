@@ -10,16 +10,24 @@ namespace Ncqrs.Eventing.Storage.SQLite
 {
     public class SQLiteEventStore : IEventStore
     {
-        private readonly string _connectionString;
         private IPropertyBagConverter _converter;
-        
-        public SQLiteEventStore(string connectionString) : this(connectionString, new PropertyBagConverter())
+        private ISQLiteContext _context;
+
+        public SQLiteEventStore(string connectionString) : this(new DefaultSQLiteContext(connectionString))
         {
         }
 
-        public SQLiteEventStore(string connectionString, IPropertyBagConverter converter)
+        public SQLiteEventStore(string connectionString, IPropertyBagConverter converter) : this(new DefaultSQLiteContext(connectionString), converter)
         {
-            _connectionString = connectionString;
+        }
+
+        public SQLiteEventStore(ISQLiteContext context) : this(context, new PropertyBagConverter())
+        {
+        }
+
+        public SQLiteEventStore(ISQLiteContext context, IPropertyBagConverter converter)
+        {
+            _context = context;
             _converter = converter;
         }
 
@@ -31,27 +39,30 @@ namespace Ncqrs.Eventing.Storage.SQLite
         public IEnumerable<SourcedEvent> GetAllEventsSinceVersion(Guid id, long version)
         {
             var res = new List<SourcedEvent>();
-            using (var conn = new SQLiteConnection(_connectionString))
-            using (var cmd = new SQLiteCommand(Query.SelectAllEventsQuery, conn))
-            {
-                cmd.AddParam("EventSourceId", id).AddParam("EventSourceVersion", version);
-                conn.Open();
-                using (var reader = cmd.ExecuteReader())
-                {
-                    var formatter = new BinaryFormatter();
-                    while (reader.Read())
-                    {
-                        var rawData = (Byte[])reader["Data"];
 
-                        using (var dataStream = new MemoryStream(rawData))
+            _context.WithConnection(connection =>
+            {
+                using (var cmd = new SQLiteCommand(Query.SelectAllEventsQuery, connection))
+                {
+                    cmd.AddParam("EventSourceId", id).AddParam("EventSourceVersion", version);
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        var formatter = new BinaryFormatter();
+                        while (reader.Read())
                         {
-                            var bag = (PropertyBag) formatter.Deserialize(dataStream);
-                            var evnt = (SourcedEvent)_converter.Convert(bag);
-                            res.Add(evnt);
+                            var rawData = (Byte[])reader["Data"];
+
+                            using (var dataStream = new MemoryStream(rawData))
+                            {
+                                var bag = (PropertyBag)formatter.Deserialize(dataStream);
+                                var evnt = (SourcedEvent)_converter.Convert(bag);
+                                res.Add(evnt);
+                            }
                         }
                     }
                 }
-            }
+            });
 
             return res;
         }
@@ -59,29 +70,20 @@ namespace Ncqrs.Eventing.Storage.SQLite
         public void Save(IEventSource source)
         {
             var events = source.GetUncommittedEvents();
-            using (var conn = new SQLiteConnection(_connectionString))
+
+            _context.WithConnection(connection => 
+            _context.WithTransaction(connection, transaction =>
             {
-                conn.Open();
-                using (var transaction = conn.BeginTransaction())
-                    try
-                    {
-                        var currentVersion = GetVersion(source.EventSourceId, transaction);
+                var currentVersion = GetVersion(source.EventSourceId, transaction);
 
-                        if (currentVersion == null)
-                            AddEventSource(source, transaction);
-                        else if (currentVersion.Value != source.InitialVersion)
-                            throw new ConcurrencyException(source.EventSourceId, source.Version);
+                if (currentVersion == null)
+                    AddEventSource(source, transaction);
+                else if (currentVersion.Value != source.InitialVersion)
+                    throw new ConcurrencyException(source.EventSourceId, source.Version);
 
-                        SaveEvents(events, source.EventSourceId, transaction);
-                        UpdateEventSourceVersion(source, transaction);
-                        transaction.Commit();
-                    }
-                    catch
-                    {
-                        transaction.Rollback();
-                        throw;
-                    }
-            }
+                SaveEvents(events, source.EventSourceId, transaction);
+                UpdateEventSourceVersion(source, transaction);
+            }));    
         }
 
         private static int? GetVersion(Guid providerId, SQLiteTransaction transaction)
@@ -92,7 +94,6 @@ namespace Ncqrs.Eventing.Storage.SQLite
                 return (int?)command.ExecuteScalar();
             }
         }
-
 
         private void AddEventSource(IEventSource eventSource, SQLiteTransaction transaction)
         {
