@@ -21,7 +21,8 @@ namespace Ncqrs.Eventing.Storage.SQLite.Tests
             _connection = new SQLiteConnection(_connString);
             _connection.Open();
             _transaction = _connection.BeginTransaction();
-            _context = new ManualSQLiteContext(_connection, _transaction);
+            _context = new ManualSQLiteContext();
+            _context.SetContext(_connection, _transaction);
             _store = new SQLiteEventStore(_context);
         }
 

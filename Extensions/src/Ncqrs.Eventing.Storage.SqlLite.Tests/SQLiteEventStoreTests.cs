@@ -19,7 +19,7 @@ namespace Ncqrs.Eventing.Storage.SQLite.Tests{
             _connString = string.Format("Data Source={0};", _path);
             File.Delete(_path);
             SQLiteEventStore.EnsureDatabaseExists(_connString);
-            _store = new SQLiteEventStore(new DefaultSQLiteContext(_connString));
+            _store = new SQLiteEventStore(_connString);
         }
 
         [TearDown]

@@ -49,6 +49,8 @@
     <Compile Include="DefaultSQLiteContext.cs" />
     <Compile Include="ISQLiteContext.cs" />
     <Compile Include="ManualSQLiteContext.cs" />
+    <Compile Include="MissingSQLiteContextConnectionException.cs" />
+    <Compile Include="MissingSQLiteContextTransactionException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Query.cs" />
     <Compile Include="SQLiteCommandExtensions.cs" />
