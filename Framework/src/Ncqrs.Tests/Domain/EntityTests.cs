@@ -54,7 +54,7 @@ namespace Ncqrs.Tests.Domain
                 ApplyEvent(new OrderLineCreatedEvent(_id, value));
             }
 
-            public void OnOrderLineCreated(SourcedEvent evnt)
+            protected void OnOrderLineCreated(SourcedEvent evnt)
             {
                 _lines.Add(new OrderLine(((OrderLineCreatedEvent)evnt).Value));
             }
