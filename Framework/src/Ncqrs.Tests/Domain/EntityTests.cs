@@ -34,6 +34,8 @@ namespace Ncqrs.Tests.Domain
         public class Order : Entity
         {
             private readonly int _id;
+            private bool _sent;
+            private Address _sentToAddress;
             private readonly List<OrderLine> _lines = new List<OrderLine>();
 
             public Order(AggregateRoot parent, int id)
@@ -41,12 +43,21 @@ namespace Ncqrs.Tests.Domain
             {
                 RegisterHandler(new TypeAndCallbackThresholdedActionBasedDomainEventHandler(
                                     OnOrderLineCreated, x => x is OrderLineCreatedEvent &&((OrderLineCreatedEvent)x).OrderId == _id, typeof(OrderLineCreatedEvent)));
+
+                RegisterHandler(new TypeAndCallbackThresholdedActionBasedDomainEventHandler<OrderSentToAddress>(
+                                    OnOrderSentToAddress, (x) => x.OrderId == Id));
                 _id = id;
             }
 
             public int Id
             {
                 get { return _id; }
+            }
+
+            public void Send(Address address)
+            {
+                ApplyEvent(new OrderSentToAddress(Id, address.Street, address.PostalCode, address.City,
+                    address.State, address.County));
             }
 
             public void CreateLine(decimal value)
@@ -57,6 +68,12 @@ namespace Ncqrs.Tests.Domain
             protected void OnOrderLineCreated(SourcedEvent evnt)
             {
                 _lines.Add(new OrderLine(((OrderLineCreatedEvent)evnt).Value));
+            }
+
+            protected void OnOrderSentToAddress(OrderSentToAddress e)
+            {
+                _sent = true;
+                _sentToAddress = new Address(e.Street, e.PostalCode, e.City, e.State, e.County);
             }
         }
 
@@ -97,6 +114,26 @@ namespace Ncqrs.Tests.Domain
             }
         }
 
+        public class OrderSentToAddress : SourcedEvent
+        {
+            public int OrderId { get; set; }
+            public string Street { get; set; }
+            public string PostalCode { get; set; }
+            public string City { get; set; }
+            public string State { get; set; }
+            public string County { get; set; }
+
+            public OrderSentToAddress(int orderId, string street, string postalCode, string city, string state, string county)
+            {
+                OrderId = orderId;
+                Street = street;
+                PostalCode = postalCode;
+                City = city;
+                State = state;
+                County = county;
+            }
+        }
+
         public class OrderLine
         {
             private readonly decimal _value;
@@ -109,6 +146,24 @@ namespace Ncqrs.Tests.Domain
             public decimal Value
             {
                 get { return _value; }
+            }
+        }
+
+        public class Address
+        {
+            public string Street { get; private set; }
+            public string PostalCode { get; private set; }
+            public string City { get; private set; }
+            public string State { get; private set; }
+            public string County { get; private set; }
+
+            public Address(string street, string postalCode, string city, string state, string county)
+            {
+                Street = street;
+                PostalCode = postalCode;
+                City = city;
+                State = state;
+                County = county;
             }
         }
 
@@ -127,5 +182,4 @@ namespace Ncqrs.Tests.Domain
         }
 
     }
-   
 }

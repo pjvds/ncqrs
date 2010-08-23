@@ -31,4 +31,15 @@ namespace Ncqrs.Eventing.Sourcing
             return _filterCallback(sourcedEvent) && _internalHandler.HandleEvent(sourcedEvent);
         }
     }
+
+    public class TypeAndCallbackThresholdedActionBasedDomainEventHandler<TEvent> : TypeAndCallbackThresholdedActionBasedDomainEventHandler
+        where TEvent : SourcedEvent
+    {
+        private readonly TypeAndCallbackThresholdedActionBasedDomainEventHandler _internalHandle;
+
+        public TypeAndCallbackThresholdedActionBasedDomainEventHandler(Action<TEvent> handler, Func<TEvent, bool> filterCallback) : base((e)=>handler((TEvent)e), (e)=>filterCallback((TEvent)e), typeof(TEvent))
+        {
+            
+        }
+    }
 }
