@@ -123,7 +123,8 @@ namespace Ncqrs.Tests.Domain
         public void Applying_an_event_when_there_is_no_unit_of_work_should_not_cause_an_exception()
         {
             var theAggregate = new MyAggregateRoot();
-            theAggregate.MethodThatCausesAnEventThatHasAHandler();
+            Action act = ()=>theAggregate.MethodThatCausesAnEventThatHasAHandler();
+            act.ShouldNotThrow();
         }
 
         [Test]
