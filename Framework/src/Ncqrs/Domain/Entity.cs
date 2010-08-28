@@ -13,6 +13,11 @@ namespace Ncqrs.Domain
         [NonSerialized]
         private readonly AggregateRoot _parent;
 
+        protected AggregateRoot ParentAggregateRoot
+        {
+            get { return _parent; }
+        }
+
         /// <summary>
         /// Gets the unique identifier for this entity. This identifier
         /// is set on construction and should not be changed. The creator
