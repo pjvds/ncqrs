@@ -39,7 +39,7 @@ namespace Ncqrs.Domain
         /// Initializes a new instance of the <see cref="AggregateRootMappedByConvention"/> class.
         /// </summary>
         protected AggregateRootMappedByConvention()
-            : base(new ConventionBasedSourcedEventHandlerMappingStrategy())
+            : base(new ConventionBasedEventHandlerMappingStrategy())
         {
         }
     }

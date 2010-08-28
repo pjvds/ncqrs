@@ -75,9 +75,9 @@ namespace Ncqrs.Tests.Eventing.Sourcing.Mapping
         public void It_should_skip_when_mapped_method_is_static()
         {
             var aggregate = new IlligalStaticMethodTarget();
-            var mapping = new ConventionBasedSourcedEventHandlerMappingStrategy();
+            var mapping = new ConventionBasedEventHandlerMappingStrategy();
 
-            var handlers = mapping.GetEventHandlersFromAggregateRoot(aggregate);
+            var handlers = mapping.GetEventHandlers(aggregate);
 
             handlers.Should().BeEmpty();
         }
@@ -86,9 +86,9 @@ namespace Ncqrs.Tests.Eventing.Sourcing.Mapping
         public void It_should_skip_when_mapped_method_does_not_have_a_parameter()
         {
             var aggregate = new NoParameterMethodTarget();
-            var mapping = new ConventionBasedSourcedEventHandlerMappingStrategy();
+            var mapping = new ConventionBasedEventHandlerMappingStrategy();
 
-            var handlers = mapping.GetEventHandlersFromAggregateRoot(aggregate);
+            var handlers = mapping.GetEventHandlers(aggregate);
 
             handlers.Should().BeEmpty();
         }
@@ -97,9 +97,9 @@ namespace Ncqrs.Tests.Eventing.Sourcing.Mapping
         public void It_should_skip_when_mapped_method_does_have_more_then_one_parameter()
         {
             var aggregate = new MoreThenOneParameterMethodTarget();
-            var mapping = new ConventionBasedSourcedEventHandlerMappingStrategy();
+            var mapping = new ConventionBasedEventHandlerMappingStrategy();
 
-            var handlers = mapping.GetEventHandlersFromAggregateRoot(aggregate);
+            var handlers = mapping.GetEventHandlers(aggregate);
 
             handlers.Should().BeEmpty();
         }
@@ -108,9 +108,9 @@ namespace Ncqrs.Tests.Eventing.Sourcing.Mapping
         public void It_should_skip_when_mapped_method_does_not_have_a_DomainEvent_as_parameter()
         {
             var aggregate = new NotADomainEventTarget();
-            var mapping = new ConventionBasedSourcedEventHandlerMappingStrategy();
+            var mapping = new ConventionBasedEventHandlerMappingStrategy();
 
-            var handlers = mapping.GetEventHandlersFromAggregateRoot(aggregate);
+            var handlers = mapping.GetEventHandlers(aggregate);
 
             handlers.Should().BeEmpty();
         }
@@ -119,9 +119,9 @@ namespace Ncqrs.Tests.Eventing.Sourcing.Mapping
         public void It_should_map_the_mapped_events()
         {
             var aggregate = new GoodTarget();
-            var mapping = new ConventionBasedSourcedEventHandlerMappingStrategy();
+            var mapping = new ConventionBasedEventHandlerMappingStrategy();
 
-            var handlers = mapping.GetEventHandlersFromAggregateRoot(aggregate);
+            var handlers = mapping.GetEventHandlers(aggregate);
 
             handlers.Count().Should().Be(4);
             handlers.Should().OnlyHaveUniqueItems();
@@ -131,9 +131,9 @@ namespace Ncqrs.Tests.Eventing.Sourcing.Mapping
         public void It_should_create_the_correct_event_handlers()
         {
             var aggregate = new GoodTarget();
-            var mapping = new ConventionBasedSourcedEventHandlerMappingStrategy();
+            var mapping = new ConventionBasedEventHandlerMappingStrategy();
 
-            var handlers = mapping.GetEventHandlersFromAggregateRoot(aggregate);
+            var handlers = mapping.GetEventHandlers(aggregate);
 
             foreach (var handler in handlers)
             {

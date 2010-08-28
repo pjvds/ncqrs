@@ -150,7 +150,7 @@
     <Compile Include="Eventing\EventNotHandledException.cs" />
     <Compile Include="Eventing\Sourcing\Mapping\ExpressionHandler.cs" />
     <Compile Include="Domain\IUnitOfWorkContext.cs" />
-    <Compile Include="Eventing\Sourcing\Mapping\ExpressionBasedSourcedEventHandlerMappingStrategy.cs" />
+    <Compile Include="Eventing\Sourcing\Mapping\ExpressionBasedEventHandlerMappingStrategy.cs" />
     <Compile Include="Domain\NoUnitOfWorkAvailableInThisContextException.cs" />
     <Compile Include="Eventing\Sourcing\EventSource.cs" />
     <Compile Include="Eventing\Sourcing\TypeThresholdedActionBasedSourcedEventHandler.cs" />
@@ -201,10 +201,10 @@
     <Compile Include="Domain\AggregateRootMappedByConvention.cs" />
     <Compile Include="Domain\AggregateRootMappedWithAttributes.cs" />
     <Compile Include="Domain\IUnitOfWorkFactory.cs" />
-    <Compile Include="Eventing\Sourcing\Mapping\AttributeBasedSourcedEventHandlerMappingStrategy.cs" />
-    <Compile Include="Eventing\Sourcing\Mapping\ConventionBasedSourcedEventHandlerMappingStrategy.cs" />
+    <Compile Include="Eventing\Sourcing\Mapping\AttributeBasedEventHandlerMappingStrategy.cs" />
+    <Compile Include="Eventing\Sourcing\Mapping\ConventionBasedEventHandlerMappingStrategy.cs" />
     <Compile Include="Eventing\Sourcing\Mapping\EventHandlerAttribute.cs" />
-    <Compile Include="Eventing\Sourcing\Mapping\ISourcedEventHandlerMappingStrategy.cs" />
+    <Compile Include="Eventing\Sourcing\Mapping\IEventHandlerMappingStrategy.cs" />
     <Compile Include="Eventing\Sourcing\Mapping\InvalidEventHandlerMappingException.cs" />
     <Compile Include="Eventing\Sourcing\Mapping\MappedAggregateRoot.cs" />
     <Compile Include="Eventing\Sourcing\Mapping\NoEventHandlerAttribute.cs" />

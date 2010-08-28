@@ -71,7 +71,7 @@ namespace Ncqrs.Tests.Domain
             var field = aggregateRoot.GetType().BaseType.BaseType.GetField("_mappingStrategy", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.GetField);
 
             var theStrategy = field.GetValue(aggregateRoot);
-            theStrategy.Should().BeOfType<ExpressionBasedSourcedEventHandlerMappingStrategy>();
+            theStrategy.Should().BeOfType<ExpressionBasedEventHandlerMappingStrategy>();
         }
 
         [Test]
