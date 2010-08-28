@@ -6,14 +6,25 @@ namespace Ncqrs.Domain
     /// <summary>
     /// The abstract concept of an entity -- an object living inside an aggregate with own thread of identity.
     /// </summary>
-    public abstract class Entity
+    public abstract class Entity : Entity<AggregateRoot>
+    {
+        protected Entity(AggregateRoot parent, Guid entityId)
+            : base(parent, entityId)
+        {
+        }
+    }
+
+    /// <summary>
+    /// The abstract concept of an entity -- an object living inside an aggregate with own thread of identity.
+    /// </summary>
+    public abstract class Entity<TAggregateRoot> where TAggregateRoot : AggregateRoot
     {
         private readonly Guid _entityId;
 
         [NonSerialized]
-        private readonly AggregateRoot _parent;
+        private readonly TAggregateRoot _parent;
 
-        protected AggregateRoot ParentAggregateRoot
+        protected TAggregateRoot ParentAggregateRoot
         {
             get { return _parent; }
         }
@@ -28,7 +39,7 @@ namespace Ncqrs.Domain
             get { return _entityId; }
         }
 
-        protected Entity(AggregateRoot parent, Guid entityId)
+        protected Entity(TAggregateRoot parent, Guid entityId)
         {
             _parent = parent;
             _entityId = entityId;
@@ -59,6 +70,6 @@ namespace Ncqrs.Domain
                             evnt.GetType().FullName, this.GetType().FullName, EntityId, evnt.EntityId);
                 throw new InvalidOperationException(message);
             }
-        }
+        }   
     }
 }
