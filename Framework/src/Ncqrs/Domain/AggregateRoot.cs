@@ -1,4 +1,5 @@
-﻿using Ncqrs.Eventing.Sourcing;
+﻿using System;
+using Ncqrs.Eventing.Sourcing;
 using Ncqrs.Eventing.Sourcing.Mapping;
 
 namespace Ncqrs.Domain
@@ -8,13 +9,18 @@ namespace Ncqrs.Domain
     /// </summary>
     public abstract class AggregateRoot : EventSource
     {
+        /// <summary>
+        /// Occurs when an event was applied to an <see cref="AggregateRoot"/>.
+        /// </summary>
+        internal static event EventHandler<EventAppliedArgs> EventApplied;
+
         [NoEventHandler]
         protected override void OnEventApplied(SourcedEvent appliedEvent)
         {
-            if (UnitOfWork.Current == null)
-                throw new NoUnitOfWorkAvailableInThisContextException();
-
-            UnitOfWork.Current.RegisterDirtyInstance(this);
+            if(EventApplied != null)
+            {
+                EventApplied(this, new EventAppliedArgs(appliedEvent));
+            }
         }
     }
 }

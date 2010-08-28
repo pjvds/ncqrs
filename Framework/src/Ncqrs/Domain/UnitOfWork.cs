@@ -76,6 +76,24 @@ namespace Ncqrs.Domain
             _dirtyInstances = new Queue<AggregateRoot>();
             _threadInstance = this;
             IsDisposed = false;
+
+            InitializeAppliedEventHandler();
+        }
+
+        private void InitializeAppliedEventHandler()
+        {
+            AggregateRoot.EventApplied += AggregateRootEventAppliedHandler;
+        }
+
+        private void DestroyAppliedEventHandler()
+        {
+            AggregateRoot.EventApplied -= AggregateRootEventAppliedHandler;            
+        }
+
+        private void AggregateRootEventAppliedHandler(object sender, Eventing.Sourcing.EventAppliedArgs e)
+        {
+            var aggregateRoot = (AggregateRoot) sender;
+            RegisterDirtyInstance(aggregateRoot);
         }
 
         [ContractInvariantMethod]
@@ -116,6 +134,7 @@ namespace Ncqrs.Domain
             {
                 if (disposing)
                 {
+                    DestroyAppliedEventHandler();
                     _threadInstance = null;
                 }
 
@@ -157,7 +176,7 @@ namespace Ncqrs.Domain
         /// Registers the dirty.
         /// </summary>
         /// <param name="dirtyInstance">The dirty instance.</param>
-        internal void RegisterDirtyInstance(AggregateRoot dirtyInstance)
+        private void RegisterDirtyInstance(AggregateRoot dirtyInstance)
         {
             Contract.Requires<ArgumentNullException>(dirtyInstance != null, "dirtyInstance could not be null.");
 
