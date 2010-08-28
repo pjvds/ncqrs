@@ -47,7 +47,7 @@ namespace Ncqrs.Domain
 
         private void ValidateEventOwnership(SourcedEntityEvent evnt)
         {
-            if (evnt.EntityId != SourcedEntityEvent.UndefinedEventSourceId)
+            if (evnt.EntityId != SourcedEntityEvent.UndefinedEntityId)
             {
                 var message = String.Format("The {0} event cannot be applied to entity {1} with id {2} " +
                             "since it was already owned by entity with id {3}.",
