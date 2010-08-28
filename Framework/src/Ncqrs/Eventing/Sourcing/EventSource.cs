@@ -118,7 +118,7 @@ namespace Ncqrs.Eventing.Sourcing
             }
         }
 
-        protected void RegisterHandler(ISourcedEventHandler handler)
+        internal protected void RegisterHandler(ISourcedEventHandler handler)
         {
             Contract.Requires<ArgumentNullException>(handler != null, "The handler cannot be null.");
 
@@ -139,7 +139,7 @@ namespace Ncqrs.Eventing.Sourcing
                 throw new EventNotHandledException(evnt);
         }
 
-        protected void ApplyEvent(SourcedEvent evnt)
+        internal protected void ApplyEvent(SourcedEvent evnt)
         {
             if (evnt.EventSourceId != SourcedEvent.UndefinedEventSourceId)
             {
