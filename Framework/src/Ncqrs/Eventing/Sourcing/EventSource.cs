@@ -130,7 +130,13 @@ namespace Ncqrs.Eventing.Sourcing
             Contract.Requires<ArgumentNullException>(evnt != null, "The Event cannot be null.");
             Boolean handled = false;
 
-            foreach (var handler in _eventHandlers)
+            // Get a copy of the handlers because an event
+            // handler can register a new handler. This will
+            // cause the _eventHandlers list to be modified.
+            // And modification while iterating it not allowed.
+            var handlers = new List<ISourcedEventHandler>(_eventHandlers);
+
+            foreach (var handler in handlers)
             {
                 handled |= handler.HandleEvent(evnt);
             }
