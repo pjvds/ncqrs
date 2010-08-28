@@ -5,7 +5,7 @@ namespace Ncqrs.Domain
     public abstract class AggregateRootMappedWithAttributes : MappedAggregateRoot
     {
         protected AggregateRootMappedWithAttributes()
-            : base(new AttributeBasedSourcedEventHandlerMappingStrategy())
+            : base(new AttributeBasedEventHandlerMappingStrategy())
         {
         }
     }

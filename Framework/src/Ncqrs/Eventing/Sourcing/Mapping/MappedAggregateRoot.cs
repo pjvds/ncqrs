@@ -7,9 +7,9 @@ namespace Ncqrs.Eventing.Sourcing.Mapping
     public abstract class MappedAggregateRoot : AggregateRoot
     {
         [NonSerialized] 
-        private readonly ISourcedEventHandlerMappingStrategy _mappingStrategy;
+        private readonly IEventHandlerMappingStrategy _mappingStrategy;
 
-        protected MappedAggregateRoot(ISourcedEventHandlerMappingStrategy strategy)
+        protected MappedAggregateRoot(IEventHandlerMappingStrategy strategy)
         {
             Contract.Requires<ArgumentNullException>(strategy != null, "The strategy cannot be null.");
 
@@ -19,7 +19,7 @@ namespace Ncqrs.Eventing.Sourcing.Mapping
 
         protected void InitializeHandlers()
         {
-            foreach (var handler in _mappingStrategy.GetEventHandlersFromAggregateRoot(this))
+            foreach (var handler in _mappingStrategy.GetEventHandlers(this))
                 RegisterHandler(handler);
         }
     }

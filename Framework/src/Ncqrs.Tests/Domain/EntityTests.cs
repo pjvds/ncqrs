@@ -30,15 +30,13 @@ namespace Ncqrs.Tests.Domain
             }
         }
 
-        public class Order : Entity
+        public class Order : EntityMappedByConvention
         {
             private readonly List<OrderLine> _lines = new List<OrderLine>();
 
             public Order(AggregateRoot parent, Guid entityId)
                 : base(parent, entityId)
             {
-                RegisterHandler(new TypeAndCallbackThresholdedActionBasedDomainEventHandler(
-                                    OnOrderLineCreated, x => x is OrderLineCreatedEvent &&((OrderLineCreatedEvent)x).OrderId == EntityId, typeof(OrderLineCreatedEvent)));
             }
 
             public void CreateLine(decimal value)

@@ -124,4 +124,13 @@ namespace Ncqrs.Eventing.Sourcing
             return shouldHandle;
         }
     }
+
+    public class TypeThresholdedActionBasedDomainEventHandler<TEvent> : TypeThresholdedActionBasedDomainEventHandler
+        where TEvent : SourcedEvent
+    {
+        public TypeThresholdedActionBasedDomainEventHandler(Action<TEvent> handler, bool exact)
+            : base((e)=> handler((TEvent)e), typeof(TEvent), exact)
+        {
+        }
+    }
 }
