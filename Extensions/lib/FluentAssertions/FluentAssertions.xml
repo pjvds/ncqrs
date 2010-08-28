@@ -4,105 +4,16 @@
         <name>FluentAssertions</name>
     </assembly>
     <members>
-        <member name="M:FluentAssertions.AssertionsBase`1.VerifyThat(System.Func{System.Boolean},System.String,System.Object,System.Object,System.String,System.Object[])">
-            <summary>
-            Asserts that the supplied <paramref name="condition"/> is met.
-            </summary>
-            <param name="condition">The condition to assert</param>
-            <param name="failureMessage">
-            The message that will be used in the <see cref="T:FluentAssertions.SpecificationMismatchException"/>. This should describe what
-            was expected and why. This message should contain the following 3 placeholders:<br/>
-            <list type="bullet">
-            <item>{0} = expected value</item>
-            <item>{1} = actual value</item>
-            <item>{2} = the reason for the expectation</item>
-            </list>
-            </param>
-            <param name="expected">The expected value, or <c>null</c> if there is no explicit expected value</param>
-            <param name="actual">The actual value, or <c>null</c> if there is no explicit actual value</param>
-            <param name="reason">Should describe the reason for the expectation</param>
-            <param name="reasonParameters">Optional parameters for the <paramref name="reason"/></param>
-            <example>
-            <code>
-            VerifyThat(() =&gt; value == 0,
-                "Expected value to be &lt;{0}&gt;{2}, but found &lt;{1}&gt;",
-                expected,
-                reason,
-                reasonParameters);
-            </code>
-            </example>
-            <exception cref="T:FluentAssertions.SpecificationMismatchException">when an  exception is thrown.</exception>
-        </member>
-        <member name="M:FluentAssertions.AssertionsBase`1.VerifyThat(System.Action,System.String,System.Object,System.Object,System.String,System.Object[])">
-            <summary>
-            Asserts that the supplied <paramref name="action"/> does not throw any <see cref="T:System.Exception"/>.
-            </summary>
-            <param name="action">The <see cref="T:System.Action"/> to perform</param>
-            <param name="failureMessage">
-            The message that will be used in the <see cref="T:FluentAssertions.SpecificationMismatchException"/>. This should describe what
-            was expected and why. This message can contain the following placeholder:<br/>
-            <list type="bullet">
-            <item>{2} = the reason for the expectation</item>
-            </list>
-            </param>
-            <param name="expected">The expected value, or <c>null</c> if there is no explicit expected value</param>
-            <param name="actual">The actual value, or <c>null</c> if there is no explicit actual value</param>
-            <param name="reason">Should describe the reason for the expectation</param>
-            <param name="reasonParameters">Optional parameters for the <paramref name="reason"/></param>
-            <example>
-            <code>
-            VerifyThat(() =&gt; value == 0,
-                "Expected value to be positive{2}, but found &lt;{1}&gt;",
-                reason,
-                reasonParameters);
-            </code>
-            </example>
-            <exception cref="T:FluentAssertions.SpecificationMismatchException">when an  exception is thrown.</exception>
-        </member>
-        <member name="M:FluentAssertions.AssertionsBase`1.VerifyThat(System.Boolean,System.String,System.Object,System.Object,System.String,System.Object[])">
-            <summary>
-            Asserts that the supplied <paramref name="condition"/> is <c>true</c>.
-            </summary>
-            <param name="condition">The condition to assert</param>
-            <param name="failureMessage">
-            The message that will be used in the <see cref="T:FluentAssertions.SpecificationMismatchException"/>. This should describe what
-            was expected and why. This message should contain the following 3 placeholders:<br/>
-            <list type="bullet">
-            <item>{0} = expected value</item>
-            <item>{1} = actual value</item>
-            <item>{2} = the reason for the expectation</item>
-            </list>
-            </param>
-            <param name="expected">The expected value</param>
-            <param name="actual">The actual value</param>
-            <param name="reason">Should describe the reason for the expectation</param>
-            <param name="reasonParameters">Optional parameters for the <paramref name="reason"/></param>
-            <example>
-            <code>
-            VerifyThat(() =&gt; value == 0,
-                "Expected value to be &lt;{0}&gt;{2}, but found &lt;{1}&gt;",
-                expected,
-                reason,
-                reasonParameters);
-            </code>
-            </example>
-            <exception cref="T:FluentAssertions.SpecificationMismatchException">when the condition is <c>false</c>.</exception>
-        </member>
-        <member name="M:FluentAssertions.AssertionsBase`1.Format(System.Object)">
-            <summary>
-            If the value is a collection, returns it as a comma-separated string.
-            </summary>
-        </member>
         <member name="M:FluentAssertions.Assertions`2.Match(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
             <summary>
-            Asserts that the <paramref name="predicate"/> is statisfied.
+              Asserts that the <paramref name="predicate"/> is statisfied.
             </summary>
             <param name="predicate">The predicate which must be satisfied by the <typeparamref name="TSubject"/>.</param>
             <returns>An <see cref="!:AndConstraint"/> which can be used to chain assertions.</returns>
         </member>
         <member name="M:FluentAssertions.Assertions`2.Match(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.String,System.Object[])">
             <summary>
-            Asserts that the <paramref name="predicate"/> is satisfied.
+              Asserts that the <paramref name="predicate"/> is satisfied.
             </summary>
             <param name="predicate">The predicate which must be statisfied by the <typeparamref name="TSubject"/>.</param>
             <param name="reason">The reason why the predicate should be satisfied.</param>
@@ -111,64 +22,35 @@
         </member>
         <member name="M:FluentAssertions.Assertions`2.Match``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
             <summary>
-            Asserts that the <paramref name="predicate"/> is satisfied.
+              Asserts that the <paramref name="predicate"/> is satisfied.
             </summary>
             <param name="predicate">The predicate which must be statisfied by the <typeparamref name="TSubject"/>.</param>
             <returns>An <see cref="!:AndConstraint"/> which can be used to chain assertions.</returns>
         </member>
         <member name="M:FluentAssertions.Assertions`2.Match``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.String,System.Object[])">
             <summary>
-            Asserts that the <paramref name="predicate"/> is satisfied.
+              Asserts that the <paramref name="predicate"/> is satisfied.
             </summary>
             <param name="predicate">The predicate which must be statisfied by the <typeparamref name="TSubject"/>.</param>
             <param name="reason">The reason why the predicate should be satisfied.</param>
             <param name="reasonParameters">The parameters used when formatting the <paramref name="reason"/>.</param>
             <returns>An <see cref="!:AndConstraint"/> which can be used to chain assertions.</returns>
         </member>
-        <member name="M:FluentAssertions.DateTimeAssertions.BeMoreThan(System.TimeSpan)">
+        <member name="M:FluentAssertions.ObjectAssertions.BeAssignableTo``1">
             <summary>
-            The amount of time that a <see cref="T:System.DateTime"/> should exceed compared to another <see cref="T:System.DateTime"/>.
+            Asserts that the object is assignable to a variable of type <typeparamref name="T"/>.
             </summary>
+            <typeparam name="T">The type to which the object should be assignable.</typeparam>
+            <returns>An <see cref="T:FluentAssertions.AndConstraint`1"/> which can be used to chain assertions.</returns>
         </member>
-        <member name="M:FluentAssertions.DateTimeAssertions.BeAtLeast(System.TimeSpan)">
+        <member name="M:FluentAssertions.ObjectAssertions.BeAssignableTo``1(System.String,System.Object[])">
             <summary>
-            The amount of time that a <see cref="T:System.DateTime"/> should be equal or exceed compared to another <see cref="T:System.DateTime"/>.
+            Asserts that the object is assignable to a variable of type <typeparamref name="T"/>.
             </summary>
-        </member>
-        <member name="M:FluentAssertions.DateTimeAssertions.BeExactly(System.TimeSpan)">
-            <summary>
-            The amount of time that a <see cref="T:System.DateTime"/> should differ exactly compared to another <see cref="T:System.DateTime"/>.
-            </summary>
-        </member>
-        <member name="M:FluentAssertions.DateTimeAssertions.BeWithin(System.TimeSpan)">
-            <summary>
-            The maximum amount of time that a <see cref="T:System.DateTime"/> should differ compared to another <see cref="T:System.DateTime"/>.
-            </summary>
-        </member>
-        <member name="M:FluentAssertions.DateTimeAssertions.BeLessThan(System.TimeSpan)">
-            <summary>
-            The amount of time that a <see cref="T:System.DateTime"/> should be within another <see cref="T:System.DateTime"/>.
-            </summary>
-        </member>
-        <member name="M:FluentAssertions.StringAssertions.#ctor(System.String)">
-            <summary>
-            Initializes a new instance of the <see cref="T:System.Object"/> class.
-            </summary>
-        </member>
-        <member name="M:FluentAssertions.StringAssertions.BeEquivalentTo(System.String)">
-            <summary>
-            Case insensitive comparison
-            </summary>
-        </member>
-        <member name="M:FluentAssertions.StringAssertions.BeEquivalentTo(System.String,System.String,System.Object[])">
-            <summary>
-            Case insensitive comparison
-            </summary>
-        </member>
-        <member name="T:FluentAssertions.FluentAssertionExtensions">
-            <summary>
-            Contains extension methods for custom assertions in unit tests.
-            </summary>
+            <typeparam name="T">The type to which the object should be assignable.</typeparam>
+            <param name="reason">The reason why the object should be assignable to the type.</param>
+            <param name="reasonParameters">The parameters used when formatting the <paramref name="reason"/>.</param>
+            <returns>An <see cref="T:FluentAssertions.AndConstraint`1"/> which can be used to chain assertions.</returns>
         </member>
         <member name="M:FluentAssertions.CollectionAssertions`2.HaveCount(System.Linq.Expressions.Expression{System.Func{System.Int32,System.Boolean}})">
             <summary>
@@ -294,27 +176,6 @@
             regardless of the order. Elements are compared using their <see cref="M:System.Object.Equals(System.Object)"/>.
             </summary>
         </member>
-        <member name="M:FluentAssertions.AndConstraint`1.#ctor(`0)">
-            <summary>
-            Initializes a new instance of the <see cref="T:System.Object"/> class.
-            </summary>
-        </member>
-        <member name="M:FluentAssertions.InvokingAssertions`1.ShouldThrow``1">
-            <summary>
-            Asserts that an exception is thrown of type <typeparamref name="TException"/>.
-            </summary>
-            <typeparam name="TException">The expected type of the exception.</typeparam>
-            <returns>An <see cref="!:AndConstraint"/> which can be used to chain assertions.</returns>
-        </member>
-        <member name="M:FluentAssertions.InvokingAssertions`1.ShouldThrow``1(System.String,System.Object[])">
-            <summary>
-            Asserts that an exception is thrown of type <typeparamref name="TException"/>.
-            </summary>
-            <typeparam name="TException">The expected type of the exception.</typeparam>
-            <param name="reason">The reason why the exception should be of type <typeparamref name="TException"/>.</param>
-            <param name="reasonParameters">The parameters used when formatting the <paramref name="reason"/>.</param>
-            <returns>An <see cref="!:AndConstraint"/> which can be used to chain assertions.</returns>
-        </member>
         <member name="M:FluentAssertions.GenericCollectionAssertions`1.Contain(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
             <summary>
             Asserts that the collection contains at least one item that matches the predicate.
@@ -335,42 +196,324 @@
             Asserts that the collection does not contain any items that match the predicate.
             </summary>
         </member>
-        <member name="M:FluentAssertions.PropertyAssertions`1.AllProperties">
+        <member name="M:FluentAssertions.AndConstraint`1.#ctor(`0)">
             <summary>
-            Includes all properties of <typeparamref name="T"/> when comparing the subject with another object using <see cref="M:FluentAssertions.PropertyAssertions`1.EqualTo(System.Object)"/>.
+            Initializes a new instance of the <see cref="T:System.Object"/> class.
             </summary>
         </member>
-        <member name="M:FluentAssertions.PropertyAssertions`1.AllPropertiesBut(System.Linq.Expressions.Expression{System.Func{`0,System.Object}},System.Linq.Expressions.Expression{System.Func{`0,System.Object}}[])">
+        <member name="T:FluentAssertions.TimeSpanAssertions">
             <summary>
-            Includes all properties of <typeparamref name="T"/> when comparing the subject with another object using <see cref="M:FluentAssertions.PropertyAssertions`1.EqualTo(System.Object)"/>, 
-            except those specified using a property expression.
+            Provides methods for asserting that two <see cref="T:System.DateTime"/> objects differ in certain ways.
             </summary>
         </member>
-        <member name="M:FluentAssertions.PropertyAssertions`1.Properties(System.Linq.Expressions.Expression{System.Func{`0,System.Object}},System.Linq.Expressions.Expression{System.Func{`0,System.Object}}[])">
+        <member name="M:FluentAssertions.TimeSpanAssertions.Before(System.DateTime)">
             <summary>
-            Includes only those properties of <typeparamref name="T"/> when comparing the subject with another object using <see cref="M:FluentAssertions.PropertyAssertions`1.EqualTo(System.Object)"/>
-            that were specified using a property expression.
+            Asserts that a <see cref="T:System.DateTime"/> occurs a specified amount of time before another <see cref="T:System.DateTime"/>.
+            </summary>
+            <param name="target">
+            The <see cref="T:System.DateTime"/> to compare the subject with.
+            </param>
+        </member>
+        <member name="M:FluentAssertions.TimeSpanAssertions.Before(System.DateTime,System.String,System.Object[])">
+            <summary>
+            Asserts that a <see cref="T:System.DateTime"/> occurs a specified amount of time before another <see cref="T:System.DateTime"/>.
+            </summary>
+            <param name="target">
+            The <see cref="T:System.DateTime"/> to compare the subject with.
+            </param>
+            <param name="reason">
+            A formatted phrase explaining why the assertion should be satisfied. If the phrase does not 
+            start with the word <i>because</i>, it is prepended to the message.
+            </param>
+            <param name="reasonParameters">
+            Zero or more values to use for filling in any <see cref="M:System.String.Format(System.String,System.Object[])"/> compatible placeholders.
+            </param>
+        </member>
+        <member name="M:FluentAssertions.TimeSpanAssertions.After(System.DateTime)">
+            <summary>
+            Asserts that a <see cref="T:System.DateTime"/> occurs a specified amount of time after another <see cref="T:System.DateTime"/>.
+            </summary>
+            <param name="target">
+            The <see cref="T:System.DateTime"/> to compare the subject with.
+            </param>
+        </member>
+        <member name="M:FluentAssertions.TimeSpanAssertions.After(System.DateTime,System.String,System.Object[])">
+            <summary>
+            Asserts that a <see cref="T:System.DateTime"/> occurs a specified amount of time after another <see cref="T:System.DateTime"/>.
+            </summary>
+            <param name="target">
+            The <see cref="T:System.DateTime"/> to compare the subject with.
+            </param>
+            <param name="reason">
+            A formatted phrase explaining why the assertion should be satisfied. If the phrase does not 
+            start with the word <i>because</i>, it is prepended to the message.
+            </param>
+            <param name="reasonParameters">
+            Zero or more values to use for filling in any <see cref="M:System.String.Format(System.String,System.Object[])"/> compatible placeholders.
+            </param>
+        </member>
+        <member name="T:FluentAssertions.TimeSpanAssertions.TimeSpanPredicate">
+            <summary>
+            Provides the logic and the display text for a <see cref="T:FluentAssertions.TimeSpanCondition"/>.
             </summary>
         </member>
-        <member name="M:FluentAssertions.PropertyAssertions`1.EqualTo(System.Object)">
+        <member name="T:FluentAssertions.AssertionExtensions">
             <summary>
-            Verifies that the previously selected properties of <typeparamref name="T"/> have the same value as the equally named
-            properties of <paramref name="comparee"/>.
+            Contains extension methods for custom assertions in unit tests.
+            </summary>
+        </member>
+        <member name="M:FluentAssertions.AssertionExtensions.Invoking``1(``0,System.Action{``0})">
+            <summary>
+            Invokes the specified action on an subject so that you can chain it with any of the ShouldThrow or ShouldNotThrow 
+            overloads.
+            </summary>
+        </member>
+        <member name="M:FluentAssertions.AssertionExtensions.ShouldThrow``1(System.Action)">
+            <summary>
+            Verifies that the <paramref name="action"/> throws an exception.
+            </summary>
+            <typeparam name="TException">
+            The type of the exception it should throw.
+            </typeparam>
+            <returns>
+            Returns an object that allows asserting additional members of the thrown exception.
+            </returns>
+        </member>
+        <member name="M:FluentAssertions.AssertionExtensions.ShouldThrow``1(System.Action,System.String,System.Object[])">
+            <summary>
+            Verifies that the <paramref name="action"/> throws an exception.
+            </summary>
+            <typeparam name="TException">
+            The type of the exception it should throw.
+            </typeparam>
+            <param name="reason">
+            A formatted phrase explaining why the assertion should be satisfied. If the phrase does not 
+            start with the word <i>because</i>, it is prepended to the message.
+            </param>
+            <param name="reasonParameters">
+            Zero or more values to use for filling in any <see cref="M:System.String.Format(System.String,System.Object[])"/> compatible placeholders.
+            </param>
+            <returns>
+            Returns an object that allows asserting additional members of the thrown exception.
+            </returns>
+        </member>
+        <member name="M:FluentAssertions.AssertionExtensions.ShouldNotThrow``1(System.Action)">
+            <summary>
+            Verifies that the <paramref name="action"/> does not throw a particular exception.
+            </summary>
+            <typeparam name="TException">
+            The type of the exception it should not throw. Any other exceptions are ignored and will satisfy the assertion.
+            </typeparam>
+        </member>
+        <member name="M:FluentAssertions.AssertionExtensions.ShouldNotThrow``1(System.Action,System.String,System.Object[])">
+            <summary>
+            Verifies that the <paramref name="action"/> does not throw a particular exception.
+            </summary>
+            <typeparam name="TException">
+            The type of the exception it should not throw. Any other exceptions are ignored and will satisfy the assertion.
+            </typeparam>
+            <param name="reason">
+            A formatted phrase explaining why the assertion should be satisfied. If the phrase does not 
+            start with the word <i>because</i>, it is prepended to the message.
+            </param>
+            <param name="reasonParameters">
+            Zero or more values to use for filling in any <see cref="M:System.String.Format(System.String,System.Object[])"/> compatible placeholders.
+            </param>
+        </member>
+        <member name="M:FluentAssertions.AssertionExtensions.ShouldNotThrow(System.Action)">
+            <summary>
+            Verifies that the <paramref name="action"/> does not throw any exception at all.
+            </summary>
+        </member>
+        <member name="M:FluentAssertions.AssertionExtensions.ShouldNotThrow(System.Action,System.String,System.Object[])">
+            <summary>
+            Verifies that the <paramref name="action"/> does not throw any exception at all.
+            </summary>
+            <param name="reason">
+            A formatted phrase explaining why the assertion should be satisfied. If the phrase does not 
+            start with the word <i>because</i>, it is prepended to the message.
+            </param>
+            <param name="reasonParameters">
+            Zero or more values to use for filling in any <see cref="M:System.String.Format(System.String,System.Object[])"/> compatible placeholders.
+            </param>
+        </member>
+        <member name="M:FluentAssertions.AssertionExtensions.Enumerating(System.Func{System.Collections.IEnumerable})">
+            <summary>
+            Forces enumerating a collection. Should be used to assert that a method that uses the 
+            <c>yield</c> keyword throws a particular exception.
+            </summary>
+        </member>
+        <member name="M:FluentAssertions.AssertionExtensions.As``1(System.Object)">
+            <summary>
+            Casts the specified object to the type specified through <typeparamref name="TTo"/>.
             </summary>
             <remarks>
-            Property values are considered equal if, after converting them to the requested type, calling <see cref="!:T.Equals(object)"/> 
-            returns <c>true</c>.
+            Has been introduced to allow casting objects without breaking the fluent API.
             </remarks>
+            <typeparam name="TTo"></typeparam>
         </member>
-        <member name="M:FluentAssertions.PropertyAssertions`1.EqualTo(System.Object,System.String,System.Object[])">
+        <member name="M:FluentAssertions.DateTimeAssertions.BeMoreThan(System.TimeSpan)">
             <summary>
-            Verifies that the previously selected properties of <typeparamref name="T"/> have the same value as the equally named
-            properties of <paramref name="comparee"/>.
+            The amount of time that a <see cref="T:System.DateTime"/> should exceed compared to another <see cref="T:System.DateTime"/>.
             </summary>
-            <remarks>
-            Property values are considered equal if, after converting them to the requested type, calling <see cref="!:T.Equals(object)"/> 
-            returns <c>true</c>.
-            </remarks>
+        </member>
+        <member name="M:FluentAssertions.DateTimeAssertions.BeAtLeast(System.TimeSpan)">
+            <summary>
+            The amount of time that a <see cref="T:System.DateTime"/> should be equal or exceed compared to another <see cref="T:System.DateTime"/>.
+            </summary>
+        </member>
+        <member name="M:FluentAssertions.DateTimeAssertions.BeExactly(System.TimeSpan)">
+            <summary>
+            The amount of time that a <see cref="T:System.DateTime"/> should differ exactly compared to another <see cref="T:System.DateTime"/>.
+            </summary>
+        </member>
+        <member name="M:FluentAssertions.DateTimeAssertions.BeWithin(System.TimeSpan)">
+            <summary>
+            The maximum amount of time that a <see cref="T:System.DateTime"/> should differ compared to another <see cref="T:System.DateTime"/>.
+            </summary>
+        </member>
+        <member name="M:FluentAssertions.DateTimeAssertions.BeLessThan(System.TimeSpan)">
+            <summary>
+            The amount of time that a <see cref="T:System.DateTime"/> should be within another <see cref="T:System.DateTime"/>.
+            </summary>
+        </member>
+        <member name="M:FluentAssertions.StringAssertions.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.Object"/> class.
+            </summary>
+        </member>
+        <member name="M:FluentAssertions.StringAssertions.BeEquivalentTo(System.String)">
+            <summary>
+            Case insensitive comparison
+            </summary>
+        </member>
+        <member name="M:FluentAssertions.StringAssertions.BeEquivalentTo(System.String,System.String,System.Object[])">
+            <summary>
+            Case insensitive comparison
+            </summary>
+        </member>
+        <member name="M:FluentAssertions.StringAssertions.NotBeNullOrEmpty">
+            <summary>
+            Ensures that a string is neither <c>null</c> or empty.
+            </summary>
+        </member>
+        <member name="M:FluentAssertions.StringAssertions.NotBeNullOrEmpty(System.String,System.Object[])">
+            <summary>
+            Ensures that a string is neither <c>null</c> or empty.
+            </summary>
+            <param name="reason">
+            A formatted phrase explaining why the assertion should be satisfied. If the phrase does not 
+            start with the word <i>because</i>, it is prepended to the message.
+            </param>
+            <param name="reasonParameters">
+            Zero or more values to use for filling in any <see cref="M:System.String.Format(System.String,System.Object[])"/> compatible placeholders.
+            </param>
+        </member>
+        <member name="M:FluentAssertions.StringAssertions.BeNullOrEmpty">
+            <summary>
+            Ensures that a string is neither <c>null</c> or empty.
+            </summary>
+        </member>
+        <member name="M:FluentAssertions.StringAssertions.BeNullOrEmpty(System.String,System.Object[])">
+            <summary>
+            Ensures that a string is either <c>null</c> or empty.
+            </summary>
+            <param name="reason">
+            A formatted phrase explaining why the assertion should be satisfied. If the phrase does not 
+            start with the word <i>because</i>, it is prepended to the message.
+            </param>
+            <param name="reasonParameters">
+            Zero or more values to use for filling in any <see cref="M:System.String.Format(System.String,System.Object[])"/> compatible placeholders.
+            </param>
+        </member>
+        <member name="M:FluentAssertions.Verification.Verify(System.Func{System.Boolean},System.String,System.Object,System.Object,System.String,System.Object[])">
+            <summary>
+              Asserts that the supplied <paramref name="condition"/> is met.
+            </summary>
+            <param name="condition">The condition to assert</param>
+            <param name="failureMessage">
+              The message that will be used in the <see cref="T:FluentAssertions.SpecificationMismatchException"/>. This should describe what
+              was expected and why. This message should contain the following 3 placeholders:<br/>
+              <list type="bullet">
+                <item>{0} = expected value</item>
+                <item>{1} = actual value</item>
+                <item>{2} = the reason for the expectation</item>
+              </list>
+            </param>
+            <param name="expected">The expected value, or <c>null</c> if there is no explicit expected value</param>
+            <param name="actual">The actual value, or <c>null</c> if there is no explicit actual value</param>
+            <param name="reason">Should describe the reason for the expectation</param>
+            <param name="reasonParameters">Optional parameters for the <paramref name="reason"/></param>
+            <example>
+              <code>
+                Verification.Verify(() =&gt; value == 0,
+                "Expected value to be &lt;{0}&gt;{2}, but found &lt;{1}&gt;",
+                expected,
+                reason,
+                reasonParameters);
+              </code>
+            </example>
+            <exception cref="T:FluentAssertions.SpecificationMismatchException">when an  exception is thrown.</exception>
+        </member>
+        <member name="M:FluentAssertions.Verification.Verify(System.Action,System.String,System.Object,System.Object,System.String,System.Object[])">
+            <summary>
+              Asserts that the supplied <paramref name="action"/> does not throw any <see cref="T:System.Exception"/>.
+            </summary>
+            <param name="action">The <see cref="T:System.Action"/> to perform</param>
+            <param name="failureMessage">
+              The message that will be used in the <see cref="T:FluentAssertions.SpecificationMismatchException"/>. This should describe what
+              was expected and why. This message can contain the following placeholder:<br/>
+              <list type="bullet">
+                <item>{2} = the reason for the expectation</item>
+              </list>
+            </param>
+            <param name="expected">The expected value, or <c>null</c> if there is no explicit expected value</param>
+            <param name="actual">The actual value, or <c>null</c> if there is no explicit actual value</param>
+            <param name="reason">Should describe the reason for the expectation</param>
+            <param name="reasonParameters">Optional parameters for the <paramref name="reason"/></param>
+            <example>
+              <code>
+                Verification.Verify(() =&gt; value == 0,
+                "Expected value to be positive{2}, but found &lt;{1}&gt;",
+                reason,
+                reasonParameters);
+              </code>
+            </example>
+            <exception cref="T:FluentAssertions.SpecificationMismatchException">when an  exception is thrown.</exception>
+        </member>
+        <member name="M:FluentAssertions.Verification.Verify(System.Boolean,System.String,System.Object,System.Object,System.String,System.Object[])">
+            <summary>
+              Asserts that the supplied <paramref name="condition"/> is <c>true</c>.
+            </summary>
+            <param name="condition">The condition to assert</param>
+            <param name="failureMessage">
+              The message that will be used in the <see cref="T:FluentAssertions.SpecificationMismatchException"/>. This should describe what
+              was expected and why. This message should contain the following 3 placeholders:<br/>
+              <list type="bullet">
+                <item>{0} = expected value</item>
+                <item>{1} = actual value</item>
+                <item>{2} = the reason for the expectation</item>
+              </list>
+            </param>
+            <param name="expected">The expected value</param>
+            <param name="actual">The actual value</param>
+            <param name="reason">Should describe the reason for the expectation</param>
+            <param name="reasonParameters">Optional parameters for the <paramref name="reason"/></param>
+            <example>
+              <code>
+                Verification.Verify(() =&gt; value == 0,
+                "Expected value to be &lt;{0}&gt;{2}, but found &lt;{1}&gt;",
+                expected,
+                reason,
+                reasonParameters);
+              </code>
+            </example>
+            <exception cref="T:FluentAssertions.SpecificationMismatchException">when the condition is <c>false</c>.</exception>
+        </member>
+        <member name="M:FluentAssertions.Verification.ToString(System.Object)">
+            <summary>
+              If the value is a collection, returns it as a comma-separated string.
+            </summary>
         </member>
         <member name="M:FluentAssertions.ExceptionAssertions`1.WithMessage(System.String)">
             <summary>
@@ -429,77 +572,42 @@
             Gets the exception object of the exception thrown.
             </summary>
         </member>
-        <member name="M:FluentAssertions.ObjectAssertions.BeAssignableTo``1">
+        <member name="M:FluentAssertions.PropertyAssertions`1.AllProperties">
             <summary>
-            Asserts that the object is assignable to a variable of type <typeparamref name="T"/>.
-            </summary>
-            <typeparam name="T">The type to which the object should be assignable.</typeparam>
-            <returns>An <see cref="T:FluentAssertions.AndConstraint`1"/> which can be used to chain assertions.</returns>
-        </member>
-        <member name="M:FluentAssertions.ObjectAssertions.BeAssignableTo``1(System.String,System.Object[])">
-            <summary>
-            Asserts that the object is assignable to a variable of type <typeparamref name="T"/>.
-            </summary>
-            <typeparam name="T">The type to which the object should be assignable.</typeparam>
-            <param name="reason">The reason why the object should be assignable to the type.</param>
-            <param name="reasonParameters">The parameters used when formatting the <paramref name="reason"/>.</param>
-            <returns>An <see cref="T:FluentAssertions.AndConstraint`1"/> which can be used to chain assertions.</returns>
-        </member>
-        <member name="T:FluentAssertions.TimeSpanAssertions">
-            <summary>
-            Provides methods for asserting that two <see cref="T:System.DateTime"/> objects differ in certain ways.
+            Includes all properties of <typeparamref name="T"/> when comparing the subject with another object using <see cref="M:FluentAssertions.PropertyAssertions`1.EqualTo(System.Object)"/>.
             </summary>
         </member>
-        <member name="M:FluentAssertions.TimeSpanAssertions.Before(System.DateTime)">
+        <member name="M:FluentAssertions.PropertyAssertions`1.AllPropertiesBut(System.Linq.Expressions.Expression{System.Func{`0,System.Object}},System.Linq.Expressions.Expression{System.Func{`0,System.Object}}[])">
             <summary>
-            Asserts that a <see cref="T:System.DateTime"/> occurs a specified amount of time before another <see cref="T:System.DateTime"/>.
+            Includes all properties of <typeparamref name="T"/> when comparing the subject with another object using <see cref="M:FluentAssertions.PropertyAssertions`1.EqualTo(System.Object)"/>, 
+            except those specified using a property expression.
             </summary>
-            <param name="target">
-            The <see cref="T:System.DateTime"/> to compare the subject with.
-            </param>
         </member>
-        <member name="M:FluentAssertions.TimeSpanAssertions.Before(System.DateTime,System.String,System.Object[])">
+        <member name="M:FluentAssertions.PropertyAssertions`1.Properties(System.Linq.Expressions.Expression{System.Func{`0,System.Object}},System.Linq.Expressions.Expression{System.Func{`0,System.Object}}[])">
             <summary>
-            Asserts that a <see cref="T:System.DateTime"/> occurs a specified amount of time before another <see cref="T:System.DateTime"/>.
+            Includes only those properties of <typeparamref name="T"/> when comparing the subject with another object using <see cref="M:FluentAssertions.PropertyAssertions`1.EqualTo(System.Object)"/>
+            that were specified using a property expression.
             </summary>
-            <param name="target">
-            The <see cref="T:System.DateTime"/> to compare the subject with.
-            </param>
-            <param name="reason">
-            A formatted phrase explaining why the assertion should be satisfied. If the phrase does not 
-            start with the word <i>because</i>, it is prepended to the message.
-            </param>
-            <param name="reasonParameters">
-            Zero or more values to use for filling in any <see cref="M:System.String.Format(System.String,System.Object[])"/> compatible placeholders.
-            </param>
         </member>
-        <member name="M:FluentAssertions.TimeSpanAssertions.After(System.DateTime)">
+        <member name="M:FluentAssertions.PropertyAssertions`1.EqualTo(System.Object)">
             <summary>
-            Asserts that a <see cref="T:System.DateTime"/> occurs a specified amount of time after another <see cref="T:System.DateTime"/>.
+            Verifies that the previously selected properties of <typeparamref name="T"/> have the same value as the equally named
+            properties of <paramref name="comparee"/>.
             </summary>
-            <param name="target">
-            The <see cref="T:System.DateTime"/> to compare the subject with.
-            </param>
+            <remarks>
+            Property values are considered equal if, after converting them to the requested type, calling <see cref="!:T.Equals(object)"/> 
+            returns <c>true</c>.
+            </remarks>
         </member>
-        <member name="M:FluentAssertions.TimeSpanAssertions.After(System.DateTime,System.String,System.Object[])">
+        <member name="M:FluentAssertions.PropertyAssertions`1.EqualTo(System.Object,System.String,System.Object[])">
             <summary>
-            Asserts that a <see cref="T:System.DateTime"/> occurs a specified amount of time after another <see cref="T:System.DateTime"/>.
+            Verifies that the previously selected properties of <typeparamref name="T"/> have the same value as the equally named
+            properties of <paramref name="comparee"/>.
             </summary>
-            <param name="target">
-            The <see cref="T:System.DateTime"/> to compare the subject with.
-            </param>
-            <param name="reason">
-            A formatted phrase explaining why the assertion should be satisfied. If the phrase does not 
-            start with the word <i>because</i>, it is prepended to the message.
-            </param>
-            <param name="reasonParameters">
-            Zero or more values to use for filling in any <see cref="M:System.String.Format(System.String,System.Object[])"/> compatible placeholders.
-            </param>
-        </member>
-        <member name="T:FluentAssertions.TimeSpanAssertions.TimeSpanPredicate">
-            <summary>
-            Provides the logic and the display text for a <see cref="T:FluentAssertions.TimeSpanCondition"/>.
-            </summary>
+            <remarks>
+            Property values are considered equal if, after converting them to the requested type, calling <see cref="!:T.Equals(object)"/> 
+            returns <c>true</c>.
+            </remarks>
         </member>
     </members>
 </doc>
