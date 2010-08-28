@@ -25,7 +25,6 @@ namespace Ncqrs.Tests.Domain
             public void OverrideAggregateRootId(Guid id)
             {
                 this.GetType().GetProperty("EventSourceId").SetValue(this, id, null);
-                
             }
         }
 
@@ -121,12 +120,10 @@ namespace Ncqrs.Tests.Domain
         }
 
         [Test]
-        public void Applying_an_event_when_there_is_no_unit_of_work_should_cause_an_exception()
+        public void Applying_an_event_when_there_is_no_unit_of_work_should_not_cause_an_exception()
         {
             var theAggregate = new MyAggregateRoot();
-            Action act = ()=> theAggregate.MethodThatCausesAnEventThatHasAHandler();
-
-            act.ShouldThrow<NoUnitOfWorkAvailableInThisContextException>();
+            theAggregate.MethodThatCausesAnEventThatHasAHandler();
         }
 
         [Test]
