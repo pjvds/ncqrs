@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using Ncqrs.Commanding;
 using Ncqrs.Commanding.CommandExecution;
 using Ncqrs.Eventing.Sourcing;
+using NUnit.Framework;
 
 namespace Ncqrs.Spec
 {
     [Specification]
+    [TestFixture] // TODO: Testdriven.net debug runner doesn't recognize inhiret attributes. Use native for now.
     public abstract class CommandTestFixture<TCommand>
         where TCommand : ICommand
     {
@@ -22,6 +24,7 @@ namespace Ncqrs.Spec
         protected virtual void Finally() { }
 
         [Given]
+        [SetUp] // TODO: Testdriven.net debug runner doesn't recognize inhiret attributes. Use native for now.
         public void Setup()
         {
             var commandExecutor = BuildCommandExecutor();

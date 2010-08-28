@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using Ncqrs.Domain;
 using Ncqrs.Domain.Storage;
 using Ncqrs.Eventing.Sourcing;
+using NUnit.Framework;
 
 namespace Ncqrs.Spec
 {
     [Specification]
+    [TestFixture] // TODO: Testdriven.net debug runner doesn't recognize inhiret attributes. Use native for now.
     public abstract class AggregateRootTestFixture<TAggregateRoot> where TAggregateRoot : AggregateRoot
     {
         protected IAggregateRootCreationStrategy CreationStrategy { get; set; }
@@ -27,6 +29,7 @@ namespace Ncqrs.Spec
         protected abstract void When();
 
         [Given]
+        [SetUp] // TODO: Testdriven.net debug runner doesn't recognize inhiret attributes. Use native for now.
         public void Setup()
         {
             CreationStrategy = new SimpleAggregateRootCreationStrategy();
