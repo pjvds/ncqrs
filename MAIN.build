@@ -1,27 +1,68 @@
 <?xml version="1.0" ?>
 <project name="NAnt Examples" xmlns="http://nant.sf.net/release/0.91-alpha1/nant.xsd" default="build">
-
   <property name="nant.settings.currentframework" value="net-4.0" />
   <property name="root.dir" value="" />
+  <property name="project.version" value="0.8.0" />
   <property name="project.config" value="debug" />
   <property name="project.framework.bin" value="Framework\src\Ncqrs\bin\${project.config}" />
   <property name="msbuild" value="${framework::get-framework-directory(framework::get-target-framework())}\msbuild.exe" dynamic="true" />
-
+  <property name="release.dir" value="release" />
+  <property name="release.version" value="${project.version}" />
+  
+  <if test="${property::exists('build.number')}">
+	<property name="release.version" value="${project.version}.${build.number}"/>
+  </if>
+  
   <target name="build">
+	<echo message="Building release ${release.version}" />
     <call target="BuildFramework" />
     <call target="RunTestsForFramework" />
     <call target="UpdateAllLibFolders" />
     <call target="BuildExtensions" />
+    <call target="MakeRelease" />
   </target>
 
   <target name="BuildFramework">
     <echo message="START BUILDING FRAMEWORK" />
     <!-- TODO: Solution target does not support 4.0 yet -->
     <!-- <solution solutionfile="Framework\NcqrsFramework.sln" configuration="debug" />-->
+    <asminfo output="Framework\AssemblyInfo.cs" language="CSharp">
+		<imports>
+			<import namespace="System" />
+			<import namespace="System.Reflection" />
+			<import namespace="System.Runtime.CompilerServices" />
+			<import namespace="System.Runtime.InteropServices	" />
+		</imports>
+		<attributes>
+			<attribute type="AssemblyTitleAttribute" value="Ncqrs" />
+			<attribute type="AssemblyDescriptionAttribute" value="The CQRS Framework for .NET" />
+			<attribute type="AssemblyVersionAttribute" value="${project.version}" />
+			<attribute type="CLSCompliantAttribute" value="true" />
+			<attribute type="ComVisibleAttribute" value="false" />
+			<attribute type="AssemblyCopyrightAttribute" value="Copyright (c) 2010, Ncqrs.org" />
+			<attribute type="InternalsVisibleToAttribute" value="Ncqrs.Tests" />
+			<attribute type="InternalsVisibleToAttribute" value="Ncqrs.Spec" />
+		</attributes>
+		<references>
+			<include name="System.dll" />
+			<include name="System.Core.dll" />
+		</references>
+	</asminfo>
+    
     <exec program="${msbuild}">
       <arg value="Framework\NcqrsFramework.sln" />
       <arg value="/p:Configuration=${project.config}" />
     </exec>
+    <copy todir="${release.dir}">
+		<fileset basedir="Framework\src\Ncqrs\bin\${project.config}">
+			<include name="Ncqrs.dll" />
+			<include name="Ncqrs.pdb" />
+			<include name="Ncqrs.xml" />
+			<include name="Newtonsoft.Json.dll" />
+			<include name="Newtonsoft.Json.pdb" />
+			<include name="log4net.dll" />
+		</fileset>
+    </copy>
   </target>
 
   <target name="BuildExtensions" depends="UpdateLibForExtensions">
@@ -67,5 +108,36 @@
         <include name="**/*" />
       </fileset>
     </copy>
+  </target>
+  
+  <target name="MakeRelease" depends="BuildFramework">
+	<!-- Start with a new release directory -->
+	<delete dir="${release.dir}" />
+	
+	<copy todir="${release.dir}\Framework">
+		<fileset basedir="Framework\src\Ncqrs\bin\${project.config}">
+			<include name="Ncqrs.dll" />
+			<include name="Ncqrs.pdb" />
+			<include name="Ncqrs.xml" />
+			<include name="Newtonsoft.Json.dll" />
+			<include name="Newtonsoft.Json.pdb" />
+			<include name="log4net.dll" />
+		</fileset>
+    </copy>
+	<copy todir="${release.dir}\Spec">
+		<fileset basedir="Framework\src\Ncqrs.Spec\bin\${project.config}">
+			<include name="Ncqrs.Spec.dll" />
+			<include name="Ncqrs.Spec.pdb" />
+			<include name="Ncqrs.Spec.xml" />
+			<include name="nunit.framework.dll" />
+			<include name="nunit.framework.xml" />
+		</fileset>
+    </copy>
+    
+	<zip zipfile="${release.dir}\Ncqrs${release.version}.zip">
+		<fileset basedir="${release.dir}">
+			<include name="**/*" />
+		</fileset>
+	</zip>
   </target>
 </project>

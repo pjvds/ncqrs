@@ -20,3 +20,4 @@ bin
 # Ncqrs in non framework solution
 /Extensions/lib/Ncqrs/*
 /Samples/MyNotes/lib/*
+release
