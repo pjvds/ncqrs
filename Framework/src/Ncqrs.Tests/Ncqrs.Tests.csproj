@@ -102,6 +102,7 @@
     <Compile Include="Domain\AggregateRootMappedWithAttributesTests.cs" />
     <Compile Include="Domain\AggregateRootTests.cs" />
     <Compile Include="Domain\AggregateRootMappedByExpressionTests.cs" />
+    <Compile Include="Domain\EntityTests.cs" />
     <Compile Include="Domain\SourcedEventHanderTests.cs" />
     <Compile Include="Domain\EventNotHandledExceptionTests.cs" />
     <Compile Include="Domain\SourcedEventHandlerPredicate.cs" />
