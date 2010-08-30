@@ -55,7 +55,8 @@ namespace Website.Controllers
 
         public ActionResult Add()
         {
-            return View();
+            var command = new CreateNewNote();
+            return View(command);
         }
 
         [HttpPost]

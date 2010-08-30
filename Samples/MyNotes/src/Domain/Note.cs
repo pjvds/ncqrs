@@ -7,12 +7,6 @@ namespace Domain
 {
     public class Note : AggregateRootMappedByConvention
     {
-        public Guid Id
-        {
-            get{ return EventSourceId; }
-            set{ EventSourceId = value; }
-        }
-
         private String _text;
         private DateTime _creationDate;
 
@@ -21,8 +15,9 @@ namespace Domain
             // Need a default ctor for Ncqrs.
         }
 
-        public Note(String text)
+        public Note(Guid noteId, String text)
         {
+            EventSourceId = noteId;
             var clock = NcqrsEnvironment.Get<IClock>();
 
             // Apply a NewNoteAdded event that reflects the
@@ -31,7 +26,6 @@ namespace Domain
             // this event (the OnNewNoteAdded method).
             ApplyEvent(new NewNoteAdded
             {
-                NoteId = Id,
                 Text = text,
                 CreationDate = clock.UtcNow()
             });
@@ -45,7 +39,6 @@ namespace Domain
             // this event (the NoteTextChanged method).
             ApplyEvent(new NoteTextChanged
             {
-                NoteId = Id,
                 NewText = newText
             });
         }
@@ -54,7 +47,6 @@ namespace Domain
         // is automaticly wired as event handler based on convension.
         protected void OnNewNoteAdded(NewNoteAdded e)
         {
-            Id = e.NoteId;
             _text = e.Text;
             _creationDate = e.CreationDate;
         }

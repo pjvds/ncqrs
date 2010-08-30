@@ -7,10 +7,24 @@ namespace Commands
     [MapsToAggregateRootConstructor("Domain.Note, Domain")]
     public class CreateNewNote : CommandBase
     {
-        [Parameter(1)]
+        public Guid NoteId
+        {
+            get; set;
+        }
+
         public String Text
         {
             get; set;
+        }
+
+        public CreateNewNote()
+        {
+        }
+
+        public CreateNewNote(Guid noteId, string text)
+        {
+            NoteId = noteId;
+            Text = text;
         }
     }
 }
