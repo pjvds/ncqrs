@@ -72,6 +72,7 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
 
         private const string DEFAULT_CONNECTIONSTRING_KEY = "EventStore";
         private readonly string connectionString;
+        private bool _ignored = false;
 
         public MsSqlServerEventStoreTests()
         {
@@ -79,7 +80,7 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
         }
 
         [SetUp]
-        public void Verify_sql_connection()
+        public void TestConnection()
         {
             var connection = new SqlConnection(connectionString);
 
@@ -87,8 +88,9 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
             {
                 connection.Open();
             }
-            catch (Exception caught)
+            catch (SqlException caught)
             {
+                _ignored = true;
                 Assert.Ignore("No connection could be made with SQL server: " + caught.Message);            
             }
             finally
@@ -100,19 +102,22 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
         [TearDown]
         public void Clean()
         {
-            var connectionString = ConfigurationManager.ConnectionStrings[DEFAULT_CONNECTIONSTRING_KEY].ConnectionString;
-            using (var connection = new SqlConnection(connectionString))
+            if (!_ignored)
             {
-                connection.Open();
-                var cmd = connection.CreateCommand();
-                cmd.CommandText = "TRUNCATE TABLE [Events]";
-                cmd.ExecuteNonQuery();
+                var connectionString = ConfigurationManager.ConnectionStrings[DEFAULT_CONNECTIONSTRING_KEY].ConnectionString;
+                using (var connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+                    var cmd = connection.CreateCommand();
+                    cmd.CommandText = "TRUNCATE TABLE [Events]";
+                    cmd.ExecuteNonQuery();
 
-                cmd.CommandText = "TRUNCATE TABLE [EventSources]";
-                cmd.ExecuteNonQuery();
+                    cmd.CommandText = "TRUNCATE TABLE [EventSources]";
+                    cmd.ExecuteNonQuery();
 
-                cmd.CommandText = "TRUNCATE TABLE [Snapshots]";
-                cmd.ExecuteNonQuery();
+                    cmd.CommandText = "TRUNCATE TABLE [Snapshots]";
+                    cmd.ExecuteNonQuery();
+                }
             }
         }
 
