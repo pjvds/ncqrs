@@ -35,6 +35,13 @@ namespace Ncqrs.Domain
             InitializeEventHandlers();
             InitializeHandlers();
         }
+
+        protected AggregateRootMappedWithExpressions(Guid id)
+            : base(id, new ExpressionBasedEventHandlerMappingStrategy())
+        {
+            InitializeEventHandlers();
+            InitializeHandlers();
+        }
         
         /// <summary>
         /// Maps the given generic eventtype to the expressed handler.

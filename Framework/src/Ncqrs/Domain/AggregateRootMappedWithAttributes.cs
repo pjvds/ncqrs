@@ -1,4 +1,5 @@
 ﻿using Ncqrs.Eventing.Sourcing.Mapping;
+using System;
 
 namespace Ncqrs.Domain
 {
@@ -6,6 +7,11 @@ namespace Ncqrs.Domain
     {
         protected AggregateRootMappedWithAttributes()
             : base(new AttributeBasedEventHandlerMappingStrategy())
+        {
+        }
+
+        protected AggregateRootMappedWithAttributes(Guid id)
+            : base(id, new AttributeBasedEventHandlerMappingStrategy())
         {
         }
     }

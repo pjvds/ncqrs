@@ -40,6 +40,11 @@ namespace Ncqrs.Tests.Domain
                 RegisterHandler(new TypeThresholdedActionBasedDomainEventHandler(OnFoo, typeof(HandledEvent), false));
             }
 
+            public MyAggregateRoot(Guid id) : base(id)
+            {
+                RegisterHandler(new TypeThresholdedActionBasedDomainEventHandler(OnFoo, typeof(HandledEvent), false));
+            }
+
             public MyAggregateRoot(IEnumerable<SourcedEvent> history)
             {
                 RegisterHandler(new TypeThresholdedActionBasedDomainEventHandler(OnFoo, typeof(HandledEvent), false));
@@ -210,22 +215,19 @@ namespace Ncqrs.Tests.Domain
         [Test]
         public void Applying_an_event_should_the_the_version()
         {
-            using (NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork())
-            {
-                var theAggregate = new MyAggregateRoot();
+            var theAggregate = new MyAggregateRoot();
 
-                theAggregate.Version.Should().Be(0);
+            theAggregate.Version.Should().Be(0);
 
-                theAggregate.MethodThatCausesAnEventThatHasAHandler();                
-                theAggregate.Version.Should().Be(1);
-                theAggregate.GetUncommittedEvents().Last().EventSequence.Should().Be(1);
+            theAggregate.MethodThatCausesAnEventThatHasAHandler();
+            theAggregate.Version.Should().Be(1);
+            theAggregate.GetUncommittedEvents().Last().EventSequence.Should().Be(1);
 
-                theAggregate.MethodThatCausesAnEventThatHasAHandler();
-                theAggregate.Version.Should().Be(2);
-                theAggregate.GetUncommittedEvents().Last().EventSequence.Should().Be(2);
+            theAggregate.MethodThatCausesAnEventThatHasAHandler();
+            theAggregate.Version.Should().Be(2);
+            theAggregate.GetUncommittedEvents().Last().EventSequence.Should().Be(2);
 
-                theAggregate.MethodThatCausesAnEventThatHasAHandler();
-            }
+            theAggregate.MethodThatCausesAnEventThatHasAHandler();
         }
 
         [Test]
@@ -319,6 +321,15 @@ namespace Ncqrs.Tests.Domain
             Action act = () => theAggregate.InitializeFromHistory(history);
 
             act.ShouldThrow<InvalidOperationException>();
+        }
+        
+        [Test]
+        public void Constructing_it_with_an_id_should_set_that_to_EventSourceId_property()
+        {
+            var theId = Guid.NewGuid();
+            var theAggregate = new MyAggregateRoot(theId);
+
+            theAggregate.EventSourceId.Should().Be(theId);
         }
     }
 }

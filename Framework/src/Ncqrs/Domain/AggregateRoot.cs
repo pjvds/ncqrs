@@ -14,6 +14,12 @@ namespace Ncqrs.Domain
         /// </summary>
         internal static event EventHandler<EventAppliedArgs> EventApplied;
 
+        protected AggregateRoot()
+        {}
+
+        protected AggregateRoot(Guid id) : base(id)
+        {}
+
         [NoEventHandler]
         protected override void OnEventApplied(SourcedEvent appliedEvent)
         {

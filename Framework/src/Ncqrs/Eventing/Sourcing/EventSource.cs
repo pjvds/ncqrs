@@ -91,6 +91,12 @@ namespace Ncqrs.Eventing.Sourcing
             EventSourceId = idGenerator.GenerateNewId();
         }
 
+        protected EventSource(Guid eventSourceId)
+        {
+            InitialVersion = 0;
+            EventSourceId = eventSourceId;
+        }
+
         [ContractInvariantMethod]
         private void ContractInvariants()
         {
