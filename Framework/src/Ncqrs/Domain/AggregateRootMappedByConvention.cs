@@ -1,4 +1,5 @@
-﻿using Ncqrs.Eventing.Sourcing.Mapping;
+﻿using System;
+using Ncqrs.Eventing.Sourcing.Mapping;
 
 namespace Ncqrs.Domain
 {
@@ -40,6 +41,11 @@ namespace Ncqrs.Domain
         /// </summary>
         protected AggregateRootMappedByConvention()
             : base(new ConventionBasedEventHandlerMappingStrategy())
+        {
+        }
+
+        protected AggregateRootMappedByConvention(Guid id)
+            : base(id, new ConventionBasedEventHandlerMappingStrategy())
         {
         }
     }
