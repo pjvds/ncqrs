@@ -12,7 +12,19 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
 
             var commandType = typeof(TCommand);
             var mappingAttr = GetCommandMappingAttributeFromType(commandType);
-            return mappingAttr.CreateExecutor<TCommand>();
+            ICommandExecutor<TCommand> executor = null;
+
+            try
+            {
+                executor = mappingAttr.CreateExecutor<TCommand>();
+            }
+            catch (Exception exception)
+            {
+                var msg = string.Format("Couldn't executor for command {0} based on mapping.", commandType.FullName);
+                throw new CommandMappingException(msg, exception);
+            }
+
+            return executor;
         }
 
         public ICommandExecutor<ICommand> CreateExecutorForCommand(Type commandType)
@@ -26,7 +38,6 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
             var executeMethod = executor.GetType().GetMethod("Execute");
 
             Action<ICommand> redirection = (cmd) => executeMethod.Invoke(executor, new object[] { cmd });
-
             return new CommandExecutorWrapper<ICommand>(redirection);
         }
 
