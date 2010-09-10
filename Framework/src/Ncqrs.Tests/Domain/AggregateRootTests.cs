@@ -213,7 +213,7 @@ namespace Ncqrs.Tests.Domain
         }
 
         [Test]
-        public void Applying_an_event_should_the_the_version()
+        public void Applying_an_event_should_affect_the_version()
         {
             var theAggregate = new MyAggregateRoot();
 
