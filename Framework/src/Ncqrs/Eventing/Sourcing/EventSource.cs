@@ -173,10 +173,6 @@ namespace Ncqrs.Eventing.Sourcing
             evnt.EventSourceId = EventSourceId;
             evnt.EventSequence = Version + 1;
 
-            // First handle event. This to support the set of the
-            // Id property for the first event. If we first Append
-            // the event to the event stream, the handler cannot set
-            // the Id property anymore.
             HandleEvent(evnt);
 
             _uncommittedEvents.Append(evnt);
