@@ -15,9 +15,8 @@ namespace Domain
             // Need a default ctor for Ncqrs.
         }
 
-        public Note(Guid noteId, String text)
+        public Note(Guid noteId, String text) : base(noteId)
         {
-            EventSourceId = noteId;
             var clock = NcqrsEnvironment.Get<IClock>();
 
             // Apply a NewNoteAdded event that reflects the

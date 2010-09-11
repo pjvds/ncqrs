@@ -14,6 +14,8 @@
         <fieldset>
             <legend>Fields</legend>
             
+            <%= Html.HiddenFor(model => model.NoteId) %>
+
             <div class="editor-label">
                 <%: Html.LabelFor(model => model.Text) %>
             </div>

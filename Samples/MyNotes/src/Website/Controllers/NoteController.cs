@@ -56,6 +56,8 @@ namespace Website.Controllers
         public ActionResult Add()
         {
             var command = new CreateNewNote();
+            command.NoteId = Guid.NewGuid();
+
             return View(command);
         }
 
