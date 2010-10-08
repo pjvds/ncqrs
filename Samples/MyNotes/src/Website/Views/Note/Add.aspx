@@ -8,20 +8,22 @@
 
     <h2>Add</h2>
 
-    <% using (Html.BeginForm()) {%>
-        <%: Html.ValidationSummary(true) %>
+    <% using (Html.BeginForm())
+       {%>
+        <%: Html.ValidationSummary(true)%>
 
         <fieldset>
             <legend>Fields</legend>
             
-            <%= Html.HiddenFor(model => model.NoteId) %>
+            <%= Html.HiddenFor(model => model.CommandIdentifier) %>
+            <%= Html.HiddenFor(model => model.NoteId)%>
 
             <div class="editor-label">
-                <%: Html.LabelFor(model => model.Text) %>
+                <%: Html.LabelFor(model => model.Text)%>
             </div>
             <div class="editor-field">
-                <%: Html.TextBoxFor(model => model.Text) %>
-                <%: Html.ValidationMessageFor(model => model.Text) %>
+                <%: Html.TextBoxFor(model => model.Text)%>
+                <%: Html.ValidationMessageFor(model => model.Text)%>
             </div>
             
             <p>
@@ -32,7 +34,7 @@
     <% } %>
 
     <div>
-        <%: Html.ActionLink("Back to List", "Index") %>
+        <%: Html.ActionLink("Back to List", "Index")%>
     </div>
 
 </asp:Content>
