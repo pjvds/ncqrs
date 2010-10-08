@@ -1,6 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Website", "src\Website\Website.csproj", "{4DFE50BE-A76C-4FD2-904C-BD929FF0C32A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2AD8FF74-531A-42B2-8976-B26B78C979E2} = {2AD8FF74-531A-42B2-8976-B26B78C979E2}
+	EndProjectSection
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "src\Domain\Domain.csproj", "{BD0344CC-E61E-4BC6-8782-0AC0390F48FD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Commands", "src\Commands\Commands.csproj", "{CF0635EB-DFA4-4E82-B245-A0F125183E08}"
@@ -10,11 +15,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Events", "src\Events\Events.csproj", "{705805EF-47BE-48A8-A359-CA999169E445}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReadModel", "src\ReadModel\ReadModel.csproj", "{D01CE8F6-800E-44CC-886B-F862B10E1396}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Website", "src\Website\Website.csproj", "{4DFE50BE-A76C-4FD2-904C-BD929FF0C32A}"
-	ProjectSection(ProjectDependencies) = postProject
-		{2AD8FF74-531A-42B2-8976-B26B78C979E2} = {2AD8FF74-531A-42B2-8976-B26B78C979E2}
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A93E0686-3B54-48EE-A782-3573713EAA94}"
 	ProjectSection(SolutionItems) = preProject
