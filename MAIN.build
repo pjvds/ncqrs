@@ -17,8 +17,9 @@
 	<echo message="Building release ${release.version}" />
     <call target="BuildFramework" />
     <call target="RunTestsForFramework" />
-    <call target="UpdateAllLibFolders" />
+    <call target="UpdateLibForExtensions" />
     <call target="BuildExtensions" />
+    <call target="UpdateLibForMyNotesSample" />
     <call target="MakeRelease" />
   </target>
 
@@ -79,12 +80,6 @@
       <formatter type="Plain" />
       <test assemblyname="Framework\src\Ncqrs.Tests\bin\Debug\Ncqrs.Tests.dll" />
     </nunit2>
-  </target>
-
-  <target name="UpdateAllLibFolders" depends="BuildFramework">
-    <echo message="UPDATING LIB FOLDERS WITH NEW BUILD OF FRAMEWORK" />
-    <call target="UpdateLibForExtensions" />
-    <call target="UpdateLibForMyNotesSample" />
   </target>
 
   <target name="UpdateLibForExtensions" depends="BuildFramework">
