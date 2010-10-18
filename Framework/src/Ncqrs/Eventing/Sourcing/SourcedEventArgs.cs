@@ -4,9 +4,9 @@ namespace Ncqrs.Eventing.Sourcing
 {
     internal class EventAppliedArgs : EventArgs
     {
-        public SourcedEvent AppliedEvent { get; private set; }
+        public ISourcedEvent AppliedEvent { get; private set; }
 
-        public EventAppliedArgs(SourcedEvent appliedEvent)
+        public EventAppliedArgs(ISourcedEvent appliedEvent)
         {
             AppliedEvent = appliedEvent;
         }

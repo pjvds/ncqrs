@@ -25,7 +25,7 @@ namespace Ncqrs.Eventing.Sourcing.Mapping
     /// <summary>
     /// The generic base implementation for the handling of expression based mapping.
     /// </summary>
-    /// <typeparam name="T">This should always be a <see cref="SourcedEvent"/>.</typeparam>
+    /// <typeparam name="T">This should always be a <see cref="ISourcedEvent"/>.</typeparam>
     public class ExpressionHandler<T> : ExpressionHandler where T : IEvent
     {
         /// <summary>

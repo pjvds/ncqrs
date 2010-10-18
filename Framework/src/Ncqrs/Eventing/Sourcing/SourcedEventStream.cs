@@ -5,11 +5,11 @@ using System.Collections;
 
 namespace Ncqrs.Eventing.Sourcing
 {
-    public class SourcedEventStream : IEnumerable<SourcedEvent>
+    public class SourcedEventStream : IEnumerable<ISourcedEvent>
     {
         private Guid _eventSourceId;
         private long _sequenceOffset;
-        private readonly IList<SourcedEvent> _events = new List<SourcedEvent>();
+        private readonly IList<ISourcedEvent> _events = new List<ISourcedEvent>();
 
         /// <summary>
         /// Gets or sets the id of the <see cref="IEventSource"/> that owns the events.
@@ -120,14 +120,14 @@ namespace Ncqrs.Eventing.Sourcing
         /// <exception cref="ArgumentException">Occurs when <paramref name="sourcedEvent.EventSourceId"/> is not owned set to the <see cref="EventSourceId"/> property of this stream.</exception>
         /// <exception cref="ArgumentException">Occurs when <paramref name="sourcedEvent.Sequence"/> is not set to <see cref="LastSequence"/><c>+1</c>.</exception>
         /// <param name="sourcedEvent">The sourced event.</param>
-        public void Append(SourcedEvent sourcedEvent)
+        public void Append(ISourcedEvent sourcedEvent)
         {
             ValidateSourcedEvent(sourcedEvent);
 
             _events.Add(sourcedEvent);
         }
 
-        public void Append(IEnumerable<SourcedEvent> events)
+        public void Append(IEnumerable<ISourcedEvent> events)
         {
             if (events == null) throw new ArgumentNullException("events");
 
@@ -137,7 +137,7 @@ namespace Ncqrs.Eventing.Sourcing
             }
         }
 
-        private void ValidateSourcedEvent(SourcedEvent sourcedEvent)
+        private void ValidateSourcedEvent(ISourcedEvent sourcedEvent)
         {
             if (sourcedEvent == null) throw new ArgumentNullException("sourcedEvent");
 
@@ -168,7 +168,7 @@ namespace Ncqrs.Eventing.Sourcing
             _events.Clear();
         }
 
-        public IEnumerator<SourcedEvent> GetEnumerator()
+        public IEnumerator<ISourcedEvent> GetEnumerator()
         {
             return _events.GetEnumerator();
         }

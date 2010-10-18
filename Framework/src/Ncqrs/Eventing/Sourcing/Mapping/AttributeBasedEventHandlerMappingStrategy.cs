@@ -14,7 +14,7 @@ namespace Ncqrs.Eventing.Sourcing.Mapping
     /// <list type="number">
     /// <item><description>The method should be an instance method (no static).</description></item>
     /// <item><description>It should accept 1 parameter.</description></item>
-    /// <item><description>The parameter should be, or inherited from, the <see cref="SourcedEvent"/> class.</description></item>
+    /// <item><description>The parameter should be, or inherited from, the <see cref="ISourcedEvent"/> class.</description></item>
     /// <item><description>The method should be marked with the <see cref="EventHandlerAttribute"/>.</description></item>
     /// </list>
     /// <code>public class Foo : AggregateRootMappedWithAttributes

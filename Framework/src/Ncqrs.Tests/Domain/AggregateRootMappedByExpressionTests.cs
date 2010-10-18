@@ -41,8 +41,8 @@ namespace Ncqrs.Tests.Domain
                 Map<EventForProtectedMethod>().ToHandler(x => OnEventForProtectedMethod(x));
                 Map<EventForPrivateMethod>().ToHandler(x => OnEventForPrivateMethod(x));
             }
-            
-            public new void ApplyEvent(SourcedEvent e)
+
+            public new void ApplyEvent(ISourcedEvent e)
             {
                 base.ApplyEvent(e);
             }

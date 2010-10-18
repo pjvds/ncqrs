@@ -5,6 +5,10 @@ namespace Ncqrs.Eventing.Sourcing
 {
     public interface ISourcedEvent : IEvent
     {
+
+        Guid UndefinedEventSourceId { get; }
+        int UndefinedEventSequence { get; }
+
         /// <summary>
         /// Gets the id of the event source that caused the event.
         /// </summary>
@@ -21,5 +25,10 @@ namespace Ncqrs.Eventing.Sourcing
         long EventSequence { get; }
 
         void InitializeFrom(StoredEvent stored);
+
+        void ApplyEventSourceIdAndSequence(Guid sourceId, long sequence);
+
+        void ApplyEventInformation(Guid EventIdentifier, DateTime EventTimeStamp, Version EventVersion, Guid EventSourceId, long EventSequence);
+
     }
 }

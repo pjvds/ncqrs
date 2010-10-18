@@ -21,7 +21,7 @@ namespace Ncqrs.Domain
         {}
 
         [NoEventHandler]
-        protected override void OnEventApplied(SourcedEvent appliedEvent)
+        protected override void OnEventApplied(ISourcedEvent appliedEvent)
         {
             if(EventApplied != null)
             {

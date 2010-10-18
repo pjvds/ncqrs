@@ -35,7 +35,7 @@ namespace Ncqrs.Tests.Domain
             public int OnEventForNoEventHandlerMethodInvokeCount;
             public int FooBarEventForMethodWithWrongMethodNameInvokeCount;
 
-            public new void ApplyEvent(SourcedEvent e)
+            public new void ApplyEvent(ISourcedEvent e)
             {
                 base.ApplyEvent(e);
             }

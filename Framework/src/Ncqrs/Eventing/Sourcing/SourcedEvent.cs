@@ -6,8 +6,24 @@ namespace Ncqrs.Eventing.Sourcing
     [Serializable]
     public abstract class SourcedEvent : Event, ISourcedEvent
     {
-        public static Guid UndefinedEventSourceId = Guid.Empty;
-        public const int UndefinedEventSequence = -1;
+        public static Guid _UndefinedEventSourceId = Guid.Empty;
+        public const int _UndefinedEventSequence = -1;
+
+        public Guid UndefinedEventSourceId
+        {
+            get
+            {
+                return _UndefinedEventSourceId;
+            }
+        }
+
+        public int UndefinedEventSequence
+        {
+            get
+            {
+                return _UndefinedEventSequence;
+            }
+        }
 
         /// <summary>
         /// Gets the id of the event source that caused the event.
@@ -30,6 +46,21 @@ namespace Ncqrs.Eventing.Sourcing
         {
             get;
             internal set;
+        }
+
+        public void ApplyEventSourceIdAndSequence(Guid SourceId, long sequence)
+        {
+            this.EventSourceId = SourceId;
+            this.EventSequence = sequence;
+        }
+
+        public void ApplyEventInformation(Guid EventIdentifier, DateTime EventTimeStamp, Version EventVersion, Guid EventSourceId, long EventSequence)
+        {
+            this.EventIdentifier = EventIdentifier;
+            this.EventTimeStamp = EventTimeStamp;
+            this.EventVersion = EventVersion;
+            this.EventSourceId = EventSourceId;
+            this.EventSequence = EventSequence;
         }
 
         public SourcedEvent()
