@@ -21,3 +21,4 @@ bin
 /Extensions/lib/Ncqrs/*
 /Samples/MyNotes/lib/*
 release
+*.vs10x
