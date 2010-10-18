@@ -45,13 +45,13 @@ namespace Ncqrs.Eventing.Sourcing
         /// Initializes from history.
         /// </summary>
         /// <param name="history">The history.</param>
-        void InitializeFromHistory(IEnumerable<SourcedEvent> history);
+        void InitializeFromHistory(IEnumerable<ISourcedEvent> history);
 
         /// <summary>
         /// Gets the uncommitted events.
         /// </summary>
         /// <returns></returns>
-        IEnumerable<SourcedEvent> GetUncommittedEvents();
+        IEnumerable<ISourcedEvent> GetUncommittedEvents();
 
         /// <summary>
         /// Commits the events.

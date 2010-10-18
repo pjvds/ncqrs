@@ -21,11 +21,11 @@ namespace Ncqrs.Eventing.Sourcing.Mapping
     ///         Map{SomethingHappenedEvent}().ToHandler(x => SomethingHasHappened(x));
     ///     }
     ///     
-    ///     public void SomethingHasHappened(SourcedEvent e)
+    ///     public void SomethingHasHappened(ISourcedEvent e)
     ///     {}
     /// }
     /// 
-    /// public class SomethingHappenedEvent : SourcedEvent
+    /// public class SomethingHappenedEvent : ISourcedEvent
     /// {}
     /// </code>
     /// </remarks>

@@ -31,12 +31,12 @@ namespace Ncqrs.Eventing.Storage.SQLite
             _converter = converter;
         }
 
-        public IEnumerable<SourcedEvent> GetAllEvents(Guid id)
+        public IEnumerable<ISourcedEvent> GetAllEvents(Guid id)
         {
             return GetAllEventsSinceVersion(id, 0);
         }
 
-        public IEnumerable<SourcedEvent> GetAllEventsSinceVersion(Guid id, long version)
+        public IEnumerable<ISourcedEvent> GetAllEventsSinceVersion(Guid id, long version)
         {
             var res = new List<SourcedEvent>();
 
@@ -107,13 +107,13 @@ namespace Ncqrs.Eventing.Storage.SQLite
             }
         }
 
-        private void SaveEvents(IEnumerable<SourcedEvent> evnts, Guid eventSourceId, SQLiteTransaction transaction)
+        private void SaveEvents(IEnumerable<ISourcedEvent> evnts, Guid eventSourceId, SQLiteTransaction transaction)
         {
             if (transaction == null || evnts == null) throw new ArgumentNullException();
             foreach (var e in evnts) SaveEvent(e, eventSourceId, transaction);
         }
 
-        private void SaveEvent(SourcedEvent evnt, Guid eventSourceId, SQLiteTransaction transaction)
+        private void SaveEvent(ISourcedEvent evnt, Guid eventSourceId, SQLiteTransaction transaction)
         {
             if (evnt == null || transaction == null) throw new ArgumentNullException();
             using (var dataStream = new MemoryStream())

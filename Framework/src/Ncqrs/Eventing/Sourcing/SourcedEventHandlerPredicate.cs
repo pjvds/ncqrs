@@ -3,7 +3,7 @@
 namespace Ncqrs.Eventing.Sourcing
 {
     public class SourcedEventHandlerPredicate<TSourcedEvent> : TypeThresholdedActionBasedDomainEventHandler<TSourcedEvent>
-        where TSourcedEvent : SourcedEvent
+        where TSourcedEvent : ISourcedEvent
     {
         private readonly Predicate<TSourcedEvent> _predicate;
         private readonly ISourcedEventHandler _internalHandler;

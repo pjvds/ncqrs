@@ -16,14 +16,14 @@ namespace Ncqrs.Eventing.Storage
         /// </summary>
         /// <param name="id">The id of the event source that owns the events.</param>
         /// <returns>All the events from the event source.</returns>
-        IEnumerable<SourcedEvent> GetAllEvents(Guid id);
+        IEnumerable<ISourcedEvent> GetAllEvents(Guid id);
 
         /// <summary>
         /// Get all events provided by an specified event source.
         /// </summary>
         /// <param name="eventSourceId">The id of the event source that owns the events.</param>
         /// <returns>All the events from the event source.</returns>
-        IEnumerable<SourcedEvent> GetAllEventsSinceVersion(Guid id, long version);
+        IEnumerable<ISourcedEvent> GetAllEventsSinceVersion(Guid id, long version);
 
         /// <summary>
         /// Save all events from a specific event provider.
@@ -36,17 +36,17 @@ namespace Ncqrs.Eventing.Storage
     [ContractClassFor(typeof(IEventStore))]
     internal abstract class IEventStoreContracts : IEventStore
     {
-        public IEnumerable<SourcedEvent> GetAllEvents(Guid id)
+        public IEnumerable<ISourcedEvent> GetAllEvents(Guid id)
         {
-            Contract.Ensures(Contract.Result<IEnumerable<SourcedEvent>>() != null, "Result should never be null.");
+            Contract.Ensures(Contract.Result<IEnumerable<ISourcedEvent>>() != null, "Result should never be null.");
 
-            return default(IEnumerable<SourcedEvent>);
+            return default(IEnumerable<ISourcedEvent>);
         }
 
-        public IEnumerable<SourcedEvent> GetAllEventsSinceVersion(Guid id, long version)
+        public IEnumerable<ISourcedEvent> GetAllEventsSinceVersion(Guid id, long version)
         {
-            Contract.Ensures(Contract.ForAll(Contract.Result<IEnumerable<SourcedEvent>>(), e => e.EventSequence > version));
-            return default(IEnumerable<SourcedEvent>);
+            Contract.Ensures(Contract.ForAll(Contract.Result<IEnumerable<ISourcedEvent>>(), e => e.EventSequence > version));
+            return default(IEnumerable<ISourcedEvent>);
         }
 
         public void Save(IEventSource source)
@@ -54,9 +54,9 @@ namespace Ncqrs.Eventing.Storage
             Contract.Requires<ArgumentNullException>(source != null, "source cannot be null.");
         }
 
-        public IEnumerable<SourcedEvent> GetAllEventsSinceVersion(Guid id)
+        public IEnumerable<ISourcedEvent> GetAllEventsSinceVersion(Guid id)
         {
-            return default(IEnumerable<SourcedEvent>);
+            return default(IEnumerable<ISourcedEvent>);
         }
     }
 }

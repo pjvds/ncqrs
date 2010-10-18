@@ -11,9 +11,9 @@ namespace Ncqrs.Spec
         [ThreadStatic]
         private static EventContext _threadInstance;
 
-        private readonly List<SourcedEvent> _events = new List<SourcedEvent>();
+        private readonly List<ISourcedEvent> _events = new List<ISourcedEvent>();
 
-        public IEnumerable<SourcedEvent> Events
+        public IEnumerable<ISourcedEvent> Events
         {
             get { return _events; }
         }

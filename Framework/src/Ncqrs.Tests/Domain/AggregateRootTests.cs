@@ -52,7 +52,7 @@ namespace Ncqrs.Tests.Domain
                 InitializeFromHistory(history);
             }
 
-            public new void InitializeFromHistory(IEnumerable<SourcedEvent> history)
+            public new void InitializeFromHistory(IEnumerable<ISourcedEvent> history)
             {
                 base.InitializeFromHistory(history);
             }
@@ -69,12 +69,12 @@ namespace Ncqrs.Tests.Domain
                 ApplyEvent(e);
             }
 
-            public new void ApplyEvent(SourcedEvent e)
+            public new void ApplyEvent(ISourcedEvent e)
             {
                 base.ApplyEvent(e);
             }
 
-            private void OnFoo(SourcedEvent e)
+            private void OnFoo(ISourcedEvent e)
             {
                 FooEventHandlerInvokeCount++;
             }

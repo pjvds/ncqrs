@@ -3,7 +3,7 @@
 namespace Ncqrs.Eventing
 {
     /// <summary>
-    /// The base for all event messages. All sourced events should subclass from <see cref="Ncqrs.Eventing.Sourcing.SourcedEvent"/>.
+    /// The base for all event messages. All sourced events should subclass from <see cref="Ncqrs.Eventing.Sourcing.ISourcedEvent"/>.
     /// </summary>
     [Serializable]
     public abstract class Event : IEvent

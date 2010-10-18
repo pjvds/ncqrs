@@ -28,7 +28,7 @@ namespace Ncqrs.Eventing.Sourcing
         /// <summary>
         ///   The handler that should be called when the threshold did not hold the event.
         /// </summary>
-        private readonly Action<SourcedEvent> _handler;
+        private readonly Action<ISourcedEvent> _handler;
 
         /// <summary>
         ///   Initializes a new instance of the <see cref = "TypeThresholdedActionBasedDomainEventHandler" /> class.
@@ -37,7 +37,7 @@ namespace Ncqrs.Eventing.Sourcing
         /// <param name = "eventTypeThreshold">The event type that should be used as threshold.</param>
         /// <param name = "exact">if set to <c>true</c> the threshold will hold all types that are not the same type; otherwise it hold 
         /// all types that are not inhered from the event type threshold or implement the interface that is specified by the threshold type.</param>
-        public TypeThresholdedActionBasedDomainEventHandler(Action<SourcedEvent> handler, Type eventTypeThreshold,
+        public TypeThresholdedActionBasedDomainEventHandler(Action<ISourcedEvent> handler, Type eventTypeThreshold,
                                                               Boolean exact = false)
         {
             Contract.Requires<ArgumentNullException>(handler != null, "The handler cannot be null.");
@@ -66,7 +66,7 @@ namespace Ncqrs.Eventing.Sourcing
         ///     handler was not interested in handling this event.
         ///   </remarks>
         /// </returns>
-        public bool HandleEvent(SourcedEvent evnt)
+        public bool HandleEvent(ISourcedEvent evnt)
         {
             Contract.Requires<ArgumentNullException>(evnt != null, "The Event cannot be null.");
 
@@ -126,7 +126,7 @@ namespace Ncqrs.Eventing.Sourcing
     }
 
     public class TypeThresholdedActionBasedDomainEventHandler<TEvent> : TypeThresholdedActionBasedDomainEventHandler
-        where TEvent : SourcedEvent
+        where TEvent : ISourcedEvent
     {
         public TypeThresholdedActionBasedDomainEventHandler(Action<TEvent> handler, bool exact)
             : base((e)=> handler((TEvent)e), typeof(TEvent), exact)

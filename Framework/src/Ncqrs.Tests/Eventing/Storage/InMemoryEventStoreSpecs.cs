@@ -13,23 +13,25 @@ namespace Ncqrs.Tests.Eventing.Storage
     {
         public class EventSourceMock : IEventSource
         {
-            public Func<IEnumerable<SourcedEvent>> GetUncommittedEventsStub;
+            public Func<IEnumerable<ISourcedEvent>> GetUncommittedEventsStub;
 
             public Guid EventSourceId
             {
-                get; set;
+                get;
+                set;
             }
 
             public long Version
             {
-                get; set;
+                get;
+                set;
             }
 
-            public void InitializeFromHistory(IEnumerable<SourcedEvent> history)
+            public void InitializeFromHistory(IEnumerable<ISourcedEvent> history)
             {
             }
 
-            public IEnumerable<SourcedEvent> GetUncommittedEvents()
+            public IEnumerable<ISourcedEvent> GetUncommittedEvents()
             {
                 return GetUncommittedEventsStub();
             }
@@ -43,7 +45,8 @@ namespace Ncqrs.Tests.Eventing.Storage
 
             public long InitialVersion
             {
-                get; set;
+                get;
+                set;
             }
         }
 
@@ -80,7 +83,7 @@ namespace Ncqrs.Tests.Eventing.Storage
                                   new SomethingDoneEvent(eventSourceId), new SomethingDoneEvent(eventSourceId),
                               };
 
-            
+
             var events2 = new[]{
                                   new SomethingDoneEvent(eventSourceId), new SomethingDoneEvent(eventSourceId), new SomethingDoneEvent(eventSourceId)
                               };
