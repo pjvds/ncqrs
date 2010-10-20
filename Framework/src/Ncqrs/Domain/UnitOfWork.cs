@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using Ncqrs.Domain.Storage;
+using System.Threading;
 
 namespace Ncqrs.Domain
 {
@@ -10,8 +11,7 @@ namespace Ncqrs.Domain
         /// <summary>
         /// The <see cref="UnitOfWork"/> that is associated with the current thread.
         /// </summary>
-        [ThreadStatic]
-        private static UnitOfWork _threadInstance;
+        private static ThreadLocal<UnitOfWork> _threadInstance;
 
         /// <summary>
         /// A queue that holds a reference to all instances that have themself registered as a dirty instance during the lifespan of this unit of work instance.
@@ -31,7 +31,11 @@ namespace Ncqrs.Domain
         {
             get
             {
-                return _threadInstance;
+                if (_threadInstance == null)
+                {
+                    return null;
+                }
+                return _threadInstance.Value;
             }
         }
 
@@ -69,12 +73,12 @@ namespace Ncqrs.Domain
             Contract.Requires<ArgumentNullException>(domainRepository != null);
 
             Contract.Ensures(_repository == domainRepository, "The _repository member should be initialized with the one given by the domainRepository parameter.");
-            Contract.Ensures(_threadInstance == this, "The _threadInstance member should be initialized with this instance.");
+            Contract.Ensures(_threadInstance.Value == this, "The _threadInstance member should be initialized with this instance.");
             Contract.Ensures(IsDisposed == false);
 
             _repository = domainRepository;
             _dirtyInstances = new Queue<AggregateRoot>();
-            _threadInstance = this;
+            _threadInstance = new ThreadLocal<UnitOfWork>(() => this);
             IsDisposed = false;
 
             InitializeAppliedEventHandler();
@@ -87,12 +91,12 @@ namespace Ncqrs.Domain
 
         private void DestroyAppliedEventHandler()
         {
-            AggregateRoot.EventApplied -= AggregateRootEventAppliedHandler;            
+            AggregateRoot.EventApplied -= AggregateRootEventAppliedHandler;
         }
 
         private void AggregateRootEventAppliedHandler(object sender, Eventing.Sourcing.EventAppliedArgs e)
         {
-            var aggregateRoot = (AggregateRoot) sender;
+            var aggregateRoot = (AggregateRoot)sender;
             RegisterDirtyInstance(aggregateRoot);
         }
 
@@ -108,7 +112,7 @@ namespace Ncqrs.Domain
         /// </summary>
         ~UnitOfWork()
         {
-             Dispose(false);
+            Dispose(false);
         }
 
         /// <summary>
@@ -118,8 +122,8 @@ namespace Ncqrs.Domain
         {
             Contract.Ensures(IsDisposed == true);
 
-             Dispose(true);
-             GC.SuppressFinalize(this);
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         /// <summary>
@@ -200,6 +204,6 @@ namespace Ncqrs.Domain
                 Contract.Assume(dirtyInstance != null);
                 _repository.Save(dirtyInstance);
             }
-       }
+        }
     }
 }

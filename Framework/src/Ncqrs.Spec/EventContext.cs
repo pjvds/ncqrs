@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using Ncqrs.Domain;
 using Ncqrs.Eventing.Sourcing;
+using System.Threading;
 
 namespace Ncqrs.Spec
 {
     public class EventContext : IDisposable
     {
-        [ThreadStatic]
-        private static EventContext _threadInstance;
+        private static ThreadLocal<EventContext> _threadInstance;
 
         private readonly List<ISourcedEvent> _events = new List<ISourcedEvent>();
 
@@ -26,7 +26,11 @@ namespace Ncqrs.Spec
         {
             get
             {
-                return _threadInstance;
+                if (_threadInstance == null)
+                {
+                    return null;
+                }
+                return _threadInstance.Value;
             }
         }
 
@@ -44,7 +48,7 @@ namespace Ncqrs.Spec
 
         public EventContext()
         {
-            _threadInstance = this;
+            _threadInstance = new ThreadLocal<EventContext>(() => this);
             IsDisposed = false;
 
             InitializeAppliedEventHandler();
@@ -57,7 +61,7 @@ namespace Ncqrs.Spec
 
         private void DestroyAppliedEventHandler()
         {
-            AggregateRoot.EventApplied -= AggregateRootEventAppliedHandler;            
+            AggregateRoot.EventApplied -= AggregateRootEventAppliedHandler;
         }
 
         private void AggregateRootEventAppliedHandler(object sender, EventAppliedArgs e)
@@ -71,7 +75,7 @@ namespace Ncqrs.Spec
         /// </summary>
         ~EventContext()
         {
-             Dispose(false);
+            Dispose(false);
         }
 
         /// <summary>
@@ -81,8 +85,8 @@ namespace Ncqrs.Spec
         {
             Contract.Ensures(IsDisposed == true);
 
-             Dispose(true);
-             GC.SuppressFinalize(this);
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         /// <summary>
