@@ -6,7 +6,7 @@
   <property name="project.config" value="debug" />
   <property name="project.framework.bin" value="Framework\src\Ncqrs\bin\${project.config}" />
   <property name="msbuild" value="${framework::get-framework-directory(framework::get-target-framework())}\msbuild.exe" dynamic="true" />
-  <property name="release.dir" value="release" />
+  <property name="release.dir" value="${project.config}_build_output" />
   <property name="release.version" value="${project.version}" />
   
   <if test="${property::exists('build.number')}">
