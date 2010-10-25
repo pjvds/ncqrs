@@ -21,19 +21,33 @@ namespace NServiceBus
 
         public void Configure(Configure config)
         {
+
             Builder = config.Builder;
             Configurer = config.Configurer;
 
             NcqrsEnvironment.Configure(new NsbEnvironmentConfiguration(Builder));
+
+            NcqrsEnvironment.SetDefault<InProcessEventBus>(new InProcessEventBus(false));
+            NcqrsEnvironment.SetDefault<MessageService>(new MessageService());
+
             var compositeBus = new CompositeEventBus();
-            _inProcessEventBus = new InProcessEventBus(false);
-            compositeBus.AddBus(new NsbEventBus());
+
+            _inProcessEventBus = NcqrsEnvironment.Get<InProcessEventBus>();
             compositeBus.AddBus(_inProcessEventBus);
+
             _sendingEventHandler = new MessageSendingEventHandler();
             _inProcessEventBus.RegisterHandler(_sendingEventHandler);
-            NcqrsEnvironment.SetDefault(compositeBus);
-            _messageService = new MessageService();
+
+
+            NcqrsEnvironment.SetDefault<NsbEventBus>(new NsbEventBus());
+            compositeBus.AddBus(NcqrsEnvironment.Get<NsbEventBus>());
+
+            NcqrsEnvironment.SetDefault<IEventBus>(compositeBus);
+
+            _messageService = NcqrsEnvironment.Get<MessageService>();
             config.Configurer.RegisterSingleton(typeof(IMessageService), _messageService);
+
+
         }
 
         public ConfigNcqrs UseReceivingStrategy(Func<object, bool> condition, IReceivingStrategy receivingStrategy)
