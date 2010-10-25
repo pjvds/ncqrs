@@ -18,6 +18,11 @@ namespace Ncqrs.Eventing.Storage.SQL
     /// </summary>
     public class MsSqlServerEventStore : IEventStore, ISnapshotStore
     {
+        private static bool NoAmbientTransaction()
+        {
+            return System.Transactions.Transaction.Current == null;
+        }
+
         private static int FirstVersion = 0;
         private readonly String _connectionString;
 
@@ -25,8 +30,9 @@ namespace Ncqrs.Eventing.Storage.SQL
         private IEventTranslator<string> _translator;
         private IEventConverter _converter;
 
-        public MsSqlServerEventStore(String connectionString) : this(connectionString, null, null)
-        {}
+        public MsSqlServerEventStore(String connectionString)
+            : this(connectionString, null, null)
+        { }
 
         public MsSqlServerEventStore(String connectionString, IEventTypeResolver typeResolver, IEventConverter converter)
         {
@@ -67,7 +73,16 @@ namespace Ncqrs.Eventing.Storage.SQL
                 connection.Open();
 
                 // Execute query and create reader.
-                using (SqlDataReader reader = command.ExecuteReader())
+                System.Data.CommandBehavior beh;
+                if (NoAmbientTransaction())
+                {
+                    beh = System.Data.CommandBehavior.CloseConnection;
+                }
+                else
+                {
+                    beh = System.Data.CommandBehavior.Default;
+                }
+                using (SqlDataReader reader = command.ExecuteReader(beh))
                 {
                     while (reader.Read())
                     {
@@ -76,13 +91,8 @@ namespace Ncqrs.Eventing.Storage.SQL
                         var document = _translator.TranslateToCommon(rawEvent);
                         _converter.Upgrade(document);
 
-                        var evnt = (ISourcedEvent) _formatter.Deserialize(document);
-                        evnt.ApplyEventInformation(
-                            document.EventIdentifier,
-                            document.EventTimeStamp,
-                            document.EventVersion,
-                            document.EventSourceId,
-                            document.EventSequence);
+                        var evnt = (ISourcedEvent)_formatter.Deserialize(document);
+                        evnt.ApplyEventInformation(document.EventIdentifier, document.EventTimeStamp, document.EventVersion, document.EventSourceId, document.EventSequence);
                         result.Add(evnt);
                     }
                 }
@@ -106,38 +116,63 @@ namespace Ncqrs.Eventing.Storage.SQL
                 // Open connection and begin a transaction so we can
                 // commit or rollback all the changes that has been made.
                 connection.Open();
-                using (SqlTransaction transaction = connection.BeginTransaction())
+
+                SqlTransaction transaction = null;
+                if (NoAmbientTransaction())
                 {
-                    try
+                    transaction = connection.BeginTransaction();
+                }
+
+                try
+                {
+                    // Get the current version of the event provider.
+                    int? currentVersion = GetVersion(eventSource.EventSourceId, connection, transaction);
+
+                    // Create new event provider when it is not found.
+                    if (currentVersion == null)
                     {
-                        // Get the current version of the event provider.
-                        int? currentVersion = GetVersion(eventSource.EventSourceId, transaction);
+                        AddEventSource(eventSource, connection, transaction);
+                    }
+                    else if (currentVersion.Value != eventSource.InitialVersion)
+                    {
+                        throw new ConcurrencyException(eventSource.EventSourceId, eventSource.Version);
+                    }
 
-                        // Create new event provider when it is not found.
-                        if (currentVersion == null)
-                        {
-                            AddEventSource(eventSource, transaction);
-                        }
-                        else if (currentVersion.Value != eventSource.InitialVersion)
-                        {
-                            throw new ConcurrencyException(eventSource.EventSourceId, eventSource.Version);
-                        }
+                    // Save all events to the store.
+                    SaveEvents(events, connection, transaction);
 
-                        // Save all events to the store.
-                        SaveEvents(events, transaction);
+                    // Update the version of the provider.
+                    UpdateEventSourceVersion(eventSource, connection, transaction);
 
-                        // Update the version of the provider.
-                        UpdateEventSourceVersion(eventSource, transaction);
-
-                        // Everything is handled, commint transaction.
+                    if (NoAmbientTransaction() && (transaction != null))
+                    {
                         transaction.Commit();
+                        transaction.Dispose();
                     }
-                    catch
+
+
+                }
+                catch (ConcurrencyException cex)
+                {
+                    if (NoAmbientTransaction())
                     {
-                        // Something went wrong, rollback transaction.
-                        transaction.Rollback();
-                        throw;
+                        transaction.Commit();
+                        transaction.Dispose();
                     }
+                    throw cex;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    Console.WriteLine(ex.StackTrace);
+                    if (transaction != null)
+                    {
+                        transaction.Rollback();
+                        transaction.Dispose();
+                        transaction = null;
+                    }
+
+                    throw ex;
                 }
             }
         }
@@ -152,36 +187,49 @@ namespace Ncqrs.Eventing.Storage.SQL
                 // Open connection and begin a transaction so we can
                 // commit or rollback all the changes that has been made.
                 connection.Open();
-                using (SqlTransaction transaction = connection.BeginTransaction())
+
+                SqlTransaction transaction = null;
+                if (NoAmbientTransaction())
                 {
-                    try
+                    transaction = connection.BeginTransaction();
+                }
+
+                try
+                {
+                    using (var dataStream = new MemoryStream())
                     {
-                        using (var dataStream = new MemoryStream())
+                        var formatter = new BinaryFormatter();
+                        formatter.Serialize(dataStream, snapshot);
+                        byte[] data = dataStream.ToArray();
+
+                        using (var command = new SqlCommand(Queries.InsertSnapshot, connection))
                         {
-                            var formatter = new BinaryFormatter();
-                            formatter.Serialize(dataStream, snapshot);
-                            byte[] data = dataStream.ToArray();
-
-                            using (var command = new SqlCommand(Queries.InsertSnapshot, transaction.Connection))
-                            {
-                                command.Transaction = transaction;
-                                command.Parameters.AddWithValue("EventSourceId", snapshot.EventSourceId);
-                                command.Parameters.AddWithValue("Version", snapshot.EventSourceVersion);
-                                command.Parameters.AddWithValue("Type", snapshot.GetType().AssemblyQualifiedName);
-                                command.Parameters.AddWithValue("Data", data);
-                                command.ExecuteNonQuery();
-                            }
+                            command.Transaction = transaction;
+                            command.Parameters.AddWithValue("EventSourceId", snapshot.EventSourceId);
+                            command.Parameters.AddWithValue("Version", snapshot.EventSourceVersion);
+                            command.Parameters.AddWithValue("Type", snapshot.GetType().AssemblyQualifiedName);
+                            command.Parameters.AddWithValue("Data", data);
+                            command.ExecuteNonQuery();
                         }
+                    }
 
-                        // Everything is handled, commint transaction.
-                        transaction.Commit();
-                    }
-                    catch
+                    if (NoAmbientTransaction() && (transaction != null))
                     {
-                        // Something went wrong, rollback transaction.
-                        transaction.Rollback();
-                        throw;
+                        transaction.Commit();
+                        transaction.Dispose();
                     }
+
+                }
+                catch (Exception ex)
+                {
+                    if (transaction != null)
+                    {
+                        transaction.Rollback();
+                        transaction.Dispose();
+                        transaction = null;
+                    }
+
+                    throw ex;
                 }
             }
         }
@@ -203,15 +251,24 @@ namespace Ncqrs.Eventing.Storage.SQL
                 {
                     command.Parameters.AddWithValue("@EventSourceId", eventSourceId);
 
-                    using (var reader = command.ExecuteReader())
+                    System.Data.CommandBehavior beh;
+                    if (NoAmbientTransaction())
+                    {
+                        beh = System.Data.CommandBehavior.CloseConnection;
+                    }
+                    else
+                    {
+                        beh = System.Data.CommandBehavior.Default;
+                    }
+                    using (SqlDataReader reader = command.ExecuteReader(beh))
                     {
                         if (reader.Read())
                         {
-                            var snapshotData = (byte[]) reader["Data"];
+                            var snapshotData = (byte[])reader["Data"];
                             using (var buffer = new MemoryStream(snapshotData))
                             {
                                 var formatter = new BinaryFormatter();
-                                theSnapshot = (ISnapshot) formatter.Deserialize(buffer);
+                                theSnapshot = (ISnapshot)formatter.Deserialize(buffer);
                             }
                         }
                     }
@@ -231,7 +288,16 @@ namespace Ncqrs.Eventing.Storage.SQL
                 command.Parameters.AddWithValue("Type", eventProviderType.FullName);
                 connection.Open();
 
-                using (SqlDataReader reader = command.ExecuteReader())
+                System.Data.CommandBehavior beh;
+                if (NoAmbientTransaction())
+                {
+                    beh = System.Data.CommandBehavior.CloseConnection;
+                }
+                else
+                {
+                    beh = System.Data.CommandBehavior.Default;
+                }
+                using (SqlDataReader reader = command.ExecuteReader(beh))
                 {
                     while (reader.Read())
                     {
@@ -261,11 +327,14 @@ namespace Ncqrs.Eventing.Storage.SQL
             }
         }
 
-        private void UpdateEventSourceVersion(IEventSource eventSource, SqlTransaction transaction)
+        private void UpdateEventSourceVersion(IEventSource eventSource, SqlConnection connection, SqlTransaction transaction)
         {
-            using (var command = new SqlCommand(Queries.UpdateEventSourceVersionQuery, transaction.Connection))
+            using (var command = new SqlCommand(Queries.UpdateEventSourceVersionQuery, connection))
             {
-                command.Transaction = transaction;
+                if (transaction != null)
+                {
+                    command.Transaction = transaction;
+                }
                 command.Parameters.AddWithValue("Id", eventSource.EventSourceId);
                 command.Parameters.AddWithValue("NewVersion", eventSource.Version);
                 command.ExecuteNonQuery();
@@ -298,14 +367,14 @@ namespace Ncqrs.Eventing.Storage.SQL
         /// <param name="evnts">The events to save.</param>
         /// <param name="eventSourceId">The event source id that owns the events.</param>
         /// <param name="transaction">The transaction.</param>
-        private void SaveEvents(IEnumerable<ISourcedEvent> evnts, SqlTransaction transaction)
+        private void SaveEvents(IEnumerable<ISourcedEvent> evnts, SqlConnection connection, SqlTransaction transaction)
         {
             Contract.Requires<ArgumentNullException>(evnts != null, "The argument evnts could not be null.");
-            Contract.Requires<ArgumentNullException>(transaction != null, "The argument transaction could not be null.");
+            Contract.Requires<ArgumentNullException>(connection != null, "The argument connection could not be null.");
 
             foreach (var sourcedEvent in evnts)
             {
-                SaveEvent(sourcedEvent, transaction);
+                SaveEvent(sourcedEvent, connection, transaction);
             }
         }
 
@@ -315,18 +384,21 @@ namespace Ncqrs.Eventing.Storage.SQL
         /// <param name="evnt">The event to save.</param>
         /// <param name="eventSourceId">The id of the event source that owns the event.</param>
         /// <param name="transaction">The transaction.</param>
-        private void SaveEvent(ISourcedEvent evnt, SqlTransaction transaction)
+        private void SaveEvent(ISourcedEvent evnt, SqlConnection connection, SqlTransaction transaction)
         {
             Contract.Requires<ArgumentNullException>(evnt != null, "The argument evnt could not be null.");
-            Contract.Requires<ArgumentNullException>(transaction != null, "The argument transaction could not be null.");
+            Contract.Requires<ArgumentNullException>(connection != null, "The argument connection could not be null.");
 
             var document = _formatter.Serialize(evnt);
             var raw = _translator.TranslateToRaw(document);
             var data = Encoding.UTF8.GetBytes(raw.Data);
 
-            using (var command = new SqlCommand(Queries.InsertNewEventQuery, transaction.Connection))
+            using (var command = new SqlCommand(Queries.InsertNewEventQuery, connection))
             {
-                command.Transaction = transaction;
+                if (transaction != null)
+                {
+                    command.Transaction = transaction;
+                }
                 command.Parameters.AddWithValue("EventId", raw.EventIdentifier);
                 command.Parameters.AddWithValue("TimeStamp", raw.EventTimeStamp);
                 command.Parameters.AddWithValue("EventSourceId", raw.EventSourceId);
@@ -343,11 +415,14 @@ namespace Ncqrs.Eventing.Storage.SQL
         /// </summary>
         /// <param name="eventSource">The event source to add.</param>
         /// <param name="transaction">The transaction.</param>
-        private static void AddEventSource(IEventSource eventSource, SqlTransaction transaction)
+        private static void AddEventSource(IEventSource eventSource, SqlConnection connection, SqlTransaction transaction)
         {
-            using (var command = new SqlCommand(Queries.InsertNewProviderQuery, transaction.Connection))
+            using (var command = new SqlCommand(Queries.InsertNewProviderQuery, connection))
             {
-                command.Transaction = transaction;
+                if (transaction != null )
+                {
+                    command.Transaction = transaction;
+                }
                 command.Parameters.AddWithValue("Id", eventSource.EventSourceId);
                 command.Parameters.AddWithValue("Type", eventSource.GetType().ToString());
                 command.Parameters.AddWithValue("Version", eventSource.Version);
@@ -362,11 +437,14 @@ namespace Ncqrs.Eventing.Storage.SQL
         /// <param name="transaction">The transaction.</param>
         /// <returns>A <see cref="int?"/> that is <c>null</c> when no version was known ; otherwise,
         /// it contains the version number.</returns>
-        private static int? GetVersion(Guid providerId, SqlTransaction transaction)
+        private static int? GetVersion(Guid providerId, SqlConnection connection, SqlTransaction transaction)
         {
-            using (var command = new SqlCommand(Queries.SelectVersionQuery, transaction.Connection))
+            using (var command = new SqlCommand(Queries.SelectVersionQuery, connection))
             {
-                command.Transaction = transaction;
+                if (transaction != null)
+                {
+                    command.Transaction = transaction;
+                }
                 command.Parameters.AddWithValue("id", providerId);
                 return (int?)command.ExecuteScalar();
             }
@@ -388,11 +466,11 @@ namespace Ncqrs.Eventing.Storage.SQL
             if (resource == null) throw new ApplicationException("Could not find the resource " + resourcename + " in assembly " + currentAsm.FullName);
 
             var result = new List<string>();
-            
-            using(var reader = new StreamReader(resource))
+
+            using (var reader = new StreamReader(resource))
             {
                 string line = null;
-                while((line = reader.ReadLine()) != null)
+                while ((line = reader.ReadLine()) != null)
                 {
                     result.Add(line);
                 }
