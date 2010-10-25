@@ -11,7 +11,8 @@ namespace Ncqrs.Domain
         /// <summary>
         /// The <see cref="UnitOfWork"/> that is associated with the current thread.
         /// </summary>
-        private static ThreadLocal<UnitOfWork> _threadInstance;
+        [ThreadStatic]
+        private static UnitOfWork _threadInstance;
 
         /// <summary>
         /// A queue that holds a reference to all instances that have themself registered as a dirty instance during the lifespan of this unit of work instance.
@@ -31,11 +32,7 @@ namespace Ncqrs.Domain
         {
             get
             {
-                if (_threadInstance == null)
-                {
-                    return null;
-                }
-                return _threadInstance.Value;
+                return _threadInstance;
             }
         }
 
@@ -73,12 +70,14 @@ namespace Ncqrs.Domain
             Contract.Requires<ArgumentNullException>(domainRepository != null);
 
             Contract.Ensures(_repository == domainRepository, "The _repository member should be initialized with the one given by the domainRepository parameter.");
-            Contract.Ensures(_threadInstance.Value == this, "The _threadInstance member should be initialized with this instance.");
+            Contract.Ensures(_threadInstance == this, "The _threadInstance member should be initialized with this instance.");
+            //Contract.Ensures(_threadInstance.Value == this, "The _threadInstance member should be initialized with this instance.");
             Contract.Ensures(IsDisposed == false);
 
             _repository = domainRepository;
             _dirtyInstances = new Queue<AggregateRoot>();
-            _threadInstance = new ThreadLocal<UnitOfWork>(() => this);
+            _threadInstance = this;
+            //_threadInstance = new ThreadLocal<UnitOfWork>(() => this);
             IsDisposed = false;
 
             InitializeAppliedEventHandler();
@@ -182,7 +181,7 @@ namespace Ncqrs.Domain
         /// <param name="dirtyInstance">The dirty instance.</param>
         private void RegisterDirtyInstance(AggregateRoot dirtyInstance)
         {
-            Contract.Requires<ArgumentNullException>(dirtyInstance != null, "dirtyInstance could not be null.");
+            Contract.Requires<ArgumentNullException>(dirtyInstance != null, "dirtyInstance could not be null. ");
 
             if (!_dirtyInstances.Contains(dirtyInstance))
             {
