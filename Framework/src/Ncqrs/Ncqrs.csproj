@@ -103,6 +103,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commanding\CommandExecution\FlexibleActionCommandExecutor.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\Attributes\MapsToAggregateRootMethodOrConstructorAttribute.cs" />
     <Compile Include="Domain\Entity.cs" />
     <Compile Include="Domain\EntityMappedByConvention.cs" />
     <Compile Include="Domain\Storage\IAggregateRootCreationStrategy.cs" />
