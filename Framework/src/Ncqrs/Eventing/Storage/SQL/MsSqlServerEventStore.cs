@@ -23,6 +23,8 @@ namespace Ncqrs.Eventing.Storage.SQL
             return System.Transactions.Transaction.Current == null;
         }
 
+        public int SnapshotIntervalInEvents { get; set; }
+
         private static int FirstVersion = 0;
         private readonly String _connectionString;
 
@@ -38,6 +40,7 @@ namespace Ncqrs.Eventing.Storage.SQL
         {
             if (String.IsNullOrEmpty(connectionString)) throw new ArgumentNullException("connectionString");
 
+            SnapshotIntervalInEvents = 15;
             _connectionString = connectionString;
             _converter = converter ?? new NullEventConverter();
             _formatter = new JsonEventFormatter(typeResolver ?? new SimpleEventTypeResolver());
