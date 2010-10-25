@@ -10,7 +10,7 @@ namespace Ncqrs.Domain.Storage
 {
     public class DomainRepository : IDomainRepository
     {
-        private const int SnapshotIntervalInEvents = 15;
+        private int _snapshotIntervalInEvents = 15;
 
         private readonly IEventBus _eventBus;
         private readonly IEventStore _store;
@@ -25,6 +25,10 @@ namespace Ncqrs.Domain.Storage
             _store = store;
             _eventBus = eventBus;
             _snapshotStore = snapshotStore;
+            if (_snapshotStore != null)
+            {
+                _snapshotIntervalInEvents = _snapshotStore.SnapshotIntervalInEvents;
+            }
             _aggregateRootCreator = aggregateRootCreationStrategy ?? new SimpleAggregateRootCreationStrategy();
         }
 
@@ -33,7 +37,7 @@ namespace Ncqrs.Domain.Storage
         {
             if (_snapshotStore != null)
                 for (var i = aggregateRoot.InitialVersion + 1; i <= aggregateRoot.Version; i++)
-                    if (i % SnapshotIntervalInEvents == 0) return true;
+                    if (i % _snapshotIntervalInEvents == 0) return true;
             return false;
         }
 
@@ -66,7 +70,7 @@ namespace Ncqrs.Domain.Storage
         {
             AggregateRoot aggregate = null;
 
-            if(_snapshotStore != null)
+            if (_snapshotStore != null)
             {
                 var snapshot = _snapshotStore.GetSnapshot(eventSourceId);
 
@@ -76,12 +80,12 @@ namespace Ncqrs.Domain.Storage
                 }
             }
 
-            if(aggregate == null)
+            if (aggregate == null)
             {
                 aggregate = GetByIdFromScratch(aggregateRootType, eventSourceId);
             }
 
-            if(aggregate == null)
+            if (aggregate == null)
             {
                 var msg = string.Format("Aggregate root with EventSourceId {0} does not exist.",
                                         eventSourceId);
@@ -96,7 +100,7 @@ namespace Ncqrs.Domain.Storage
         {
             AggregateRoot aggregateRoot = null;
 
-            if(AggregateRootSupportsSnapshot(aggregateRootType, snapshot))
+            if (AggregateRootSupportsSnapshot(aggregateRootType, snapshot))
             {
                 aggregateRoot = CreateEmptyAggRoot(aggregateRootType);
                 var memType = GetSnapshotInterfaceType(aggregateRootType);
@@ -140,7 +144,7 @@ namespace Ncqrs.Domain.Storage
             var memType = GetSnapshotInterfaceType(aggType);
             var snapshotType = snapshot.GetType();
 
-            var expectedType = typeof (ISnapshotable<>).MakeGenericType(snapshotType);
+            var expectedType = typeof(ISnapshotable<>).MakeGenericType(snapshotType);
             return memType == expectedType;
         }
 
