@@ -37,11 +37,13 @@
     <Reference Include="Ncqrs">
       <HintPath>..\..\lib\Ncqrs\Ncqrs.dll</HintPath>
     </Reference>
-    <Reference Include="NServiceBus">
-      <HintPath>..\..\lib\NServiceBus\NServiceBus.dll</HintPath>
+    <Reference Include="NServiceBus, Version=2.0.0.0, Culture=neutral, PublicKeyToken=9fc386479f8a226c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\NServiceBus-2.0\NServiceBus.dll</HintPath>
     </Reference>
-    <Reference Include="NServiceBus.Core">
-      <HintPath>..\..\lib\NServiceBus\NServiceBus.Core.dll</HintPath>
+    <Reference Include="NServiceBus.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=9fc386479f8a226c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\NServiceBus-2.0\NServiceBus.Core.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -56,6 +58,7 @@
     <Compile Include="ConfigNcqrs.cs" />
     <Compile Include="ConfigureNcqrs.cs" />
     <Compile Include="EventMessage.cs" />
+    <Compile Include="ICommandMessage.cs" />
     <Compile Include="NcqrsMessageHandler.cs" />
     <Compile Include="NsbCommandService.cs" />
     <Compile Include="NsbEnvironmentConfiguration.cs" />

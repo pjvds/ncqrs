@@ -7,7 +7,7 @@ namespace NServiceBus
     public static class ConfigureNcqrs
     {
         /// <summary>
-        /// Instructs NServiceBus to install Ncqrs message handler. All <see cref="CommandMessage"/>s
+        /// Instructs NServiceBus to install Ncqrs message handler. All <see cref="ICommandMessage"/>s
         /// will be routed to Ncqrs where they will be handled.
         /// 
         /// By default, all commands will be executed using <see cref="MappedCommandExecutor{TCommand}"/>.

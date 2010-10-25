@@ -38,7 +38,7 @@ namespace Ncqrs.Eventing.Storage.SQLite
 
         public IEnumerable<ISourcedEvent> GetAllEventsSinceVersion(Guid id, long version)
         {
-            var res = new List<SourcedEvent>();
+            var res = new List<ISourcedEvent>();
 
             _context.WithConnection(connection =>
             {
@@ -56,7 +56,7 @@ namespace Ncqrs.Eventing.Storage.SQLite
                             using (var dataStream = new MemoryStream(rawData))
                             {
                                 var bag = (PropertyBag)formatter.Deserialize(dataStream);
-                                var evnt = (SourcedEvent)_converter.Convert(bag);
+                                var evnt = (ISourcedEvent)_converter.Convert(bag);
                                 res.Add(evnt);
                             }
                         }

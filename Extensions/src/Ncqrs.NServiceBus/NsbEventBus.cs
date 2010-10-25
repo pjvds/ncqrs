@@ -17,12 +17,12 @@ namespace Ncqrs.NServiceBus
     /// </summary>
     public class NsbEventBus : IEventBus
     {
-        public void Publish(IEvent eventMessage)
+        public virtual void Publish(IEvent eventMessage)
         {
             Bus.Publish(CreateEventMessage(eventMessage));
         }
 
-        public void Publish(IEnumerable<IEvent> eventMessages)
+        public virtual void Publish(IEnumerable<IEvent> eventMessages)
         {
             Bus.Publish(eventMessages.Select(CreateEventMessage).ToArray());
         }
@@ -32,12 +32,12 @@ namespace Ncqrs.NServiceBus
             throw new NotSupportedException("Registering local event handlers with NsbEventBus is not supported yet.");
         }
 
-        private static IBus Bus
+        protected static IBus Bus
         {
             get { return NcqrsEnvironment.Get<IBus>(); }
         }
 
-        private static IMessage CreateEventMessage(IEvent payload)
+        protected static IMessage CreateEventMessage(IEvent payload)
         {
             Type factoryType =
                typeof(EventMessageFactory<>).MakeGenericType(payload.GetType());
@@ -51,7 +51,7 @@ namespace Ncqrs.NServiceBus
             IMessage CreateEventMessage(IEvent payload);
         }
 
-        private class EventMessageFactory<T> : IEventMessageFactory where T : IEvent
+        protected class EventMessageFactory<T> : IEventMessageFactory where T : IEvent
         {
             IMessage IEventMessageFactory.CreateEventMessage(IEvent payload)
             {
