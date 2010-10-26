@@ -80,6 +80,22 @@ namespace ReadModel
             }
         }
         private ObjectSet<NoteItem> _NoteItemSet;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<TotalsPerDayItem> TotalsPerDayItemSet
+        {
+            get
+            {
+                if ((_TotalsPerDayItemSet == null))
+                {
+                    _TotalsPerDayItemSet = base.CreateObjectSet<TotalsPerDayItem>("TotalsPerDayItemSet");
+                }
+                return _TotalsPerDayItemSet;
+            }
+        }
+        private ObjectSet<TotalsPerDayItem> _TotalsPerDayItemSet;
 
         #endregion
         #region AddTo Methods
@@ -90,6 +106,14 @@ namespace ReadModel
         public void AddToNoteItemSet(NoteItem noteItem)
         {
             base.AddObject("NoteItemSet", noteItem);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the TotalsPerDayItemSet EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToTotalsPerDayItemSet(TotalsPerDayItem totalsPerDayItem)
+        {
+            base.AddObject("TotalsPerDayItemSet", totalsPerDayItem);
         }
 
         #endregion
@@ -198,6 +222,139 @@ namespace ReadModel
         private Nullable<global::System.DateTime> _CreationDate;
         partial void OnCreationDateChanging(Nullable<global::System.DateTime> value);
         partial void OnCreationDateChanged();
+
+        #endregion
+    
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="ReadModel", Name="TotalsPerDayItem")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class TotalsPerDayItem : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new TotalsPerDayItem object.
+        /// </summary>
+        /// <param name="id">Initial value of the Id property.</param>
+        /// <param name="date">Initial value of the Date property.</param>
+        /// <param name="newCount">Initial value of the NewCount property.</param>
+        /// <param name="editCount">Initial value of the EditCount property.</param>
+        public static TotalsPerDayItem CreateTotalsPerDayItem(global::System.Int32 id, global::System.DateTime date, global::System.Int32 newCount, global::System.Int32 editCount)
+        {
+            TotalsPerDayItem totalsPerDayItem = new TotalsPerDayItem();
+            totalsPerDayItem.Id = id;
+            totalsPerDayItem.Date = date;
+            totalsPerDayItem.NewCount = newCount;
+            totalsPerDayItem.EditCount = editCount;
+            return totalsPerDayItem;
+        }
+
+        #endregion
+        #region Primitive Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 Id
+        {
+            get
+            {
+                return _Id;
+            }
+            set
+            {
+                if (_Id != value)
+                {
+                    OnIdChanging(value);
+                    ReportPropertyChanging("Id");
+                    _Id = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("Id");
+                    OnIdChanged();
+                }
+            }
+        }
+        private global::System.Int32 _Id;
+        partial void OnIdChanging(global::System.Int32 value);
+        partial void OnIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.DateTime Date
+        {
+            get
+            {
+                return _Date;
+            }
+            set
+            {
+                OnDateChanging(value);
+                ReportPropertyChanging("Date");
+                _Date = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("Date");
+                OnDateChanged();
+            }
+        }
+        private global::System.DateTime _Date;
+        partial void OnDateChanging(global::System.DateTime value);
+        partial void OnDateChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 NewCount
+        {
+            get
+            {
+                return _NewCount;
+            }
+            set
+            {
+                OnNewCountChanging(value);
+                ReportPropertyChanging("NewCount");
+                _NewCount = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("NewCount");
+                OnNewCountChanged();
+            }
+        }
+        private global::System.Int32 _NewCount;
+        partial void OnNewCountChanging(global::System.Int32 value);
+        partial void OnNewCountChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 EditCount
+        {
+            get
+            {
+                return _EditCount;
+            }
+            set
+            {
+                OnEditCountChanging(value);
+                ReportPropertyChanging("EditCount");
+                _EditCount = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("EditCount");
+                OnEditCountChanged();
+            }
+        }
+        private global::System.Int32 _EditCount;
+        partial void OnEditCountChanging(global::System.Int32 value);
+        partial void OnEditCountChanged();
 
         #endregion
     
