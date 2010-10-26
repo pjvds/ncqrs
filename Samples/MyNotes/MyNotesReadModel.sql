@@ -13,9 +13,17 @@ GO
 USE [MyNotesReadModel]
 GO
 
-CREATE TABLE [dbo].[NoteItem](
+CREATE TABLE [dbo].[NoteItemSet](
 	[Id] [uniqueidentifier] PRIMARY KEY,
 	[Text] [varchar](250) NULL,
 	[CreationDate] [datetime] NULL
 ) ON [PRIMARY]
+GO
+
+CREATE TABLE [dbo].[TotalsPerDayItemSet] (
+    [Id] int IDENTITY(1,1) PRIMARY KEY,
+    [Date] datetime  NOT NULL,
+    [NewCount] int  NOT NULL,
+    [EditCount] int  NOT NULL
+);
 GO
