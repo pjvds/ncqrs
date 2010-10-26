@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using Events;
 using Ncqrs.Eventing.ServiceModel.Bus;
-using System.Transactions;
 
 namespace ReadModel.Denormalizers
 {
@@ -38,7 +34,7 @@ namespace ReadModel.Denormalizers
 
                 if (totalsForDate == null)
                 {
-                    totalsForDate = new TotalsPerDayItem { Date = date };
+                    totalsForDate = new TotalsPerDayItem {Date = date};
                     context.TotalsPerDayItemSet.AddObject(totalsForDate);
                 }
 

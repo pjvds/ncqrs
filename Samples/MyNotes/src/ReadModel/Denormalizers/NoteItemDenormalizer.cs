@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Events;
 using Ncqrs.Eventing.ServiceModel.Bus;
 
@@ -10,7 +9,7 @@ namespace ReadModel.Denormalizers
     {
         public void Handle(NewNoteAdded evnt)
         {
-            using(var context = new ReadModelContainer())
+            using (var context = new ReadModelContainer())
             {
                 var newItem = new NoteItem
                 {
@@ -30,7 +29,7 @@ namespace ReadModel.Denormalizers
             {
                 var itemToUpdate = context.NoteItemSet.Single(item => item.Id == evnt.NoteId);
                 itemToUpdate.Text = evnt.NewText;
-            
+
                 context.SaveChanges();
             }
         }
