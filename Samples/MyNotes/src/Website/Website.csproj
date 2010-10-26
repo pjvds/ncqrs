@@ -97,6 +97,7 @@
     <Content Include="Views\Note\Add.aspx" />
     <Content Include="Views\Note\Edit.aspx" />
     <Content Include="Views\Note\Index.aspx" />
+    <Content Include="Views\Note\Report.aspx" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

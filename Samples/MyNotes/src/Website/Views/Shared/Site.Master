@@ -16,6 +16,7 @@
             </div>
               
             <div id="logindisplay">
+                <br />
             </div> 
             
             <div id="menucontainer">
@@ -23,6 +24,7 @@
                 <ul id="menu">              
                     <li><%: Html.ActionLink("List all", "Index", "Note")%></li>
                     <li><%: Html.ActionLink("Add new", "Add", "Note")%></li>
+                    <li><%: Html.ActionLink("Report", "Report", "Note")%></li>
                     <li><%: Html.ActionLink("About", "About", "Home")%></li>
                 </ul>
             

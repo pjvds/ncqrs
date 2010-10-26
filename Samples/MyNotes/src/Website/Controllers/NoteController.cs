@@ -71,5 +71,21 @@ namespace Website.Controllers
             // displays all the notes.));
             return RedirectToAction("Index");
         }
+
+        public ActionResult Report()
+        {
+            IEnumerable<TotalsPerDayItem> items;
+
+            using (var context = new ReadModelContainer())
+            {
+                var query = from item in context.TotalsPerDayItemSet
+                            orderby item.Date descending 
+                            select item;
+
+                items = query.ToArray();
+            }
+
+            return View(items);
+        }
     }
 }

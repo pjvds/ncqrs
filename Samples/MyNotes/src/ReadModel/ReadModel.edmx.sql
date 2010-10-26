@@ -2,8 +2,8 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, and Azure
 -- --------------------------------------------------
--- Date Created: 06/06/2010 21:50:04
--- Generated from EDMX file: C:\Users\pjvds\documents\visual studio 2010\Projects\MyNotes\ReadModel\ReadModel.edmx
+-- Date Created: 10/26/2010 22:39:10
+-- Generated from EDMX file: C:\Projects\ncqrs\Samples\MyNotes\src\ReadModel\ReadModel.edmx
 -- --------------------------------------------------
 
 SET QUOTED_IDENTIFIER OFF;
@@ -22,15 +22,31 @@ GO
 -- Dropping existing tables
 -- --------------------------------------------------
 
+IF OBJECT_ID(N'[dbo].[NoteItemSet]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[NoteItemSet];
+GO
+IF OBJECT_ID(N'[dbo].[TotalsPerDayItemSet]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[TotalsPerDayItemSet];
+GO
 
 -- --------------------------------------------------
 -- Creating all tables
 -- --------------------------------------------------
 
--- Creating table 'NoteSet'
-CREATE TABLE [dbo].[NoteSet] (
+-- Creating table 'NoteItemSet'
+CREATE TABLE [dbo].[NoteItemSet] (
+    [Id] uniqueidentifier  NOT NULL,
+    [Text] varchar(250)  NULL,
+    [CreationDate] datetime  NULL
+);
+GO
+
+-- Creating table 'TotalsPerDayItemSet'
+CREATE TABLE [dbo].[TotalsPerDayItemSet] (
     [Id] int IDENTITY(1,1) NOT NULL,
-    [Property] nvarchar(max)  NOT NULL
+    [Date] datetime  NOT NULL,
+    [NewCount] int  NOT NULL,
+    [EditCount] int  NOT NULL
 );
 GO
 
@@ -38,9 +54,15 @@ GO
 -- Creating all PRIMARY KEY constraints
 -- --------------------------------------------------
 
--- Creating primary key on [Id] in table 'NoteSet'
-ALTER TABLE [dbo].[NoteSet]
-ADD CONSTRAINT [PK_NoteSet]
+-- Creating primary key on [Id] in table 'NoteItemSet'
+ALTER TABLE [dbo].[NoteItemSet]
+ADD CONSTRAINT [PK_NoteItemSet]
+    PRIMARY KEY CLUSTERED ([Id] ASC);
+GO
+
+-- Creating primary key on [Id] in table 'TotalsPerDayItemSet'
+ALTER TABLE [dbo].[TotalsPerDayItemSet]
+ADD CONSTRAINT [PK_TotalsPerDayItemSet]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
