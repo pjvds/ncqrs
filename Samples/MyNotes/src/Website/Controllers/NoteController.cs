@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web.Mvc;
 using Commands;
-using Website.CommandService;
 using ReadModel;
-using System.Linq;
+using Website.CommandService;
 
 namespace Website.Controllers
 {
@@ -32,7 +32,7 @@ namespace Website.Controllers
 
             using (var context = new ReadModelContainer())
             {
-                item = context.NoteItemSet.Single(note => note.Id == id) ;
+                item = context.NoteItemSet.Single(note => note.Id == id);
             }
 
             var command = new ChangeNoteText();
@@ -79,7 +79,7 @@ namespace Website.Controllers
             using (var context = new ReadModelContainer())
             {
                 var query = from item in context.TotalsPerDayItemSet
-                            orderby item.Date descending 
+                            orderby item.Date descending
                             select item;
 
                 items = query.ToArray();
