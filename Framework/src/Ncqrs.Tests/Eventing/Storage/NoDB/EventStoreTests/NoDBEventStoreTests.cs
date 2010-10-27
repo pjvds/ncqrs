@@ -7,7 +7,7 @@ using Rhino.Mocks;
 
 namespace Ncqrs.Eventing.Storage.NoDB.Tests.EventStoreTests
 {
-    public class NoDBEventStoreTestFixture
+    public abstract class NoDBEventStoreTestFixture
     {
         protected NoDBEventStore EventStore;
         protected SourcedEvent[] Events;

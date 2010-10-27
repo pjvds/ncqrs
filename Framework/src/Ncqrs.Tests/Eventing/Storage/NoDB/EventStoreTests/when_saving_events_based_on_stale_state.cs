@@ -2,6 +2,7 @@
 
 namespace Ncqrs.Eventing.Storage.NoDB.Tests.EventStoreTests
 {
+    [TestFixture]
     public class when_saving_events_based_on_stale_state : NoDBEventStoreTestFixture
     {
         [Test, ExpectedException(typeof(ConcurrencyException))]
