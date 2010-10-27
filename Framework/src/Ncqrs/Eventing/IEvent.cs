@@ -53,8 +53,6 @@ namespace Ncqrs.Eventing
         {
             get
             {
-                Contract.Ensures(Contract.Result<DateTime>().Kind == DateTimeKind.Utc, "The event time stamp should always be in a UTC kind.");
-
                 return default(DateTime);
             }
         }
