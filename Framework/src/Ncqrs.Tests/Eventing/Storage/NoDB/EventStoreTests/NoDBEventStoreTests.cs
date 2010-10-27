@@ -19,7 +19,7 @@ namespace Ncqrs.Eventing.Storage.NoDB.Tests.EventStoreTests
             EventStore = new NoDBEventStore("./");
             Source = MockRepository.GenerateMock<IEventSource>();
             Guid id = Guid.NewGuid();
-            int sequenceCounter = 0;
+            int sequenceCounter = 1;
             Events = new SourcedEvent[]
                          {
                              new CustomerCreatedEvent(Guid.NewGuid(), id, sequenceCounter++, DateTime.UtcNow, "Foo",
