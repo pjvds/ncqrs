@@ -1,4 +1,5 @@
-﻿using Ncqrs.Domain;
+﻿using System;
+using Ncqrs.Domain;
 
 namespace Ncqrs.Commanding.CommandExecution
 {
@@ -25,13 +26,29 @@ namespace Ncqrs.Commanding.CommandExecution
     public abstract class CommandExecutorBase<TCommand> : ICommandExecutor<TCommand> where TCommand : ICommand
     {
         /// <summary>
+        /// Holds the <see cref="IUnitOfWorkFactory"/>. This instance should never be null.
+        /// </summary>
+        private readonly IUnitOfWorkFactory _factory;
+
+        protected CommandExecutorBase()
+            : this(NcqrsEnvironment.Get<IUnitOfWorkFactory>())
+        {
+        }
+
+        protected CommandExecutorBase(IUnitOfWorkFactory unitOfWorkFactory)
+        {
+            if(unitOfWorkFactory == null) throw new ArgumentNullException("unitOfWorkFactory");
+            _factory = unitOfWorkFactory;
+        }
+        
+        /// <summary>
         /// Executes the command.
         /// </summary>
         /// <param name="command">The command to execute. This should not be null.</param>
         /// <exception cref="ArgumentNullException">Occurs when <i>command</i> is null.</exception>
         public void Execute(TCommand command)
         {
-            using (var work = NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork())
+            using (var work = _factory.CreateUnitOfWork())
             {
                 ExecuteInContext(work, command);
             }
