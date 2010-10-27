@@ -352,7 +352,7 @@ namespace Ncqrs.Eventing.Storage.SQL
             var eventVersion = Version.Parse((string)reader["Version"]);
             var eventSourceId = (Guid)reader["EventSourceId"];
             var eventSequence = (long)reader["Sequence"];
-            var data = Encoding.UTF8.GetString((Byte[])reader["Data"]);
+            var data = (String)reader["Data"];
 
             return new StoredEvent<string>(
                 eventIdentifier,
@@ -394,7 +394,6 @@ namespace Ncqrs.Eventing.Storage.SQL
 
             var document = _formatter.Serialize(evnt);
             var raw = _translator.TranslateToRaw(document);
-            var data = Encoding.UTF8.GetBytes(raw.Data);
 
             using (var command = new SqlCommand(Queries.InsertNewEventQuery, connection))
             {
@@ -408,7 +407,7 @@ namespace Ncqrs.Eventing.Storage.SQL
                 command.Parameters.AddWithValue("Name", raw.EventName);
                 command.Parameters.AddWithValue("Version", raw.EventVersion.ToString());
                 command.Parameters.AddWithValue("Sequence", raw.EventSequence);
-                command.Parameters.AddWithValue("Data", data);
+                command.Parameters.AddWithValue("Data", raw.Data);
                 command.ExecuteNonQuery();
             }
         }
