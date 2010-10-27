@@ -97,17 +97,19 @@ namespace Ncqrs.Eventing.Storage.NoDB
         {
             var file = id.GetVersionFile(_path);
             var bytes = new byte[indicies.Length * 8];
-            for (int i = 0; i < indicies.Length * 8; i += 8)
+            for (int i = 0; i < indicies.Length; i += 8)
             {
+                var bytesIndex = i * 8;
                 var intbytes = BitConverter.GetBytes(indicies[i]);
-                bytes[i] = intbytes[0];
-                bytes[i + 1] = intbytes[1];
-                bytes[i + 2] = intbytes[2];
-                bytes[i + 3] = intbytes[3];
-                bytes[i + 3] = intbytes[4];
-                bytes[i + 3] = intbytes[5];
-                bytes[i + 3] = intbytes[6];
-                bytes[i + 3] = intbytes[7];
+
+                bytes[bytesIndex] = intbytes[0];
+                bytes[bytesIndex + 1] = intbytes[1];
+                bytes[bytesIndex + 2] = intbytes[2];
+                bytes[bytesIndex + 3] = intbytes[3];
+                bytes[bytesIndex + 3] = intbytes[4];
+                bytes[bytesIndex + 3] = intbytes[5];
+                bytes[bytesIndex + 3] = intbytes[6];
+                bytes[bytesIndex + 3] = intbytes[7];
             }
             using (var writer = file.OpenWrite())
             {
