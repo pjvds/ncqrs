@@ -102,14 +102,10 @@ namespace Ncqrs.Eventing.Storage.NoDB
                 var bytesIndex = i * 8;
                 var intbytes = BitConverter.GetBytes(indicies[i]);
 
-                bytes[bytesIndex] = intbytes[0];
-                bytes[bytesIndex + 1] = intbytes[1];
-                bytes[bytesIndex + 2] = intbytes[2];
-                bytes[bytesIndex + 3] = intbytes[3];
-                bytes[bytesIndex + 3] = intbytes[4];
-                bytes[bytesIndex + 3] = intbytes[5];
-                bytes[bytesIndex + 3] = intbytes[6];
-                bytes[bytesIndex + 3] = intbytes[7];
+                for (int byteIndexOffset = 0; byteIndexOffset < 8; byteIndexOffset++)
+                {
+                    bytes[bytesIndex + byteIndexOffset] = intbytes[byteIndexOffset];
+                }
             }
             using (var writer = file.OpenWrite())
             {
