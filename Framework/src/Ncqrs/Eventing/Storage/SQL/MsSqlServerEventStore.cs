@@ -18,6 +18,9 @@ namespace Ncqrs.Eventing.Storage.SQL
     /// </summary>
     public class MsSqlServerEventStore : IEventStore, ISnapshotStore
     {
+
+        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
         private static bool NoAmbientTransaction()
         {
             return System.Transactions.Transaction.Current == null;
@@ -162,12 +165,11 @@ namespace Ncqrs.Eventing.Storage.SQL
                         transaction.Commit();
                         transaction.Dispose();
                     }
-                    throw cex;
+                    throw;
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.Message);
-                    Console.WriteLine(ex.StackTrace);
+                    Log.Warn(string.Format("Exception occurred on Eventing Save{0}", transaction != null ? " - Transaction rolled back" : ""), ex);
                     if (transaction != null)
                     {
                         transaction.Rollback();
@@ -175,7 +177,7 @@ namespace Ncqrs.Eventing.Storage.SQL
                         transaction = null;
                     }
 
-                    throw ex;
+                    throw;
                 }
             }
         }
