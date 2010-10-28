@@ -22,3 +22,5 @@ bin
 /Samples/MyNotes/lib/*
 release
 *.vs10x
+/debug_build_output
+/release_build_output
