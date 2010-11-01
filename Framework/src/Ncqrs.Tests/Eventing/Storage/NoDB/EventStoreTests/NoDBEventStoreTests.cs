@@ -7,6 +7,7 @@ using Rhino.Mocks;
 
 namespace Ncqrs.Eventing.Storage.NoDB.Tests.EventStoreTests
 {
+    [Category("Integration")]
     public abstract class NoDBEventStoreTestFixture
     {
         protected NoDBEventStore EventStore;
@@ -35,7 +36,7 @@ namespace Ncqrs.Eventing.Storage.NoDB.Tests.EventStoreTests
             Source.Stub(e => e.GetUncommittedEvents()).Return(Events);
             EventStore.Save(Source);
         }
-
+    
         [TestFixtureTearDown]
         public void TearDown()
         {

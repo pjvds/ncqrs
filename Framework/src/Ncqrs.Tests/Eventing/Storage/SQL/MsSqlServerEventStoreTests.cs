@@ -13,6 +13,7 @@ using System.Configuration;
 namespace Ncqrs.Tests.Eventing.Storage.SQL
 {
     [TestFixture]
+    [Category("Integration")]
     public class MsSqlServerEventStoreTests
     {
         [Serializable]
