@@ -21,12 +21,12 @@ namespace Ncqrs.Eventing.Storage.NoDB
 
         #region IEventStore Members
 
-        public IEnumerable<SourcedEvent> GetAllEvents(Guid id)
+        public IEnumerable<ISourcedEvent> GetAllEvents(Guid id)
         {
             return GetAllEventsSinceVersion(id, 0);
         }
 
-        public IEnumerable<SourcedEvent> GetAllEventsSinceVersion(Guid id, long version)
+        public IEnumerable<ISourcedEvent> GetAllEventsSinceVersion(Guid id, long version)
         {
             FileInfo file = id.GetEventStoreFileInfo(_path);
             if (!file.Exists || GetVersion(id) <= version) yield break;
