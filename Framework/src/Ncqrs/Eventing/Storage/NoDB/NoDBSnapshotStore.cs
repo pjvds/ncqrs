@@ -10,6 +10,7 @@ namespace Ncqrs.Eventing.Storage.NoDB
     public class NoDBSnapshotStore : ISnapshotStore
     {
         private readonly string _path;
+        public int SnapshotIntervalInEvents { get; set; }
 
         public NoDBSnapshotStore(string path)
         {
