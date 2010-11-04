@@ -100,7 +100,7 @@ namespace Ncqrs.Eventing.Sourcing
         [ContractInvariantMethod]
         private void ContractInvariants()
         {
-            Contract.Invariant(_uncommittedEvents != null, "The member _unacceptedEvents should never be null.");
+            Contract.Invariant(_uncommittedEvents != null, "The member _uncommittedEvents should never be null.");
         }
 
         /// <summary>
