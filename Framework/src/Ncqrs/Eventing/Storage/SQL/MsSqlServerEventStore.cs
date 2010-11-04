@@ -334,6 +334,7 @@ namespace Ncqrs.Eventing.Storage.SQL
 
         private void UpdateEventSourceVersion(IEventSource eventSource, SqlConnection connection, SqlTransaction transaction)
         {
+            var initVersion = eventSource.InitialVersion;
             using (var command = new SqlCommand(Queries.UpdateEventSourceVersionQuery, connection))
             {
                 if (transaction != null)
@@ -342,7 +343,12 @@ namespace Ncqrs.Eventing.Storage.SQL
                 }
                 command.Parameters.AddWithValue("Id", eventSource.EventSourceId);
                 command.Parameters.AddWithValue("NewVersion", eventSource.Version);
-                command.ExecuteNonQuery();
+                command.Parameters.AddWithValue("InitialVersion", initVersion);
+                var updateCount = command.ExecuteNonQuery();
+                if (updateCount != 1)
+                {
+                    throw new ConcurrencyException(eventSource.EventSourceId, eventSource.Version);
+                }
             }
         }
 
@@ -429,7 +435,7 @@ namespace Ncqrs.Eventing.Storage.SQL
                 }
                 command.Parameters.AddWithValue("Id", eventSource.EventSourceId);
                 command.Parameters.AddWithValue("Type", eventSource.GetType().ToString());
-                command.Parameters.AddWithValue("Version", eventSource.Version);
+                command.Parameters.AddWithValue("Version", eventSource.InitialVersion);
                 command.ExecuteNonQuery();
             }
         }
