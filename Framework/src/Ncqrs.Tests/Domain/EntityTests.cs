@@ -100,6 +100,8 @@ namespace Ncqrs.Tests.Domain
         [Test]
         public void Creating_an_entity_should_generate_event()
         {
+            var uowf = new UnitOfWorkFactory();
+            uowf.CreateUnitOfWork();
             var orderId1 = Guid.NewGuid();
             var orderId2 = Guid.NewGuid();
 
@@ -109,6 +111,8 @@ namespace Ncqrs.Tests.Domain
             theAggregate.CreateOrderLine(orderId1, 20);
             theAggregate.CreateOrder(orderId2);
             theAggregate.CreateOrderLine(orderId2, 30);
+
+            UnitOfWork.Current.Dispose();
         }
     }
 }

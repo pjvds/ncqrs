@@ -23,10 +23,10 @@ namespace Ncqrs.Domain
         [NoEventHandler]
         protected override void OnEventApplied(ISourcedEvent appliedEvent)
         {
-            if(EventApplied != null)
-            {
-                EventApplied(this, new EventAppliedArgs(appliedEvent));
-            }
+            if (UnitOfWork.Current == null)
+                throw new NoUnitOfWorkAvailableInThisContextException();
+
+            UnitOfWork.Current.RegisterDirtyInstance(this);
         }
     }
 }

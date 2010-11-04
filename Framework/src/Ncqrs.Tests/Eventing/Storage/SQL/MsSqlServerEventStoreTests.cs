@@ -76,7 +76,9 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
 
         public MsSqlServerEventStoreTests()
         {
-            connectionString = ConfigurationManager.ConnectionStrings[DEFAULT_CONNECTIONSTRING_KEY].ConnectionString;
+            connectionString = @"Data Source=.\SQLEXPRESS;Initial Catalog=MsSqlServerEventStoreTestEventStore;Integrated Security=True";
+                
+                //ConfigurationManager.ConnectionStrings[DEFAULT_CONNECTIONSTRING_KEY].ConnectionString;
         }
 
         [SetUp]
@@ -104,7 +106,10 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
         {
             if (!_ignored)
             {
-                var connectionString = ConfigurationManager.ConnectionStrings[DEFAULT_CONNECTIONSTRING_KEY].ConnectionString;
+                var connectionString = @"Data Source=.\SQLEXPRESS;Initial Catalog=MsSqlServerEventStoreTestEventStore;Integrated Security=True"; 
+                
+                //ConfigurationManager.ConnectionStrings[DEFAULT_CONNECTIONSTRING_KEY].ConnectionString;
+
                 using (var connection = new SqlConnection(connectionString))
                 {
                     connection.Open();

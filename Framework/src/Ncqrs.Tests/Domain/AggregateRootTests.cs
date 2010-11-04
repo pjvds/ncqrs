@@ -80,6 +80,20 @@ namespace Ncqrs.Tests.Domain
             }
         }
 
+        [SetUp]
+        public void setup()
+        {
+            var uowf = new UnitOfWorkFactory();
+            uowf.CreateUnitOfWork();
+
+        }
+
+        [TearDown]
+        public void teardown()
+        {
+            UnitOfWork.Current.Dispose();
+        }
+
         [Test]
         public void It_should_initialize_with_a_new_id_given_by_the_generator_from_the_environment()
         {
@@ -165,6 +179,7 @@ namespace Ncqrs.Tests.Domain
         [Test]
         public void Accepting_the_changes_should_clear_the_uncommitted_events()
         {
+
             var theAggregate = new MyAggregateRoot();
 
             theAggregate.MethodThatCausesAnEventThatHasAHandler();
@@ -176,6 +191,7 @@ namespace Ncqrs.Tests.Domain
             theAggregate.AcceptChanges();
 
             theAggregate.GetUncommittedEvents().Should().BeEmpty();
+
         }
 
         [Test]
@@ -199,9 +215,8 @@ namespace Ncqrs.Tests.Domain
         [Test]
         public void Applying_an_event_should_not_effect_the_initial_version()
         {
-            using (NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork())
-            {
-                var theAggregate = new MyAggregateRoot();
+
+            var theAggregate = new MyAggregateRoot();
 
                 theAggregate.InitialVersion.Should().Be(0);
                 theAggregate.MethodThatCausesAnEventThatHasAHandler();
@@ -209,7 +224,7 @@ namespace Ncqrs.Tests.Domain
                 theAggregate.MethodThatCausesAnEventThatHasAHandler();
                 theAggregate.InitialVersion.Should().Be(0);
                 theAggregate.MethodThatCausesAnEventThatHasAHandler();
-            }
+
         }
 
         [Test]
