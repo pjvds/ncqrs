@@ -7,6 +7,14 @@ namespace Ncqrs.Messaging
     {
         private readonly MessagingContext _messagingContext = new MessagingContext();
 
+        public MessagingAggregateRoot() : base()
+        {            
+        }
+
+        public MessagingAggregateRoot(Guid id) : base(id)
+        {            
+        }
+
         public MessagingContext MessagingContext
         {
             get { return _messagingContext; }

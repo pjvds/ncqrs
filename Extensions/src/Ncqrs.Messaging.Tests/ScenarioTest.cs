@@ -95,11 +95,18 @@ namespace Ncqrs.Messaging.Tests
         {
             private Guid _cargoId;
 
+            public HandlingEvent()
+            {                
+            }
+
+            public HandlingEvent(Guid id) : base(id)
+            {                
+            }
+
             public void Handle(RegisterHandlingEventMesasge message)
             {
                 ApplyEvent(new HandlingEventRegistered
                               {
-                                  Id = message.EventId,
                                   CargoId = message.CargoId
                               });
 
@@ -110,7 +117,6 @@ namespace Ncqrs.Messaging.Tests
 
             private void OnHandlingEventRegistered(HandlingEventRegistered @event)
             {
-                EventSourceId = @event.Id;
                 _cargoId = @event.CargoId;
             }
         }
@@ -126,17 +132,21 @@ namespace Ncqrs.Messaging.Tests
                 get { return _handlingEventCount; }
             }
 
+            public Cargo(Guid id) : base(id)
+            {                
+            }
+
+            public Cargo() : base()
+            {                
+            }
+
             public void Handle(BookCargoMessage message)
             {
-                ApplyEvent(new CargoBooked
-                              {
-                                  Id = message.CargoId
-                              });
+                ApplyEvent(new CargoBooked());
             }
 
             private void OnCargoBooked(CargoBooked @event)
-            {
-                EventSourceId = @event.Id;
+            {                
             }
 
             public void Handle(CargoWasHandledMessage message)
@@ -152,13 +162,11 @@ namespace Ncqrs.Messaging.Tests
 
         public class HandlingEventRegistered : SourcedEvent
         {
-            public Guid Id { get; set; }
             public Guid CargoId { get; set; }
         }
 
         public class CargoBooked : SourcedEvent
-        {
-            public Guid Id { get; set; }
+        {            
         }
 
         public class CargoHandled : SourcedEvent

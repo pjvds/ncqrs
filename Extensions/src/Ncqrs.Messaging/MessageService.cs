@@ -35,7 +35,7 @@ namespace Ncqrs.Messaging
             var existingReceiver = (IMessagingAggregateRoot)work.TryGetById(message.ReceiverType, message.ReceiverId);
             CheckProcessingRequirements(message, existingReceiver);
 
-            return existingReceiver ?? CreateNewAggregateInstance(message.ReceiverType);
+            return existingReceiver ?? CreateNewAggregateInstance(message.ReceiverType, message.ReceiverId);
         }
 
         private IncomingMessage ReceiveMessage(object message)
@@ -64,9 +64,9 @@ namespace Ncqrs.Messaging
             return existingReceiver != null && message.ProcessingRequirements == MessageProcessingRequirements.RequiresNew;
         }
 
-        private static IMessagingAggregateRoot CreateNewAggregateInstance(Type recieverType)
+        private static IMessagingAggregateRoot CreateNewAggregateInstance(Type recieverType, Guid id)
         {
-            return (IMessagingAggregateRoot)Activator.CreateInstance(recieverType);
+            return (IMessagingAggregateRoot)Activator.CreateInstance(recieverType, new object[] {id});
         }
 
 
