@@ -24,6 +24,7 @@ namespace Ncqrs.EventBus
             {
                 _lastEventInSequence++;
                 _sequenceLength++;
+               _lastEventInSequenceId = sequencedEvent.Event.EventIdentifier;
                 ProcessEventsNotInSequence();
             }
             else

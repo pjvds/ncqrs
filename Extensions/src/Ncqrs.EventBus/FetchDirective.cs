@@ -1,24 +1,33 @@
-﻿namespace Ncqrs.EventBus
+﻿using System;
+
+namespace Ncqrs.EventBus
 {
     public struct FetchDirective
     {
         private readonly bool _shouldFetch;
         private readonly int _maxCount;
+        private readonly Guid? _uniqueId;
 
-        private FetchDirective(bool shouldFetch, int maxCount)
+        private FetchDirective(bool shouldFetch, int maxCount, Guid? uniqueId)
         {
             _shouldFetch = shouldFetch;
+            _uniqueId = uniqueId;
             _maxCount = maxCount;
         }
 
-        public static FetchDirective FetchNow(int maxCount)
+        public Guid? UniqueId
         {
-            return new FetchDirective(true, maxCount);
+            get { return _uniqueId; }
+        }
+
+        public static FetchDirective FetchNow(Guid uniqueId, int maxCount)
+        {
+            return new FetchDirective(true, maxCount, uniqueId);
         }
 
         public static FetchDirective DoNotFetchYet()
         {
-            return new FetchDirective(false, 0);
+            return new FetchDirective(false, 0, null);
         }
 
         public bool ShouldFetch

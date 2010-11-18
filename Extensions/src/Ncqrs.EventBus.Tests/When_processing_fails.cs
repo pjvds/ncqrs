@@ -11,7 +11,7 @@ namespace Ncqrs.EventBus.Tests
         {
             var sut = CreateProcessor();
 
-            sut.ProcessNext(_event);
+            sut.ProcessNext(_event);                       
 
             _pipelineBackupQueue.AssertWasCalled(x => x.EnqueueForLaterProcessing(_event.Event));
         }        
@@ -28,11 +28,9 @@ namespace Ncqrs.EventBus.Tests
 
         private PipelineProcessor CreateProcessor()
         {
-            return new PipelineProcessor(
-                _pipelineBackupQueue,
-                new FailingEventProcessor(),
-                MockRepository.GenerateMock<IEventQueue>(),
-                x => _pipelineStateStore.MarkLastProcessedEvent(x));
+            var pipelineProcessor = new PipelineProcessor(new FailingEventProcessor());
+            pipelineProcessor.EventProcessed += (s, e) => _pipelineStateStore.MarkLastProcessedEvent(e.Event);
+            return pipelineProcessor;
         }
     }
 }

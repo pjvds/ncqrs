@@ -31,8 +31,8 @@ namespace Ncqrs.Messaging
         }
 
         private static IMessagingAggregateRoot GetReceiver(IUnitOfWorkContext work, IncomingMessage message)
-        {            
-            var existingReceiver = (IMessagingAggregateRoot)work.GetById(message.ReceiverType, message.ReceiverId);
+        {                        
+            var existingReceiver = (IMessagingAggregateRoot)work.TryGetById(message.ReceiverType, message.ReceiverId);
             CheckProcessingRequirements(message, existingReceiver);
 
             return existingReceiver ?? CreateNewAggregateInstance(message.ReceiverType);

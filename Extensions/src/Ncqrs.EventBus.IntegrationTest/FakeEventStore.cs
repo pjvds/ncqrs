@@ -7,17 +7,25 @@ namespace Ncqrs.EventBus.IntegrationTest
     public class FakeEventStore : IBrowsableEventStore
     {
         private readonly Random _random = new Random();
+        private const int Count = 1000;
+        private int _fetched;
 
         public void SetCursorPositionAfter(Guid? lastEventId)
-        {            
+        {
         }
 
         public IEnumerable<SourcedEvent> FetchEvents(int maxCount)
         {
-            int count = _random.Next(maxCount);
-            for (int i = 0; i < count; i++)
+            lock (this)
             {
-                yield return new RandomEvent();
+                int count = _random.Next(maxCount);
+                int available = Count - _fetched;
+                count = count > available ? available : count;
+                for (int i = 0; i < count; i++)
+                {
+                    _fetched++;
+                    yield return new RandomEvent(_fetched);
+                }
             }
         }
     }

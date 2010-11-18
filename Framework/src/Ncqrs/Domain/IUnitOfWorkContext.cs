@@ -34,6 +34,16 @@ namespace Ncqrs.Domain
         AggregateRoot GetById(Type aggregateRootType, Guid eventSourceId);
 
         /// <summary>
+        /// Gets aggregate root by <see cref="AggregateRoot.EventSourcId">event source id or null if not found</see>.
+        /// </summary>
+        /// <param name="aggregateRootType">Type of the aggregate root.</param>
+        /// <param name="eventSourceId">The eventSourceId of the aggregate root.</param>        
+        /// <returns>
+        /// A new instance of the aggregate root that contains the latest known state or null if not found.
+        /// </returns>
+        AggregateRoot TryGetById(Type aggregateRootType, Guid eventSourceId);
+
+        /// <summary>
         /// Accept all the changes that has been made within this context. All <see cref="IEvent">events</see>
         /// that has been occured will be stored and published.
         /// </summary>

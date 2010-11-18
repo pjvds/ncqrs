@@ -1,35 +1,38 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Collections.Generic;
-using System.Threading;
 
 namespace Ncqrs.EventBus
 {
     public class EventDemultiplexer : IEventQueue
     {
-        private int _pendingEventCount;
-        private readonly Action<SequencedEvent> _enqueueToProcessingCallback;
         private readonly List<EventDemultiplexerQueue> _queues = new List<EventDemultiplexerQueue>();
-        private readonly Dictionary<SequencedEvent, EventDemultiplexerQueue> _eventQueueMap = new Dictionary<SequencedEvent, EventDemultiplexerQueue>();
+        private readonly Dictionary<Guid, EventDemultiplexerQueue> _eventQueueMap = new Dictionary<Guid, EventDemultiplexerQueue>();
+        
+        public event EventHandler<EventDemultiplexedEventArgs> EventDemultiplexed;
 
-        public EventDemultiplexer(Action<SequencedEvent> enqueueToProcessingCallback)
+        private void OnEventDemultiplexed(EventDemultiplexedEventArgs e)
         {
-            _enqueueToProcessingCallback = enqueueToProcessingCallback;
+            var handler = EventDemultiplexed;
+            if (handler != null)
+            {
+                handler(this, e);
+            }
         }
 
-        public event EventHandler StateChanged;
-
-        public int PendingEventCount
+        public void Demultiplex(SequencedEvent sequencedEvent)
         {
-            get { return _pendingEventCount; }
-        }
-
-        public void ProcessNext(SequencedEvent sequencedEvent)
-        {
+            if (IsDuplicate(sequencedEvent))
+            {
+                Debug.WriteLine("Ignoring duplicate event {0}.", sequencedEvent.Event.EventIdentifier);
+                return;
+            }
             var queue = FindQueueFor(sequencedEvent);
             if (queue != null)
             {
-                queue.Enqueue(sequencedEvent);                
+                AssociateEventAndQueue(sequencedEvent, queue);
+                queue.Enqueue(sequencedEvent);
             }
             else
             {
@@ -37,39 +40,37 @@ namespace Ncqrs.EventBus
                 AssociateEventAndQueue(sequencedEvent, queue);
                 EnqueueToProcessing(sequencedEvent);
             }
-            Interlocked.Increment(ref _pendingEventCount);
-            OnStateChanged();
         }
 
-        private void OnStateChanged()
+        private bool IsDuplicate(SequencedEvent sequencedEvent)
         {
-            if (StateChanged != null)
-            {
-                StateChanged(this, new EventArgs());
-            }
+            return _eventQueueMap.ContainsKey(sequencedEvent.Event.EventIdentifier);
         }
 
         private void AssociateEventAndQueue(SequencedEvent sequencedEvent, EventDemultiplexerQueue queue)
         {
-            _eventQueueMap[sequencedEvent] = queue;
+            _eventQueueMap.Add(sequencedEvent.Event.EventIdentifier, queue);
         }
 
         public void MarkAsProcessed(SequencedEvent sequencedEvent)
         {
-            var queue = _eventQueueMap[sequencedEvent];
-            queue.Unblock();
-            Interlocked.Decrement(ref _pendingEventCount);
-            OnStateChanged();
+            var eventId = sequencedEvent.Event.EventIdentifier;
+            var queue = _eventQueueMap[eventId];            
+            _eventQueueMap.Remove(eventId);
+            if (!queue.Unblock())
+            {
+                _queues.Remove(queue);
+            }            
         }
 
         private void EnqueueToProcessing(SequencedEvent sequencedEvent)
         {
-            _enqueueToProcessingCallback(sequencedEvent);
+            OnEventDemultiplexed(new EventDemultiplexedEventArgs(sequencedEvent));
         }
 
         private EventDemultiplexerQueue CreateAndBlockQueueFor(SequencedEvent sequencedEvent)
         {
-            var queue = new EventDemultiplexerQueue(sequencedEvent.Event.EventSourceId, _enqueueToProcessingCallback);
+            var queue = new EventDemultiplexerQueue(sequencedEvent.Event.EventSourceId, EnqueueToProcessing);
             _queues.Add(queue);
             return queue;
         }
@@ -78,6 +79,6 @@ namespace Ncqrs.EventBus
         {
             return _queues.FirstOrDefault(x => x.Accepts(sequencedEvent));
         }
-                      
+
     }
 }

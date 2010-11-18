@@ -31,11 +31,9 @@ namespace Ncqrs.EventBus.Tests
 
         private PipelineProcessor CreateProcessor()
         {
-            return new PipelineProcessor(
-                _pipelineBackupQueue,
-                new SucceedingEventProcessor(),
-                _eventQueue,
-                x => _pipelineStateStore.MarkLastProcessedEvent(x));
+            var pipelineProcessor = new PipelineProcessor(new SucceedingEventProcessor());
+            pipelineProcessor.EventProcessed += (s, e) => _pipelineStateStore.MarkLastProcessedEvent(e.Event);
+            return pipelineProcessor;
         }
     }
 }

@@ -18,6 +18,14 @@ namespace Ncqrs.Domain.Storage
         AggregateRoot GetById(Type aggregateRootType, Guid eventSourceId);
 
         /// <summary>
+        /// Gets aggregate root by eventSourceId. If aggregate root with this id does not exist, returns null.
+        /// </summary>
+        /// <param name="aggregateRootType">Type of the aggregate root.</param>
+        /// <param name="eventSourceId">The eventSourceId of the aggregate root.</param>
+        /// <returns>A new instance of the aggregate root that contains the latest known state or null</returns>
+        AggregateRoot TryGetById(Type aggregateRootType, Guid eventSourceId);
+
+        /// <summary>
         /// Gets aggregate root by eventSourceId.
         /// </summary>
         /// <typeparam name="T">The type of the aggregate root.</typeparam>
@@ -36,6 +44,13 @@ namespace Ncqrs.Domain.Storage
     internal abstract class IDomainRepositoryContracts : IDomainRepository
     {
         public AggregateRoot GetById(Type aggregateRootType, Guid eventSourceId)
+        {
+            Contract.Requires<ArgumentNullException>(aggregateRootType != null);
+
+            return default(AggregateRoot);
+        }
+
+        public AggregateRoot TryGetById(Type aggregateRootType, Guid eventSourceId)
         {
             Contract.Requires<ArgumentNullException>(aggregateRootType != null);
 

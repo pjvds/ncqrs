@@ -64,9 +64,29 @@ namespace Ncqrs.Domain.Storage
         /// </returns>
         public AggregateRoot GetById(Type aggregateRootType, Guid eventSourceId)
         {
+            AggregateRoot aggregate = TryGetById(aggregateRootType, eventSourceId);
+            if(aggregate == null)
+            {
+                var msg = string.Format("Aggregate root with EventSourceId {0} does not exist.",
+                                        eventSourceId);
+
+                throw new AggregateRootNotFoundException(msg);
+            }
+
+            return aggregate;
+        }
+
+        /// <summary>
+        /// Gets aggregate root by eventSourceId. If aggregate root with this id does not exist, returns null.
+        /// </summary>
+        /// <param name="aggregateRootType">Type of the aggregate root.</param>
+        /// <param name="eventSourceId">The eventSourceId of the aggregate root.</param>
+        /// <returns>A new instance of the aggregate root that contains the latest known state or null</returns>
+        public AggregateRoot TryGetById(Type aggregateRootType, Guid eventSourceId)
+        {
             AggregateRoot aggregate = null;
 
-            if(_snapshotStore != null)
+            if (_snapshotStore != null)
             {
                 var snapshot = _snapshotStore.GetSnapshot(eventSourceId);
 
@@ -76,19 +96,10 @@ namespace Ncqrs.Domain.Storage
                 }
             }
 
-            if(aggregate == null)
+            if (aggregate == null)
             {
                 aggregate = GetByIdFromScratch(aggregateRootType, eventSourceId);
-            }
-
-            if(aggregate == null)
-            {
-                var msg = string.Format("Aggregate root with EventSourceId {0} does not exist.",
-                                        eventSourceId);
-
-                throw new AggregateRootNotFoundException(msg);
-            }
-
+            }            
             return aggregate;
         }
 

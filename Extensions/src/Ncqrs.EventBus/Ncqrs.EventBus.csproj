@@ -43,8 +43,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DefaultEventProcessor.cs" />
+    <Compile Include="EventDemultiplexedEventArgs.cs" />
     <Compile Include="EventDemultiplexerQueue.cs" />
+    <Compile Include="EventFetchedEventArgs.cs" />
+    <Compile Include="EventFetcher.cs" />
+    <Compile Include="EventProcessedEventArgs.cs" />
     <Compile Include="FetchDirective.cs" />
+    <Compile Include="FetchResult.cs" />
     <Compile Include="IEventFetchPolicy.cs" />
     <Compile Include="IEventQueue.cs" />
     <Compile Include="IBrowsableEventStore.cs" />

@@ -1,4 +1,6 @@
-﻿namespace Ncqrs.EventBus
+﻿using System;
+
+namespace Ncqrs.EventBus
 {
     public class ThresholdedEventFetchPolicy : IEventFetchPolicy
     {
@@ -12,16 +14,16 @@
         }
 
         public FetchDirective ShouldFetch(PipelineState currentState)
-        {
-            if (currentState.ActiveFetchRequests > 0)
-            {
-                return FetchDirective.DoNotFetchYet();
-            }
+        {            
             if (currentState.PendingEventCount < _minimumPendingEvents)
             {
-                return FetchDirective.FetchNow(_batchSize);
+                return FetchDirective.FetchNow(Guid.NewGuid(), _batchSize);
             }
             return FetchDirective.DoNotFetchYet();
+        }
+
+        public void OnFetchingCompleted(FetchResult result)
+        {            
         }
     }
 }

@@ -100,8 +100,10 @@ namespace Ncqrs.Eventing.Storage.SQL
 
                 using (var command = new SqlCommand(string.Format(query, maxCount), connection))
                 {
-                    // Add EventSourceId parameter and open connection.
-                    command.Parameters.AddWithValue("EventId", eventId);
+                    if (eventId.HasValue)
+                    {
+                        command.Parameters.AddWithValue("EventId", eventId);
+                    }
                     connection.Open();
 
                     // Execute query and create reader.

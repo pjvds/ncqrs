@@ -35,6 +35,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.EventBus.Tests", "src
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.EventBus.IntegrationTest", "src\Ncqrs.EventBus.IntegrationTest\Ncqrs.EventBus.IntegrationTest.csproj", "{DC0FB020-79D9-497E-8869-9508FCFA6537}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C5F929F8-0CE3-4743-99A4-F15D90F03CEB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

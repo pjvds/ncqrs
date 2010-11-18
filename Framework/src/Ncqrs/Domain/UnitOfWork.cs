@@ -173,6 +173,19 @@ namespace Ncqrs.Domain
         }
 
         /// <summary>
+        /// Gets aggregate root by <see cref="AggregateRoot.EventSourcId">event source id or null if not found</see>.
+        /// </summary>
+        /// <param name="aggregateRootType">Type of the aggregate root.</param>
+        /// <param name="eventSourceId">The eventSourceId of the aggregate root.</param>        
+        /// <returns>
+        /// A new instance of the aggregate root that contains the latest known state or null if not found.
+        /// </returns>
+        public AggregateRoot TryGetById(Type aggregateRootType, Guid eventSourceId)
+        {
+            return _repository.TryGetById(aggregateRootType, eventSourceId);
+        }
+
+        /// <summary>
         /// Registers the dirty.
         /// </summary>
         /// <param name="dirtyInstance">The dirty instance.</param>

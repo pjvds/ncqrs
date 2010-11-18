@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,114 +9,99 @@ namespace Ncqrs.EventBus
     {
         private const int MaxDegreeOfParallelismForProcessing = 10;
         private const int PipelineStateUpdateThreshold = 10;
-        private static readonly TimeSpan EventFetchPolicyUpdateInterval = TimeSpan.FromMilliseconds(100);
-
-        private int _eventSequence = 1;
-        private int _activeFetchRequests;
-
+        private readonly EventFetcher _fetcher;
         private readonly PipelineProcessor _processor;
-        private readonly IEventFetchPolicy _fetchPolicy;
         private readonly IBrowsableEventStore _eventStore;
         private readonly IPipelineStateStore _pipelineStateStore;
         private readonly EventDemultiplexer _eventDemultiplexer;
         private readonly BlockingCollection<SequencedEvent> _preProcessingQueue = new BlockingCollection<SequencedEvent>();
         private readonly BlockingCollection<SequencedEvent> _postProcessingQueue = new BlockingCollection<SequencedEvent>();
-        private readonly BlockingCollection<SequencedEvent> _preDemultiplexingQueue = new BlockingCollection<SequencedEvent>();
-        private readonly IPipelineBackupQueue _pipelineBackupQueue;        
-        private Timer _eventFetchPolicyExecutor;
+        private readonly BlockingCollection<Action> _preDemultiplexingQueue = new BlockingCollection<Action>();
+        private readonly CancellationTokenSource _cancellation = new CancellationTokenSource();
 
-        public Pipeline(IEventProcessor eventProcessor, IPipelineBackupQueue pipelineBackupQueue, IPipelineStateStore pipelineStateStore, IBrowsableEventStore eventStore, IEventFetchPolicy fetchPolicy)
+        public Pipeline(IEventProcessor eventProcessor, IPipelineStateStore pipelineStateStore, IBrowsableEventStore eventStore, IEventFetchPolicy fetchPolicy)
         {
             _pipelineStateStore = new ThresholdedPipelineStateStore(pipelineStateStore, PipelineStateUpdateThreshold);
-            _eventDemultiplexer = new EventDemultiplexer(EnqueueToProcessing);
-            _eventDemultiplexer.StateChanged += (sender, args) => EvaluateEventFetchPolicy();
-            _processor = new PipelineProcessor(_pipelineBackupQueue, eventProcessor, _eventDemultiplexer, EnqueueToPostProcessing);
-            _pipelineBackupQueue = pipelineBackupQueue;
-            _fetchPolicy = fetchPolicy;
+            _eventDemultiplexer = new EventDemultiplexer();
+            _eventDemultiplexer.EventDemultiplexed += OnEventDemultiplexed;
+            _processor = new PipelineProcessor(eventProcessor);
+            _processor.EventProcessed += OnEventProcessed;
+            _fetcher = new EventFetcher(fetchPolicy, eventStore);
+            _fetcher.EventFetched += OnEventFetched;
             _eventStore = eventStore;
         }
 
-        private void EvaluateEventFetchPolicy()
+        private void OnEventDemultiplexed(object sender, EventDemultiplexedEventArgs e)
         {
-            var directive = _fetchPolicy.ShouldFetch(new PipelineState(_eventDemultiplexer.PendingEventCount, _activeFetchRequests));
-           if (directive.ShouldFetch)
-           {
-               FetchEvents(directive);
-           }
+            _preProcessingQueue.Add(e.Event);
         }
 
-        private void FetchEvents(FetchDirective directive)
+        private void OnEventProcessed(object sender, EventProcessedEventArgs e)
         {
-            Task.Factory.StartNew(() =>
-                                      {
-                                          Interlocked.Increment(ref _activeFetchRequests);
-                                          var events = _eventStore.FetchEvents(directive.MaxCount);
-                                          foreach (var evnt in events)
-                                          {
-                                              _preDemultiplexingQueue.Add(new SequencedEvent(_eventSequence++, evnt));
-                                          }
-                                          Interlocked.Decrement(ref _activeFetchRequests);
-                                      });
-
+            _preDemultiplexingQueue.Add(() => _eventDemultiplexer.MarkAsProcessed(e.Event));
+            _postProcessingQueue.Add(e.Event);
         }
+
+        private void OnEventFetched(object sender, EventFetchedEventArgs e)
+        {
+            _preDemultiplexingQueue.Add(() => _eventDemultiplexer.Demultiplex(e.Event));
+        }        
 
         public void Start()
         {
             _eventStore.SetCursorPositionAfter(_pipelineStateStore.GetLastProcessedEvent());
+            _fetcher.EvaluateEventFetchPolicy(new PipelineState(0));
             StartProcessor();
             StartDemultiplexer();
             StartPostProcessor();
-            FetchEvents(FetchDirective.FetchNow(10));
-            _eventFetchPolicyExecutor = new Timer(x => EvaluateEventFetchPolicy(), null, TimeSpan.Zero, EventFetchPolicyUpdateInterval);            
         }
 
-        private void EnqueueToProcessing(SequencedEvent evnt)
+        public void Stop()
         {
-            _preProcessingQueue.Add(evnt);
-        }
-
-        private void EnqueueToPostProcessing(SequencedEvent evnt)
-        {
-            _postProcessingQueue.Add(evnt);
-        }
+            _cancellation.Cancel();
+            _cancellation.Dispose();
+        }               
 
         private void StartDemultiplexer()
+        {            
+            Task.Factory.StartNew(DemultiplexEventsAndEvauateFetchPolicy, _cancellation.Token, TaskCreationOptions.LongRunning);
+        }
+
+        private void DemultiplexEventsAndEvauateFetchPolicy(object cancellationToken)
         {
-            Task.Factory.StartNew(DemultiplexEvents);
+            var eventStream = _preDemultiplexingQueue.GetConsumingEnumerable((CancellationToken)cancellationToken);
+            foreach (var evnt in eventStream)
+            {
+                evnt();
+                _fetcher.EvaluateEventFetchPolicy(new PipelineState(_preDemultiplexingQueue.Count));
+            }
         }
 
         private void StartProcessor()
         {
-            Task.Factory.StartNew(ProcessEvents);
+            for (int i = 0; i < MaxDegreeOfParallelismForProcessing; i++)
+            {
+                Task.Factory.StartNew(ProcessEvents, _cancellation.Token, TaskCreationOptions.LongRunning);
+            }
+        }
+
+        private void ProcessEvents(object cancellationToken)
+        {
+            var eventStream = _preProcessingQueue.GetConsumingEnumerable((CancellationToken)cancellationToken);
+            foreach (var evnt in eventStream)
+            {
+                _processor.ProcessNext(evnt);
+            }
         }
 
         private void StartPostProcessor()
         {
-            Task.Factory.StartNew(PostProcessEvents);
-        }
+            Task.Factory.StartNew(PostProcessEvents, _cancellation.Token, TaskCreationOptions.LongRunning);
+        }                
 
-        private void DemultiplexEvents()
+        private void PostProcessEvents(object cancellationToken)
         {
-            var eventStream = _preDemultiplexingQueue.GetConsumingEnumerable();
-            foreach (var evnt in eventStream)
-            {
-                _eventDemultiplexer.ProcessNext(evnt);
-            }
-        }
-
-        private void ProcessEvents()
-        {
-            var eventStream = _preProcessingQueue.GetConsumingEnumerable();
-            var parallelOptions = new ParallelOptions
-                                      {
-                                          MaxDegreeOfParallelism = MaxDegreeOfParallelismForProcessing
-                                      };
-            Parallel.ForEach(eventStream, parallelOptions, x => _processor.ProcessNext(x));
-        }
-
-        private void PostProcessEvents()
-        {
-            var eventStream = _postProcessingQueue.GetConsumingEnumerable();
+            var eventStream = _postProcessingQueue.GetConsumingEnumerable((CancellationToken)cancellationToken);
             foreach (var evnt in eventStream)
             {
                 _pipelineStateStore.MarkLastProcessedEvent(evnt);

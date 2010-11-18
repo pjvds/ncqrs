@@ -15,12 +15,14 @@ namespace Ncqrs.EventBus
             _enqueueToProcessingCallback = enqueueToProcessingCallback;
         }
         
-        public void Unblock()
+        public bool Unblock()
         {
             if (_queue.Count > 0)
             {
                 _enqueueToProcessingCallback(_queue.Dequeue());
+                return true;
             }
+            return false;
         }
                 
         public bool Accepts(SequencedEvent fetchedEvent)

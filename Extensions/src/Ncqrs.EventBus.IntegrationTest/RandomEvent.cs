@@ -6,9 +6,17 @@ namespace Ncqrs.EventBus.IntegrationTest
     public class RandomEvent : SourcedEvent
     {      
         public RandomEvent()
-            : base(Guid.NewGuid(), Guid.NewGuid(), 0, DateTime.Now)
         {            
         }
 
+        public RandomEvent(long sequence)
+            : base(Guid.NewGuid(), Guid.NewGuid(), sequence, DateTime.UtcNow)
+        {                        
+        }
+
+        public RandomEvent(Guid sourceId, long sequence)
+            : base(Guid.NewGuid(), sourceId, sequence, DateTime.UtcNow)
+        {
+        }
     }
 }
