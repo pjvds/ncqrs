@@ -153,34 +153,20 @@ namespace Ncqrs.Eventing.Sourcing
 
         internal protected void ApplyEvent(SourcedEvent evnt)
         {
-            if (evnt.EventSourceId != SourcedEvent.UndefinedEventSourceId)
-            {
-                var message = String.Format("The {0} event cannot be applied to event source {1} with id {2} " +
-                                            "since it was already owned by event source with id {3}.",
-                                            evnt.GetType().FullName, this.GetType().FullName, EventSourceId, evnt.EventSourceId);
-                throw new InvalidOperationException(message);
-            }
-
-            if (evnt.EventSequence != SourcedEvent.UndefinedEventSequence)
-            {
-                // TODO: Add better exception message.
-                var message = String.Format("The {0} event cannot be applied to event source {1} with id {2} " +
-                            "since the event already contains a sequence {3} while {4} was expected.",
-                            evnt.GetType().FullName, this.GetType().FullName, EventSourceId, evnt.EventSequence, SourcedEvent.UndefinedEventSequence);
-                throw new InvalidOperationException(message);
-            }
-
-            evnt.EventSourceId = EventSourceId;
-            evnt.EventSequence = Version + 1;
+            _uncommittedEvents.Append(evnt);
 
             HandleEvent(evnt);
-
-            _uncommittedEvents.Append(evnt);
             
             OnEventApplied(evnt);
         }
 
         private void ApplyEventFromHistory(SourcedEvent evnt)
+        {
+            ValidateHistoricalEvent(evnt);
+            HandleEvent(evnt);
+        }
+
+        private void ValidateHistoricalEvent(SourcedEvent evnt)
         {
             if (evnt.EventSourceId != EventSourceId)
             {
@@ -195,8 +181,6 @@ namespace Ncqrs.Eventing.Sourcing
                                             evnt.EventSequence, InitialVersion, InitialVersion + 1);
                 throw new InvalidOperationException(message);
             }
-
-            HandleEvent(evnt);
         }
 
         public IEnumerable<SourcedEvent> GetUncommittedEvents()

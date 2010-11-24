@@ -34,7 +34,7 @@ namespace Ncqrs.Eventing.Sourcing
         }
 
         /// <summary>
-        /// Gets the last sequence in this stream.
+        /// Gets the last sequence in this stream. This respects the <see cref="SequenceOffset"/> property.
         /// </summary>
         /// <value>The last sequence.</value>
         public long LastSequence
@@ -113,6 +113,29 @@ namespace Ncqrs.Eventing.Sourcing
             Contract.Invariant(Contract.ForAll(_events, (sourcedEvent) => sourcedEvent.EventSequence == (_sequenceOffset + _events.IndexOf(sourcedEvent) + 1)));
         }
 
+        protected void ClaimEvent(SourcedEvent evnt)
+        {
+            if (evnt.EventSourceId != SourcedEvent.UndefinedEventSourceId)
+            {
+                var message = String.Format("The {0} event cannot be applied to event source {1} with id {2} " +
+                                            "since it was already owned by event source with id {3}.",
+                                            evnt.GetType().FullName, this.GetType().FullName, EventSourceId, evnt.EventSourceId);
+                throw new InvalidOperationException(message);
+            }
+
+            if (evnt.EventSequence != SourcedEvent.UndefinedEventSequence)
+            {
+                // TODO: Add better exception message.
+                var message = String.Format("The {0} event cannot be applied to event source {1} with id {2} " +
+                            "since the event already contains a sequence {3} while {4} was expected.",
+                            evnt.GetType().FullName, this.GetType().FullName, EventSourceId, evnt.EventSequence, SourcedEvent.UndefinedEventSequence);
+                throw new InvalidOperationException(message);
+            }
+
+            evnt.EventSourceId = EventSourceId;
+            evnt.EventSequence = LastSequence+1;
+        }
+
         /// <summary>
         /// Appends the specified sourced event to this steam.
         /// </summary>
@@ -122,7 +145,7 @@ namespace Ncqrs.Eventing.Sourcing
         /// <param name="sourcedEvent">The sourced event.</param>
         public void Append(SourcedEvent sourcedEvent)
         {
-            ValidateSourcedEvent(sourcedEvent);
+            ClaimEvent(sourcedEvent);
 
             _events.Add(sourcedEvent);
         }
