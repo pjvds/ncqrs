@@ -16,6 +16,29 @@ namespace Ncqrs.Tests.Eventing.Sourcing
         }
 
         [Test]
+        public void Appending_an_event_that_does_not_hold_EventSourceId_and_Sequence_should_be_accepted()
+        {
+            var target = new SourcedEventStream();
+            var anSourcedEvent = new SourcedEventFoo(Guid.NewGuid(), SourcedEvent.UndefinedEventSourceId, SourcedEvent.UndefinedEventSequence, DateTime.UtcNow);
+
+            Action act = () => target.Append(anSourcedEvent);
+            act.ShouldNotThrow();
+        }
+
+        [Test]
+        public void Appending_an_event_should_cause_the_event_owner_info_to_be_set()
+        {
+            var eventSourceId = Guid.NewGuid();
+            var target = new SourcedEventStream(eventSourceId);
+            var theSourcedEvent = new SourcedEventFoo(Guid.NewGuid(), SourcedEvent.UndefinedEventSourceId, SourcedEvent.UndefinedEventSequence, DateTime.UtcNow);
+
+            target.Append(theSourcedEvent);
+
+            theSourcedEvent.EventSourceId.Should().Be(eventSourceId);
+            theSourcedEvent.EventSequence.Should().Be(1);
+        }
+
+        [Test]
         public void Appending_an_event_while_it_is_not_owned_by_any_source_should_cause_an_exception()
         {
             var target = new SourcedEventStream();
@@ -26,13 +49,13 @@ namespace Ncqrs.Tests.Eventing.Sourcing
         }
 
         [Test]
-        public void Appending_an_event_with_wrong_sequence_should_cause_an_exception()
+        public void Appending_an_event_with_sequence_should_cause_an_exception()
         {
             var anEventSourceId = Guid.NewGuid();
             var wrongSequence = 999;
 
             var target = new SourcedEventStream(anEventSourceId);
-            var anSourcedEvent = new SourcedEventFoo(Guid.NewGuid(), Guid.NewGuid(), wrongSequence, DateTime.UtcNow);
+            var anSourcedEvent = new SourcedEventFoo(Guid.NewGuid(), SourcedEvent.UndefinedEventSourceId, wrongSequence, DateTime.UtcNow);
 
             Action act = () => target.Append(anSourcedEvent);
             act.ShouldThrow<ArgumentException>();
@@ -43,7 +66,7 @@ namespace Ncqrs.Tests.Eventing.Sourcing
         {
             var anEventSourceId = Guid.NewGuid();
             var target = new SourcedEventStream(anEventSourceId);
-            var anSourcedEvent = new SourcedEventFoo(Guid.NewGuid(), anEventSourceId, 1, DateTime.UtcNow);
+            var anSourcedEvent = new SourcedEventFoo(Guid.NewGuid(), anEventSourceId, SourcedEvent.UndefinedEventSequence, DateTime.UtcNow);
             
             target.Append(anSourcedEvent);
 
@@ -56,7 +79,8 @@ namespace Ncqrs.Tests.Eventing.Sourcing
         {
             var anEventSourceId = Guid.NewGuid();
             var target = new SourcedEventStream(anEventSourceId);
-            var anSourcedEvent = new SourcedEventFoo(Guid.NewGuid(), anEventSourceId, 1, DateTime.UtcNow);
+            var anSourcedEvent = new SourcedEventFoo(Guid.NewGuid(), SourcedEvent.UndefinedEventSourceId,
+                                                     SourcedEvent.UndefinedEventSequence, DateTime.Now);
 
             target.Append(anSourcedEvent);
 
