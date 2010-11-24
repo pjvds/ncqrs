@@ -77,6 +77,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -94,6 +95,7 @@
     <Compile Include="Commanding\CommandExecution\Mapping\Attributes\AggregateRootIdAttributeTests.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Fluent\FluentCommandMappingTests.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\MappingForCommandNotFoundExceptionTests.cs" />
+    <Compile Include="Commanding\CommandExecution\TransactionalCommandExecutorWrapperTests.cs" />
     <Compile Include="Commanding\CommandExecutorBaseTests.cs" />
     <Compile Include="Commanding\ExecutorForCommandNotFoundExceptionTests.cs" />
     <Compile Include="Commanding\ServiceModel\CommandServiceBaseTests.cs" />

@@ -18,14 +18,46 @@ namespace Ncqrs.Commanding.CommandExecution
         private readonly ICommandExecutor<TCommand> _executor;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TransactionalCommandExecutorWrapper"/> class.
+        /// The transaction scope that will be passed to every transaction creation.
+        /// </summary>
+        private readonly Func<TransactionScope> _creationCallback;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TransactionalCommandExecutorWrapper{TCommand}"/> class.
         /// </summary>
         /// <param name="executor">The executor to use to execute the command.</param>
-        public TransactionalCommandExecutorWrapper(ICommandExecutor<TCommand> executor)
+        public TransactionalCommandExecutorWrapper(ICommandExecutor<TCommand> executor) : this(executor, null)
         {
             Contract.Requires<ArgumentNullException>(executor != null, "The executor cannot be null.");
 
             _executor = executor;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TransactionalCommandExecutorWrapper{TCommand}"/> class.
+        /// </summary>
+        /// <param name="executor">The executor to use to execute the command.</param>
+        /// <param name="scope">The <see cref="TransactionScope"/> to use with the transaction.</param>
+        public TransactionalCommandExecutorWrapper(ICommandExecutor<TCommand> executor, Func<TransactionScope> transactionCreationCallback)
+        {
+            Contract.Requires<ArgumentNullException>(executor != null, "The executor cannot be null.");
+
+            _executor = executor;
+            _creationCallback = transactionCreationCallback ?? CreateTransactionScope;
+        }
+
+        /// <summary>
+        /// Creates a default transaction scope in respect of this article: <see cref="http://blogs.msdn.com/b/dbrowne/archive/2010/05/21/using-new-transactionscope-considered-harmful.aspx"/>.
+        /// </summary>
+        /// <returns></returns>
+        private static TransactionScope CreateTransactionScope()
+        {
+            var transactionOptions = new TransactionOptions
+            {
+                IsolationLevel = IsolationLevel.ReadCommitted,
+                Timeout = TimeSpan.MaxValue
+            };
+            return new TransactionScope(TransactionScopeOption.Required, transactionOptions);   
         }
 
         /// <summary>
@@ -35,7 +67,7 @@ namespace Ncqrs.Commanding.CommandExecution
         /// <exception cref="ArgumentNullException">Occurs when <i>command</i> is null.</exception>
         public void Execute(TCommand command)
         {
-            using (var transaction = new TransactionScope())
+            using (var transaction = _creationCallback())
             {
                 _executor.Execute(command);
                 transaction.Complete();
