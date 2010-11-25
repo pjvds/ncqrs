@@ -55,7 +55,7 @@ namespace Ncqrs.Commanding.CommandExecution
             var transactionOptions = new TransactionOptions
             {
                 IsolationLevel = IsolationLevel.ReadCommitted,
-                Timeout = TimeSpan.MaxValue
+                Timeout = TransactionManager.MaximumTimeout
             };
             return new TransactionScope(TransactionScopeOption.Required, transactionOptions);   
         }
