@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?oxygen RNGSchema="http://www.oasis-open.org/docbook/xml/5.0/rng/docbook.rng" type="xml"?>
+<book version="5.0" xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:svg="http://www.w3.org/2000/svg"
+    xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:html="http://www.w3.org/1999/xhtml">
+    <info>
+        <title>Getting Started with Ncqrs</title>
+        <author>
+            <personname><firstname>Pieter Joost</firstname><surname>van de
+                Sande</surname></personname>
+        </author>
+        <pubdate>not yet</pubdate>
+    </info>
+    <chapter>
+        <title>Introduction</title>
+        <para>This reference documentation explains what the Ncqrs framework is, how it can help and
+            how you can use it.</para>
+        <section>
+            <title>What is Ncqrs?</title>
+            <para>Ncqrs is a framework for .NET that helps build scalable, extensible and
+                maintainable applications by supporting developers apply the Command Query
+                Responsibility Segregation (CQRS) architectural pattern. It does so by providing an
+                infrastructure and implementations for the most important building blocks for
+                command handling and execution, domain modeling, event sourcing, domain events,
+                denormalization and event storage. These building blocks help you to focus on the
+                code that adds business value. They come with annotation, convention and
+                configuration support and help you to write isolated and testable code.</para>
+        </section>
+        <section>
+            <title>When to use Ncqrs</title>
+            <para>cotty said in Star Trek V: <emphasis>“How many times do I have to tell you, the
+                    right tool for the right job!“</emphasis>. Ncqrs isn’t the right tool for every
+                job. Which means that not every application will benefit from Ncqrs. Simple <link
+                    xlink:href="http://en.wikipedia.org/wiki/Create,_read,_update_and_delete"
+                    >CRUD</link> based systems without much behavior will not benefit from it. But
+                there is a wide variety of applications that do benefit from Ncqrs.</para>
+            <para>Applications will most likely benefit from Ncqrs when they have one or more of the
+                following characteristics:</para>
+            <orderedlist>
+                <listitem>
+                    <para><emphasis role="bold">Long life time</emphasis> The project will exists
+                        for a longer period or time and therefore has the needs to organically
+                        grow.</para>
+                </listitem>
+                <listitem>
+                    <para><emphasis role="bold">Need to be scalable</emphasis> The application needs
+                        the be scalable when needed.</para>
+                </listitem>
+                <listitem>
+                    <para><emphasis role="bold">Contain business logic</emphasis> The application
+                        contains business logic that needs to stay maintainable.</para>
+                </listitem>
+                <listitem>
+                    <para><emphasis role="bold">Demand for integration</emphasis>Other applications
+                        need to be able to integrate with it.</para>
+                </listitem>
+                <listitem>
+                    <para><emphasis role="bold">Having multiple views</emphasis> There are multiple
+                        screens, reports or application that have there own view on the data.</para>
+                </listitem>
+                <listitem>
+                    <para><emphasis role="bold">Must have a audit log </emphasis> All state changes
+                        must be logged and a auditable log needs to be build.</para>
+                </listitem>
+            </orderedlist>
+        </section>
+        <section>
+            <title>System requirements</title>
+            <para> You need the .NET Framework 3.5 or higher to use the Ncqrs framework. </para>
+        </section>
+        <section>
+            <title>License information</title>
+            <para>The Ncqrs framework and its documentation are licensed under the Apache License,
+                Version 2.0 (the “License”); you may not use this file except in compliance with the
+                License. You may obtain a copy of the License at <link
+                    xlink:href="http://www.apache.org/licenses/LICENSE-2.0"/>.</para>
+            <para>Unless required by applicable law or agreed to in writing, software distributed
+                under the License is distributed on an “AS IS” BASIS, WITHOUT WARRANTIES OR
+                CONDITIONS OF ANY KIND, either express or implied. See the License for the specific
+                language governing permissions and limitations under the License.</para>
+        </section>
+    </chapter>
+    <chapter>
+        <title>Contribution</title>
+        <section>
+            <title>Introduction</title>
+            <para>Ncqrs is an open source project that is driven by software developers that love to
+                make the world just a little bit better. The project is driven by the contribution
+                of people. Whether it is that they give feedback, make a bug report, fixing some
+                code or add some documentation. The project would not be a success without the
+                people that are contributing. It keeps the project vibrant, alive and on the path of
+                progress.</para>
+            <para>Active constribution, an contribution period longer then 3 months, is rewarded
+                with licenses of the following products: <itemizedlist>
+                    <listitem>
+                        <para>ReSharper</para>
+                    </listitem>
+                    <listitem>
+                        <para>NDepend</para>
+                    </listitem>
+                    <listitem>
+                        <para>OxygenXML</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>Please consider contribution in one or more ways as described in this
+                chapter.</para>
+        </section>
+        <section>
+            <title>Feedback</title>
+            <para>One of the key drivers for us is feedback. We take all feedback serious and it
+                help us in the decisions we make and to choose the parts where we spent our time on.
+                It can also be good to just put a smile on our face. Whether you just want to say
+                that we rock, that you would like to see feature X or Y, or that you are confused
+                about something related to the project. You can drop your feedback through one of
+                the follow way:</para>
+            <itemizedlist>
+                <listitem>
+                    <para><link xlink:href="http://twitter.com/ncqrs">@ncqrs at
+                        twitter</link></para>
+                </listitem>
+                <listitem>
+                    <para><link xlink:href="mailto:feedback@ncqrs.org">Feedback mail</link></para>
+                </listitem>
+                <listitem>
+                    <para><link xlink:href="http://groups.google.com/group/ncqrs-dev">Ncqrs-dev
+                            discussion group at google</link></para>
+                </listitem>
+            </itemizedlist>
+        </section>
+        <section>
+            <title>Documentation</title>
+            <para>A solid framework is one thing, but a framework is almost worthless without
+                documentation. Applications that are build using the Ncqrs framework will have it as
+                part of there fundament. A choice for a component can have a big impact in the
+                future. Documentation is important to guide people and preventing them from making
+                mistakes. This documentation can come in many ways. For example, the current form
+                that you are reading. But also quick starts, blog posts, how to video’s, they all
+                have a big impact. Did you blogged about your experience, did you find a weak spot
+                in our documentation or do you have any other contribution, please let us
+                know!</para>
+            <para>This documentation is stored in the main repository of the framework, so you can
+                fork it, make a change and do a pull request.</para>
+        </section>
+    </chapter>
+    <chapter>
+        <title>The architecture</title>
+        <section>
+            <title>Introduction</title>
+            <para>Change is a fact of life in software development. Knowledge moves forward, new
+                insights are obtained and so requirements change. This makes it important to develop
+                applications that can deal with this fact. A well known way to solve this problem is
+                to split a system apart in layers. This architecture is known as N-tier. In this
+                architecture the system is horizontal split into logical layers that depend on each
+                other like a stack of plates. An layer only depends on the layer below. Layers never
+                depend on a layer above, or further down then the direct layer below. This is a
+                great way to reach a certain level of abstraction. It also gives the ability to
+                replace a implementation without breaking a lot. You only break the contract with
+                the layer that depends on the layer that gets replaced, and that is always zero for
+                the top layer and only one for all others. </para>
+            <para>Although N-tier has been the standard for years, it also comes with a price.
+                Layers hides a lot of power and details. They can only use the power of a layer
+                directly below, never on a layer below that one. It also does not allow you to
+                optimize layers for a certain concern other then broad ones like User Interface,
+                Business and Data Access. For example, the User Interface uses Objects from the
+                Business tier but can never query the data directly from the database.</para>
+            <para>Ncqrs helps developers apply the Command Query Responsibility Segregation (CQRS)
+                architectural pattern. This pattern itself is quite simple. It states that the
+                component that processes commands should be separated from the one that processes
+                queries.</para>
+            <para>Instead of separating the system in horizontal layers, as we know from N-tier
+                architectures, we separate them also vertically. This means, instead of defining
+                layers for user interface, business logic and data storage, we split by commands and
+                queries.</para>
+        </section>
+        <section>
+            <title>The big picture</title>
+            <para>
+                <figure xml:id="architecture-overview" xreflabel="">
+                    <title>Architecture overview</title>
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata fileref="images/architecture-overview.png" width=""/>
+                        </imageobject>
+                    </mediaobject>
+                </figure>
+            </para>
+            <para linkend="system-flow">The figure <xref linkend="architecture-overview"/> shows the
+                architectural overview of a CQRS based system. The first thing you should notice is
+                that it is not just horizontally layered as you might know from general
+                architectures. In it's fundament it is separated by a read- and a write side. This
+                means that the user interface - or any other top component - doesn't use the same
+                model to read data as to write data. Instead of getting for example customer data,
+                modifying it and save the changes, the user interface read all the data needed from
+                a read database, displays it to the user and to make modification it sends command
+                to the command handlers. These command handlers make changes to the domain. The
+                changes in the domain cause events to occur, these events represent the changes.
+                These events are stored and published to denormalizers. The denormalizers make
+                modifications to the read database according to the events and event data. Via this
+                way the read databases are kept up to date. Now the user interface can read the data
+                again and we have a close loop. This process is illustrated in <xref
+                    linkend="system-flow"/>.</para>
+            <para>
+                <figure xml:id="system-flow">
+                    <title>System flow</title>
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata fileref="images/system_flow.png" width=""/>
+                        </imageobject>
+                    </mediaobject>
+                </figure>
+            </para>
+        </section>
+    </chapter>
+    <chapter>
+        <title>Components</title>
+        <section>
+            <title>Command handlers</title>
+            <para>The user interface sends commands to make changes to the system. Commands are
+                simple object that contain all the data needed to perform the underlying action. An
+                example of the command could be <code>MoveUserToNewAddress</code>. The command
+                should hold the new address for the user and the user id that indicates which user
+                has moved.</para>
+            <para>Commands also tent to express intent by there name. For example, although the
+                command <code>MoveUserToNewAddress</code> and <code>CorrectAddressForUser</code>
+                both contain the same data – the address and the user id – the intent is definitely
+                different. All commands are send to a Command Service. This service receives the
+                commands and routes them to the corresponding command executors. All command
+                executors respond to a specific command and execute an action based on there
+                content. Command executors should not contain any business logic. The only thing
+                they do is making changes to aggregate roots from the domain and makes changes to
+                them. To stay away from plumbing code, Ncqrs supports mapping for command to map a
+                command directly to an domain object.</para>
+        </section>
+        <section>
+            <title>The Domain</title>
+            <para>Command executors make changes to aggregate roots in the domain. All business
+                logic is captured within these objects and is not used for querying. This allows us
+                to optimize this model for behavior. Aggregate roots contain the actual business
+                logic and are responsible for guarding their own invariants. State changes on
+                aggregate roots cause domain events to occur. This sequence of domain events
+                represents all the changes that has been made. This pattern is called event
+                sourcing.</para>
+        </section>
+        <section>
+            <title>Events</title>
+            <para>All state changes in the domain are represented by domain events. They are simple
+                object that contain all data related to the change. We gave two examples of command
+                names. The events that are related to the state change of these commands will be
+                    <code>UserMovedToNewAddress</code> and <code>AddressCorrectedForUser</code>.
+                Notice that the names are in the past tense.</para>
+        </section>
+        <section>
+            <title>Repository</title>
+            <para>The repository is used to get and save aggregate roots. This is done by there
+                events. Saving an aggregate root will result in persisting all his uncommitted
+                events that occurred while making change to it. Getting an aggregate root is done by
+                getting this events and replaying them to build up the aggregate root into the
+                latest state. The events are stored in the event store and when an aggregate root is
+                saved, all the events will also be published to the event store.</para>
+        </section>
+        <section>
+            <title>Event Store</title>
+            <para>All events that have occurred end up in the event store. It contains all the event
+                that represents the state changes in the system. These can be used to build up the
+                current state by replaying them all. This store can also be used to fill up new or
+                repair existing read model.</para>
+        </section>
+        <section>
+            <title>Event Bus</title>
+            <para>When an aggregate root is saved via the repository all the uncommitted events that
+                represent the state changes that has been made are persisted into the event store.
+                Beside that, the repository also publish these events via the event bus. This bus
+                publishes it to everybody that has registered itself as one being interested in the
+                events. An event bus can be synchronous or asynchronous, but the read models will be
+                consistent at some point of time.</para>
+        </section>
+        <section>
+            <title>Denormalizers</title>
+            <para>There are different event handlers subscribed to the events bus. The most common
+                one are denormalizers. These event handlers take events and makes changes to the
+                read model based on them. For example, a denormalizer could update the users address
+                in the user table based on the data in the <code>UserMovedToNewAddress</code> event.
+                But it could also update the total number of users in city <emphasis role="italic"
+                    >X</emphasis> based on that the same event. </para>
+            <para>Event handlers are not only interesting to keep the read model up to date. But
+                they could also be written to make changes to an external system or send warning
+                email to the business when certain event occur. It could also be that an event
+                handler issues a new command. Event handlers are great components to extent the
+                system with new functionality without making changes in it.</para>
+        </section>
+        <section>
+            <title>Read Model</title>
+            <para>An important part of every application is data. Most of the screen in an user
+                interface request it. But every screen just tents to have a different view on the
+                data. For example, one wants all the products with there name, price and category,
+                while another wants the products with there name and top 3 latest product review
+                score and name of the reviewer. Read models are models that can be optimized for
+                data querying. And what is a optimal query? That is a query that just queries the
+                data from one source. In other words: select * from x where y. No joining, just give
+                me the data. We can accomplish this by creating one table per view. So that every
+                view can just request data by a simple query. You read model doesn’t even have to be
+                a relational database, it could be a document based database that contains a
+                collection for every view. Ncqrs does only provide a base class for denormalizers
+                that allows them be subscribed to the event bus. The denormalization itself is
+                simple and straightforward.</para>
+        </section>
+    </chapter>
+    <chapter>
+        <title>Aggregate Root</title>
+        <section>
+            <title>How they work</title>
+            <section>
+                <para>The base for an aggregate root is the <code>AggregateRoot</code> class. It is
+                    located in the <code>Ncqrs.Domain</code> namespace. There are also base classes
+                    that add mapping support.<figure>
+                        <title>Making changes to an aggregate root <footnote>
+                                <para>See the full sequence diagram here: <link
+                                        xlink:href="http://www.websequencediagrams.com/?lz=VXNlciBDb2RlLT5BZ2dyZWdhdGUgUm9vdDogbmV3KGJheikKAAsOLT5OZXdGb29CYXJDcmVhdGVkRXZlbgAUHABJEEFwcGx5ADAFKGV2bnQADyJPbk5ld0FnZ1Jvb3QAbQcAMwcAgSQbRm9vKGJhcgCBLRJGb28AgSUNABATAG9DAF4IAIFdBg&amp;s=rose"
+                                        >websequencediagrams.com</link>.</para>
+                            </footnote></title>
+                        <mediaobject>
+                            <imageobject>
+                                <imagedata fileref="images/agg-root-sequence.png"/>
+                            </imageobject>
+                        </mediaobject>
+                    </figure></para>
+                <section>
+                    <title>Mapped by convention</title>
+                    <para>Since aggregate roots modify there own state by handling events, you can
+                        end up with a lot of event handlers. To prevent you from writing a lot of
+                        plumbing code to wire event handlers the Ncqrs framework offers aggregate
+                        root based types that support event handler mapping.</para>
+                    <para>When you use the <code>AggregateRootMappedByConvention</code> class as
+                        base for your aggregate roots you are able to create event handlers very
+                        easily by convention. Here is an example of an event handling method in the
+                        aggregate
+                        root:<programlisting><code>protected void OnFooEvent(FooEvent e)
+{
+	// Will be mapped as a event handler for the FooEvent.
+}</code></programlisting></para>
+                    <para>All methods that satisfy the following convention are mapped as event
+                        handler:</para>
+                    <para>
+                        <orderedlist>
+                            <listitem>
+                                <para>Method is an instance method (not static).</para>
+                            </listitem>
+                            <listitem>
+                                <para>Method name starts with <emphasis role="italic"
+                                            ><code>On</code></emphasis> or <emphasis role="italic"
+                                            ><code>on</code></emphasis>. Like:
+                                        <code>OnProductAdded</code> or
+                                    <code>onProductAdded</code>.</para>
+                            </listitem>
+                            <listitem>
+                                <para>The method accepts only one parameter.</para>
+                            </listitem>
+                            <listitem>
+                                <para>That parameter is type of, or inherit from, the
+                                        <code>SourcedEvent</code> class.</para>
+                            </listitem>
+                            <listitem>
+                                <para>Is not marked with the <code>NoEventHandlerAttribute</code>
+                                    attribute.</para>
+                            </listitem>
+                        </orderedlist>
+                    </para>
+                    <para>Although a method may be public, protected, internal, protected internal
+                        or private and can be virtual we do not advice you to make event handlers
+                        public.</para>
+                    <section>
+                        <title>Excluding methods</title>
+                        <para>Sometimes you want to prevent methods that satisfy the convention for
+                            being mapped. The can be excluded from the mapping by annotating them
+                            with the <code>NoEventHandlerAttribute</code> attribute. All methods
+                            annotated with this attribute will be ignored in the mapping process.
+                            The following code shows a method that will be excluded:</para>
+                        <programlisting><code>[NoEventHandler]
+protected void OnFooEvent(FooEvent e)
+{
+    // Will not be mapped.
+}</code></programlisting>
+                    </section>
+                </section>
+            </section>
+        </section>
+    </chapter>
+</book>

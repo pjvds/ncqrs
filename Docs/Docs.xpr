@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="11.2">
+    <meta>
+        <filters directoryPatterns="" filePatterns=""
+            positiveFilePatterns="" showHiddenFiles="false"/>
+        <options/>
+    </meta>
+    <projectTree name="Docs.xpr">
+        <folder name="images">
+            <file name="images/agg-root-sequence.png"/>
+            <file name="images/architecture-overview.png"/>
+            <file
+                name="images/architecture-overview%20(pjvds-mac%27s%20conflicted%20copy%202010-09-04).png"/>
+            <file name="images/system_flow.png"/>
+        </folder>
+        <file name="Getting%20started%20with%20Ncqrs.xml"/>
+    </projectTree>
+</project>
