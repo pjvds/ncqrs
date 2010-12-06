@@ -13,6 +13,8 @@ namespace Ncqrs.Eventing.Storage.NoDB.Tests.EventStoreTests
         [TestFixtureSetUp]
         public void SetUp()
         {
+            BaseSetup();
+
             _returnedEvents = EventStore.GetAllEvents(Source.EventSourceId).ToArray();
         }
 

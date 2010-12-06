@@ -16,6 +16,8 @@ namespace Ncqrs.Eventing.Storage.NoDB.Tests.EventStoreTests
         [TestFixtureSetUp]
         public void SetUp()
         {
+            BaseSetup();
+
             _foldername = Source.EventSourceId.ToString().Substring(0, 2);
             _filename = Source.EventSourceId.ToString().Substring(2);
         }
