@@ -6,9 +6,6 @@ namespace Ncqrs.Eventing.Sourcing
     [Serializable]
     public abstract class SourcedEvent : Event, ISourcedEvent
     {
-        public static Guid UndefinedEventSourceId = Guid.Empty;
-        public const int UndefinedEventSequence = -1;
-
         /// <summary>
         /// Gets the id of the event source that caused the event.
         /// </summary>
@@ -34,8 +31,8 @@ namespace Ncqrs.Eventing.Sourcing
 
         public SourcedEvent()
         {
-            EventSourceId = UndefinedEventSourceId;
-            EventSequence = UndefinedEventSequence;
+            EventSourceId = UndefinedValues.UndefinedEventSourceId;
+            EventSequence = UndefinedValues.UndefinedEventSequence;
         }
 
 
@@ -59,7 +56,7 @@ namespace Ncqrs.Eventing.Sourcing
 
         public void ClaimEvent(Guid eventSourceId, long sequence)
         {
-            if (this.EventSourceId != UndefinedEventSourceId) throw new InvalidOperationException(string.Format("The event is already owned by event source with id {0}.", this.EventSourceId));
+            if (this.EventSourceId != UndefinedValues.UndefinedEventSourceId) throw new InvalidOperationException(string.Format("The event is already owned by event source with id {0}.", this.EventSourceId));
 
             EventSourceId = eventSourceId;
             EventSequence = sequence;

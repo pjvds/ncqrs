@@ -115,7 +115,7 @@ namespace Ncqrs.Eventing.Sourcing
 
         protected void ClaimEvent(ISourcedEvent evnt)
         {
-            if (evnt.EventSourceId != SourcedEvent.UndefinedEventSourceId)
+            if (evnt.EventSourceId != UndefinedValues.UndefinedEventSourceId)
             {
                 var message = String.Format("The {0} event cannot be applied to event source {1} with id {2} " +
                                             "since it was already owned by event source with id {3}.",
@@ -123,12 +123,12 @@ namespace Ncqrs.Eventing.Sourcing
                 throw new InvalidOperationException(message);
             }
 
-            if (evnt.EventSequence != SourcedEvent.UndefinedEventSequence)
+            if (evnt.EventSequence != UndefinedValues.UndefinedEventSequence)
             {
                 // TODO: Add better exception message.
                 var message = String.Format("The {0} event cannot be applied to event source {1} with id {2} " +
                             "since the event already contains a sequence {3} while {4} was expected.",
-                            evnt.GetType().FullName, this.GetType().FullName, EventSourceId, evnt.EventSequence, SourcedEvent.UndefinedEventSequence);
+                            evnt.GetType().FullName, this.GetType().FullName, EventSourceId, evnt.EventSequence, UndefinedValues.UndefinedEventSequence);
                 throw new InvalidOperationException(message);
             }
 
