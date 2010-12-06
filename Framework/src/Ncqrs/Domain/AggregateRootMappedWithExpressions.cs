@@ -46,9 +46,9 @@ namespace Ncqrs.Domain
         /// <summary>
         /// Maps the given generic eventtype to the expressed handler.
         /// </summary>
-        /// <typeparam name="T">This should always be a <see cref="SourcedEvent"/>.</typeparam>
+        /// <typeparam name="T">This should always be a <see cref="ISourcedEvent"/>.</typeparam>
         /// <returns>An <see cref="ExpressionHandler{T}"/>which allows us to define the mapping to a handler.</returns>
-        protected ExpressionHandler<T> Map<T>() where T : SourcedEvent
+        protected ExpressionHandler<T> Map<T>() where T : ISourcedEvent
         {
             var handler = new ExpressionHandler<T>();
             _mappinghandlers.Add(handler);

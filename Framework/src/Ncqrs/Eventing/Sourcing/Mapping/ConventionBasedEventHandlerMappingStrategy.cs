@@ -24,7 +24,7 @@ namespace Ncqrs.Eventing.Sourcing.Mapping
     ///     </item>
     ///     <item>
     ///         <value>
-    ///             The parameter must be, or inhired from, the <see cref="SourcedEvent"/> class.
+    ///             The parameter must be, or implemented from, the <see cref="ISourcedEvent"/> class.
     ///         </value>
     ///     </item>
     /// </list>

@@ -2,11 +2,11 @@
 
 namespace Ncqrs.Eventing.Sourcing
 {
-    public abstract class SourcedEventHander<TEvent> : ISourcedEventHandler where TEvent : SourcedEvent
+    public abstract class SourcedEventHander<TEvent> : ISourcedEventHandler where TEvent : ISourcedEvent
     {
         public abstract Boolean HandleEvent(TEvent evnt);
 
-        Boolean ISourcedEventHandler.HandleEvent(SourcedEvent evnt)
+        Boolean ISourcedEventHandler.HandleEvent(ISourcedEvent evnt)
         {
             Boolean handled = false;
 

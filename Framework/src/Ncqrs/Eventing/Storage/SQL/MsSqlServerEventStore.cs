@@ -43,7 +43,7 @@ namespace Ncqrs.Eventing.Storage.SQL
         /// </summary>
         /// <param name="id">The id of the event provider.</param>
         /// <returns>All events for the specified event provider.</returns>
-        public IEnumerable<SourcedEvent> GetAllEvents(Guid id)
+        public IEnumerable<ISourcedEvent> GetAllEvents(Guid id)
         {
             return GetAllEventsSinceVersion(id, FirstVersion);
         }
@@ -53,9 +53,9 @@ namespace Ncqrs.Eventing.Storage.SQL
         /// </summary>
         /// <param name="eventSourceId">The id of the event source that owns the events.</param>
         /// <returns>All the events from the event source.</returns>
-        public IEnumerable<SourcedEvent> GetAllEventsSinceVersion(Guid id, long version)
+        public IEnumerable<ISourcedEvent> GetAllEventsSinceVersion(Guid id, long version)
         {
-            var result = new List<SourcedEvent>();
+            var result = new List<ISourcedEvent>();
 
             // Create connection and command.
             using (var connection = new SqlConnection(_connectionString))
@@ -76,12 +76,8 @@ namespace Ncqrs.Eventing.Storage.SQL
                         var document = _translator.TranslateToCommon(rawEvent);
                         _converter.Upgrade(document);
 
-                        var evnt = (SourcedEvent) _formatter.Deserialize(document);
-                        evnt.EventIdentifier = document.EventIdentifier;
-                        evnt.EventTimeStamp = document.EventTimeStamp;
-                        evnt.EventVersion = document.EventVersion;
-                        evnt.EventSourceId = document.EventSourceId;
-                        evnt.EventSequence = document.EventSequence;
+                        var evnt = (ISourcedEvent) _formatter.Deserialize(document);
+                        evnt.InitializeFrom(rawEvent);
                         result.Add(evnt);
                     }
                 }

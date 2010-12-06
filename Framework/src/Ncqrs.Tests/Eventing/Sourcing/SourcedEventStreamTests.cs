@@ -45,7 +45,7 @@ namespace Ncqrs.Tests.Eventing.Sourcing
             var anSourcedEvent = new SourcedEventFoo(Guid.NewGuid(), Guid.NewGuid(), 1, DateTime.UtcNow);
 
             Action act = () => target.Append(anSourcedEvent);
-            act.ShouldThrow<ArgumentException>();
+            act.ShouldThrow<InvalidOperationException>();
         }
 
         [Test]
@@ -58,7 +58,7 @@ namespace Ncqrs.Tests.Eventing.Sourcing
             var anSourcedEvent = new SourcedEventFoo(Guid.NewGuid(), SourcedEvent.UndefinedEventSourceId, wrongSequence, DateTime.UtcNow);
 
             Action act = () => target.Append(anSourcedEvent);
-            act.ShouldThrow<ArgumentException>();
+            act.ShouldThrow<InvalidOperationException>();
         }
 
         [Test]
@@ -66,7 +66,7 @@ namespace Ncqrs.Tests.Eventing.Sourcing
         {
             var anEventSourceId = Guid.NewGuid();
             var target = new SourcedEventStream(anEventSourceId);
-            var anSourcedEvent = new SourcedEventFoo(Guid.NewGuid(), anEventSourceId, SourcedEvent.UndefinedEventSequence, DateTime.UtcNow);
+            var anSourcedEvent = new SourcedEventFoo(Guid.NewGuid(), SourcedEvent.UndefinedEventSourceId, SourcedEvent.UndefinedEventSequence, DateTime.UtcNow);
             
             target.Append(anSourcedEvent);
 

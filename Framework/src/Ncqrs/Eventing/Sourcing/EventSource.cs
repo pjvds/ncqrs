@@ -107,7 +107,7 @@ namespace Ncqrs.Eventing.Sourcing
         /// Initializes from history.
         /// </summary>
         /// <param name="history">The history.</param>
-        public virtual void InitializeFromHistory(IEnumerable<SourcedEvent> history)
+        public virtual void InitializeFromHistory(IEnumerable<ISourcedEvent> history)
         {
             Contract.Requires<ArgumentNullException>(history != null, "The history cannot be null.");
             if (_uncommittedEvents.Count > 0) throw new InvalidOperationException("Cannot apply history when instance has uncommitted changes.");
@@ -131,7 +131,7 @@ namespace Ncqrs.Eventing.Sourcing
             _eventHandlers.Add(handler);
         }
 
-        protected virtual void HandleEvent(SourcedEvent evnt)
+        protected virtual void HandleEvent(ISourcedEvent evnt)
         {
             Contract.Requires<ArgumentNullException>(evnt != null, "The Event cannot be null.");
             Boolean handled = false;
@@ -151,7 +151,7 @@ namespace Ncqrs.Eventing.Sourcing
                 throw new EventNotHandledException(evnt);
         }
 
-        internal protected void ApplyEvent(SourcedEvent evnt)
+        internal protected void ApplyEvent(ISourcedEvent evnt)
         {
             _uncommittedEvents.Append(evnt);
 
@@ -160,13 +160,13 @@ namespace Ncqrs.Eventing.Sourcing
             OnEventApplied(evnt);
         }
 
-        private void ApplyEventFromHistory(SourcedEvent evnt)
+        private void ApplyEventFromHistory(ISourcedEvent evnt)
         {
             ValidateHistoricalEvent(evnt);
             HandleEvent(evnt);
         }
 
-        private void ValidateHistoricalEvent(SourcedEvent evnt)
+        private void ValidateHistoricalEvent(ISourcedEvent evnt)
         {
             if (evnt.EventSourceId != EventSourceId)
             {
@@ -183,7 +183,7 @@ namespace Ncqrs.Eventing.Sourcing
             }
         }
 
-        public IEnumerable<SourcedEvent> GetUncommittedEvents()
+        public IEnumerable<ISourcedEvent> GetUncommittedEvents()
         {
             Contract.Ensures(Contract.Result<IEnumerable<SourcedEvent>>() != null, "The result of this method should never be null.");
 
@@ -203,7 +203,7 @@ namespace Ncqrs.Eventing.Sourcing
             InitialVersion = newInitialVersion;
         }
 
-        protected virtual void OnEventApplied(SourcedEvent appliedEvent)
+        protected virtual void OnEventApplied(ISourcedEvent appliedEvent)
         {
             // Nothing to do. Allow override from subclassers.
         }

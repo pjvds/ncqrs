@@ -21,5 +21,7 @@ namespace Ncqrs.Eventing.Sourcing
         long EventSequence { get; }
 
         void InitializeFrom(StoredEvent stored);
+
+        void ClaimEvent(Guid eventSourceId, long sequence);
     }
 }

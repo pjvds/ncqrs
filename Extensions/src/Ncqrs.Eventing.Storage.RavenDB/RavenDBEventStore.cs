@@ -44,9 +44,9 @@ namespace Ncqrs.Eventing.Storage.RavenDB
                 return Guid.NewGuid();
             }
             return null;
-        }      
+        }
 
-        public IEnumerable<SourcedEvent> GetAllEvents(Guid id)
+        public IEnumerable<ISourcedEvent> GetAllEvents(Guid id)
         {
             using (var session = _documentStore.OpenSession())
             {
@@ -58,7 +58,7 @@ namespace Ncqrs.Eventing.Storage.RavenDB
             }
         }
 
-        public IEnumerable<SourcedEvent> GetAllEventsSinceVersion(Guid id, long version)
+        public IEnumerable<ISourcedEvent> GetAllEventsSinceVersion(Guid id, long version)
         {
             using (var session = _documentStore.OpenSession())
             {

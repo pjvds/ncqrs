@@ -49,10 +49,20 @@ namespace Ncqrs.Eventing.Sourcing
 
         public virtual void InitializeFrom(StoredEvent stored)
         {
+            // TODO: this does not update the event version information. That information isn't even exposed here.
             EventIdentifier = stored.EventIdentifier;
             EventSourceId = stored.EventSourceId;
             EventSequence = stored.EventSequence;
             EventTimeStamp = stored.EventTimeStamp;
+        }
+
+
+        public void ClaimEvent(Guid eventSourceId, long sequence)
+        {
+            if (this.EventSourceId != UndefinedEventSourceId) throw new InvalidOperationException(string.Format("The event is already owned by event source with id {0}.", this.EventSourceId));
+
+            EventSourceId = eventSourceId;
+            EventSequence = sequence;
         }
     }
 }
