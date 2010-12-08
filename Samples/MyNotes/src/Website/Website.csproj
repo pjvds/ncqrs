@@ -134,7 +134,7 @@
     </ProjectReference>
     <ProjectReference Include="..\Commands\Commands.csproj">
       <Project>{CF0635EB-DFA4-4E82-B245-A0F125183E08}</Project>
-      <Name>Commands</Name>
+      <Name>Commands %28Samples\MyNotes\Commands%29</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

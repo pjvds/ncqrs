@@ -98,15 +98,15 @@
     </ProjectReference>
     <ProjectReference Include="..\Commands\Commands.csproj">
       <Project>{CF0635EB-DFA4-4E82-B245-A0F125183E08}</Project>
-      <Name>Commands</Name>
+      <Name>Commands %28Samples\MyNotes\Commands%29</Name>
     </ProjectReference>
     <ProjectReference Include="..\Domain\Domain.csproj">
       <Project>{BD0344CC-E61E-4BC6-8782-0AC0390F48FD}</Project>
-      <Name>Domain</Name>
+      <Name>Domain %28Samples\MyNotes\Domain%29</Name>
     </ProjectReference>
     <ProjectReference Include="..\Events\Events.csproj">
       <Project>{705805EF-47BE-48A8-A359-CA999169E445}</Project>
-      <Name>Events</Name>
+      <Name>Events %28Samples\MyNotes\Events%29</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

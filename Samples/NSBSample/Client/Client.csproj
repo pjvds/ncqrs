@@ -31,23 +31,23 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="log4net">
-      <HintPath>..\..\..\Extensions\lib\NServiceBus\log4net.dll</HintPath>
-    </Reference>
     <Reference Include="Ncqrs">
-      <HintPath>..\..\..\Extensions\lib\Ncqrs\Ncqrs.dll</HintPath>
+      <HintPath>..\..\..\lib\$(Configuration)\Ncqrs\Ncqrs.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\..\..\lib\ThirdParty\log4net\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Ncqrs.NServiceBus">
-      <HintPath>..\..\..\Extensions\src\Ncqrs.NServiceBus\bin\Debug\Ncqrs.NServiceBus.dll</HintPath>
+      <HintPath>..\..\..\lib\$(Configuration)\Ncqrs.NServiceBus\Ncqrs.NServiceBus.dll</HintPath>
     </Reference>
     <Reference Include="NServiceBus">
-      <HintPath>..\..\..\Extensions\lib\NServiceBus\NServiceBus.dll</HintPath>
+      <HintPath>..\..\..\lib\ThirdParty\NServiceBus\NServiceBus.dll</HintPath>
     </Reference>
     <Reference Include="NServiceBus.Core">
-      <HintPath>..\..\..\Extensions\lib\NServiceBus\NServiceBus.Core.dll</HintPath>
+      <HintPath>..\..\..\lib\ThirdParty\NServiceBus\NServiceBus.Core.dll</HintPath>
     </Reference>
     <Reference Include="NServiceBus.Host">
-      <HintPath>..\..\..\Extensions\lib\NServiceBus\NServiceBus.Host.exe</HintPath>
+      <HintPath>..\..\..\lib\ThirdParty\NServiceBus\NServiceBus.Host.exe</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -73,11 +73,11 @@
   <ItemGroup>
     <ProjectReference Include="..\Commands\Commands.csproj">
       <Project>{5EF85227-BF8E-4A19-8496-2A3BB500E27C}</Project>
-      <Name>Commands</Name>
+      <Name>Commands %28Samples\NSBSample\Commands%29</Name>
     </ProjectReference>
     <ProjectReference Include="..\Events\Events.csproj">
       <Project>{5088657E-AC3F-4081-B0B8-ACFBBD6BFA28}</Project>
-      <Name>Events</Name>
+      <Name>Events %28Samples\NSBSample\Events%29</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

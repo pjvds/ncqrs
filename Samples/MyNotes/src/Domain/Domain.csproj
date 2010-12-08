@@ -49,7 +49,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Events\Events.csproj">
       <Project>{705805EF-47BE-48A8-A359-CA999169E445}</Project>
-      <Name>Events</Name>
+      <Name>Events %28Samples\MyNotes\Events%29</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

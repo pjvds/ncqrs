@@ -31,11 +31,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="log4net">
-      <HintPath>..\..\..\Extensions\lib\NServiceBus\log4net.dll</HintPath>
-    </Reference>
     <Reference Include="Ncqrs">
-      <HintPath>..\..\..\Extensions\lib\Ncqrs\Ncqrs.dll</HintPath>
+      <HintPath>..\..\..\lib\$(Configuration)\Ncqrs\Ncqrs.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\..\..\lib\ThirdParty\log4net\log4net.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -52,7 +52,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Events\Events.csproj">
       <Project>{5088657E-AC3F-4081-B0B8-ACFBBD6BFA28}</Project>
-      <Name>Events</Name>
+      <Name>Events %28Samples\NSBSample\Events%29</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
