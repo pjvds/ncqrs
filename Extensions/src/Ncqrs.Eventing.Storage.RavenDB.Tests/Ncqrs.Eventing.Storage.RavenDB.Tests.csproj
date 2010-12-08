@@ -12,12 +12,12 @@
     <AssemblyName>Ncqrs.Eventing.Storage.RavenDB.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <OutputPath>..\..\..\lib\$(Configuration)\$(AssemblyName)\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -25,44 +25,54 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Esent.Interop">
-      <HintPath>..\..\lib\RavenDB\Esent.Interop.dll</HintPath>
+      <HintPath>..\..\..\lib\ThirdParty\RavenDB\Esent.Interop.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="FluentAssertions">
-      <HintPath>..\..\lib\FluentAssertions\FluentAssertions.dll</HintPath>
+      <HintPath>..\..\..\lib\ThirdParty\FluentAssertions\FluentAssertions.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="ICSharpCode.NRefactory">
-      <HintPath>..\..\lib\RavenDB\ICSharpCode.NRefactory.dll</HintPath>
+      <HintPath>..\..\..\lib\ThirdParty\RavenDB\ICSharpCode.NRefactory.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="log4net">
-      <HintPath>..\..\..\Framework\lib\log4net\log4net.dll</HintPath>
+      <HintPath>..\..\..\lib\ThirdParty\log4net\log4net.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Lucene.Net">
-      <HintPath>..\..\lib\RavenDB\Lucene.Net.dll</HintPath>
+      <HintPath>..\..\..\lib\ThirdParty\RavenDB\Lucene.Net.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Ncqrs">
-      <HintPath>..\..\lib\Ncqrs\Ncqrs.dll</HintPath>
+      <HintPath>..\..\..\lib\$(Configuration)\Ncqrs\Ncqrs.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\lib\RavenDB\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\..\lib\ThirdParty\RavenDB\Newtonsoft.Json.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="nunit.framework">
-      <HintPath>..\..\..\Framework\lib\Nunit\nunit.framework.dll</HintPath>
+      <HintPath>..\..\..\lib\ThirdParty\Nunit\nunit.framework.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Raven.Client">
-      <HintPath>..\..\lib\RavenDB\Raven.Client.dll</HintPath>
+      <HintPath>..\..\..\lib\ThirdParty\RavenDB\Raven.Client.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Raven.Database">
-      <HintPath>..\..\lib\RavenDB\Raven.Database.dll</HintPath>
+      <HintPath>..\..\..\lib\ThirdParty\RavenDB\Raven.Database.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Rhino.Mocks">
-      <HintPath>..\..\lib\RhinoMocks\Rhino.Mocks.dll</HintPath>
+      <HintPath>..\..\..\lib\ThirdParty\RhinoMocks\Rhino.Mocks.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -85,6 +95,7 @@
     <ProjectReference Include="..\Ncqrs.Eventing.Storage.RavenDB\Ncqrs.Eventing.Storage.RavenDB.csproj">
       <Project>{EA93A91D-7BC9-4EC0-8A22-8A772AFD76C3}</Project>
       <Name>Ncqrs.Eventing.Storage.RavenDB</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

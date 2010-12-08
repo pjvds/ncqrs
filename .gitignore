@@ -2,11 +2,11 @@
 obj
 bin
 *.csproj.user
+*.suo
 
 # Resharper
 *ReSharper*
 *resharper*
-*.suo
 *.cache
 
 # Other useful stuff

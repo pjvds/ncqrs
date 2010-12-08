@@ -4,7 +4,6 @@
   <property name="root.dir" value="" />
   <property name="project.version" value="0.8.0" />
   <property name="project.config" value="debug" />
-  <property name="project.framework.bin" value="Framework\src\Ncqrs\bin\${project.config}" />
   <property name="msbuild" value="${framework::get-framework-directory(framework::get-target-framework())}\msbuild.exe" dynamic="true" />
   <property name="release.dir" value="release" />
   <property name="release.version" value="${project.version}" />
@@ -17,9 +16,7 @@
 	<echo message="Building release ${release.version}" />
     <call target="BuildFramework" />
     <call target="RunTestsForFramework" />
-    <call target="UpdateLibForExtensions" />
     <call target="BuildExtensions" />
-    <call target="UpdateLibForMyNotesSample" />
     <call target="MakeRelease" />
   </target>
 
@@ -55,18 +52,26 @@
       <arg value="/p:Configuration=${project.config}" />
     </exec>
     <copy todir="${release.dir}">
-		<fileset basedir="Framework\src\Ncqrs\bin\${project.config}">
+		<fileset basedir="lib\${project.config}">
 			<include name="Ncqrs.dll" />
 			<include name="Ncqrs.pdb" />
 			<include name="Ncqrs.xml" />
+		</fileset>
+	</copy>
+	<copy todir="${release.dir}">
+		<fileset basedir="lib\ThirdParty\json.net">
 			<include name="Newtonsoft.Json.dll" />
 			<include name="Newtonsoft.Json.pdb" />
+		</fileset>
+	</copy>
+	<copy todir="${release.dir}">
+		<fileset basedir="lib\ThirdParty\log4net">
 			<include name="log4net.dll" />
 		</fileset>
     </copy>
   </target>
 
-  <target name="BuildExtensions" depends="UpdateLibForExtensions">
+  <target name="BuildExtensions" depends="BuildFramework">
     <exec program="${msbuild}">
       <arg value="Extensions\NcqrsExtensions.sln" />
       <arg value="/p:Configuration=${project.config}" />
@@ -81,51 +86,46 @@
       <test assemblyname="Framework\src\Ncqrs.Tests\bin\Debug\Ncqrs.Tests.dll" />
     </nunit2>
   </target>
-
-  <target name="UpdateLibForExtensions" depends="BuildFramework">
-    <echo message="Updating Extensions lib folder" />
-    <copy todir="Extensions\lib\Ncqrs" flatten="false" overwrite="true">
-      <fileset basedir="Framework\src\Ncqrs\bin\${project.config}">
-        <include name="**/*" />
-      </fileset>
-    </copy>
-  </target>
-
-  <target name="UpdateLibForMyNotesSample" depends="BuildFramework">
-    <echo message="Updating MyNotes lib folder" />
-    <copy todir="Samples\MyNotes\lib\Ncqrs" flatten="false" overwrite="true">
-      <fileset basedir="Framework\src\Ncqrs\bin\${project.config}">
-        <include name="**/*" />
-      </fileset>
-    </copy>
-    <copy todir="Samples\MyNotes\lib\Ncqrs.Config.StructureMap" flatten="false" overwrite="true">
-      <fileset basedir="Extensions\src\Ncqrs.Config.StructureMap\bin\${project.config}">
-        <include name="**/*" />
-      </fileset>
-    </copy>
-  </target>
   
   <target name="MakeRelease" depends="BuildFramework">
 	<!-- Start with a new release directory -->
 	<delete dir="${release.dir}" />
 	
 	<copy todir="${release.dir}\Framework">
-		<fileset basedir="Framework\src\Ncqrs\bin\${project.config}">
+		<fileset basedir="lib\${project.config}\Ncqrs">
 			<include name="Ncqrs.dll" />
 			<include name="Ncqrs.pdb" />
 			<include name="Ncqrs.xml" />
+		</fileset>
+	</copy>
+	<copy todir="${release.dir}\Framework">
+		<fileset basedir="lib\ThirdParty\json.net">
 			<include name="Newtonsoft.Json.dll" />
 			<include name="Newtonsoft.Json.pdb" />
+		</fileset>
+	</copy>
+	<copy todir="${release.dir}\Framework">
+		<fileset basedir="lib\ThirdParty\log4net">
 			<include name="log4net.dll" />
 		</fileset>
     </copy>
 	<copy todir="${release.dir}\Spec">
-		<fileset basedir="Framework\src\Ncqrs.Spec\bin\${project.config}">
+		<fileset basedir="lib\${project.config}\Ncqrs.Spec">
 			<include name="Ncqrs.Spec.dll" />
 			<include name="Ncqrs.Spec.pdb" />
 			<include name="Ncqrs.Spec.xml" />
+		</fileset>
+	</copy>
+	<copy todir="${release.dir}\Spec">
+			<fileset basedir="lib\ThirdParty\NUnit">
 			<include name="nunit.framework.dll" />
 			<include name="nunit.framework.xml" />
+		</fileset>
+    </copy>
+    <copy todir="${release.dir}\Extensions">
+		<fileset basedir="lib\${project.config}">
+			<include name="**/*" />
+			<exclude name="Ncqrs/*" /> <!-- Goes in the Framework directory.  -->
 		</fileset>
     </copy>
     
