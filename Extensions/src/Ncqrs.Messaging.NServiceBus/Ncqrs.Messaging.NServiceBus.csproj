@@ -72,7 +72,10 @@
       <Link>NsbEventBus.cs</Link>
     </Compile>
     <Compile Include="ConfigNcqrs.cs" />
-    <Compile Include="NsbMessageSender.cs" />
+    <Compile Include="InternalMessage.cs" />
+    <Compile Include="NsbInternalReceivingStrategy.cs" />
+    <Compile Include="NsbInternalSendingStrategy.cs" />
+    <Compile Include="NsbExternalSendingStrategy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
