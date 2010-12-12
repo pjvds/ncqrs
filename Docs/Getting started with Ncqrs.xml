@@ -130,14 +130,14 @@
         <section>
             <title>Documentation</title>
             <para>A solid framework is one thing, but a framework is almost worthless without
-                documentation. Applications that are build using the Ncqrs framework will have it as
-                part of there fundament. A choice for a component can have a big impact in the
-                future. Documentation is important to guide people and preventing them from making
-                mistakes. This documentation can come in many ways. For example, the current form
-                that you are reading. But also quick starts, blog posts, how to video’s, they all
-                have a big impact. Did you blogged about your experience, did you find a weak spot
-                in our documentation or do you have any other contribution, please let us
-                know!</para>
+                documentation. Applications that are built using the Ncqrs framework will have
+                documentation as part of their fundament.  The choice of a component can have a big
+                impact on the future of an application.  Documentation is important to guide people
+                and to prevent them from making mistakes. This documentation can come in many ways,
+                for example, the current form that you are reading. But also quick starts, blog
+                posts, how to video’s, they all have a big impact. Did you blog about your
+                experience with Ncqrs?  Did you find a weak spot in our documentation or do you have
+                any other contribution?  Please let us know!</para>
             <para>This documentation is stored in the main repository of the framework, so you can
                 fork it, make a change and do a pull request.</para>
         </section>
@@ -148,18 +148,18 @@
             <title>Introduction</title>
             <para>Change is a fact of life in software development. Knowledge moves forward, new
                 insights are obtained and so requirements change. This makes it important to develop
-                applications that can deal with this fact. A well known way to solve this problem is
-                to split a system apart in layers. This architecture is known as N-tier. In this
+                applications that can deal with change. A well known way to solve this problem is to
+                split a system into layers. This architecture is known as N-tier. In this
                 architecture the system is horizontal split into logical layers that depend on each
-                other like a stack of plates. An layer only depends on the layer below. Layers never
-                depend on a layer above, or further down then the direct layer below. This is a
-                great way to reach a certain level of abstraction. It also gives the ability to
-                replace a implementation without breaking a lot. You only break the contract with
-                the layer that depends on the layer that gets replaced, and that is always zero for
-                the top layer and only one for all others. </para>
+                other like a stack of plates.  A layer only depends on the layer below.  Layers
+                never depend on a layer above, or further down then the direct layer below. This is
+                a great way to reach a certain level of abstraction. It also gives the ability to
+                replace a particular implementation without breaking a lot. You only break the
+                contract with the layer that depends on the layer that gets replaced, and that is
+                always zero for the top layer and only one for all others. </para>
             <para>Although N-tier has been the standard for years, it also comes with a price.
                 Layers hides a lot of power and details. They can only use the power of a layer
-                directly below, never on a layer below that one. It also does not allow you to
+                directly below, never a layer below that one.  It also does not allow you to
                 optimize layers for a certain concern other then broad ones like User Interface,
                 Business and Data Access. For example, the User Interface uses Objects from the
                 Business tier but can never query the data directly from the database.</para>
@@ -168,7 +168,7 @@
                 component that processes commands should be separated from the one that processes
                 queries.</para>
             <para>Instead of separating the system in horizontal layers, as we know from N-tier
-                architectures, we separate them also vertically. This means, instead of defining
+                architectures, we also separate them vertically. This means that instead of defining
                 layers for user interface, business logic and data storage, we split by commands and
                 queries.</para>
         </section>
@@ -186,18 +186,18 @@
             </para>
             <para linkend="system-flow">The figure <xref linkend="architecture-overview"/> shows the
                 architectural overview of a CQRS based system. The first thing you should notice is
-                that it is not just horizontally layered as you might know from general
-                architectures. In it's fundament it is separated by a read- and a write side. This
-                means that the user interface - or any other top component - doesn't use the same
-                model to read data as to write data. Instead of getting for example customer data,
+                that it is not just horizontally layered as you might recognise from general
+                architectures. It is fundamentally separated by a read- and a write side. This means
+                that the user interface - or any other top component - doesn't use the same model to
+                read data as it does to write data. Instead of getting for example customer data,
                 modifying it and save the changes, the user interface read all the data needed from
                 a read database, displays it to the user and to make modification it sends command
                 to the command handlers. These command handlers make changes to the domain. The
                 changes in the domain cause events to occur, these events represent the changes.
                 These events are stored and published to denormalizers. The denormalizers make
-                modifications to the read database according to the events and event data. Via this
-                way the read databases are kept up to date. Now the user interface can read the data
-                again and we have a close loop. This process is illustrated in <xref
+                modifications to the read database according to the events and event data.  This way
+                the read databases are kept up to date. Now the user interface can read the data
+                again and we have a closed loop. This process is illustrated in <xref
                     linkend="system-flow"/>.</para>
             <para>
                 <figure xml:id="system-flow">
@@ -216,7 +216,7 @@
         <section>
             <title>Command handlers</title>
             <para>The user interface sends commands to make changes to the system. Commands are
-                simple object that contain all the data needed to perform the underlying action. An
+                simple objects that contain all the data needed to perform the underlying action. An
                 example of the command could be <code>MoveUserToNewAddress</code>. The command
                 should hold the new address for the user and the user id that indicates which user
                 has moved.</para>
