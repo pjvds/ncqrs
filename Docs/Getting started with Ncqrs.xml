@@ -17,8 +17,8 @@
             how you can use it.</para>
         <section>
             <title>What is Ncqrs?</title>
-            <para>Ncqrs is a framework for .NET that helps build scalable, extensible and
-                maintainable applications by supporting developers apply the Command Query
+            <para>Ncqrs is a framework for .NET that assists in building scalable, extensible and
+                maintainable applications by helping developers apply the Command Query
                 Responsibility Segregation (CQRS) architectural pattern. It does so by providing an
                 infrastructure and implementations for the most important building blocks for
                 command handling and execution, domain modeling, event sourcing, domain events,
@@ -30,21 +30,20 @@
             <title>When to use Ncqrs</title>
             <para>Scotty said in Star Trek V: <emphasis>“How many times do I have to tell you, the
                     right tool for the right job!“</emphasis>. Ncqrs isn’t the right tool for every
-                job. Which means that not every application will benefit from Ncqrs. Simple <link
+                job. This means that not every application will benefit from Ncqrs. Simple <link
                     xlink:href="http://en.wikipedia.org/wiki/Create,_read,_update_and_delete"
                     >CRUD</link> based systems without much behavior will not benefit from it. But
-                there is a wide variety of applications that do benefit from Ncqrs.</para>
+                there are a wide variety of applications that could benefit from Ncqrs.</para>
             <para>Applications will most likely benefit from Ncqrs when they have one or more of the
                 following characteristics:</para>
             <orderedlist>
                 <listitem>
-                    <para><emphasis role="bold">Long life time</emphasis> The project will exists
-                        for a longer period or time and therefore has the needs to organically
-                        grow.</para>
+                    <para><emphasis role="bold">Long life time</emphasis> The project will exist for
+                        a long period of time and needs to be able to grow organically.</para>
                 </listitem>
                 <listitem>
-                    <para><emphasis role="bold">Need to be scalable</emphasis> The application needs
-                        the be scalable when needed.</para>
+                    <para><emphasis role="bold">Needs to be scalable</emphasis> The application
+                        needs the capacity to be scalable.</para>
                 </listitem>
                 <listitem>
                     <para><emphasis role="bold">Contain business logic</emphasis> The application
@@ -56,11 +55,12 @@
                 </listitem>
                 <listitem>
                     <para><emphasis role="bold">Having multiple views</emphasis> There are multiple
-                        screens, reports or application that have there own view on the data.</para>
+                        screens, reports or applications that have their own view of the
+                        data.</para>
                 </listitem>
                 <listitem>
-                    <para><emphasis role="bold">Must have a audit log </emphasis> All state changes
-                        must be logged and a auditable log needs to be build.</para>
+                    <para><emphasis role="bold">Requirement for auditability </emphasis> All state
+                        changes must be logged and an auditable log needs to be maintained.</para>
                 </listitem>
             </orderedlist>
         </section>
@@ -84,14 +84,13 @@
         <title>Contribution</title>
         <section>
             <title>Introduction</title>
-            <para>Ncqrs is an open source project that is driven by software developers that love to
-                make the world just a little bit better. The project is driven by the contribution
-                of people. Whether it is that they give feedback, make a bug report, fixing some
-                code or add some documentation. The project would not be a success without the
-                people that are contributing. It keeps the project vibrant, alive and on the path of
-                progress.</para>
-            <para>Active constribution, an contribution period longer then 3 months, is rewarded
-                with licenses of the following products: <itemizedlist>
+            <para>Ncqrs is an open source project driven by software developers who love to make the
+                world just a little bit better. The project is driven by people's contribution:
+                whether they give feedback, make a bug report, fix some code or add some
+                documentation. The project would not be a success without the people that
+                contribute. They keep the project vibrant, alive and progressive.</para>
+            <para>Active contribution, a contribution period longer than 3 months, is rewarded with
+                licenses for the following products: <itemizedlist>
                     <listitem>
                         <para>ReSharper</para>
                     </listitem>
@@ -108,12 +107,12 @@
         </section>
         <section>
             <title>Feedback</title>
-            <para>One of the key drivers for us is feedback. We take all feedback serious and it
-                help us in the decisions we make and to choose the parts where we spent our time on.
-                It can also be good to just put a smile on our face. Whether you just want to say
-                that we rock, that you would like to see feature X or Y, or that you are confused
-                about something related to the project. You can drop your feedback through one of
-                the follow way:</para>
+            <para>One of the key drivers for us is feedback. We take all feedback seriously and it
+                help us in decision making and in choosing the parts of the project that we devote
+                time to.  Feedback can also be a good way to just put a smile on our faces. Whether
+                you just want to say that we rock, that you would like to see feature X or Y, or
+                that you are confused about something related to the project you can drop your
+                feedback to us in one of the follow ways:</para>
             <itemizedlist>
                 <listitem>
                     <para><link xlink:href="http://twitter.com/ncqrs">@ncqrs at
