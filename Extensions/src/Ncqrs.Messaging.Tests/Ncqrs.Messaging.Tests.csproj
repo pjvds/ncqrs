@@ -55,6 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FakeSendingStrategy.cs" />
     <Compile Include="MessageServiceTests.cs" />
     <Compile Include="MessagingAggregateRootTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

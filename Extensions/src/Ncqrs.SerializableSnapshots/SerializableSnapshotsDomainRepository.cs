@@ -51,6 +51,11 @@ namespace Ncqrs.SerializableSnapshots
             return aggregate;
         }
 
+        public AggregateRoot TryGetById(Type aggregateRootType, Guid eventSourceId)
+        {
+            throw new NotImplementedException();
+        }
+
         protected AggregateRoot GetByIdFromSnapshot(AggregateRoot aggregateRoot)
         {
             var events = _store.GetAllEventsSinceVersion(aggregateRoot.EventSourceId, aggregateRoot.InitialVersion);

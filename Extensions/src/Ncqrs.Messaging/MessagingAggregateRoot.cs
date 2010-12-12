@@ -120,7 +120,7 @@ namespace Ncqrs.Messaging
                 return this;
             }
 
-            public ISetMessageRequirements NamedEndpoint(string receiverId)
+            public ISetMessageRequirements Endpoint(string receiverId)
             {
                 _message.ReceiverId = receiverId;
                 return this;

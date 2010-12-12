@@ -45,6 +45,10 @@
   <ItemGroup>
     <Compile Include="ConditionalReceivingStrategy.cs" />
     <Compile Include="ConditionalSendingStrategy.cs" />
+    <Compile Include="Destination.cs" />
+    <Compile Include="IAcceptExisting.cs" />
+    <Compile Include="IAddressing.cs" />
+    <Compile Include="ICreateNew.cs" />
     <Compile Include="IMessageHandler.cs" />
     <Compile Include="IMessageService.cs" />
     <Compile Include="IMessagingAggregateRoot.cs" />
@@ -53,9 +57,9 @@
     <Compile Include="ISendMessages.cs" />
     <Compile Include="ISetMessageDestination.cs" />
     <Compile Include="ISetMessageRequirements.cs" />
-    <Compile Include="LocalInMemoryReceivingStrategy.cs" />
+    <Compile Include="LocalReceivingStrategy.cs" />
     <Compile Include="IncomingMessage.cs" />
-    <Compile Include="LocalInMemorySendingStrategy.cs" />
+    <Compile Include="LocalMessageServiceSendingStrategy.cs" />
     <Compile Include="MappingReceivingStrategy.cs" />
     <Compile Include="MessageMappingException.cs" />
     <Compile Include="MessageProcessingRequirements.cs" />
@@ -68,7 +72,8 @@
     <Compile Include="MessagingContext.cs" />
     <Compile Include="OutgoingMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SetMessageDestinationForLocal.cs" />
+    <Compile Include="SetInternalMessageDestination.cs" />
+    <Compile Include="UrlAddressing.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

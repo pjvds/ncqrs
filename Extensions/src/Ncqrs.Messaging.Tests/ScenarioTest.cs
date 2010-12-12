@@ -28,6 +28,17 @@ namespace Ncqrs.Messaging.Tests
                                      ReceiverType = typeof (Cargo),
                                      SenderId = "Client"
                                  })));
+
+            //messageService
+            //    .ForIncomingMessage<RegisterHandlingEventTransportMesasge>()
+            //    .AsPayloadUse(x => x)
+            //    .AsMessageIdUse(x => x.MessageId)
+            //    .AsReceiverIdUse(x => x.EventId)
+            //    .AsSenderUse("Client");            
+
+            //messageService
+            //    .Map<RegisterHandlingEventTransportMesasge>().To<RegisterHandlingEventMessage>();                            
+
             messageService.UseReceivingStrategy(
                 new ConditionalReceivingStrategy(
                     x => x.GetType() == typeof (RegisterHandlingEventMesasge),
@@ -41,10 +52,10 @@ namespace Ncqrs.Messaging.Tests
                                      ReceiverType = typeof (HandlingEvent),
                                      SenderId = "Client"
                                  })));
-            messageService.UseReceivingStrategy(new ConditionalReceivingStrategy(x => true, new LocalInMemoryReceivingStrategy()));
+            messageService.UseReceivingStrategy(new ConditionalReceivingStrategy(x => true, new LocalReceivingStrategy()));
 
             var messageSendingEventHandler = new MessageSendingEventHandler();
-            var sendingStrategy = new LocalInMemorySendingStrategy();
+            var sendingStrategy = new FakeSendingStrategy();
             messageSendingEventHandler.UseStrategy(new ConditionalSendingStrategy(x => true, sendingStrategy));
             ((InProcessEventBus)NcqrsEnvironment.Get<IEventBus>()).RegisterHandler(messageSendingEventHandler);
 

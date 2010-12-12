@@ -2,6 +2,6 @@
 {
     public interface ISetMessageDestination
     {
-        ISetMessageRequirements NamedEndpoint(string receiverId);
+        ISetMessageRequirements Endpoint(string receiverId);
     }
 }
