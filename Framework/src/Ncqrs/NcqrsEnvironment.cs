@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Reflection;
+using Ncqrs.Commanding;
 using Ncqrs.Config;
 using Ncqrs.Domain;
 using Ncqrs.Eventing.ServiceModel.Bus;
@@ -33,6 +34,7 @@ namespace Ncqrs
             SetDefault<IEventBus>(new InProcessEventBus());
             SetDefault<IEventStore>(new InMemoryEventStore());
             SetDefault<IUnitOfWorkFactory>(new UnitOfWorkFactory());
+            SetDefault<IKnownCommandsEnumerator>(new AllCommandsInAppDomainEnumerator());
         }
 
         /// <summary>
@@ -99,7 +101,7 @@ namespace Ncqrs
         {
             Contract.Requires<ArgumentNullException>(instance != null, "The instance cannot be null.");
 
-            _defaults[typeof (T)] = instance;
+            _defaults[typeof(T)] = instance;
         }
 
         /// <summary>

@@ -33,11 +33,23 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Ncqrs, Version=0.8.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\Ncqrs\Ncqrs.dll</HintPath>
+    <Reference Include="Commands" />
+    <Reference Include="Ncqrs">
+      <HintPath>..\..\..\..\lib\$(Configuration)\Ncqrs\Ncqrs.dll</HintPath>
     </Reference>
+    <Reference Include="Ncqrs.CommandService">
+      <HintPath>..\..\..\..\lib\$(Configuration)\Ncqrs.CommandService\Ncqrs.CommandService.dll</HintPath>
+    </Reference>
+    <Reference Include="Ncqrs.CommandService.Contracts">
+      <HintPath>..\..\..\..\lib\$(Configuration)\Ncqrs.CommandService.Contracts\Ncqrs.CommandService.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="Ncqrs.Config.StructureMap">
+      <HintPath>..\..\..\..\lib\$(Configuration)\Ncqrs.Config.StructureMap\Ncqrs.Config.StructureMap.dll</HintPath>
+    </Reference>
+    <Reference Include="StructureMap">
+      <HintPath>..\..\..\..\lib\ThirdParty\StructureMap\StructureMap.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.Entity" />
@@ -45,6 +57,7 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Activation" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -73,32 +86,28 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BootStrapper.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\NoteController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Service References\CommandService\Reference.cs">
+    <Compile Include="Properties\Settings.Designer.cs">
+      <DependentUpon>Settings.settings</DependentUpon>
       <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Reference.svcmap</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
-    <None Include="Service References\CommandService\MyNotesCommandService.disco" />
-    <None Include="Service References\CommandService\configuration91.svcinfo" />
-    <None Include="Service References\CommandService\configuration.svcinfo" />
-    <None Include="Service References\CommandService\Reference.svcmap">
-      <Generator>WCF Proxy Generator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
     <Content Include="Views\Note\Add.aspx" />
     <Content Include="Views\Note\Edit.aspx" />
     <Content Include="Views\Note\Index.aspx" />
     <Content Include="Views\Note\Report.aspx" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -128,6 +137,10 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Domain\Domain.csproj">
+      <Project>{BD0344CC-E61E-4BC6-8782-0AC0390F48FD}</Project>
+      <Name>Domain %28Samples\MyNotes\Domain%29</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ReadModel\ReadModel.csproj">
       <Project>{D01CE8F6-800E-44CC-886B-F862B10E1396}</Project>
       <Name>ReadModel</Name>
@@ -141,21 +154,9 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <WCFMetadataStorage Include="Service References\CommandService\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\CommandService\MyNotesCommandService.wsdl" />
-    <None Include="Service References\CommandService\MyNotesCommandService.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\CommandService\MyNotesCommandService1.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\CommandService\MyNotesCommandService2.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\CommandService\MyNotesCommandService3.xsd">
-      <SubType>Designer</SubType>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
@@ -171,17 +172,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>False</UseIIS>
-          <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>10564</DevelopmentServerPort>
-          <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>
-          </IISUrl>
-          <NTLMAuthentication>False</NTLMAuthentication>
-          <UseCustomServer>False</UseCustomServer>
-          <CustomServerUrl>
-          </CustomServerUrl>
-          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+          <SaveServerSettingsInUserFile>True</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
     </VisualStudio>

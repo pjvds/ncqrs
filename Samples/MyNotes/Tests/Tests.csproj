@@ -67,10 +67,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\src\CommandService\CommandService.csproj">
-      <Project>{2AD8FF74-531A-42B2-8976-B26B78C979E2}</Project>
-      <Name>CommandService</Name>
-    </ProjectReference>
     <ProjectReference Include="..\src\Commands\Commands.csproj">
       <Project>{CF0635EB-DFA4-4E82-B245-A0F125183E08}</Project>
       <Name>Commands</Name>
