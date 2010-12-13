@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.Linq;
+using System.Runtime.Serialization;
 using Ncqrs.Commanding.CommandExecution.Mapping.Attributes;
 
 namespace Ncqrs.Commanding
@@ -10,6 +13,8 @@ namespace Ncqrs.Commanding
     /// action.
     /// </summary>
     [Serializable]
+    [DataContract]
+    [KnownType("GetKnownTypes")]
     public abstract class CommandBase : ICommand
     {
         /// <summary>
@@ -59,6 +64,21 @@ namespace Ncqrs.Commanding
             Contract.Requires<ArgumentNullException>(idGenerator != null);
 
             CommandIdentifier = idGenerator.GenerateNewId();
+        }
+
+        /// <summary>
+        /// Used by WCF to enumerate all types inheriting from <see cref="CommandBase"/>,
+        /// so that instances of them can be sent to a service operation that expects a command.
+        /// </summary>
+        /// <returns>An enumeration of all classes in the current AppDomain inheriting from <see cref="CommandBase" /></returns>
+        public static IEnumerable<Type> GetKnownTypes()
+        {
+            var knownCommandsEnumerator = NcqrsEnvironment.Get<IKnownCommandsEnumerator>();
+            if (knownCommandsEnumerator == null)
+            {
+                throw new InvalidOperationException("No Ncqrs.Commanding.IKnownCommandsEnumerator implementation registered with the NcqrsEnvironment.");
+            }
+            return knownCommandsEnumerator.GetAllCommandTypes();
         }
     }
 }

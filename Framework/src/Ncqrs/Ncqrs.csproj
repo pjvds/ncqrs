@@ -91,13 +91,13 @@
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Transactions" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commanding\AllCommandsInAppDomainEnumerator.cs" />
+    <Compile Include="Commanding\IKnownCommandsEnumerator.cs" />
     <Compile Include="Domain\Entity.cs" />
     <Compile Include="Domain\EntityMappedByConvention.cs" />
     <Compile Include="Domain\Storage\IAggregateRootCreationStrategy.cs" />
