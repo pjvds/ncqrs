@@ -17,7 +17,7 @@ namespace Ncqrs.EventBus.Tests
             var sut = CreateProcessor();
             sut.ProcessNext(_event);
 
-            _pipelineStateStore.AssertWasCalled(x => x.MarkLastProcessedEvent(_event));
+            _eventStore.AssertWasCalled(x => x.MarkLastProcessedEvent(_event));
         }
 
         [Test]
@@ -32,7 +32,7 @@ namespace Ncqrs.EventBus.Tests
         private PipelineProcessor CreateProcessor()
         {
             var pipelineProcessor = new PipelineProcessor(new SucceedingEventProcessor());
-            pipelineProcessor.EventProcessed += (s, e) => _pipelineStateStore.MarkLastProcessedEvent(e.Event);
+            pipelineProcessor.EventProcessed += (s, e) => _eventStore.MarkLastProcessedEvent(e.Event);
             return pipelineProcessor;
         }
     }

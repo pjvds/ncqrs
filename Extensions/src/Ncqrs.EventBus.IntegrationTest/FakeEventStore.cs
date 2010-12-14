@@ -28,5 +28,9 @@ namespace Ncqrs.EventBus.IntegrationTest
                 }
             }
         }
+
+        public void MarkLastProcessedEvent(SequencedEvent evnt)
+        {            
+        }
     }
 }

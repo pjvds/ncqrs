@@ -7,19 +7,19 @@ namespace Ncqrs.EventBus.Tests
     public class When_processing_fails : PipelineProcessorSpecificationBase
     {             
         [Test]
-        public void Event_is_marked_as_processed()
+        public void Event_is_not_marked_as_processed()
         {
             var sut = CreateProcessor();
 
             sut.ProcessNext(_event);
 
-            _pipelineStateStore.AssertWasCalled(x => x.MarkLastProcessedEvent(_event));
+            _eventStore.AssertWasNotCalled(x => x.MarkLastProcessedEvent(_event));
         }
 
         private PipelineProcessor CreateProcessor()
         {
             var pipelineProcessor = new PipelineProcessor(new FailingEventProcessor());
-            pipelineProcessor.EventProcessed += (s, e) => _pipelineStateStore.MarkLastProcessedEvent(e.Event);
+            pipelineProcessor.EventProcessed += (s, e) => _eventStore.MarkLastProcessedEvent(e.Event);
             return pipelineProcessor;
         }
     }

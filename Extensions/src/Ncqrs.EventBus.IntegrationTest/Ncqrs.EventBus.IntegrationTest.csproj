@@ -50,8 +50,6 @@
   <ItemGroup>
     <Compile Include="ConsoleEventProcessor.cs" />
     <Compile Include="FakeEventStore.cs" />
-    <Compile Include="InMemoryPipelineBackupQueue.cs" />
-    <Compile Include="InMemoryPipelineStateStore.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RandomEvent.cs" />
