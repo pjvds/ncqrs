@@ -5,7 +5,7 @@ using Ncqrs.Eventing.Storage.SQL;
 
 namespace Ncqrs.EventBus
 {
-    public class MsSqlServerBrowsableEventStore : IBrowsableEventStore, IPipelineBackupQueue
+    public class MsSqlServerBrowsableEventStore : IBrowsableEventStore
     {
         private readonly MsSqlServerEventStore _wrappedStore;
         private Guid? _lastEventId;
@@ -29,11 +29,6 @@ namespace Ncqrs.EventBus
                 _lastEventId = evnt.EventIdentifier;
                 yield return evnt;
             }
-        }
-
-        public void EnqueueForLaterProcessing(SourcedEvent evnt)
-        {
-            _wrappedStore.SaveEvents(new[] {evnt});
         }
     }
 }

@@ -57,7 +57,6 @@
     <Compile Include="CursorPositionCalculator.cs" />
     <Compile Include="EventDemultiplexer.cs" />
     <Compile Include="IEventProcessor.cs" />
-    <Compile Include="IPipelineBackupQueue.cs" />
     <Compile Include="IPipelineMonitoringStrategy.cs" />
     <Compile Include="IPipelineStateMonitor.cs" />
     <Compile Include="IPipelineStateStore.cs" />
