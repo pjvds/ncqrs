@@ -1,14 +1,15 @@
 ﻿using Commands;
 using Ncqrs;
+using Ncqrs.Commanding;
 using Ncqrs.Commanding.CommandExecution.Mapping.Attributes;
 using Ncqrs.Commanding.ServiceModel;
+using Ncqrs.CommandService.Infrastructure;
 using Ncqrs.Config.StructureMap;
 using Ncqrs.Eventing.ServiceModel.Bus;
 using Ncqrs.Eventing.Storage;
 using Ncqrs.Eventing.Storage.SQL;
 using ReadModel.Denormalizers;
 using Website.Properties;
-using Ncqrs.Commanding;
 
 namespace Website
 {
@@ -33,6 +34,7 @@ namespace Website
 
             var service = new Ncqrs.Commanding.ServiceModel.CommandService();
             service.RegisterExecutorsInAssembly(commandAssembly);
+            service.AddInterceptor(new ThrowOnExceptionInterceptor());
 
             return service;
         }
