@@ -59,9 +59,7 @@
     <Compile Include="IEventProcessor.cs" />
     <Compile Include="IPipelineMonitoringStrategy.cs" />
     <Compile Include="IPipelineStateMonitor.cs" />
-    <Compile Include="IPipelineStateStore.cs" />
     <Compile Include="MsSqlServerBrowsableEventStore.cs" />
-    <Compile Include="MsSqlServerPipelineStateStore.cs" />
     <Compile Include="Pipeline.cs" />
     <Compile Include="PipelineProcessor.cs" />
     <Compile Include="PipelineState.cs" />
@@ -69,7 +67,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SequencedEvent.cs" />
     <Compile Include="ThresholdedEventFetchPolicy.cs" />
-    <Compile Include="ThresholdedPipelineStateStore.cs" />
+    <Compile Include="LazyBrowsableEventStore.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

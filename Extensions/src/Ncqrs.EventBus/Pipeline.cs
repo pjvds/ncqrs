@@ -12,23 +12,21 @@ namespace Ncqrs.EventBus
         private readonly EventFetcher _fetcher;
         private readonly PipelineProcessor _processor;
         private readonly IBrowsableEventStore _eventStore;
-        private readonly IPipelineStateStore _pipelineStateStore;
         private readonly EventDemultiplexer _eventDemultiplexer;
         private readonly BlockingCollection<SequencedEvent> _preProcessingQueue = new BlockingCollection<SequencedEvent>();
         private readonly BlockingCollection<SequencedEvent> _postProcessingQueue = new BlockingCollection<SequencedEvent>();
         private readonly BlockingCollection<Action> _preDemultiplexingQueue = new BlockingCollection<Action>();
         private readonly CancellationTokenSource _cancellation = new CancellationTokenSource();
 
-        public Pipeline(IEventProcessor eventProcessor, IPipelineStateStore pipelineStateStore, IBrowsableEventStore eventStore, IEventFetchPolicy fetchPolicy)
+        public Pipeline(IEventProcessor eventProcessor, IBrowsableEventStore eventStore, IEventFetchPolicy fetchPolicy)
         {
-            _pipelineStateStore = new ThresholdedPipelineStateStore(pipelineStateStore, PipelineStateUpdateThreshold);
+            _eventStore = new LazyBrowsableEventStore(eventStore, PipelineStateUpdateThreshold);
             _eventDemultiplexer = new EventDemultiplexer();
             _eventDemultiplexer.EventDemultiplexed += OnEventDemultiplexed;
             _processor = new PipelineProcessor(eventProcessor);
             _processor.EventProcessed += OnEventProcessed;
-            _fetcher = new EventFetcher(fetchPolicy, eventStore);
+            _fetcher = new EventFetcher(fetchPolicy, _eventStore);
             _fetcher.EventFetched += OnEventFetched;
-            _eventStore = eventStore;
         }
 
         private void OnEventDemultiplexed(object sender, EventDemultiplexedEventArgs e)
@@ -49,7 +47,6 @@ namespace Ncqrs.EventBus
 
         public void Start()
         {
-            _eventStore.SetCursorPositionAfter(_pipelineStateStore.GetLastProcessedEvent());
             _fetcher.EvaluateEventFetchPolicy(new PipelineState(0));
             StartProcessor();
             StartDemultiplexer();
@@ -104,7 +101,7 @@ namespace Ncqrs.EventBus
             var eventStream = _postProcessingQueue.GetConsumingEnumerable((CancellationToken)cancellationToken);
             foreach (var evnt in eventStream)
             {
-                _pipelineStateStore.MarkLastProcessedEvent(evnt);
+                _eventStore.MarkLastProcessedEvent(evnt);
             }
         }
     }

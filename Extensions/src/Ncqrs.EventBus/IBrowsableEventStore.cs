@@ -6,7 +6,7 @@ namespace Ncqrs.EventBus
 {    
     public interface IBrowsableEventStore
     {
-        void SetCursorPositionAfter(Guid? lastEventId);
         IEnumerable<SourcedEvent> FetchEvents(int maxCount);
+        void MarkLastProcessedEvent(SequencedEvent evnt);
     }
 }
