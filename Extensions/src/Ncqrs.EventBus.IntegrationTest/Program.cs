@@ -24,10 +24,7 @@ namespace Ncqrs.EventBus.IntegrationTest
             var connectionString = ConfigurationManager.ConnectionStrings["Main"].ConnectionString;
 
             var consoleEventProcessor = new ConsoleEventProcessor();
-            var p = new Pipeline(
-                consoleEventProcessor,                
-                new MsSqlServerBrowsableEventStore(connectionString), 
-                new ThresholdedEventFetchPolicy(10, 20));
+            var p = Pipeline.Create(consoleEventProcessor, new MsSqlServerBrowsableEventStore(connectionString));
             p.Start();
             Console.ReadLine();
             p.Stop();

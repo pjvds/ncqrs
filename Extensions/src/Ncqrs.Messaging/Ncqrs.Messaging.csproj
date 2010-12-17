@@ -59,7 +59,6 @@
     <Compile Include="ISetMessageRequirements.cs" />
     <Compile Include="LocalReceivingStrategy.cs" />
     <Compile Include="IncomingMessage.cs" />
-    <Compile Include="LocalMessageServiceSendingStrategy.cs" />
     <Compile Include="MappingReceivingStrategy.cs" />
     <Compile Include="MessageMappingException.cs" />
     <Compile Include="MessageProcessingRequirements.cs" />

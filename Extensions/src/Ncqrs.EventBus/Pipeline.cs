@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -16,7 +17,7 @@ namespace Ncqrs.EventBus
         private readonly BlockingCollection<SequencedEvent> _preProcessingQueue = new BlockingCollection<SequencedEvent>();
         private readonly BlockingCollection<SequencedEvent> _postProcessingQueue = new BlockingCollection<SequencedEvent>();
         private readonly BlockingCollection<Action> _preDemultiplexingQueue = new BlockingCollection<Action>();
-        private readonly CancellationTokenSource _cancellation = new CancellationTokenSource();
+        private readonly CancellationTokenSource _cancellation = new CancellationTokenSource();        
 
         public Pipeline(IEventProcessor eventProcessor, IBrowsableEventStore eventStore, IEventFetchPolicy fetchPolicy)
         {
@@ -27,6 +28,14 @@ namespace Ncqrs.EventBus
             _processor.EventProcessed += OnEventProcessed;
             _fetcher = new EventFetcher(fetchPolicy, _eventStore);
             _fetcher.EventFetched += OnEventFetched;
+        }
+
+        public static Pipeline Create(IEventProcessor eventProcessor,IBrowsableEventStore eventStore)
+        {
+            const int minimumPendingEvents = 10;
+            const int batchSize = 20;
+
+            return new Pipeline(eventProcessor, eventStore, new ThresholdedEventFetchPolicy(minimumPendingEvents, batchSize));
         }
 
         private void OnEventDemultiplexed(object sender, EventDemultiplexedEventArgs e)
@@ -56,21 +65,27 @@ namespace Ncqrs.EventBus
         public void Stop()
         {
             _cancellation.Cancel();
-            _cancellation.Dispose();
         }               
 
         private void StartDemultiplexer()
         {            
-            Task.Factory.StartNew(DemultiplexEventsAndEvauateFetchPolicy, _cancellation.Token, TaskCreationOptions.LongRunning);
+            Task.Factory.StartNew(DemultiplexEventsAndEvaluateFetchPolicy, _cancellation.Token, TaskCreationOptions.LongRunning);
         }
 
-        private void DemultiplexEventsAndEvauateFetchPolicy(object cancellationToken)
+        private void DemultiplexEventsAndEvaluateFetchPolicy(object cancellationToken)
         {
-            var eventStream = _preDemultiplexingQueue.GetConsumingEnumerable((CancellationToken)cancellationToken);
-            foreach (var evnt in eventStream)
+            try
             {
-                evnt();
-                _fetcher.EvaluateEventFetchPolicy(new PipelineState(_preDemultiplexingQueue.Count));
+                var eventStream = _preDemultiplexingQueue.GetConsumingEnumerable((CancellationToken) cancellationToken);
+                foreach (var evnt in eventStream)
+                {
+                    evnt();
+                    _fetcher.EvaluateEventFetchPolicy(new PipelineState(_preDemultiplexingQueue.Count));
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                Debug.WriteLine("DemultiplexEventsAndEvaluateFetchPolicy operation cancelled.");
             }
         }
 
@@ -84,11 +99,18 @@ namespace Ncqrs.EventBus
 
         private void ProcessEvents(object cancellationToken)
         {
-            var eventStream = _preProcessingQueue.GetConsumingEnumerable((CancellationToken)cancellationToken);
-            foreach (var evnt in eventStream)
+            try
             {
-                _processor.ProcessNext(evnt);
+                var eventStream = _preProcessingQueue.GetConsumingEnumerable((CancellationToken)cancellationToken);
+                foreach (var evnt in eventStream)
+                {
+                    _processor.ProcessNext(evnt);
+                }
             }
+            catch (OperationCanceledException)
+            {
+                Debug.WriteLine("ProcessEvents operation cancelled.");
+            }            
         }
 
         private void StartPostProcessor()
@@ -98,10 +120,17 @@ namespace Ncqrs.EventBus
 
         private void PostProcessEvents(object cancellationToken)
         {
-            var eventStream = _postProcessingQueue.GetConsumingEnumerable((CancellationToken)cancellationToken);
-            foreach (var evnt in eventStream)
+            try
             {
-                _eventStore.MarkLastProcessedEvent(evnt);
+                var eventStream = _postProcessingQueue.GetConsumingEnumerable((CancellationToken)cancellationToken);
+                foreach (var evnt in eventStream)
+                {
+                    _eventStore.MarkLastProcessedEvent(evnt);
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                Debug.WriteLine("PostProcessEvents operation cancelled.");
             }
         }
     }
