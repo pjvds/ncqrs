@@ -9,7 +9,6 @@ using System.Text;
 using Ncqrs.Eventing.Sourcing;
 using Ncqrs.Eventing.Sourcing.Snapshotting;
 using Ncqrs.Eventing.Storage.Serialization;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace Ncqrs.Eventing.Storage.SQL
@@ -26,8 +25,9 @@ namespace Ncqrs.Eventing.Storage.SQL
         private IEventTranslator<string> _translator;
         private IEventConverter _converter;
 
-        public MsSqlServerEventStore(String connectionString) : this(connectionString, null, null)
-        {}
+        public MsSqlServerEventStore(String connectionString)
+            : this(connectionString, null, null)
+        { }
 
         public MsSqlServerEventStore(String connectionString, IEventTypeResolver typeResolver, IEventConverter converter)
         {
@@ -44,7 +44,7 @@ namespace Ncqrs.Eventing.Storage.SQL
         /// </summary>
         /// <param name="id">The id of the event provider.</param>
         /// <returns>All events for the specified event provider.</returns>
-        public IEnumerable<SourcedEvent> GetAllEvents(Guid id)
+        public IEnumerable<ISourcedEvent> GetAllEvents(Guid id)
         {
             return GetAllEventsSinceVersion(id, FirstVersion);
         }
@@ -54,9 +54,9 @@ namespace Ncqrs.Eventing.Storage.SQL
         /// </summary>
         /// <param name="eventSourceId">The id of the event source that owns the events.</param>
         /// <returns>All the events from the event source.</returns>
-        public IEnumerable<SourcedEvent> GetAllEventsSinceVersion(Guid id, long version)
+        public IEnumerable<ISourcedEvent> GetAllEventsSinceVersion(Guid id, long version)
         {
-            var result = new List<SourcedEvent>();
+            var result = new List<ISourcedEvent>();
 
             // Create connection and command.
             using (var connection = new SqlConnection(_connectionString))
@@ -94,8 +94,8 @@ namespace Ncqrs.Eventing.Storage.SQL
             // Create connection and command.
             using (var connection = new SqlConnection(_connectionString))
             {
-                var query = eventId.HasValue 
-                    ? Queries.SelectEventsAfterQuery 
+                var query = eventId.HasValue
+                    ? Queries.SelectEventsAfterQuery
                     : Queries.SelectEventsFromBeginningOfTime;
 
                 using (var command = new SqlCommand(string.Format(query, maxCount), connection))
@@ -128,12 +128,8 @@ namespace Ncqrs.Eventing.Storage.SQL
             var document = _translator.TranslateToCommon(rawEvent);
             _converter.Upgrade(document);
 
-            var evnt = (SourcedEvent) _formatter.Deserialize(document);
-            evnt.EventIdentifier = document.EventIdentifier;
-            evnt.EventTimeStamp = document.EventTimeStamp;
-            evnt.EventVersion = document.EventVersion;
-            evnt.EventSourceId = document.EventSourceId;
-            evnt.EventSequence = document.EventSequence;
+            var evnt = (SourcedEvent)_formatter.Deserialize(document);
+            evnt.InitializeFrom(rawEvent);
             return evnt;
         }
 
@@ -284,11 +280,11 @@ namespace Ncqrs.Eventing.Storage.SQL
                     {
                         if (reader.Read())
                         {
-                            var snapshotData = (byte[]) reader["Data"];
+                            var snapshotData = (byte[])reader["Data"];
                             using (var buffer = new MemoryStream(snapshotData))
                             {
                                 var formatter = new BinaryFormatter();
-                                theSnapshot = (ISnapshot) formatter.Deserialize(buffer);
+                                theSnapshot = (ISnapshot)formatter.Deserialize(buffer);
                             }
                         }
                     }
@@ -357,7 +353,7 @@ namespace Ncqrs.Eventing.Storage.SQL
             var eventVersion = Version.Parse((string)reader["Version"]);
             var eventSourceId = (Guid)reader["EventSourceId"];
             var eventSequence = (long)reader["Sequence"];
-            var data = Encoding.UTF8.GetString((Byte[])reader["Data"]);
+            var data = (String)reader["Data"];
 
             return new StoredEvent<string>(
                 eventIdentifier,
@@ -399,7 +395,6 @@ namespace Ncqrs.Eventing.Storage.SQL
 
             var document = _formatter.Serialize(evnt);
             var raw = _translator.TranslateToRaw(document);
-            var data = Encoding.UTF8.GetBytes(raw.Data);
 
             using (var command = new SqlCommand(Queries.InsertNewEventQuery, transaction.Connection))
             {
@@ -410,7 +405,7 @@ namespace Ncqrs.Eventing.Storage.SQL
                 command.Parameters.AddWithValue("Name", raw.EventName);
                 command.Parameters.AddWithValue("Version", raw.EventVersion.ToString());
                 command.Parameters.AddWithValue("Sequence", raw.EventSequence);
-                command.Parameters.AddWithValue("Data", data);
+                command.Parameters.AddWithValue("Data", raw.Data);
                 command.ExecuteNonQuery();
             }
         }
@@ -465,11 +460,11 @@ namespace Ncqrs.Eventing.Storage.SQL
             if (resource == null) throw new ApplicationException("Could not find the resource " + resourcename + " in assembly " + currentAsm.FullName);
 
             var result = new List<string>();
-            
-            using(var reader = new StreamReader(resource))
+
+            using (var reader = new StreamReader(resource))
             {
                 string line = null;
-                while((line = reader.ReadLine()) != null)
+                while ((line = reader.ReadLine()) != null)
                 {
                     result.Add(line);
                 }
