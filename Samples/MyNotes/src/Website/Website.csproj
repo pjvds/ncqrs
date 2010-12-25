@@ -33,7 +33,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Commands" />
     <Reference Include="Ncqrs">
       <HintPath>..\..\..\..\lib\$(Configuration)\Ncqrs\Ncqrs.dll</HintPath>
     </Reference>
@@ -137,17 +136,21 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Commands\Commands.csproj">
+      <Project>{CF0635EB-DFA4-4E82-B245-A0F125183E08}</Project>
+      <Name>Commands %28Samples\MyNotes\Commands%29</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Domain\Domain.csproj">
       <Project>{BD0344CC-E61E-4BC6-8782-0AC0390F48FD}</Project>
       <Name>Domain %28Samples\MyNotes\Domain%29</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Events\Events.csproj">
+      <Project>{705805EF-47BE-48A8-A359-CA999169E445}</Project>
+      <Name>Events %28Samples\MyNotes\Events%29</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ReadModel\ReadModel.csproj">
       <Project>{D01CE8F6-800E-44CC-886B-F862B10E1396}</Project>
       <Name>ReadModel</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Commands\Commands.csproj">
-      <Project>{CF0635EB-DFA4-4E82-B245-A0F125183E08}</Project>
-      <Name>Commands %28Samples\MyNotes\Commands%29</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
