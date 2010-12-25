@@ -37,6 +37,7 @@
   <ItemGroup>
     <Reference Include="Ncqrs">
       <HintPath>..\..\..\lib\$(Configuration)\Ncqrs\Ncqrs.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
@@ -58,6 +59,7 @@
     <ProjectReference Include="..\Ncqrs.EventBus\Ncqrs.EventBus.csproj">
       <Project>{CAF2E548-87C8-422B-A62C-8C3ED83FF3C3}</Project>
       <Name>Ncqrs.EventBus</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

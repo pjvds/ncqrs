@@ -33,15 +33,19 @@
   <ItemGroup>
     <Reference Include="FluentAssertions">
       <HintPath>..\..\..\lib\ThirdParty\FluentAssertions\FluentAssertions.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Ncqrs">
       <HintPath>..\..\..\lib\$(Configuration)\Ncqrs\Ncqrs.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\..\..\lib\ThirdParty\NUnit\nunit.framework.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Rhino.Mocks">
       <HintPath>..\..\..\lib\ThirdParty\RhinoMocks\Rhino.Mocks.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -64,6 +68,7 @@
     <ProjectReference Include="..\Ncqrs.EventBus\Ncqrs.EventBus.csproj">
       <Project>{CAF2E548-87C8-422B-A62C-8C3ED83FF3C3}</Project>
       <Name>Ncqrs.EventBus</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
