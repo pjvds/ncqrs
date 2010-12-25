@@ -32,7 +32,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Ncqrs">
-      <HintPath>..\..\lib\Ncqrs\Ncqrs.dll</HintPath>
+      <HintPath>..\..\..\lib\$(Configuration)\Ncqrs\Ncqrs.dll</HintPath>
     </Reference>
     <Reference Include="NServiceBus">
       <HintPath>..\..\..\lib\ThirdParty\NServiceBus\NServiceBus.dll</HintPath>
