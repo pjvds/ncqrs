@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Autofac;
+﻿using Autofac;
 
 namespace Ncqrs.Config.Autofac
 {
@@ -27,6 +23,8 @@ namespace Ncqrs.Config.Autofac
             _container = container;
         }
 
+        #region IEnvironmentConfiguration Members
+
         /// <summary>
         /// Tries to get the specified instance.
         /// </summary>
@@ -35,12 +33,14 @@ namespace Ncqrs.Config.Autofac
         /// <returns>An indication whether the instance could be get or not.</returns>
         public bool TryGet<T>(out T result) where T : class
         {
-            if (!_container.TryResolve<T>(out result))
+            if (!_container.TryResolve(out result))
             {
                 result = default(T);
             }
 
             return result != default(T);
         }
+
+        #endregion
     }
 }
