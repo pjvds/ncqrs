@@ -8,7 +8,6 @@ using Ncqrs.Config.StructureMap;
 using Ncqrs.Eventing.ServiceModel.Bus;
 using Ncqrs.Eventing.Storage;
 using Ncqrs.Eventing.Storage.SQL;
-using ReadModel.Denormalizers;
 using Website.Properties;
 
 namespace Website
@@ -48,7 +47,6 @@ namespace Website
         private static IEventBus InitializeEventBus()
         {
             var bus = new InProcessEventBus();
-            bus.RegisterAllHandlersInAssembly(typeof(NoteItemDenormalizer).Assembly);
 
             return bus;
         }
