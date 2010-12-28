@@ -34,6 +34,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="log4net">
+      <HintPath>..\lib\ThirdParty\log4net\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="Ncqrs">
       <HintPath>..\lib\Debug\Ncqrs\Ncqrs.dll</HintPath>
       <Private>True</Private>
