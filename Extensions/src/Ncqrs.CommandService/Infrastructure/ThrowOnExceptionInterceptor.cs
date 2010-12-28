@@ -2,7 +2,7 @@
 
 namespace Ncqrs.CommandService.Infrastructure
 {
-    internal class ThrowOnExceptionInterceptor : ICommandServiceInterceptor
+    public class ThrowOnExceptionInterceptor : ICommandServiceInterceptor
     {
         public void OnBeforeBeforeExecutorResolving(CommandContext context)
         {
@@ -16,7 +16,7 @@ namespace Ncqrs.CommandService.Infrastructure
 
         public void OnAfterExecution(CommandContext context)
         {
-            if (context != null)
+            if (context != null && context.Exception != null)
                 throw context.Exception;
         }
     }
