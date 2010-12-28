@@ -35,6 +35,10 @@
   <ItemGroup>
     <Reference Include="Ncqrs">
       <HintPath>..\..\..\..\lib\$(Configuration)\Ncqrs\Ncqrs.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Ncqrs.EventBus">
+      <HintPath>..\..\..\..\lib\$(Configuration)\Ncqrs.EventBus\Ncqrs.EventBus.dll</HintPath>
     </Reference>
     <Reference Include="Ncqrs.CommandService">
       <HintPath>..\..\..\..\lib\$(Configuration)\Ncqrs.CommandService\Ncqrs.CommandService.dll</HintPath>
@@ -44,6 +48,9 @@
     </Reference>
     <Reference Include="Ncqrs.Config.StructureMap">
       <HintPath>..\..\..\..\lib\$(Configuration)\Ncqrs.Config.StructureMap\Ncqrs.Config.StructureMap.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\..\..\lib\ThirdParty\json.net\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="StructureMap">
       <HintPath>..\..\..\..\lib\ThirdParty\StructureMap\StructureMap.dll</HintPath>
@@ -172,7 +179,17 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <SaveServerSettingsInUserFile>True</SaveServerSettingsInUserFile>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>False</AutoAssignPort>
+          <DevelopmentServerPort>1337</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>
+          </IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
     </VisualStudio>
