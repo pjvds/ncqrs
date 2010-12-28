@@ -2,7 +2,7 @@
 
 namespace Ncqrs.CommandService.Infrastructure
 {
-    public class ThrowOnExceptionInterceptor : ICommandServiceInterceptor
+    internal class ThrowOnExceptionInterceptor : ICommandServiceInterceptor
     {
         public void OnBeforeBeforeExecutorResolving(CommandContext context)
         {
