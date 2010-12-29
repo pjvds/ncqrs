@@ -24,7 +24,7 @@
     
         <tr>
             <td>
-                <%: Html.ActionLink("Edit", "Edit", "Note", new { id=item.Id }) %> |
+                <%: Html.ActionLink("Edit", "Edit", "Note", new {id=item.Id}, null)%>
             </td>
             <td>
                 <%: String.Format("{0:g}", item.CreationDate) %>
@@ -44,4 +44,3 @@
     </p>
 
 </asp:Content>
-
