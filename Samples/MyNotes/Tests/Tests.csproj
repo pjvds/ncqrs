@@ -35,22 +35,22 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Ncqrs">
-      <HintPath>..\lib\Ncqrs\Ncqrs.dll</HintPath>
+      <HintPath>..\..\..\lib\$(Configuration)\Ncqrs\Ncqrs.dll</HintPath>
     </Reference>
     <Reference Include="Ncqrs.Config.StructureMap">
-      <HintPath>..\..\..\Extensions\src\Ncqrs.Config.StructureMap\bin\Debug\Ncqrs.Config.StructureMap.dll</HintPath>
+      <HintPath>..\..\..\lib\$(Configuration)\Ncqrs.Config.StructureMap\Ncqrs.Config.StructureMap.dll</HintPath>
     </Reference>
     <Reference Include="Ncqrs.Eventing.Storage.NoDB">
-      <HintPath>..\..\..\Extensions\src\Ncqrs.Eventing.Storage.NoDB\bin\Debug\Ncqrs.Eventing.Storage.NoDB.dll</HintPath>
+      <HintPath>..\..\..\lib\$(Configuration)\Ncqrs.Eventing.Storage.NoDB\Ncqrs.Eventing.Storage.NoDB.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\..\Extensions\src\Ncqrs.Eventing.Storage.NoDB\bin\Debug\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\..\lib\ThirdParty\json.net\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
-      <HintPath>..\..\..\Framework\lib\Nunit\nunit.framework.dll</HintPath>
+      <HintPath>..\..\..\lib\ThirdParty\Nunit\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="StructureMap">
-      <HintPath>..\..\..\Extensions\lib\StructureMap\StructureMap.dll</HintPath>
+      <HintPath>..\..\..\lib\ThirdParty\StructureMap\StructureMap.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
