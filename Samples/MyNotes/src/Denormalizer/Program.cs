@@ -12,21 +12,6 @@ namespace Denormalizer
         private static int _processedEvents = 0;
         private static InProcessEventBus _bus = new InProcessEventBus(true);
 
-        public class CallbackEventProcessor : IEventProcessor
-        {
-            private readonly Action<SourcedEvent> _callback;
-
-            public CallbackEventProcessor(Action<SourcedEvent> callback)
-            {
-                _callback = callback;
-            }
-
-            public void Process(SourcedEvent evnt)
-            {
-                _callback(evnt);
-            }
-        }
-
         static void Main(string[] args)
         {
             // Register all denormalizers in this assembly.
@@ -51,6 +36,21 @@ namespace Denormalizer
 
             Console.WriteLine("Processing event {0} (id {1})", evnt.EventSequence, evnt.EventIdentifier);
             _bus.Publish(evnt);
+        }
+    }
+
+    public class CallbackEventProcessor : IEventProcessor
+    {
+        private readonly Action<SourcedEvent> _callback;
+
+        public CallbackEventProcessor(Action<SourcedEvent> callback)
+        {
+            _callback = callback;
+        }
+
+        public void Process(SourcedEvent evnt)
+        {
+            _callback(evnt);
         }
     }
 }

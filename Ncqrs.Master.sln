@@ -12,28 +12,52 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extensions", "Extensions", "{4EAA1C9A-E268-4BA7-A73E-940E3D769C3A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Config.StructureMap", "Extensions\src\Ncqrs.Config.StructureMap\Ncqrs.Config.StructureMap.csproj", "{2558F4AD-8D5D-43A2-AAEA-75B966F9B4DE}"
+	ProjectSection(ProjectDependencies) = postProject
+		{01F84441-80D3-49B4-AB18-96894ACB2F90} = {01F84441-80D3-49B4-AB18-96894ACB2F90}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Config.Windsor", "Extensions\src\Ncqrs.Config.Windsor\Ncqrs.Config.Windsor.csproj", "{99BE6129-C5C4-45A5-94AB-0ADEA0A6AD53}"
+	ProjectSection(ProjectDependencies) = postProject
+		{01F84441-80D3-49B4-AB18-96894ACB2F90} = {01F84441-80D3-49B4-AB18-96894ACB2F90}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Config.Windsor.Tests", "Extensions\src\Ncqrs.Config.Windsor.Tests\Ncqrs.Config.Windsor.Tests.csproj", "{629CA40F-74CF-4040-8CAD-5EFEDD06BCFE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Eventing.Storage.MongoDB", "Extensions\src\Ncqrs.Eventing.Storage.MongoDB\Ncqrs.Eventing.Storage.MongoDB.csproj", "{E421E735-2833-4948-9BA0-94924BDC502E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{01F84441-80D3-49B4-AB18-96894ACB2F90} = {01F84441-80D3-49B4-AB18-96894ACB2F90}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Eventing.Storage.RavenDB", "Extensions\src\Ncqrs.Eventing.Storage.RavenDB\Ncqrs.Eventing.Storage.RavenDB.csproj", "{EA93A91D-7BC9-4EC0-8A22-8A772AFD76C3}"
+	ProjectSection(ProjectDependencies) = postProject
+		{01F84441-80D3-49B4-AB18-96894ACB2F90} = {01F84441-80D3-49B4-AB18-96894ACB2F90}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Eventing.Storage.RavenDB.Tests", "Extensions\src\Ncqrs.Eventing.Storage.RavenDB.Tests\Ncqrs.Eventing.Storage.RavenDB.Tests.csproj", "{7714E2D3-372D-4B0A-9393-F7A0EDA331F5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Eventing.Storage.SQLite", "Extensions\src\Ncqrs.Eventing.Storage.SqlLite\Ncqrs.Eventing.Storage.SQLite.csproj", "{DD28A7E6-A864-43F1-AB94-FC854ADD9AA0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{01F84441-80D3-49B4-AB18-96894ACB2F90} = {01F84441-80D3-49B4-AB18-96894ACB2F90}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Eventing.Storage.SQLite.Tests", "Extensions\src\Ncqrs.Eventing.Storage.SqlLite.Tests\Ncqrs.Eventing.Storage.SQLite.Tests.csproj", "{2EAA3A87-4D94-4044-8641-B4E04E5774D8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Messaging", "Extensions\src\Ncqrs.Messaging\Ncqrs.Messaging.csproj", "{3624C541-6D6E-4AAC-B70A-7A769FB5C442}"
+	ProjectSection(ProjectDependencies) = postProject
+		{01F84441-80D3-49B4-AB18-96894ACB2F90} = {01F84441-80D3-49B4-AB18-96894ACB2F90}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Messaging.NServiceBus", "Extensions\src\Ncqrs.Messaging.NServiceBus\Ncqrs.Messaging.NServiceBus.csproj", "{923B7912-224A-4CB1-BA34-D18A9E1EAB66}"
+	ProjectSection(ProjectDependencies) = postProject
+		{01F84441-80D3-49B4-AB18-96894ACB2F90} = {01F84441-80D3-49B4-AB18-96894ACB2F90}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Messaging.Tests", "Extensions\src\Ncqrs.Messaging.Tests\Ncqrs.Messaging.Tests.csproj", "{778A871A-CEB4-4AF1-81CC-EA532EC05067}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.NServiceBus", "Extensions\src\Ncqrs.NServiceBus\Ncqrs.NServiceBus.csproj", "{9B796256-E9D6-4F21-BB89-C5333A880BFE}"
+	ProjectSection(ProjectDependencies) = postProject
+		{01F84441-80D3-49B4-AB18-96894ACB2F90} = {01F84441-80D3-49B4-AB18-96894ACB2F90}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.NServiceBus.Tests", "Extensions\src\Ncqrs.NServiceBus.Tests\Ncqrs.NServiceBus.Tests.csproj", "{86D87653-EC64-4388-A5F7-2F64F690C5F5}"
 EndProject
@@ -46,8 +70,14 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Commands", "Samples\MyNotes\src\Commands\Commands.csproj", "{CF0635EB-DFA4-4E82-B245-A0F125183E08}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Samples\MyNotes\src\Domain\Domain.csproj", "{BD0344CC-E61E-4BC6-8782-0AC0390F48FD}"
+	ProjectSection(ProjectDependencies) = postProject
+		{01F84441-80D3-49B4-AB18-96894ACB2F90} = {01F84441-80D3-49B4-AB18-96894ACB2F90}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Events", "Samples\MyNotes\src\Events\Events.csproj", "{705805EF-47BE-48A8-A359-CA999169E445}"
+	ProjectSection(ProjectDependencies) = postProject
+		{01F84441-80D3-49B4-AB18-96894ACB2F90} = {01F84441-80D3-49B4-AB18-96894ACB2F90}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReadModel", "Samples\MyNotes\src\ReadModel\ReadModel.csproj", "{D01CE8F6-800E-44CC-886B-F862B10E1396}"
 EndProject
@@ -67,10 +97,19 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Commands", "Samples\NSBSample\Commands\Commands.csproj", "{5EF85227-BF8E-4A19-8496-2A3BB500E27C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Samples\NSBSample\Domain\Domain.csproj", "{B233A995-93BA-4B6F-8227-EF2A57C750BD}"
+	ProjectSection(ProjectDependencies) = postProject
+		{01F84441-80D3-49B4-AB18-96894ACB2F90} = {01F84441-80D3-49B4-AB18-96894ACB2F90}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Events", "Samples\NSBSample\Events\Events.csproj", "{5088657E-AC3F-4081-B0B8-ACFBBD6BFA28}"
+	ProjectSection(ProjectDependencies) = postProject
+		{01F84441-80D3-49B4-AB18-96894ACB2F90} = {01F84441-80D3-49B4-AB18-96894ACB2F90}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server", "Samples\NSBSample\Server\Server.csproj", "{E55F2D87-CBA5-48CE-AF6E-FBF069084BAF}"
+	ProjectSection(ProjectDependencies) = postProject
+		{01F84441-80D3-49B4-AB18-96894ACB2F90} = {01F84441-80D3-49B4-AB18-96894ACB2F90}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppV1", "Samples\VersioningSample\src\Appv1\AppV1.csproj", "{ECE2E2E8-648C-4561-82A0-9A1D6A2D4645}"
 EndProject
@@ -81,18 +120,33 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppV3", "Samples\VersioningSample\src\AppV3\AppV3.csproj", "{2489CF5D-6CEE-44C7-825D-521383275DB7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.EventBus", "Extensions\src\Ncqrs.EventBus\Ncqrs.EventBus.csproj", "{CAF2E548-87C8-422B-A62C-8C3ED83FF3C3}"
+	ProjectSection(ProjectDependencies) = postProject
+		{01F84441-80D3-49B4-AB18-96894ACB2F90} = {01F84441-80D3-49B4-AB18-96894ACB2F90}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.CommandService", "Extensions\src\Ncqrs.CommandService\Ncqrs.CommandService.csproj", "{9CBAEAFE-9265-47BA-82C5-5E0774CBF2C5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{01F84441-80D3-49B4-AB18-96894ACB2F90} = {01F84441-80D3-49B4-AB18-96894ACB2F90}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.EventBus.IntegrationTest", "Extensions\src\Ncqrs.EventBus.IntegrationTest\Ncqrs.EventBus.IntegrationTest.csproj", "{DC0FB020-79D9-497E-8869-9508FCFA6537}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.CommandService.Contracts", "Extensions\src\Ncqrs.CommandService.Contracts\Ncqrs.CommandService.Contracts.csproj", "{76062319-4F5D-4055-9D1A-5680DD2DA882}"
+	ProjectSection(ProjectDependencies) = postProject
+		{01F84441-80D3-49B4-AB18-96894ACB2F90} = {01F84441-80D3-49B4-AB18-96894ACB2F90}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.EventBus.Tests", "Extensions\src\Ncqrs.EventBus.Tests\Ncqrs.EventBus.Tests.csproj", "{EE6E54C8-D108-49E7-9E2A-6BAEF6D5339F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.NServiceBus.EventBus", "Extensions\src\Ncqrs.NServiceBus.EventBus\Ncqrs.NServiceBus.EventBus.csproj", "{B8B5FD78-06BE-4BC0-8A0A-7C63C3FEB63C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{01F84441-80D3-49B4-AB18-96894ACB2F90} = {01F84441-80D3-49B4-AB18-96894ACB2F90}
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Denormalizer", "Denormalizer\Denormalizer.csproj", "{64989576-E701-4DBF-AA44-E38ADBAC4D65}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Denormalizer", "Samples\MyNotes\src\Denormalizer\Denormalizer.csproj", "{64989576-E701-4DBF-AA44-E38ADBAC4D65}"
+	ProjectSection(ProjectDependencies) = postProject
+		{01F84441-80D3-49B4-AB18-96894ACB2F90} = {01F84441-80D3-49B4-AB18-96894ACB2F90}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
