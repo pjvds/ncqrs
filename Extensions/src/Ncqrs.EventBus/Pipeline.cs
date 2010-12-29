@@ -8,7 +8,7 @@ namespace Ncqrs.EventBus
 {
     public class Pipeline
     {
-        private const int MaxDegreeOfParallelismForProcessing = 10;
+        private const int MaxDegreeOfParallelismForProcessing = 1;
         private const int PipelineStateUpdateThreshold = 10;
         private readonly EventFetcher _fetcher;
         private readonly PipelineProcessor _processor;
@@ -17,7 +17,8 @@ namespace Ncqrs.EventBus
         private readonly BlockingCollection<SequencedEvent> _preProcessingQueue = new BlockingCollection<SequencedEvent>();
         private readonly BlockingCollection<SequencedEvent> _postProcessingQueue = new BlockingCollection<SequencedEvent>();
         private readonly BlockingCollection<Action> _preDemultiplexingQueue = new BlockingCollection<Action>();
-        private readonly CancellationTokenSource _cancellation = new CancellationTokenSource();        
+        private readonly CancellationTokenSource _cancellation = new CancellationTokenSource();
+        private readonly Timer _fetchTimer;
 
         public Pipeline(IEventProcessor eventProcessor, IBrowsableEventStore eventStore, IEventFetchPolicy fetchPolicy)
         {
@@ -28,6 +29,7 @@ namespace Ncqrs.EventBus
             _processor.EventProcessed += OnEventProcessed;
             _fetcher = new EventFetcher(fetchPolicy, _eventStore);
             _fetcher.EventFetched += OnEventFetched;
+            _fetchTimer = new Timer(x => EvaluateFetchPolicy(), null, TimeSpan.Zero, TimeSpan.FromSeconds(1));
         }
 
         public static Pipeline Create(IEventProcessor eventProcessor,IBrowsableEventStore eventStore)
@@ -56,10 +58,10 @@ namespace Ncqrs.EventBus
 
         public void Start()
         {
-            _fetcher.EvaluateEventFetchPolicy(new PipelineState(0));
             StartProcessor();
             StartDemultiplexer();
             StartPostProcessor();
+            EvaluateFetchPolicy();
         }
 
         public void Stop()
@@ -80,13 +82,18 @@ namespace Ncqrs.EventBus
                 foreach (var evnt in eventStream)
                 {
                     evnt();
-                    _fetcher.EvaluateEventFetchPolicy(new PipelineState(_preDemultiplexingQueue.Count));
+                    EvaluateFetchPolicy();
                 }
             }
             catch (OperationCanceledException)
             {
                 Debug.WriteLine("DemultiplexEventsAndEvaluateFetchPolicy operation cancelled.");
             }
+        }
+
+        private void EvaluateFetchPolicy()
+        {
+            _fetcher.EvaluateEventFetchPolicy(new PipelineState(_preDemultiplexingQueue.Count));
         }
 
         private void StartProcessor()

@@ -12,6 +12,12 @@ namespace Denormalizer.Denormalizers
         {
             using (var context = new ReadModelContainer())
             {
+                var existing = context.NoteItemSet.SingleOrDefault(x => x.Id == evnt.NoteId);
+                if (existing != null)
+                {
+                    return;                    
+                }
+
                 var newItem = new NoteItem
                 {
                     Id = evnt.NoteId,
