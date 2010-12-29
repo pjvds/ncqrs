@@ -12,6 +12,7 @@ namespace Ncqrs.Spec
         private static EventContext _threadInstance;
 
         private readonly List<ISourcedEvent> _events = new List<ISourcedEvent>();
+        private Action<AggregateRoot, ISourcedEvent> _eventAppliedCallback;
 
         public IEnumerable<ISourcedEvent> Events
         {
@@ -52,17 +53,21 @@ namespace Ncqrs.Spec
 
         private void InitializeAppliedEventHandler()
         {
-            AggregateRoot.EventApplied += AggregateRootEventAppliedHandler;
+            if(_eventAppliedCallback == null)
+                _eventAppliedCallback = new Action<AggregateRoot, ISourcedEvent>(AggregateRootEventAppliedHandler);
+
+            AggregateRoot.RegisterThreadStaticEventAppliedCallback(_eventAppliedCallback);
         }
 
         private void DestroyAppliedEventHandler()
         {
-            AggregateRoot.EventApplied -= AggregateRootEventAppliedHandler;            
+            if(_eventAppliedCallback != null)
+                AggregateRoot.UnregisterThreadStaticEventAppliedCallback(_eventAppliedCallback);
         }
 
-        private void AggregateRootEventAppliedHandler(object sender, EventAppliedArgs e)
+        private void AggregateRootEventAppliedHandler(AggregateRoot aggregateRoot, ISourcedEvent evnt)
         {
-            _events.Add(e.AppliedEvent);
+            _events.Add(evnt);
         }
 
         /// <summary>

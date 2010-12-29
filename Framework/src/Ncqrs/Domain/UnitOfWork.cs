@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using Ncqrs.Domain.Storage;
+using Ncqrs.Eventing.Sourcing;
 
 namespace Ncqrs.Domain
 {
@@ -10,13 +11,14 @@ namespace Ncqrs.Domain
         /// <summary>
         /// The <see cref="UnitOfWork"/> that is associated with the current thread.
         /// </summary>
-        [ThreadStatic]
-        private static UnitOfWork _threadInstance;
+        [ThreadStatic] private static UnitOfWork _threadInstance;
 
         /// <summary>
         /// A queue that holds a reference to all instances that have themself registered as a dirty instance during the lifespan of this unit of work instance.
         /// </summary>
         private readonly Queue<AggregateRoot> _dirtyInstances;
+
+        private readonly Action<AggregateRoot, ISourcedEvent> _eventAppliedCallback;
 
         /// <summary>
         /// A reference to the repository that is associated with this instance.
@@ -75,6 +77,7 @@ namespace Ncqrs.Domain
             _repository = domainRepository;
             _dirtyInstances = new Queue<AggregateRoot>();
             _threadInstance = this;
+            _eventAppliedCallback = new Action<AggregateRoot, ISourcedEvent>(AggregateRootEventAppliedHandler);
             IsDisposed = false;
 
             InitializeAppliedEventHandler();
@@ -82,17 +85,16 @@ namespace Ncqrs.Domain
 
         private void InitializeAppliedEventHandler()
         {
-            AggregateRoot.EventApplied += AggregateRootEventAppliedHandler;
+            AggregateRoot.RegisterThreadStaticEventAppliedCallback(_eventAppliedCallback);
         }
 
         private void DestroyAppliedEventHandler()
         {
-            AggregateRoot.EventApplied -= AggregateRootEventAppliedHandler;            
+            AggregateRoot.UnregisterThreadStaticEventAppliedCallback(_eventAppliedCallback);
         }
 
-        private void AggregateRootEventAppliedHandler(object sender, Eventing.Sourcing.EventAppliedArgs e)
+        private void AggregateRootEventAppliedHandler(AggregateRoot aggregateRoot, ISourcedEvent evnt)
         {
-            var aggregateRoot = (AggregateRoot) sender;
             RegisterDirtyInstance(aggregateRoot);
         }
 

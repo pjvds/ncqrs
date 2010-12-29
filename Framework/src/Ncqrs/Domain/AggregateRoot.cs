@@ -11,25 +11,16 @@ namespace Ncqrs.Domain
     public abstract class AggregateRoot : EventSource
     {
         [ThreadStatic]
-        private static List<WeakReference> _eventAppliedHandlers;
+        private static readonly List<Action<AggregateRoot, ISourcedEvent>> _eventAppliedCallbacks = new List<Action<AggregateRoot, ISourcedEvent>>();
 
-        /// <summary>
-        /// Occurs when an event was applied to an <see cref="AggregateRoot"/>.
-        /// </summary>
-        internal static event EventHandler<EventAppliedArgs> EventApplied
+        public static void RegisterThreadStaticEventAppliedCallback(Action<AggregateRoot, ISourcedEvent> callback)
         {
-            add
-            {
-                if(_eventAppliedHandlers == null) _eventAppliedHandlers = new List<WeakReference>();
+            _eventAppliedCallbacks.Add(callback);
+        }
 
-                _eventAppliedHandlers.Add(new WeakReference(value));
-            }
-            remove
-            {
-                if (_eventAppliedHandlers == null) _eventAppliedHandlers = new List<WeakReference>();
-
-                _eventAppliedHandlers.RemoveAll(r => r.Target == value);
-            }
+        public static void UnregisterThreadStaticEventAppliedCallback(Action<AggregateRoot, ISourcedEvent> callback)
+        {
+            _eventAppliedCallbacks.Remove(callback);
         }
 
         protected AggregateRoot()
@@ -41,18 +32,11 @@ namespace Ncqrs.Domain
         [NoEventHandler]
         protected override void OnEventApplied(ISourcedEvent appliedEvent)
         {
-            if (_eventAppliedHandlers == null)
-            {
-                return;
-            }
+            var callbacks = _eventAppliedCallbacks;
 
-            foreach (var handlerRef in _eventAppliedHandlers)
+            foreach(var callback in callbacks)
             {
-                if (handlerRef.IsAlive)
-                {
-                    var handler = (EventHandler<EventAppliedArgs>) handlerRef.Target;
-                    handler(this, new EventAppliedArgs(appliedEvent));
-                }
+                callback(this, appliedEvent);
             }
         }
     }
