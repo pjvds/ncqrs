@@ -1,6 +1,5 @@
 ﻿using System;
 using Commands;
-using CommandService.Properties;
 using Events;
 using Ncqrs;
 using Ncqrs.Commanding.CommandExecution.Mapping.Attributes;
@@ -11,8 +10,6 @@ using Ncqrs.Domain.Storage;
 using Ncqrs.Eventing.ServiceModel.Bus;
 using Ncqrs.Eventing.Storage;
 using Ncqrs.Eventing.Storage.NoDB;
-using Ncqrs.Eventing.Storage.SQL;
-using ReadModel.Denormalizers;
 
 namespace Tests
 {
@@ -36,7 +33,7 @@ namespace Tests
         {
             var commandAssembly = typeof (CreateNewNote).Assembly;
 
-            var service = new Ncqrs.Commanding.ServiceModel.CommandService();
+            var service = new CommandService();
             service.RegisterExecutorsInAssembly(commandAssembly);
 
             return service;
