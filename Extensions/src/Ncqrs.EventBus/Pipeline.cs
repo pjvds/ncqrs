@@ -9,7 +9,6 @@ namespace Ncqrs.EventBus
     public class Pipeline
     {
         private const int MaxDegreeOfParallelismForProcessing = 1;
-        private const int PipelineStateUpdateThreshold = 10;
         private readonly EventFetcher _fetcher;
         private readonly PipelineProcessor _processor;
         private readonly IBrowsableEventStore _eventStore;
@@ -22,7 +21,7 @@ namespace Ncqrs.EventBus
 
         public Pipeline(IEventProcessor eventProcessor, IBrowsableEventStore eventStore, IEventFetchPolicy fetchPolicy)
         {
-            _eventStore = new LazyBrowsableEventStore(eventStore, PipelineStateUpdateThreshold);
+            _eventStore = new LazyBrowsableEventStore(eventStore);
             _eventDemultiplexer = new EventDemultiplexer();
             _eventDemultiplexer.EventDemultiplexed += OnEventDemultiplexed;
             _processor = new PipelineProcessor(eventProcessor);

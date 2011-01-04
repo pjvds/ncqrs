@@ -31,7 +31,7 @@ namespace Website
         {
             var commandAssembly = typeof (CreateNewNote).Assembly;
 
-            var service = new Ncqrs.Commanding.ServiceModel.CommandService();
+            var service = new CommandService();
             service.RegisterExecutorsInAssembly(commandAssembly);
             service.AddInterceptor(new ThrowOnExceptionInterceptor());
 

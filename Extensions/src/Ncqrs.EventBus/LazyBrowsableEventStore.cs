@@ -6,11 +6,13 @@ namespace Ncqrs.EventBus
 {
     public class LazyBrowsableEventStore : IBrowsableEventStore
     {
+        private const int DefaultThreshold = 1;
+
         private readonly IBrowsableEventStore _wrappedStore;
         private readonly CursorPositionCalculator _cursorCalculator = new CursorPositionCalculator(0);
         private readonly int _threshold;
 
-        public LazyBrowsableEventStore(IBrowsableEventStore wrappedStore, int threshold)
+        public LazyBrowsableEventStore(IBrowsableEventStore wrappedStore, int threshold = DefaultThreshold)
         {
             _wrappedStore = wrappedStore;
             _threshold = threshold;
