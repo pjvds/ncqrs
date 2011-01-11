@@ -34,10 +34,6 @@
       <HintPath>..\..\..\lib\ThirdParty\CastleWindsor\Castle.Core.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Castle.DynamicProxy2">
-      <HintPath>..\..\..\lib\ThirdParty\CastleWindsor\Castle.DynamicProxy2.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Castle.Windsor">
       <HintPath>..\..\..\lib\ThirdParty\CastleWindsor\Castle.Windsor.dll</HintPath>
       <Private>False</Private>
