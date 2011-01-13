@@ -2,17 +2,30 @@
 
 namespace Ncqrs.Eventing.Sourcing
 {
-    public class SourcedEventHandlerPredicate<TSourcedEvent> : TypeThresholdedActionBasedDomainEventHandler<TSourcedEvent>
-        where TSourcedEvent : ISourcedEvent
+    public class EntityThresholdedDomainEventHandlerWrapper : ISourcedEventHandler
     {
-        private readonly Predicate<TSourcedEvent> _predicate;
-        private readonly ISourcedEventHandler _internalHandler;
+        private readonly Guid _entityId;
+        private readonly ISourcedEventHandler _wrappedHandler;
 
-        public SourcedEventHandlerPredicate(Predicate<TSourcedEvent> predicate, ISourcedEventHandler internalHandler)
-            : base((e) => internalHandler.HandleEvent(e), false)
+        public EntityThresholdedDomainEventHandlerWrapper(Guid entityId, ISourcedEventHandler wrappedHandler)
+
         {
-            _predicate = predicate;
-            _internalHandler = internalHandler;
+            _entityId = entityId;
+            _wrappedHandler = wrappedHandler;
+        }
+
+        public bool HandleEvent(ISourcedEvent sourcedEvent)
+        {
+            var sourcedEntityEvent = sourcedEvent as SourcedEntityEvent;
+            if (sourcedEntityEvent == null)
+            {
+                return false;
+            }
+            if (sourcedEntityEvent.EntityId != _entityId)
+            {
+                return false;
+            }
+            return _wrappedHandler.HandleEvent(sourcedEvent);
         }
     }
 }

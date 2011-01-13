@@ -14,6 +14,11 @@ namespace Ncqrs.Tests.Domain
         {
             private readonly List<Order> _orders = new List<Order>();
 
+            public List<Order> Orders
+            {
+                get { return _orders; }
+            }
+
             public void CreateOrder(Guid id)
             {
                 ApplyEvent(new OrderCreatedEvent(id));
@@ -21,12 +26,12 @@ namespace Ncqrs.Tests.Domain
 
             public void CreateOrderLine(Guid orderId, decimal value)
             {
-                _orders.First(x => x.EntityId == orderId).CreateLine(value);
+                Orders.First(x => x.EntityId == orderId).CreateLine(value);
             }
 
             public void OnOrderCreated(OrderCreatedEvent evnt)
             {
-                _orders.Add(new Order(this, evnt.OrderId));
+                Orders.Add(new Order(this, evnt.OrderId));
             }
         }
 
@@ -39,14 +44,19 @@ namespace Ncqrs.Tests.Domain
             {
             }
 
+            public List<OrderLine> Lines
+            {
+                get { return _lines; }
+            }
+
             public void CreateLine(decimal value)
             {
                 ApplyEvent(new OrderLineCreatedEvent(value));
             }
 
-            public void OnOrderLineCreated(SourcedEvent evnt)
+            public void OnOrderLineCreated(OrderLineCreatedEvent evnt)
             {
-                _lines.Add(new OrderLine(((OrderLineCreatedEvent)evnt).Value));
+                Lines.Add(new OrderLine(evnt.Value));
             }
         }
 
@@ -109,6 +119,21 @@ namespace Ncqrs.Tests.Domain
             theAggregate.CreateOrderLine(orderId1, 20);
             theAggregate.CreateOrder(orderId2);
             theAggregate.CreateOrderLine(orderId2, 30);
+        }
+
+        [Test]
+        public void Entity_event_handlers_should_be_called_only_if_event_is_sourced_from_this_entty()
+        {
+            var orderId1 = Guid.NewGuid();
+            var orderId2 = Guid.NewGuid();
+
+            var theAggregate = new Customer();
+            theAggregate.CreateOrder(orderId1);
+            theAggregate.CreateOrder(orderId2);
+            theAggregate.CreateOrderLine(orderId1, 30);
+
+            Assert.AreEqual(1, theAggregate.Orders[0].Lines.Count);
+            Assert.AreEqual(0, theAggregate.Orders[1].Lines.Count);
         }
     }
 }

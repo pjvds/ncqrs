@@ -185,7 +185,7 @@ namespace Ncqrs.Eventing.Sourcing
 
         public IEnumerable<ISourcedEvent> GetUncommittedEvents()
         {
-            Contract.Ensures(Contract.Result<IEnumerable<SourcedEvent>>() != null, "The result of this method should never be null.");
+            Contract.Ensures(Contract.Result<IEnumerable<ISourcedEvent>>() != null, "The result of this method should never be null.");
 
             return _uncommittedEvents;
         }
