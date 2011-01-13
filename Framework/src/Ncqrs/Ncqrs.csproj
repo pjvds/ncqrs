@@ -102,9 +102,9 @@
     <Compile Include="Domain\EntityMappedByConvention.cs" />
     <Compile Include="Domain\Storage\IAggregateRootCreationStrategy.cs" />
     <Compile Include="Domain\Storage\SimpleAggregateRootCreationStrategy.cs" />
+    <Compile Include="Eventing\Sourcing\EntityThresholdedDomainEventHandlerWrapper.cs" />
     <Compile Include="Eventing\Sourcing\SourcedEventArgs.cs" />
     <Compile Include="Eventing\Sourcing\SourcedEntityEvent.cs" />
-    <Compile Include="Eventing\Sourcing\SourcedEventHandlerPredicate.cs" />
     <Compile Include="Eventing\Storage\NoDB\NoDBEventStore.cs" />
     <Compile Include="Eventing\Storage\NoDB\NoDBSnapshotStore.cs" />
     <Compile Include="Eventing\Storage\NoDB\StoredEventExtensions.cs" />
