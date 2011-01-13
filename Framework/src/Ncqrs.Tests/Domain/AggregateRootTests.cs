@@ -199,8 +199,6 @@ namespace Ncqrs.Tests.Domain
         [Test]
         public void Applying_an_event_should_not_effect_the_initial_version()
         {
-            using (NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork())
-            {
                 var theAggregate = new MyAggregateRoot();
 
                 theAggregate.InitialVersion.Should().Be(0);
@@ -209,7 +207,6 @@ namespace Ncqrs.Tests.Domain
                 theAggregate.MethodThatCausesAnEventThatHasAHandler();
                 theAggregate.InitialVersion.Should().Be(0);
                 theAggregate.MethodThatCausesAnEventThatHasAHandler();
-            }
         }
 
         [Test]
@@ -330,6 +327,38 @@ namespace Ncqrs.Tests.Domain
             var theAggregate = new MyAggregateRoot(theId);
 
             theAggregate.EventSourceId.Should().Be(theId);
+        }
+
+        [Test]
+        public void Applying_an_event_should_call_the_event_handler_only_once()
+        {
+            var theAggregate = new MyAggregateRoot();
+
+            theAggregate.MethodThatCausesAnEventThatHasAHandler();
+
+            theAggregate.FooEventHandlerInvokeCount.Should().Be(1);
+        }
+
+        [Test]
+        public void Applying_an_event_to_an_agg_root_with_history_should_call_the_event_handler_only_once()
+        {
+            var theAggregate = new MyAggregateRoot();
+
+            var event1 = new HandledEvent(Guid.NewGuid(), theAggregate.EventSourceId, 1, DateTime.UtcNow);
+            var event2 = new HandledEvent(Guid.NewGuid(), theAggregate.EventSourceId, 2, DateTime.UtcNow);
+            var event3 = new HandledEvent(Guid.NewGuid(), theAggregate.EventSourceId, 3, DateTime.UtcNow);
+            var event4 = new HandledEvent(Guid.NewGuid(), theAggregate.EventSourceId, 4, DateTime.UtcNow);
+            var event5 = new HandledEvent(Guid.NewGuid(), theAggregate.EventSourceId, 5, DateTime.UtcNow);
+
+            IEnumerable<SourcedEvent> history = new[] { event1, event2, event3, event4, event5 };
+
+            theAggregate.InitializeFromHistory(history);
+
+            var eventHandlerCountAfterInitialization = theAggregate.FooEventHandlerInvokeCount;
+
+            theAggregate.MethodThatCausesAnEventThatHasAHandler();
+
+            theAggregate.FooEventHandlerInvokeCount.Should().Be(eventHandlerCountAfterInitialization + 1);
         }
     }
 }
