@@ -94,11 +94,22 @@ namespace Ncqrs.Commanding.ServiceModel
         /// Initializes a new instance of the <see cref="CommandContext"/> class.
         /// </summary>
         /// <param name="theCommand">The command that will be executed.</param>
-        public CommandContext(ICommand theCommand)
+        /// <param name="state">The current state of the command context</param>
+        /// <param name="exception">Any exception which may have been thrown while executing</param>
+        public CommandContext(ICommand theCommand, CommandExecutionState state = CommandExecutionState.None, Exception exception = null)
         {
             Contract.Requires<ArgumentNullException>(theCommand != null, "The theCommand cannot be null.");
 
             _theCommand = theCommand;
+            Exception = exception;
+            if (state == CommandExecutionState.Resolved) ExecutorResolved = true;
+            if (state == CommandExecutionState.Called)
+            {
+                ExecutorResolved = true;
+                ExecutorHasBeenCalled = true;
+            }
         }
     }
+
+    public enum CommandExecutionState { None, Resolved, Called }
 }
