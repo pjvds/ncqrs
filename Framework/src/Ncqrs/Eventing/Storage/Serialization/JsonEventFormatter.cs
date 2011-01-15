@@ -34,8 +34,26 @@ namespace Ncqrs.Eventing.Storage.Serialization
             var eventType = _typeResolver.ResolveType(obj.EventName);
             var reader = obj.Data.CreateReader();
             var theEvent = (ISourcedEvent) _serializer.Deserialize(reader, eventType);
+            
+            //json deserialization doesn't seem to restore the EntityId for sourced enetity events
+            SetEntityIdIfEntityEvent(obj, theEvent);
+
             theEvent.InitializeFrom(obj);
             return theEvent;
+        }
+
+        private static void SetEntityIdIfEntityEvent(StoredEvent<JObject> obj, ISourcedEvent theEvent)
+        {
+            var entityEvent = theEvent as ISourcedEntityEvent;
+            if(entityEvent != null)
+            {
+                var eventAllowingSettingOfEntityId = entityEvent as IAllowSettingEntityId;
+                if (eventAllowingSettingOfEntityId != null)
+                {
+                    var entityId = new Guid((string)obj.Data["EntityId"]);
+                    eventAllowingSettingOfEntityId.SetEntityId(entityId);
+                }
+            }
         }
 
         public StoredEvent<JObject> Serialize(ISourcedEvent theEvent)

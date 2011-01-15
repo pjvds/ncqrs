@@ -19,18 +19,20 @@ namespace Ncqrs.Eventing.Storage.NoDB.Tests.EventStoreTests
         {
             EventStore = new NoDBEventStore("./");
             Source = MockRepository.GenerateMock<IEventSource>();
-            Guid id = Guid.NewGuid();
+            Guid aggregateId = Guid.NewGuid();
+            Guid entityId = Guid.NewGuid();
             int sequenceCounter = 1;
             Events = new SourcedEvent[]
                          {
-                             new CustomerCreatedEvent(Guid.NewGuid(), id, sequenceCounter++, DateTime.UtcNow, "Foo",
-                                                      35),
-                             new CustomerNameChanged(Guid.NewGuid(), id, sequenceCounter++, DateTime.UtcNow,
-                                                     "Name" + sequenceCounter),
-                             new CustomerNameChanged(Guid.NewGuid(), id, sequenceCounter++, DateTime.UtcNow,
-                                                     "Name" + sequenceCounter)
+                             //new CustomerCreatedEvent(Guid.NewGuid(), aggregateId, sequenceCounter++, DateTime.UtcNow, "Foo",
+                             //                         35),
+                             //new CustomerNameChanged(Guid.NewGuid(), aggregateId, sequenceCounter++, DateTime.UtcNow,
+                             //                        "Name" + sequenceCounter),
+                             //new CustomerNameChanged(Guid.NewGuid(), aggregateId, sequenceCounter++, DateTime.UtcNow,
+                             //                        "Name" + sequenceCounter),
+                             new AccountTitleChangedEvent(Guid.NewGuid(), aggregateId, entityId, sequenceCounter++, DateTime.UtcNow, "Title" + sequenceCounter )
                          };
-            Source.Stub(e => e.EventSourceId).Return(id);
+            Source.Stub(e => e.EventSourceId).Return(aggregateId);
             Source.Stub(e => e.InitialVersion).Return(0);
             Source.Stub(e => e.Version).Return(Events.Length);
             Source.Stub(e => e.GetUncommittedEvents()).Return(Events);

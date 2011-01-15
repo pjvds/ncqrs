@@ -67,6 +67,25 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
         }
 
         [Serializable]
+        public class AccountNameChangedEvent : SourcedEntityEvent
+        {
+            public Guid CustomerId { get { return EventSourceId; } }
+            public Guid AccountId { get { return EntityId; } }
+            public string NewAccountName { get; set; }
+
+            public AccountNameChangedEvent()
+            {
+                
+            }
+
+            public AccountNameChangedEvent(Guid eventIdentifier, Guid aggregateRootId, Guid entityId, long eventSequence, DateTime eventTimeStamp, string newAccountName)
+                :base(eventIdentifier, aggregateRootId, entityId, eventSequence, eventTimeStamp)
+            {
+                NewAccountName = newAccountName;
+            }
+        }
+
+        [Serializable]
         public class MySnapshot : Snapshot
         {
         }
@@ -191,32 +210,37 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
         public void Retrieving_all_events_should_return_the_same_as_added()
         {
             var targetStore = new MsSqlServerEventStore(connectionString);
-            var id = Guid.NewGuid();
+            var aggregateId = Guid.NewGuid();
+            var entityId = Guid.NewGuid();
 
             int sequenceCounter = 1;
             var events = new SourcedEvent[]
                              {
-                                 new CustomerCreatedEvent(Guid.NewGuid(), id, sequenceCounter++, DateTime.UtcNow, "Foo",
+                                 new CustomerCreatedEvent(Guid.NewGuid(), aggregateId, sequenceCounter++, DateTime.UtcNow, "Foo",
                                                           35),
-                                 new CustomerNameChanged(Guid.NewGuid(), id, sequenceCounter++, DateTime.UtcNow,
+                                 new CustomerNameChanged(Guid.NewGuid(), aggregateId, sequenceCounter++, DateTime.UtcNow,
                                                          "Name" + sequenceCounter),
-                                 new CustomerNameChanged(Guid.NewGuid(), id, sequenceCounter++, DateTime.UtcNow,
+                                 new CustomerNameChanged(Guid.NewGuid(), aggregateId, sequenceCounter++, DateTime.UtcNow,
                                                          "Name" + sequenceCounter),
-                                 new CustomerNameChanged(Guid.NewGuid(), id, sequenceCounter++, DateTime.UtcNow,
-                                                         "Name" + sequenceCounter)
+                                 new CustomerNameChanged(Guid.NewGuid(), aggregateId, sequenceCounter++, DateTime.UtcNow,
+                                                         "Name" + sequenceCounter),
+                                 new AccountNameChangedEvent(Guid.NewGuid(), aggregateId, entityId, sequenceCounter++, DateTime.UtcNow, "New Account Title" + sequenceCounter)
                              };
 
             var eventSource = MockRepository.GenerateMock<IEventSource>();
-            eventSource.Stub(e => e.EventSourceId).Return(id);
+            eventSource.Stub(e => e.EventSourceId).Return(aggregateId);
             eventSource.Stub(e => e.InitialVersion).Return(0);
             eventSource.Stub(e => e.Version).Return(events.Length);
             eventSource.Stub(e => e.GetUncommittedEvents()).Return(events);
 
             targetStore.Save(eventSource);
 
-            var result = targetStore.GetAllEvents(id);
+            var result = targetStore.GetAllEvents(aggregateId);
             result.Count().Should().Be(events.Length);
             result.First().EventIdentifier.Should().Be(events.First().EventIdentifier);
+
+            var foundEntityId = result.ElementAt(4).As<SourcedEntityEvent>().EntityId;
+            foundEntityId.Should().Be(entityId);
         }
 
         [Test]
