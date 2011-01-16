@@ -32,28 +32,27 @@
   <ItemGroup>
     <Reference Include="Castle.Core">
       <HintPath>..\..\..\lib\ThirdParty\CastleWindsor\Castle.Core.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Castle.DynamicProxy2">
-      <HintPath>..\..\..\lib\ThirdParty\CastleWindsor\Castle.DynamicProxy2.dll</HintPath>
-      <Private>False</Private>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Castle.Windsor">
       <HintPath>..\..\..\lib\ThirdParty\CastleWindsor\Castle.Windsor.dll</HintPath>
-      <Private>False</Private>
+      <Private>True</Private>
     </Reference>
     <Reference Include="FluentAssertions">
       <HintPath>..\..\..\lib\ThirdParty\FluentAssertions\FluentAssertions.dll</HintPath>
-      <Private>False</Private>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Ncqrs">
       <HintPath>..\..\..\lib\$(Configuration)\Ncqrs\Ncqrs.dll</HintPath>
-      <Private>False</Private>
+      <Private>True</Private>
     </Reference>
     <Reference Include="nunit.framework">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\lib\ThirdParty\NUnit\nunit.framework.dll</HintPath>
-      <Private>False</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Rhino.Mocks">
+      <HintPath>..\..\..\lib\ThirdParty\RhinoMocks\Rhino.Mocks.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -64,6 +63,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="WindsorConfigurationCommandServiceRegistration.cs" />
     <Compile Include="WindsorConfigurationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -71,7 +71,7 @@
     <ProjectReference Include="..\Ncqrs.Config.Windsor\Ncqrs.Config.Windsor.csproj">
       <Project>{99BE6129-C5C4-45A5-94AB-0ADEA0A6AD53}</Project>
       <Name>Ncqrs.Config.Windsor</Name>
-      <Private>False</Private>
+      <Private>True</Private>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -2,7 +2,7 @@
 
 namespace Ncqrs.Eventing.Sourcing
 {
-    public class SourcedEntityEvent : SourcedEvent
+    public class SourcedEntityEvent : SourcedEvent, ISourcedEntityEvent, IAllowSettingEntityId
     {
         public static Guid UndefinedEntityId = Guid.Empty;
 
@@ -17,6 +17,11 @@ namespace Ncqrs.Eventing.Sourcing
         }
 
         public SourcedEntityEvent(Guid eventIdentifier, Guid eventSourceId, Guid entityId, long eventSequence, DateTime eventTimeStamp) : base(eventIdentifier, eventSourceId, eventSequence, eventTimeStamp)
+        {
+            EntityId = entityId;
+        }
+
+        public void SetEntityId(Guid entityId)
         {
             EntityId = entityId;
         }
