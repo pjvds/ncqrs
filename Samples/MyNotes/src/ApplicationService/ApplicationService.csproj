@@ -36,25 +36,25 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Ncqrs">
-      <HintPath>..\..\..\lib\Debug\Ncqrs\Ncqrs.dll</HintPath>
+      <HintPath>..\..\..\..\lib\Debug\Ncqrs\Ncqrs.dll</HintPath>
     </Reference>
     <Reference Include="Ncqrs.CommandService">
-      <HintPath>..\..\..\lib\Debug\Ncqrs.CommandService\Ncqrs.CommandService.dll</HintPath>
+      <HintPath>..\..\..\..\lib\Debug\Ncqrs.CommandService\Ncqrs.CommandService.dll</HintPath>
     </Reference>
     <Reference Include="Ncqrs.CommandService.Contracts">
-      <HintPath>..\..\..\lib\Debug\Ncqrs.CommandService.Contracts\Ncqrs.CommandService.Contracts.dll</HintPath>
+      <HintPath>..\..\..\..\lib\Debug\Ncqrs.CommandService.Contracts\Ncqrs.CommandService.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Ncqrs.Config.StructureMap">
-      <HintPath>..\..\..\lib\Debug\Ncqrs.Config.StructureMap\Ncqrs.Config.StructureMap.dll</HintPath>
+      <HintPath>..\..\..\..\lib\Debug\Ncqrs.Config.StructureMap\Ncqrs.Config.StructureMap.dll</HintPath>
     </Reference>
     <Reference Include="Ncqrs.EventBus">
-      <HintPath>..\..\..\lib\Debug\Ncqrs.EventBus\Ncqrs.EventBus.dll</HintPath>
+      <HintPath>..\..\..\..\lib\Debug\Ncqrs.EventBus\Ncqrs.EventBus.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\..\lib\ThirdParty\json.net\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\..\..\lib\ThirdParty\json.net\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="StructureMap">
-      <HintPath>..\..\..\lib\ThirdParty\StructureMap\StructureMap.dll</HintPath>
+      <HintPath>..\..\..\..\lib\ThirdParty\StructureMap\StructureMap.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -80,19 +80,19 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\src\Commands\Commands.csproj">
+    <ProjectReference Include="..\Commands\Commands.csproj">
       <Project>{CF0635EB-DFA4-4E82-B245-A0F125183E08}</Project>
       <Name>Commands</Name>
     </ProjectReference>
-    <ProjectReference Include="..\src\Domain\Domain.csproj">
+    <ProjectReference Include="..\Domain\Domain.csproj">
       <Project>{BD0344CC-E61E-4BC6-8782-0AC0390F48FD}</Project>
       <Name>Domain</Name>
     </ProjectReference>
-    <ProjectReference Include="..\src\Events\Events.csproj">
+    <ProjectReference Include="..\Events\Events.csproj">
       <Project>{705805EF-47BE-48A8-A359-CA999169E445}</Project>
       <Name>Events</Name>
     </ProjectReference>
-    <ProjectReference Include="..\src\ReadModel\ReadModel.csproj">
+    <ProjectReference Include="..\ReadModel\ReadModel.csproj">
       <Project>{D01CE8F6-800E-44CC-886B-F862B10E1396}</Project>
       <Name>ReadModel</Name>
     </ProjectReference>
@@ -103,6 +103,9 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
