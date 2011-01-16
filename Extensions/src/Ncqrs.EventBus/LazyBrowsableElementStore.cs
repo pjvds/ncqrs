@@ -4,31 +4,31 @@ using Ncqrs.Eventing.Sourcing;
 
 namespace Ncqrs.EventBus
 {
-    public class LazyBrowsableEventStore : IBrowsableEventStore
+    public class LazyBrowsableElementStore : IBrowsableElementStore
     {
         private const int DefaultThreshold = 1;
 
-        private readonly IBrowsableEventStore _wrappedStore;
+        private readonly IBrowsableElementStore _wrappedStore;
         private readonly CursorPositionCalculator _cursorCalculator = new CursorPositionCalculator(0);
         private readonly int _threshold;
 
-        public LazyBrowsableEventStore(IBrowsableEventStore wrappedStore, int threshold = DefaultThreshold)
+        public LazyBrowsableElementStore(IBrowsableElementStore wrappedStore, int threshold = DefaultThreshold)
         {
             _wrappedStore = wrappedStore;
             _threshold = threshold;
         }
 
-        public IEnumerable<SourcedEvent> FetchEvents(int maxCount)
+        public IEnumerable<IProcessingElement> Fetch(int maxCount)
         {
-            return _wrappedStore.FetchEvents(maxCount);
+            return _wrappedStore.Fetch(maxCount);
         }
 
-        public void MarkLastProcessedEvent(SequencedEvent evnt)
+        public void MarkLastProcessedEvent(IProcessingElement processingElement)
         {
-            _cursorCalculator.Append(evnt);
+            _cursorCalculator.Append(processingElement);
             if (_cursorCalculator.SequenceLength >= _threshold)
             {
-                _wrappedStore.MarkLastProcessedEvent(evnt);
+                _wrappedStore.MarkLastProcessedEvent(processingElement);
                 _cursorCalculator.ClearSequence();
             }
         }

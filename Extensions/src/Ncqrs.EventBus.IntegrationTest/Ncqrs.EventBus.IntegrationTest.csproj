@@ -49,8 +49,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConsoleEventProcessor.cs" />
-    <Compile Include="FakeEventStore.cs" />
+    <Compile Include="ConsoleElementProcessor.cs" />
+    <Compile Include="FakeElementStore.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RandomEvent.cs" />

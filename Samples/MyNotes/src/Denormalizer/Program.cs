@@ -18,7 +18,7 @@ namespace Denormalizer
             _bus.RegisterAllHandlersInAssembly(typeof(Program).Assembly);
 
             var connectionString = Settings.Default.EventStoreConnectionString;
-            var browsableEventStore = new MsSqlServerBrowsableEventStore(connectionString);
+            var browsableEventStore = new MsSqlServerBrowsableElementStore(connectionString);
             var pipeline = Pipeline.Create(new CallbackEventProcessor(Process), browsableEventStore);
 
             pipeline.Start();
@@ -39,7 +39,7 @@ namespace Denormalizer
         }
     }
 
-    public class CallbackEventProcessor : IEventProcessor
+    public class CallbackEventProcessor : IElementProcessor
     {
         private readonly Action<SourcedEvent> _callback;
 
@@ -48,9 +48,10 @@ namespace Denormalizer
             _callback = callback;
         }
 
-        public void Process(SourcedEvent evnt)
+        public void Process(IProcessingElement evnt)
         {
-            _callback(evnt);
+            var typedElement = (SourcedEventProcessingElement) evnt;
+            _callback(typedElement.Event);
         }
     }
 }

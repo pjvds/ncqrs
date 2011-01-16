@@ -5,19 +5,19 @@ namespace Ncqrs.EventBus
 {
     public class EventFetcher
     {
-        private readonly IEventFetchPolicy _fetchPolicy;
-        private readonly IBrowsableEventStore _eventStore;
+        private readonly IFetchPolicy _fetchPolicy;
+        private readonly IBrowsableElementStore _elementStore;
         private bool _activeFetchRequest;
         private readonly object _fetchLock = new object();
-        private int _eventSequence = 1;
+        private int _sequence = 1;
 
-        public EventFetcher(IEventFetchPolicy fetchPolicy, IBrowsableEventStore eventStore)
+        public EventFetcher(IFetchPolicy fetchPolicy, IBrowsableElementStore elementStore)
         {
             _fetchPolicy = fetchPolicy;
-            _eventStore = eventStore;
+            _elementStore = elementStore;
         }
 
-        public void EvaluateEventFetchPolicy(PipelineState pipelineState)
+        public void EvaluateFetchPolicy(PipelineState pipelineState)
         {
             if (_activeFetchRequest)
             {
@@ -26,36 +26,36 @@ namespace Ncqrs.EventBus
             var directive = _fetchPolicy.ShouldFetch(pipelineState);
             if (directive.ShouldFetch)
             {
-                StartFetchingEvents(directive);
+                StartFetching(directive);
             }
         }
 
-        public event EventHandler<EventFetchedEventArgs> EventFetched;
+        public event EventHandler<ElementFetchedEventArgs> ElementFetched;
 
-        private void OnEventFetched(EventFetchedEventArgs e)
+        private void OnElementFetched(ElementFetchedEventArgs e)
         {
-            EventHandler<EventFetchedEventArgs> handler = EventFetched;
+            EventHandler<ElementFetchedEventArgs> handler = ElementFetched;
             if (handler != null)
             {
                 handler(this, e);
             }
         }
 
-        private void StartFetchingEvents(FetchDirective directive)
+        private void StartFetching(FetchDirective directive)
         {
-            Task.Factory.StartNew(() => FetchEvents(directive));
+            Task.Factory.StartNew(() => Fetch(directive));
         }
 
-        private void FetchEvents(FetchDirective directive)
+        private void Fetch(FetchDirective directive)
         {
             lock (_fetchLock)
             {
                 _activeFetchRequest = true;
-                var events = _eventStore.FetchEvents(directive.MaxCount);
-                foreach (var evnt in events)
+                var elements = _elementStore.Fetch(directive.MaxCount);
+                foreach (var element in elements)
                 {
-                    var sequencedEvent = new SequencedEvent(_eventSequence++, evnt);
-                    OnEventFetched(new EventFetchedEventArgs(sequencedEvent));
+                    element.SequenceNumber = _sequence++;
+                    OnElementFetched(new ElementFetchedEventArgs(element));
                 }
                 _activeFetchRequest = false;
             }

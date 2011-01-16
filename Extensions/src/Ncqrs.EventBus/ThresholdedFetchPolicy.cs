@@ -2,12 +2,12 @@
 
 namespace Ncqrs.EventBus
 {
-    public class ThresholdedEventFetchPolicy : IEventFetchPolicy
+    public class ThresholdedFetchPolicy : IFetchPolicy
     {
         private readonly int _minimumPendingEvents;
         private readonly int _batchSize;
 
-        public ThresholdedEventFetchPolicy(int minimumPendingEvents, int batchSize)
+        public ThresholdedFetchPolicy(int minimumPendingEvents, int batchSize)
         {
             _minimumPendingEvents = minimumPendingEvents;
             _batchSize = batchSize;

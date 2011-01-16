@@ -6,17 +6,17 @@ namespace Ncqrs.EventBus
 {    
     public class PipelineProcessor
     {
-        private readonly IEventProcessor _eventProcessor;
+        private readonly IElementProcessor _elementProcessor;
 
         public PipelineProcessor(
-            IEventProcessor eventProcessor)
+            IElementProcessor elementProcessor)
         {
-            _eventProcessor = eventProcessor;
+            _elementProcessor = elementProcessor;
         }
 
-        public event EventHandler<EventProcessedEventArgs> EventProcessed;
+        public event EventHandler<ElementProcessedEventArgs> EventProcessed;
 
-        private void OnEventProcessed(EventProcessedEventArgs e)
+        private void OnEventProcessed(ElementProcessedEventArgs e)
         {
             var handler = EventProcessed;
             if (handler != null)
@@ -25,16 +25,16 @@ namespace Ncqrs.EventBus
             }
         }
 
-        public void ProcessNext(SequencedEvent evnt)
+        public void ProcessNext(IProcessingElement element)
         {
             try
             {
-                _eventProcessor.Process(evnt.Event);
-                OnEventProcessed(new EventProcessedEventArgs(evnt));
+                _elementProcessor.Process(element);
+                OnEventProcessed(new ElementProcessedEventArgs(element));
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("Exception during event processing: "+ex);
+                Debug.WriteLine("Exception during ProcessedElement processing: "+ex);
             }            
         }
     }

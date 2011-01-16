@@ -7,41 +7,41 @@ namespace Ncqrs.EventBus
     public class CursorPositionCalculator
     {
         private int _lastEventInSequence;
-        private Guid _lastEventInSequenceId;
+        private string _lastElementtInSequenceId;
         private int _count;
         private int _sequenceLength;
-        private readonly SortedDictionary<int, Guid> _eventsNotInSequence = new SortedDictionary<int, Guid>();
+        private readonly SortedDictionary<int, string> _elementsNotInSequence = new SortedDictionary<int, string>();
 
         public CursorPositionCalculator(int startingSequenceNumber)
         {
             _lastEventInSequence = startingSequenceNumber;
         }
 
-        public void Append(SequencedEvent sequencedEvent)
+        public void Append(IProcessingElement processingElement)
         {
             _count++;
-            if (sequencedEvent.Sequence == _lastEventInSequence + 1)
+            if (processingElement.SequenceNumber == _lastEventInSequence + 1)
             {
                 _lastEventInSequence++;
                 _sequenceLength++;
-               _lastEventInSequenceId = sequencedEvent.Event.EventIdentifier;
+                _lastElementtInSequenceId = processingElement.UniqueId;
                 ProcessEventsNotInSequence();
             }
             else
             {
-                _eventsNotInSequence.Add(sequencedEvent.Sequence, sequencedEvent.Event.EventIdentifier);
+                _elementsNotInSequence.Add(processingElement.SequenceNumber, processingElement.UniqueId);
             }
         }
 
         private void ProcessEventsNotInSequence()
         {
-            KeyValuePair<int, Guid> current;
-            while (_eventsNotInSequence.Count > 0 && (current = _eventsNotInSequence.First()).Key == GetNextInSequence())
+            KeyValuePair<int, string> current;
+            while (_elementsNotInSequence.Count > 0 && (current = _elementsNotInSequence.First()).Key == GetNextInSequence())
             {
                 _lastEventInSequence++;
-                _lastEventInSequenceId = current.Value;
+                _lastElementtInSequenceId = current.Value;
                 _sequenceLength++;
-                _eventsNotInSequence.Remove(current.Key);
+                _elementsNotInSequence.Remove(current.Key);
             }            
         }
 
@@ -60,9 +60,9 @@ namespace Ncqrs.EventBus
             get { return _sequenceLength;}
         }   
      
-        public Guid LastEventInSequenceId
+        public string LastElementtInSequenceId
         {
-            get { return _lastEventInSequenceId; }
+            get { return _lastElementtInSequenceId; }
         }
 
         public void ClearSequence()

@@ -43,31 +43,33 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DefaultEventProcessor.cs" />
-    <Compile Include="EventDemultiplexedEventArgs.cs" />
-    <Compile Include="EventDemultiplexerQueue.cs" />
-    <Compile Include="EventFetchedEventArgs.cs" />
+    <Compile Include="DefaultElementProcessor.cs" />
+    <Compile Include="ElementDemultiplexedEventArgs.cs" />
+    <Compile Include="DemultiplexerQueue.cs" />
+    <Compile Include="ElementFetchedEventArgs.cs" />
     <Compile Include="EventFetcher.cs" />
-    <Compile Include="EventProcessedEventArgs.cs" />
+    <Compile Include="ElementProcessedEventArgs.cs" />
     <Compile Include="FetchDirective.cs" />
     <Compile Include="FetchResult.cs" />
-    <Compile Include="IEventFetchPolicy.cs" />
+    <Compile Include="IFetchPolicy.cs" />
     <Compile Include="IEventQueue.cs" />
-    <Compile Include="IBrowsableEventStore.cs" />
+    <Compile Include="IBrowsableElementStore.cs" />
     <Compile Include="CursorPositionCalculator.cs" />
     <Compile Include="EventDemultiplexer.cs" />
-    <Compile Include="IEventProcessor.cs" />
+    <Compile Include="IElementProcessor.cs" />
     <Compile Include="IPipelineMonitoringStrategy.cs" />
     <Compile Include="IPipelineStateMonitor.cs" />
-    <Compile Include="MsSqlServerBrowsableEventStore.cs" />
+    <Compile Include="MsSqlServerBrowsableElementStore.cs" />
     <Compile Include="Pipeline.cs" />
     <Compile Include="PipelineProcessor.cs" />
     <Compile Include="PipelineState.cs" />
     <Compile Include="PipelineStateChangedEventArgs.cs" />
+    <Compile Include="ProcessingElement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SequencedEvent.cs" />
-    <Compile Include="ThresholdedEventFetchPolicy.cs" />
-    <Compile Include="LazyBrowsableEventStore.cs" />
+    <Compile Include="SourcedEventProcessingElement.cs" />
+    <Compile Include="ThresholdedFetchPolicy.cs" />
+    <Compile Include="LazyBrowsableElementStore.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -11,48 +11,48 @@ namespace Ncqrs.EventBus
         private const int MaxDegreeOfParallelismForProcessing = 1;
         private readonly EventFetcher _fetcher;
         private readonly PipelineProcessor _processor;
-        private readonly IBrowsableEventStore _eventStore;
+        private readonly IBrowsableElementStore _elementStore;
         private readonly EventDemultiplexer _eventDemultiplexer;
-        private readonly BlockingCollection<SequencedEvent> _preProcessingQueue = new BlockingCollection<SequencedEvent>();
-        private readonly BlockingCollection<SequencedEvent> _postProcessingQueue = new BlockingCollection<SequencedEvent>();
+        private readonly BlockingCollection<IProcessingElement> _preProcessingQueue = new BlockingCollection<IProcessingElement>();
+        private readonly BlockingCollection<IProcessingElement> _postProcessingQueue = new BlockingCollection<IProcessingElement>();
         private readonly BlockingCollection<Action> _preDemultiplexingQueue = new BlockingCollection<Action>();
         private readonly CancellationTokenSource _cancellation = new CancellationTokenSource();
         private readonly Timer _fetchTimer;
 
-        public Pipeline(IEventProcessor eventProcessor, IBrowsableEventStore eventStore, IEventFetchPolicy fetchPolicy)
+        public Pipeline(IElementProcessor elementProcessor, IBrowsableElementStore elementStore, IFetchPolicy fetchPolicy)
         {
-            _eventStore = new LazyBrowsableEventStore(eventStore);
+            _elementStore = new LazyBrowsableElementStore(elementStore);
             _eventDemultiplexer = new EventDemultiplexer();
             _eventDemultiplexer.EventDemultiplexed += OnEventDemultiplexed;
-            _processor = new PipelineProcessor(eventProcessor);
+            _processor = new PipelineProcessor(elementProcessor);
             _processor.EventProcessed += OnEventProcessed;
-            _fetcher = new EventFetcher(fetchPolicy, _eventStore);
-            _fetcher.EventFetched += OnEventFetched;
+            _fetcher = new EventFetcher(fetchPolicy, _elementStore);
+            _fetcher.ElementFetched += OnElementFetched;
             _fetchTimer = new Timer(x => EvaluateFetchPolicy(), null, TimeSpan.Zero, TimeSpan.FromSeconds(1));
         }
 
-        public static Pipeline Create(IEventProcessor eventProcessor,IBrowsableEventStore eventStore)
+        public static Pipeline Create(IElementProcessor elementProcessor,IBrowsableElementStore elementStore)
         {
             const int minimumPendingEvents = 10;
             const int batchSize = 20;
 
-            return new Pipeline(eventProcessor, eventStore, new ThresholdedEventFetchPolicy(minimumPendingEvents, batchSize));
+            return new Pipeline(elementProcessor, elementStore, new ThresholdedFetchPolicy(minimumPendingEvents, batchSize));
         }
 
-        private void OnEventDemultiplexed(object sender, EventDemultiplexedEventArgs e)
+        private void OnEventDemultiplexed(object sender, ElementDemultiplexedEventArgs e)
         {
-            _preProcessingQueue.Add(e.Event);
+            _preProcessingQueue.Add(e.DemultiplexedElement);
         }
 
-        private void OnEventProcessed(object sender, EventProcessedEventArgs e)
+        private void OnEventProcessed(object sender, ElementProcessedEventArgs e)
         {
-            _preDemultiplexingQueue.Add(() => _eventDemultiplexer.MarkAsProcessed(e.Event));
-            _postProcessingQueue.Add(e.Event);
+            _preDemultiplexingQueue.Add(() => _eventDemultiplexer.MarkAsProcessed(e.ProcessedElement));
+            _postProcessingQueue.Add(e.ProcessedElement);
         }
 
-        private void OnEventFetched(object sender, EventFetchedEventArgs e)
+        private void OnElementFetched(object sender, ElementFetchedEventArgs e)
         {
-            _preDemultiplexingQueue.Add(() => _eventDemultiplexer.Demultiplex(e.Event));
+            _preDemultiplexingQueue.Add(() => _eventDemultiplexer.Demultiplex(e.ProcessingElement));
         }        
 
         public void Start()
@@ -92,7 +92,7 @@ namespace Ncqrs.EventBus
 
         private void EvaluateFetchPolicy()
         {
-            _fetcher.EvaluateEventFetchPolicy(new PipelineState(_preDemultiplexingQueue.Count));
+            _fetcher.EvaluateFetchPolicy(new PipelineState(_preDemultiplexingQueue.Count));
         }
 
         private void StartProcessor()
@@ -131,7 +131,7 @@ namespace Ncqrs.EventBus
                 var eventStream = _postProcessingQueue.GetConsumingEnumerable((CancellationToken)cancellationToken);
                 foreach (var evnt in eventStream)
                 {
-                    _eventStore.MarkLastProcessedEvent(evnt);
+                    _elementStore.MarkLastProcessedEvent(evnt);
                 }
             }
             catch (OperationCanceledException)

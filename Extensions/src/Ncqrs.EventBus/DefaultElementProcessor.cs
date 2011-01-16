@@ -1,21 +1,22 @@
 ﻿using Ncqrs.Eventing;
 using Ncqrs.Eventing.ServiceModel.Bus;
-using Ncqrs.Eventing.Sourcing;
 
 namespace Ncqrs.EventBus
 {
-    public class DefaultEventProcessor : IEventProcessor
+    
+    public class DefaultElementProcessor : IElementProcessor
     {
         private readonly InProcessEventBus _internalBus;
         
-        public DefaultEventProcessor(bool useTransactionScope)
+        public DefaultElementProcessor(bool useTransactionScope)
         {
             _internalBus = new InProcessEventBus(useTransactionScope);
         }
 
-        public void Process(SourcedEvent evnt)
+        public void Process(IProcessingElement processingElement)
         {
-            _internalBus.Publish(evnt);
+            var typedElement = (SourcedEventProcessingElement) processingElement;
+            _internalBus.Publish(typedElement.Event);
         }
 
         public void RegisterHandler<TEvent>(IEventHandler<TEvent> handler) where TEvent : IEvent

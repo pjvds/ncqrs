@@ -23,8 +23,8 @@ namespace Ncqrs.EventBus.IntegrationTest
         {
             var connectionString = ConfigurationManager.ConnectionStrings["Main"].ConnectionString;
 
-            var consoleEventProcessor = new ConsoleEventProcessor();
-            var p = Pipeline.Create(consoleEventProcessor, new MsSqlServerBrowsableEventStore(connectionString));
+            var consoleEventProcessor = new ConsoleElementProcessor();
+            var p = Pipeline.Create(consoleEventProcessor, new MsSqlServerBrowsableElementStore(connectionString));
             p.Start();
             Console.ReadLine();
             p.Stop();

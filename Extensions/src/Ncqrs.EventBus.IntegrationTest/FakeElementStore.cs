@@ -4,7 +4,7 @@ using Ncqrs.Eventing.Sourcing;
 
 namespace Ncqrs.EventBus.IntegrationTest
 {
-    public class FakeEventStore : IBrowsableEventStore
+    public class FakeElementStore : IBrowsableElementStore
     {
         private readonly Random _random = new Random();
         private const int Count = 1000;
@@ -14,7 +14,7 @@ namespace Ncqrs.EventBus.IntegrationTest
         {
         }
 
-        public IEnumerable<SourcedEvent> FetchEvents(int maxCount)
+        public IEnumerable<IProcessingElement> Fetch(int maxCount)
         {
             lock (this)
             {
@@ -24,12 +24,12 @@ namespace Ncqrs.EventBus.IntegrationTest
                 for (int i = 0; i < count; i++)
                 {
                     _fetched++;
-                    yield return new RandomEvent(_fetched);
+                    yield return new SourcedEventProcessingElement(new RandomEvent(_fetched));
                 }
             }
         }
 
-        public void MarkLastProcessedEvent(SequencedEvent evnt)
+        public void MarkLastProcessedEvent(IProcessingElement evnt)
         {            
         }
     }

@@ -5,14 +5,14 @@ using System.Collections.Generic;
 
 namespace Ncqrs.EventBus
 {
-    public class EventDemultiplexer : IEventQueue
+    public class EventDemultiplexer// : IEventQueue
     {
-        private readonly List<EventDemultiplexerQueue> _queues = new List<EventDemultiplexerQueue>();
-        private readonly Dictionary<Guid, EventDemultiplexerQueue> _eventQueueMap = new Dictionary<Guid, EventDemultiplexerQueue>();
+        private readonly List<DemultiplexerQueue> _queues = new List<DemultiplexerQueue>();
+        private readonly Dictionary<string, DemultiplexerQueue> _queueMap = new Dictionary<string, DemultiplexerQueue>();
         
-        public event EventHandler<EventDemultiplexedEventArgs> EventDemultiplexed;
+        public event EventHandler<ElementDemultiplexedEventArgs> EventDemultiplexed;
 
-        private void OnEventDemultiplexed(EventDemultiplexedEventArgs e)
+        private void OnEventDemultiplexed(ElementDemultiplexedEventArgs e)
         {
             var handler = EventDemultiplexed;
             if (handler != null)
@@ -21,63 +21,62 @@ namespace Ncqrs.EventBus
             }
         }
 
-        public void Demultiplex(SequencedEvent sequencedEvent)
+        public void Demultiplex(IProcessingElement sequencedEvent)
         {
             if (IsDuplicate(sequencedEvent))
             {
-                Debug.WriteLine("Ignoring duplicate event {0}.", sequencedEvent.Event.EventIdentifier);
+                Debug.WriteLine("Ignoring duplicate element {0}.", sequencedEvent.UniqueId);
                 return;
             }
             var queue = FindQueueFor(sequencedEvent);
             if (queue != null)
             {
-                AssociateEventAndQueue(sequencedEvent, queue);
+                AssociateElementAndQueue(sequencedEvent, queue);
                 queue.Enqueue(sequencedEvent);
             }
             else
             {
                 queue = CreateAndBlockQueueFor(sequencedEvent);
-                AssociateEventAndQueue(sequencedEvent, queue);
+                AssociateElementAndQueue(sequencedEvent, queue);
                 EnqueueToProcessing(sequencedEvent);
             }
         }
 
-        private bool IsDuplicate(SequencedEvent sequencedEvent)
+        private bool IsDuplicate(IProcessingElement processingElement)
         {
-            return _eventQueueMap.ContainsKey(sequencedEvent.Event.EventIdentifier);
+            return _queueMap.ContainsKey(processingElement.UniqueId);
         }
 
-        private void AssociateEventAndQueue(SequencedEvent sequencedEvent, EventDemultiplexerQueue queue)
+        private void AssociateElementAndQueue(IProcessingElement processingElement, DemultiplexerQueue queue)
         {
-            _eventQueueMap.Add(sequencedEvent.Event.EventIdentifier, queue);
+            _queueMap.Add(processingElement.UniqueId, queue);
         }
 
-        public void MarkAsProcessed(SequencedEvent sequencedEvent)
+        public void MarkAsProcessed(IProcessingElement processingElement)
         {
-            var eventId = sequencedEvent.Event.EventIdentifier;
-            var queue = _eventQueueMap[eventId];            
-            _eventQueueMap.Remove(eventId);
+            var queue = _queueMap[processingElement.UniqueId];            
+            _queueMap.Remove(processingElement.UniqueId);
             if (!queue.Unblock())
             {
                 _queues.Remove(queue);
             }            
         }
 
-        private void EnqueueToProcessing(SequencedEvent sequencedEvent)
+        private void EnqueueToProcessing(IProcessingElement processingElement)
         {
-            OnEventDemultiplexed(new EventDemultiplexedEventArgs(sequencedEvent));
+            OnEventDemultiplexed(new ElementDemultiplexedEventArgs(processingElement));
         }
 
-        private EventDemultiplexerQueue CreateAndBlockQueueFor(SequencedEvent sequencedEvent)
+        private DemultiplexerQueue CreateAndBlockQueueFor(IProcessingElement processingElement)
         {
-            var queue = new EventDemultiplexerQueue(sequencedEvent.Event.EventSourceId, EnqueueToProcessing);
+            var queue = new DemultiplexerQueue(processingElement.GroupingKey, EnqueueToProcessing);
             _queues.Add(queue);
             return queue;
         }
 
-        private EventDemultiplexerQueue FindQueueFor(SequencedEvent sequencedEvent)
+        private DemultiplexerQueue FindQueueFor(IProcessingElement processingElement)
         {
-            return _queues.FirstOrDefault(x => x.Accepts(sequencedEvent));
+            return _queues.FirstOrDefault(x => x.Accepts(processingElement));
         }
 
     }

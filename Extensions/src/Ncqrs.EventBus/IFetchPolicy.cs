@@ -2,7 +2,7 @@
 
 namespace Ncqrs.EventBus
 {
-    public interface IEventFetchPolicy
+    public interface IFetchPolicy
     {
         FetchDirective ShouldFetch(PipelineState currentState);
         void OnFetchingCompleted(FetchResult result);

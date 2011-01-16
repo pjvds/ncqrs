@@ -6,7 +6,7 @@ using Ncqrs.Eventing.Storage.SQL;
 
 namespace Ncqrs.EventBus
 {
-    public class MsSqlServerBrowsableEventStore : IBrowsableEventStore
+    public class MsSqlServerBrowsableElementStore : IBrowsableElementStore
     {
         private const string MarkLastProcessedEventQuery = "INSERT INTO [PipelineState] ([LastProcessedEventId]) VALUES (@LastProcessedEventId)";
         private const string GetLastProcessedEventQuery = "SELECT TOP 1 [LastProcessedEventId] FROM [PipelineState] ORDER BY [BatchId] DESC";
@@ -15,13 +15,13 @@ namespace Ncqrs.EventBus
         private readonly MsSqlServerEventStore _wrappedStore;
         private Guid? _lastEventId;
 
-        public MsSqlServerBrowsableEventStore(string connectionString)
+        public MsSqlServerBrowsableElementStore(string connectionString)
         {
             _wrappedStore = new MsSqlServerEventStore(connectionString);
             _connectionString = connectionString;
         }
                 
-        public IEnumerable<SourcedEvent> FetchEvents(int maxCount)
+        public IEnumerable<IProcessingElement> Fetch(int maxCount)
         {
             if (!_lastEventId.HasValue)
             {
@@ -31,7 +31,7 @@ namespace Ncqrs.EventBus
             foreach (var evnt in result)
             {
                 _lastEventId = evnt.EventIdentifier;
-                yield return evnt;
+                yield return new SourcedEventProcessingElement(evnt);
             }
         }
 
@@ -47,12 +47,13 @@ namespace Ncqrs.EventBus
             }
         }
 
-        public void MarkLastProcessedEvent(SequencedEvent evnt)
+        public void MarkLastProcessedEvent(IProcessingElement processingElement)
         {
+            var typedElement = (SourcedEventProcessingElement) processingElement;
             using (var connection = new SqlConnection(_connectionString))
             using (var command = new SqlCommand(MarkLastProcessedEventQuery, connection))
             {
-                command.Parameters.AddWithValue("LastProcessedEventId", evnt.Event.EventIdentifier);
+                command.Parameters.AddWithValue("LastProcessedEventId", typedElement.Event.EventIdentifier);
                 connection.Open();
                 command.ExecuteNonQuery();
             }
