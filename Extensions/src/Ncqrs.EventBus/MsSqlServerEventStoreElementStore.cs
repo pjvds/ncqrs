@@ -8,8 +8,8 @@ namespace Ncqrs.EventBus
 {
     public class MsSqlServerEventStoreElementStore : IBrowsableElementStore
     {
-        private const string MarkLastProcessedEventQuery = "INSERT INTO [PipelineState] ([LastProcessedEventId]) VALUES (@LastProcessedEventId)";
-        private const string GetLastProcessedEventQuery = "SELECT TOP 1 [LastProcessedEventId] FROM [PipelineState] ORDER BY [BatchId] DESC";
+        private const string MarkLastProcessedEventQuery = "INSERT INTO [PipelineState] ([PipelineName], [LastProcessedEventId]) VALUES (@PipelineName, @LastProcessedEventId)";
+        private const string GetLastProcessedEventQuery = "SELECT TOP 1 [LastProcessedEventId] FROM [PipelineState] WHERE [PipelineName] = @PipelineName ORDER BY [BatchId] DESC";
 
         private readonly String _connectionString;
         private readonly MsSqlServerEventStore _wrappedStore;
@@ -21,11 +21,11 @@ namespace Ncqrs.EventBus
             _connectionString = connectionString;
         }
                 
-        public IEnumerable<IProcessingElement> Fetch(int maxCount)
+        public IEnumerable<IProcessingElement> Fetch(string pipelineName, int maxCount)
         {
             if (!_lastEventId.HasValue)
             {
-                _lastEventId = GetLastProcessedEvent();
+                _lastEventId = GetLastProcessedEvent(pipelineName);
             }            
             var result = _wrappedStore.GetEventsAfter(_lastEventId, maxCount);
             foreach (var evnt in result)
@@ -35,25 +35,26 @@ namespace Ncqrs.EventBus
             }
         }
 
-        private Guid? GetLastProcessedEvent()
+        private Guid? GetLastProcessedEvent(string pipelineName)
         {
             using (var connection = new SqlConnection(_connectionString))
             using (var command = new SqlCommand(GetLastProcessedEventQuery, connection))
             {
                 connection.Open();
-
+                command.Parameters.AddWithValue("PipelineName", pipelineName);
                 object result = command.ExecuteScalar();
                 return (Guid?)result;
             }
         }
 
-        public void MarkLastProcessedEvent(IProcessingElement processingElement)
+        public void MarkLastProcessedEvent(string pipelineName, IProcessingElement processingElement)
         {
             var typedElement = (SourcedEventProcessingElement) processingElement;
             using (var connection = new SqlConnection(_connectionString))
             using (var command = new SqlCommand(MarkLastProcessedEventQuery, connection))
             {
                 command.Parameters.AddWithValue("LastProcessedEventId", typedElement.Event.EventIdentifier);
+                command.Parameters.AddWithValue("PipelineName", pipelineName);
                 connection.Open();
                 command.ExecuteNonQuery();
             }

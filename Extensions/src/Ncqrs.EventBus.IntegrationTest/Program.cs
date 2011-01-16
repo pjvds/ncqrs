@@ -23,12 +23,19 @@ namespace Ncqrs.EventBus.IntegrationTest
         {
             var connectionString = ConfigurationManager.ConnectionStrings["Main"].ConnectionString;
 
-            var consoleEventProcessor = new ConsoleElementProcessor();
-            var p = Pipeline.Create(consoleEventProcessor, new MsSqlServerEventStoreElementStore(connectionString));
-            p.Start();
+            var consoleEventProcessor1 = new ConsoleElementProcessor("1", 100);
+            var consoleEventProcessor2 = new ConsoleElementProcessor("2", 200);
+            var p1 = Pipeline.Create("First pipeline", consoleEventProcessor1,
+                                     new MsSqlServerEventStoreElementStore(connectionString));
+            var p2 = Pipeline.Create("Second pipeline", consoleEventProcessor2,
+                                     new MsSqlServerEventStoreElementStore(connectionString));
+            
+            p1.Start();
+            p2.Start();
             Console.ReadLine();
-            p.Stop();
-            Console.WriteLine("Processed {0} events", consoleEventProcessor.ProcessedEvents);
+            p1.Stop();
+            p2.Stop();
+            Console.WriteLine("Processed {0} events", consoleEventProcessor1.ProcessedEvents);
             Console.ReadLine();
 
         }

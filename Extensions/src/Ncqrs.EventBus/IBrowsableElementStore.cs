@@ -4,7 +4,7 @@ namespace Ncqrs.EventBus
 {    
     public interface IBrowsableElementStore
     {
-        IEnumerable<IProcessingElement> Fetch(int maxCount);
-        void MarkLastProcessedEvent(IProcessingElement processingElement);
+        IEnumerable<IProcessingElement> Fetch(string pipelineName, int maxCount);
+        void MarkLastProcessedEvent(string pipelineName, IProcessingElement processingElement);
     }
 }

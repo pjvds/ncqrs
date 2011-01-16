@@ -18,17 +18,17 @@ namespace Ncqrs.EventBus
             _threshold = threshold;
         }
 
-        public IEnumerable<IProcessingElement> Fetch(int maxCount)
+        public IEnumerable<IProcessingElement> Fetch(string pipelineName, int maxCount)
         {
-            return _wrappedStore.Fetch(maxCount);
+            return _wrappedStore.Fetch(pipelineName, maxCount);
         }
 
-        public void MarkLastProcessedEvent(IProcessingElement processingElement)
+        public void MarkLastProcessedEvent(string pipelineName, IProcessingElement processingElement)
         {
             _cursorCalculator.Append(processingElement);
             if (_cursorCalculator.SequenceLength >= _threshold)
             {
-                _wrappedStore.MarkLastProcessedEvent(processingElement);
+                _wrappedStore.MarkLastProcessedEvent(pipelineName, processingElement);
                 _cursorCalculator.ClearSequence();
             }
         }

@@ -14,7 +14,7 @@ namespace Ncqrs.EventBus.IntegrationTest
         {
         }
 
-        public IEnumerable<IProcessingElement> Fetch(int maxCount)
+        public IEnumerable<IProcessingElement> Fetch(string pipelineName, int maxCount)
         {
             lock (this)
             {
@@ -29,7 +29,7 @@ namespace Ncqrs.EventBus.IntegrationTest
             }
         }
 
-        public void MarkLastProcessedEvent(IProcessingElement evnt)
+        public void MarkLastProcessedEvent(string pipelineName, IProcessingElement evnt)
         {            
         }
     }

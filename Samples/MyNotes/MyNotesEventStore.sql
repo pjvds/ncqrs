@@ -48,6 +48,7 @@ GO
 
 CREATE TABLE [dbo].[PipelineState](
 	[BatchId] [int] IDENTITY(1,1) NOT NULL,
+	[PipelineName] [varchar](255) NOT NULL,
 	[LastProcessedEventId] [uniqueidentifier] NOT NULL,
 	CONSTRAINT [PK_MainPipelineState] PRIMARY KEY CLUSTERED 
 	(

@@ -20,7 +20,7 @@ namespace Ncqrs.EventBus
             _buffer = new FixedSizeChunkBuffer(fetchSize);
         }
 
-        public IEnumerable<IProcessingElement> Fetch(int maxCount)
+        public IEnumerable<IProcessingElement> Fetch(string pipelineName, int maxCount)
         {
             if (_fetchSize != maxCount)
             {
@@ -41,7 +41,7 @@ namespace Ncqrs.EventBus
 
         private IEnumerable<IProcessingElement> FetchFromPersistentStoreAndCorrelateWithBuffer()
         {
-            var fetchedFromPersistentStore = _persistentStore.Fetch(_fetchSize);
+            var fetchedFromPersistentStore = _persistentStore.Fetch(null, _fetchSize);
             if (!fetchedFromPersistentStore.Any() || CorrelateWithBufffer(fetchedFromPersistentStore))
             {
                 _inMemoryMode = true;
@@ -65,9 +65,9 @@ namespace Ncqrs.EventBus
             return _firstElementPushed != null;
         }
 
-        public void MarkLastProcessedEvent(IProcessingElement processingElement)
+        public void MarkLastProcessedEvent(string pipelineName, IProcessingElement processingElement)
         {
-            _persistentStore.MarkLastProcessedEvent(processingElement);
+            _persistentStore.MarkLastProcessedEvent(pipelineName, processingElement);
         }
 
         public void PushElement(IProcessingElement processingElement)
