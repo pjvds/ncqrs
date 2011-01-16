@@ -9,7 +9,7 @@ namespace Ncqrs.EventBus.IntegrationTest
 
         public void Process(IProcessingElement evnt)
         {
-            Thread.Sleep(200);
+            Thread.Sleep(100);
 
             Interlocked.Increment(ref ProcessedEvents);
 

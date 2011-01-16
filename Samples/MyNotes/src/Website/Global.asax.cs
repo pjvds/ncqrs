@@ -15,7 +15,6 @@ namespace Website
                 "Note/{action}/{id}", // URL with parameters
                 new { controller = "Note", action = "Index", id = UrlParameter.Optional } // Parameter defaults
             );
-            routes.Add(new ServiceRoute("CommandService", new ServiceHostFactory(), typeof(CommandWebService)));
             routes.MapRoute(
                 "Default", // Route name
                 "{controller}/{action}/{id}", // URL with parameters
@@ -25,7 +24,6 @@ namespace Website
 
         protected void Application_Start()
         {
-            BootStrapper.BootUp();
             AreaRegistration.RegisterAllAreas();
             RegisterRoutes(RouteTable.Routes);
         }

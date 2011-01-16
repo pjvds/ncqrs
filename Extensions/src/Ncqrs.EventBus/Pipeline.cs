@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 namespace Ncqrs.EventBus
-{
+{    
     public class Pipeline
     {
         private const int MaxDegreeOfParallelismForProcessing = 1;
@@ -21,7 +21,7 @@ namespace Ncqrs.EventBus
 
         public Pipeline(IElementProcessor elementProcessor, IBrowsableElementStore elementStore, IFetchPolicy fetchPolicy)
         {
-            _elementStore = new LazyBrowsableElementStore(elementStore);
+            _elementStore = elementStore;
             _eventDemultiplexer = new EventDemultiplexer();
             _eventDemultiplexer.EventDemultiplexed += OnEventDemultiplexed;
             _processor = new PipelineProcessor(elementProcessor);
@@ -29,6 +29,11 @@ namespace Ncqrs.EventBus
             _fetcher = new EventFetcher(fetchPolicy, _elementStore);
             _fetcher.ElementFetched += OnElementFetched;
             _fetchTimer = new Timer(x => EvaluateFetchPolicy(), null, TimeSpan.Zero, TimeSpan.FromSeconds(1));
+        }
+
+        public static Pipeline CreateWithLazyElementMarking(IElementProcessor elementProcessor, IBrowsableElementStore elementStore)
+        {
+            return Create(elementProcessor, new LazyMarkingBrowsableElementStore(elementStore));
         }
 
         public static Pipeline Create(IElementProcessor elementProcessor,IBrowsableElementStore elementStore)

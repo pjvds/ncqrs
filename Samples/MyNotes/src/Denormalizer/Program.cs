@@ -18,7 +18,7 @@ namespace Denormalizer
             _bus.RegisterAllHandlersInAssembly(typeof(Program).Assembly);
 
             var connectionString = Settings.Default.EventStoreConnectionString;
-            var browsableEventStore = new MsSqlServerBrowsableElementStore(connectionString);
+            var browsableEventStore = new MsSqlServerEventStoreElementStore(connectionString);
             var pipeline = Pipeline.Create(new CallbackEventProcessor(Process), browsableEventStore);
 
             pipeline.Start();

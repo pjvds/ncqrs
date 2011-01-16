@@ -10,7 +10,7 @@ namespace Ncqrs.EventBus.IntegrationTest
     {        
         static void Main(string[] args)
         {
-            //GenerateEvents();
+            GenerateEvents();
             //GenerateEventsForAggregateRoots();
             ProcessEvents();
 
@@ -24,7 +24,7 @@ namespace Ncqrs.EventBus.IntegrationTest
             var connectionString = ConfigurationManager.ConnectionStrings["Main"].ConnectionString;
 
             var consoleEventProcessor = new ConsoleElementProcessor();
-            var p = Pipeline.Create(consoleEventProcessor, new MsSqlServerBrowsableElementStore(connectionString));
+            var p = Pipeline.Create(consoleEventProcessor, new MsSqlServerEventStoreElementStore(connectionString));
             p.Start();
             Console.ReadLine();
             p.Stop();

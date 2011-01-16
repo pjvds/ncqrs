@@ -6,7 +6,7 @@ using Ncqrs.Eventing.Storage.SQL;
 
 namespace Ncqrs.EventBus
 {
-    public class MsSqlServerBrowsableElementStore : IBrowsableElementStore
+    public class MsSqlServerEventStoreElementStore : IBrowsableElementStore
     {
         private const string MarkLastProcessedEventQuery = "INSERT INTO [PipelineState] ([LastProcessedEventId]) VALUES (@LastProcessedEventId)";
         private const string GetLastProcessedEventQuery = "SELECT TOP 1 [LastProcessedEventId] FROM [PipelineState] ORDER BY [BatchId] DESC";
@@ -15,7 +15,7 @@ namespace Ncqrs.EventBus
         private readonly MsSqlServerEventStore _wrappedStore;
         private Guid? _lastEventId;
 
-        public MsSqlServerBrowsableElementStore(string connectionString)
+        public MsSqlServerEventStoreElementStore(string connectionString)
         {
             _wrappedStore = new MsSqlServerEventStore(connectionString);
             _connectionString = connectionString;

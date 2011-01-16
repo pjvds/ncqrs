@@ -4,7 +4,7 @@ using Ncqrs.Eventing.Sourcing;
 
 namespace Ncqrs.EventBus
 {
-    public class LazyBrowsableElementStore : IBrowsableElementStore
+    public class LazyMarkingBrowsableElementStore : IBrowsableElementStore
     {
         private const int DefaultThreshold = 1;
 
@@ -12,7 +12,7 @@ namespace Ncqrs.EventBus
         private readonly CursorPositionCalculator _cursorCalculator = new CursorPositionCalculator(0);
         private readonly int _threshold;
 
-        public LazyBrowsableElementStore(IBrowsableElementStore wrappedStore, int threshold = DefaultThreshold)
+        public LazyMarkingBrowsableElementStore(IBrowsableElementStore wrappedStore, int threshold = DefaultThreshold)
         {
             _wrappedStore = wrappedStore;
             _threshold = threshold;

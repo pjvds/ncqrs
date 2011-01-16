@@ -1,25 +1,25 @@
-﻿using Commands;
+﻿using ApplicationService.Properties;
+using Commands;
 using Ncqrs;
 using Ncqrs.Commanding;
 using Ncqrs.Commanding.CommandExecution.Mapping.Attributes;
 using Ncqrs.Commanding.ServiceModel;
 using Ncqrs.CommandService.Infrastructure;
-using Ncqrs.Config.StructureMap;
+using Ncqrs.EventBus;
 using Ncqrs.Eventing.ServiceModel.Bus;
 using Ncqrs.Eventing.Storage;
 using Ncqrs.Eventing.Storage.SQL;
-using Website.Properties;
 
-namespace Website
+namespace ApplicationService
 {
     public static class BootStrapper
     {
-        public static void BootUp()
+        public static void BootUp(InMemoryBufferedBrowsableElementStore buffer)
         {
-            var config = new StructureMapConfiguration(cfg =>
+            var config = new Ncqrs.Config.StructureMap.StructureMapConfiguration(cfg =>
             {
                 cfg.For<ICommandService>().Use(InitializeCommandService);
-                cfg.For<IEventBus>().Use(InitializeEventBus);
+                cfg.For<IEventBus>().Use(x => InitializeEventBus(buffer));
                 cfg.For<IEventStore>().Use(InitializeEventStore);
                 cfg.For<IKnownCommandsEnumerator>().Use(new AllCommandsInAppDomainEnumerator());
             });
@@ -40,13 +40,15 @@ namespace Website
 
         private static IEventStore InitializeEventStore()
         {
-            var store = new MsSqlServerEventStore(Settings.Default.SqlEventStoreConnectionString);
+            var store = new MsSqlServerEventStore(Settings.Default.EventStoreConnectionString);
             return store;
         }
 
-        private static IEventBus InitializeEventBus()
+        private static IEventBus InitializeEventBus(InMemoryBufferedBrowsableElementStore buffer)
         {
             var bus = new InProcessEventBus();
+
+            bus.RegisterHandler(new InMemoryBufferedEventHandler(buffer));
 
             return bus;
         }

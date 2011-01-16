@@ -95,7 +95,6 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BootStrapper.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\NoteController.cs" />
     <Compile Include="Global.asax.cs">

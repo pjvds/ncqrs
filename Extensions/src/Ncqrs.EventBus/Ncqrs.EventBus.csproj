@@ -51,15 +51,18 @@
     <Compile Include="ElementProcessedEventArgs.cs" />
     <Compile Include="FetchDirective.cs" />
     <Compile Include="FetchResult.cs" />
+    <Compile Include="FixedSizeChunkBuffer.cs" />
     <Compile Include="IFetchPolicy.cs" />
     <Compile Include="IEventQueue.cs" />
     <Compile Include="IBrowsableElementStore.cs" />
     <Compile Include="CursorPositionCalculator.cs" />
     <Compile Include="EventDemultiplexer.cs" />
     <Compile Include="IElementProcessor.cs" />
+    <Compile Include="InMemoryBufferedBrowsableElementStore.cs" />
+    <Compile Include="InMemoryBufferedEventHandler.cs" />
     <Compile Include="IPipelineMonitoringStrategy.cs" />
     <Compile Include="IPipelineStateMonitor.cs" />
-    <Compile Include="MsSqlServerBrowsableElementStore.cs" />
+    <Compile Include="MsSqlServerEventStoreElementStore.cs" />
     <Compile Include="Pipeline.cs" />
     <Compile Include="PipelineProcessor.cs" />
     <Compile Include="PipelineState.cs" />
@@ -69,7 +72,7 @@
     <Compile Include="SequencedEvent.cs" />
     <Compile Include="SourcedEventProcessingElement.cs" />
     <Compile Include="ThresholdedFetchPolicy.cs" />
-    <Compile Include="LazyBrowsableElementStore.cs" />
+    <Compile Include="LazyMarkingBrowsableElementStore.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
