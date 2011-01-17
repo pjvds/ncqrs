@@ -10,13 +10,25 @@ namespace Ncqrs.Eventing
         private readonly long _currentSourceVersion;
         private readonly Guid _sourceId;
         private readonly List<CommittedEvent> _events = new List<CommittedEvent>();
+        
+        public CommittedEventStream()
+        {            
+        }
 
         public CommittedEventStream(IEnumerable<CommittedEvent> events)
         {
             _events.AddRange(events);
-            var last = _events.Last();
-            _currentSourceVersion = last.EventSequence;
-            _sourceId = last.EventSourceId;
+            if (_events.Count > 0)
+            {
+                var last = _events.Last();
+                _currentSourceVersion = last.EventSequence;
+                _sourceId = last.EventSourceId;
+            }
+        }
+
+        public bool IsEmpy
+        {
+            get { return _events.Count == 0; }
         }
 
         public Guid SourceId

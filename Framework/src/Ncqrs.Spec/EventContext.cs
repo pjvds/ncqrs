@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using Ncqrs.Domain;
+using Ncqrs.Eventing;
 using Ncqrs.Eventing.Sourcing;
 
 namespace Ncqrs.Spec
@@ -11,10 +12,10 @@ namespace Ncqrs.Spec
         [ThreadStatic]
         private static EventContext _threadInstance;
 
-        private readonly List<ISourcedEvent> _events = new List<ISourcedEvent>();
-        private Action<AggregateRoot, ISourcedEvent> _eventAppliedCallback;
+        private readonly List<UncommittedEvent> _events = new List<UncommittedEvent>();
+        private Action<AggregateRoot, UncommittedEvent> _eventAppliedCallback;
 
-        public IEnumerable<ISourcedEvent> Events
+        public IEnumerable<UncommittedEvent> Events
         {
             get { return _events; }
         }
@@ -54,7 +55,7 @@ namespace Ncqrs.Spec
         private void InitializeAppliedEventHandler()
         {
             if(_eventAppliedCallback == null)
-                _eventAppliedCallback = new Action<AggregateRoot, ISourcedEvent>(AggregateRootEventAppliedHandler);
+                _eventAppliedCallback = new Action<AggregateRoot, UncommittedEvent>(AggregateRootEventAppliedHandler);
 
             AggregateRoot.RegisterThreadStaticEventAppliedCallback(_eventAppliedCallback);
         }
@@ -65,7 +66,7 @@ namespace Ncqrs.Spec
                 AggregateRoot.UnregisterThreadStaticEventAppliedCallback(_eventAppliedCallback);
         }
 
-        private void AggregateRootEventAppliedHandler(AggregateRoot aggregateRoot, ISourcedEvent evnt)
+        private void AggregateRootEventAppliedHandler(AggregateRoot aggregateRoot, UncommittedEvent evnt)
         {
             _events.Add(evnt);
         }

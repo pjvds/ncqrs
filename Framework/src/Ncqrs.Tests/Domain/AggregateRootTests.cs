@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using Ncqrs.Domain;
+using Ncqrs.Eventing;
 using Ncqrs.Eventing.Sourcing;
 using Rhino.Mocks;
 using NUnit.Framework;
@@ -33,6 +34,7 @@ namespace Ncqrs.Tests.Domain
 
         public class MyAggregateRoot : AggregateRoot
         {
+            private readonly List<UncommittedEvent> _uncomittedEvents = new List<UncommittedEvent>();
             public int FooEventHandlerInvokeCount = 0;
 
             public MyAggregateRoot()
@@ -52,9 +54,11 @@ namespace Ncqrs.Tests.Domain
                 InitializeFromHistory(history);
             }
 
-            public new void InitializeFromHistory(IEnumerable<ISourcedEvent> history)
+            public void InitializeFromHistory(IEnumerable<object> history)
             {
-                base.InitializeFromHistory(history);
+                Guid commandId = Guid.NewGuid();
+                long sequence = 1;
+                base.InitializeFromHistory(new CommittedEventStream(history.Select(x => new CommittedEvent(commandId, Guid.NewGuid(), EventSourceId, sequence++, DateTime.UtcNow, x))));
             }
 
             public void MethodThatCausesAnEventThatHasAHandler()
@@ -74,9 +78,20 @@ namespace Ncqrs.Tests.Domain
                 base.ApplyEvent(e);
             }
 
-            private void OnFoo(ISourcedEvent e)
+            private void OnFoo(object e)
             {
                 FooEventHandlerInvokeCount++;
+            }
+
+            protected override void OnEventApplied(UncommittedEvent appliedEvent)
+            {
+                base.OnEventApplied(appliedEvent);
+                _uncomittedEvents.Add(appliedEvent);
+            }
+
+            public IEnumerable<UncommittedEvent> GetUncommittedEvents()
+            {
+                return _uncomittedEvents;
             }
         }
 
@@ -147,36 +162,7 @@ namespace Ncqrs.Tests.Domain
             var theAggregate = new MyAggregateRoot(history);
 
             theAggregate.FooEventHandlerInvokeCount.Should().Be(3);
-        }
-
-        [Test]
-        public void Getting_the_uncommitted_via_the_IEventSource_interface_should_return_the_same_as_directly()
-        {
-            var theAggregate = new MyAggregateRoot();
-
-            theAggregate.MethodThatCausesAnEventThatHasAHandler();
-            theAggregate.MethodThatCausesAnEventThatHasAHandler();
-
-            var directResult = theAggregate.GetUncommittedEvents();
-            var viaInterfaceResult = ((IEventSource) theAggregate).GetUncommittedEvents();
-            directResult.Should().BeEquivalentTo(viaInterfaceResult);
-        }
-
-        [Test]
-        public void Accepting_the_changes_should_clear_the_uncommitted_events()
-        {
-            var theAggregate = new MyAggregateRoot();
-
-            theAggregate.MethodThatCausesAnEventThatHasAHandler();
-            theAggregate.MethodThatCausesAnEventThatHasAHandler();
-            theAggregate.MethodThatCausesAnEventThatHasAHandler();
-            theAggregate.MethodThatCausesAnEventThatHasAHandler();
-            theAggregate.MethodThatCausesAnEventThatHasAHandler();
-
-            theAggregate.AcceptChanges();
-
-            theAggregate.GetUncommittedEvents().Should().BeEmpty();
-        }
+        }                
 
         [Test]
         public void Accepting_the_changes_should_set_the_initial_version_to_the_new_version()
@@ -293,18 +279,7 @@ namespace Ncqrs.Tests.Domain
             Action act = () => theAggregate.InitializeFromHistory(history);
             act.ShouldThrow<InvalidOperationException>().And.Message.Should().Contain("sequence");
         }
-
-        [Test]
-        public void Applying_an_event_that_is_already_owned_by_another_source_should_cause_an_exception()
-        {
-            var theEvent = new HandledEvent();
-            theEvent.OverrideAggregateRootId(Guid.NewGuid());
-            var theAggregate = new MyAggregateRoot();
-
-            Action act = () => theAggregate.ApplyEvent(theEvent);
-
-            act.ShouldThrow<InvalidOperationException>();
-        }
+        
 
         [Test]
         public void It_could_not_be_loaded_from_history_when_it_already_contains_uncommitted_events()
@@ -344,15 +319,17 @@ namespace Ncqrs.Tests.Domain
         {
             var theAggregate = new MyAggregateRoot();
 
-            var event1 = new HandledEvent(Guid.NewGuid(), theAggregate.EventSourceId, 1, DateTime.UtcNow);
-            var event2 = new HandledEvent(Guid.NewGuid(), theAggregate.EventSourceId, 2, DateTime.UtcNow);
-            var event3 = new HandledEvent(Guid.NewGuid(), theAggregate.EventSourceId, 3, DateTime.UtcNow);
-            var event4 = new HandledEvent(Guid.NewGuid(), theAggregate.EventSourceId, 4, DateTime.UtcNow);
-            var event5 = new HandledEvent(Guid.NewGuid(), theAggregate.EventSourceId, 5, DateTime.UtcNow);
+            Guid commandId = Guid.NewGuid();
 
-            IEnumerable<SourcedEvent> history = new[] { event1, event2, event3, event4, event5 };
+            var event1 = new CommittedEvent(commandId, Guid.NewGuid(), theAggregate.EventSourceId, 1, DateTime.UtcNow, new HandledEvent());
+            var event2 = new CommittedEvent(commandId, Guid.NewGuid(), theAggregate.EventSourceId, 2, DateTime.UtcNow, new HandledEvent());
+            var event3 = new CommittedEvent(commandId, Guid.NewGuid(), theAggregate.EventSourceId, 3, DateTime.UtcNow, new HandledEvent());
+            var event4 = new CommittedEvent(commandId, Guid.NewGuid(), theAggregate.EventSourceId, 4, DateTime.UtcNow, new HandledEvent());
+            var event5 = new CommittedEvent(commandId, Guid.NewGuid(), theAggregate.EventSourceId, 5, DateTime.UtcNow, new HandledEvent());
 
-            theAggregate.InitializeFromHistory(history);
+            IEnumerable<CommittedEvent> history = new[] { event1, event2, event3, event4, event5 };
+
+            ((IEventSource)theAggregate).InitializeFromHistory(new CommittedEventStream(history));
 
             var eventHandlerCountAfterInitialization = theAggregate.FooEventHandlerInvokeCount;
 

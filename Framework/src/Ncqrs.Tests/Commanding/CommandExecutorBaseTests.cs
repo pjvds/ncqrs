@@ -47,19 +47,22 @@ namespace Ncqrs.Tests.Commanding
         {
             var factory = MockRepository.GenerateMock<IUnitOfWorkFactory>();
 
-            var aCommand = new FooCommand();
+            var aCommand = new FooCommand()
+                               {
+                                   CommandIdentifier = Guid.NewGuid()
+                               };
             var executor = new FooCommandExecutor(factory);
             executor.Execute(aCommand);
 
-            factory.AssertWasCalled(f=>f.CreateUnitOfWork());
+            factory.AssertWasCalled(f => f.CreateUnitOfWork(aCommand.CommandIdentifier));
         }
 
         [Test]
         public void Executing_should_call_ExecuteInContext_with_context_from_factory()
-        {
+        {            
             var context = MockRepository.GenerateMock<IUnitOfWorkContext>();
             var factory = MockRepository.GenerateMock<IUnitOfWorkFactory>();
-            factory.Stub(f => f.CreateUnitOfWork()).Return(context);
+            factory.Stub(f => f.CreateUnitOfWork(Guid.NewGuid())).Return(context).IgnoreArguments();
 
             var aCommand = new FooCommand();
             var executor = new FooCommandExecutor(factory);

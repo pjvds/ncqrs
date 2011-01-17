@@ -77,7 +77,7 @@ namespace Ncqrs.Tests.Domain
         [Test]
         public void Public_event_handlers_should_be_mapped()
         {
-            using (var work = NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork())
+            using (var work = NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork(Guid.NewGuid()))
             {
                 var target = new TheAggregateRoot();
                 target.ApplyEvent(new EventForPublicMethod());
@@ -88,7 +88,7 @@ namespace Ncqrs.Tests.Domain
         [Test]
         public void Protected_event_handlers_should_be_mapped()
         {
-            using (var work = NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork())
+            using (var work = NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork(Guid.NewGuid()))
             {
                 var target = new TheAggregateRoot();
 
@@ -101,7 +101,7 @@ namespace Ncqrs.Tests.Domain
         [Test]
         public void Private_event_handlers_should_be_mapped()
         {
-            using (var work = NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork())
+            using (var work = NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork(Guid.NewGuid()))
             {
                 var target = new TheAggregateRoot();
 
@@ -115,7 +115,7 @@ namespace Ncqrs.Tests.Domain
         [Test]
         public void Methods_marked_as_no_event_handler_should_not_be_mapped()
         {
-            using (var work = NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork())
+            using (var work = NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork(Guid.NewGuid()))
             {
                 var target = new TheAggregateRoot();
 

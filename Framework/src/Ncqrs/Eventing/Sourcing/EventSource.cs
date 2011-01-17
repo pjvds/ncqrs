@@ -9,13 +9,7 @@ namespace Ncqrs.Eventing.Sourcing
     {
         [NonSerialized]
         private Guid _eventSourceId;
-
-        /// <summary>
-        /// Holds the events that are not yet committed.
-        /// </summary>
-        [NonSerialized]
-        private readonly SourcedEventStream _uncommittedEvents = new SourcedEventStream();
-
+        
         /// <summary>
         /// Gets the globally unique identifier.
         /// </summary>
@@ -28,9 +22,7 @@ namespace Ncqrs.Eventing.Sourcing
             protected set
             {
                 Contract.Requires<InvalidOperationException>(Version == 0);
-
                 _eventSourceId = value;
-                _uncommittedEvents.EventSourceId = EventSourceId;
             }
         }
 
@@ -92,12 +84,6 @@ namespace Ncqrs.Eventing.Sourcing
             EventSourceId = eventSourceId;
         }
 
-        [ContractInvariantMethod]
-        private void ContractInvariants()
-        {
-            Contract.Invariant(_uncommittedEvents != null, "The member _unacceptedEvents should never be null.");
-        }
-
         /// <summary>
         /// Initializes from history.
         /// </summary>
@@ -107,13 +93,19 @@ namespace Ncqrs.Eventing.Sourcing
             Contract.Requires<ArgumentNullException>(history != null, "The history cannot be null.");
             if (_initialVersion != 0) throw new InvalidOperationException("Cannot apply history when instance has uncommitted changes.");
 
-            _initialVersion = history.CurrentSourceVersion;
+            if (history.IsEmpy)
+            {
+                return;                
+            }
+
             _eventSourceId = history.SourceId;
 
             foreach (var historicalEvent in history)
             {                
                 ApplyEventFromHistory(historicalEvent);                
             }
+
+            _initialVersion = history.CurrentSourceVersion;
         }
 
         public event EventHandler<EventAppliedEventArgs> EventApplied;
@@ -157,7 +149,7 @@ namespace Ncqrs.Eventing.Sourcing
         {
             var wrappedEvent = new UncommittedEvent(_idGenerator.GenerateNewId(), EventSourceId, GetNextSequence(), _initialVersion, DateTime.UtcNow, evnt);
 
-            HandleEvent(wrappedEvent);
+            HandleEvent(wrappedEvent.Payload);
             OnEventApplied(wrappedEvent);
         }
 
@@ -181,22 +173,17 @@ namespace Ncqrs.Eventing.Sourcing
                 throw new InvalidOperationException(message);
             }
 
-            if (evnt.EventSequence != InitialVersion + 1)
-            {
-                var message = String.Format("Cannot apply event with sequence {0}. Since the initial version of the " +
-                                            "aggregate root is {1}. Only an event with sequence number {2} can be applied.",
-                                            evnt.EventSequence, InitialVersion, InitialVersion + 1);
-                throw new InvalidOperationException(message);
-            }
+            //Do we really really need this check? Why don't we trust IEventStore?
+
+            //if (evnt.EventSequence != InitialVersion + 1)
+            //{
+            //    var message = String.Format("Cannot apply event with sequence {0}. Since the initial version of the " +
+            //                                "aggregate root is {1}. Only an event with sequence number {2} can be applied.",
+            //                                evnt.EventSequence, InitialVersion, InitialVersion + 1);
+            //    throw new InvalidOperationException(message);
+            //}
         }
-
-        public IEnumerable<ISourcedEvent> GetUncommittedEvents()
-        {
-            Contract.Ensures(Contract.Result<IEnumerable<ISourcedEvent>>() != null, "The result of this method should never be null.");
-
-            return _uncommittedEvents;
-        }
-
+        
         public void AcceptChanges()
         {            
             _initialVersion = Version;

@@ -71,20 +71,18 @@ namespace Ncqrs.Tests.Domain.Storage
         [Test]
         public void Save_test()
         {
-            using (var work = NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork())
+            var commandId = Guid.NewGuid();
+            using (NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork(commandId))
             {
                 var store = MockRepository.GenerateMock<IEventStore>();
                 var bus = MockRepository.GenerateMock<IEventBus>();
-                var aggregate = new MyAggregateRoot();
+                var eventStream = new UncommittedEventStream(commandId);
 
-                aggregate.Foo();
-                aggregate.Bar();
-
-                store.Expect(s => s.Save(aggregate));
+                store.Expect(s => s.Store(eventStream));
                 bus.Expect(b => b.Publish((IEnumerable<IEvent>) null)).IgnoreArguments();
 
                 var repository = new DomainRepository(store, bus);
-                repository.Save(aggregate);
+                repository.Store(eventStream);
 
                 bus.VerifyAllExpectations();
                 store.VerifyAllExpectations();

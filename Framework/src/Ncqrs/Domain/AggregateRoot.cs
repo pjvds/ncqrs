@@ -33,6 +33,7 @@ namespace Ncqrs.Domain
         [NoEventHandler]
         protected override void OnEventApplied(UncommittedEvent appliedEvent)
         {
+            base.OnEventApplied(appliedEvent);
             var callbacks = _eventAppliedCallbacks;
 
             foreach(var callback in callbacks)

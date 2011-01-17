@@ -46,10 +46,11 @@ namespace Ncqrs.Tests.Commanding.CommandExecution
         [Test]
         public void Executing_it_should_create_unit_of_work_with_factory()
         {
+            Guid commandId = Guid.NewGuid();
             var factoryMock = MockRepository.GenerateMock<IUnitOfWorkFactory>();
             var contextMock = MockRepository.GenerateMock<IUnitOfWorkContext>();
 
-            factoryMock.Expect(t => t.CreateUnitOfWork()).Repeat.Once().Return(contextMock);
+            factoryMock.Expect(t => t.CreateUnitOfWork(commandId)).IgnoreArguments().Repeat.Once().Return(contextMock);
 
             Func<CreateMessageCommand, Message> creation = (c) => new Message(c.Text);
             var executor = new CreatingCommandExecutor<CreateMessageCommand, Message>(creation, factoryMock);
@@ -66,7 +67,7 @@ namespace Ncqrs.Tests.Commanding.CommandExecution
             var factoryMock = MockRepository.GenerateMock<IUnitOfWorkFactory>();
             var contextMock = MockRepository.GenerateMock<IUnitOfWorkContext>();
 
-            factoryMock.Stub(t => t.CreateUnitOfWork()).Return(contextMock);
+            factoryMock.Stub(t => t.CreateUnitOfWork(Guid.Empty)).IgnoreArguments().Return(contextMock);
             contextMock.Expect(t => t.Accept()).Repeat.Once();
 
             Func<CreateMessageCommand, Message> creation = (c) => new Message(c.Text);
@@ -86,7 +87,7 @@ namespace Ncqrs.Tests.Commanding.CommandExecution
             var factoryMock = MockRepository.GenerateMock<IUnitOfWorkFactory>();
             var contextMock = MockRepository.GenerateMock<IUnitOfWorkContext>();
 
-            factoryMock.Stub(t => t.CreateUnitOfWork()).Return(contextMock);
+            factoryMock.Stub(t => t.CreateUnitOfWork(Guid.NewGuid())).IgnoreArguments().Return(contextMock);
             contextMock.Expect(t => t.Accept()).Repeat.Once();
 
             Func<CreateMessageCommand, Message> creation = (c) =>

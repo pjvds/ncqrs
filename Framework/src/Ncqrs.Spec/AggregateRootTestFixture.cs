@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Ncqrs.Domain;
 using Ncqrs.Domain.Storage;
+using Ncqrs.Eventing;
 using Ncqrs.Eventing.Sourcing;
 using NUnit.Framework;
 
@@ -17,7 +19,7 @@ namespace Ncqrs.Spec
 
         protected Exception CaughtException { get; private set; }
 
-        protected IEnumerable<ISourcedEvent> PublishedEvents { get; private set; }
+        protected List<UncommittedEvent> PublishedEvents { get; private set; }
         
         protected virtual IEnumerable<SourcedEvent> Given()
         {
@@ -32,21 +34,32 @@ namespace Ncqrs.Spec
         [SetUp] // TODO: Testdriven.net debug runner doesn't recognize inhiret attributes. Use native for now.
         public void Setup()
         {
+            Guid commitId = Guid.NewGuid();
+            Guid sourceId = Guid.NewGuid();
             CreationStrategy = new SimpleAggregateRootCreationStrategy();
 
             AggregateRoot = CreationStrategy.CreateAggregateRoot<TAggregateRoot>();
-            PublishedEvents = new SourcedEvent[0];
+            PublishedEvents = new List<UncommittedEvent>();
             
             var history = Given();
             if(history != null)
             {
-                AggregateRoot.InitializeFromHistory(history);
+                long sequence = 0;
+                AggregateRoot.InitializeFromHistory(
+                    new CommittedEventStream(
+                        history.Select(x => new CommittedEvent(commitId,
+                                                               Guid.NewGuid(),
+                                                               AggregateRoot.
+                                                                   EventSourceId,
+                                                               sequence++,
+                                                               DateTime.
+                                                                   UtcNow, x))));
             }
 
             try
             {
+                AggregateRoot.EventApplied += (s, e) => PublishedEvents.Add(e.Event);
                 When();
-                PublishedEvents = AggregateRoot.GetUncommittedEvents();
             }
             catch (Exception exception)
             {
