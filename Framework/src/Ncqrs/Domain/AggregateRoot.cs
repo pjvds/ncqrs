@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Ncqrs.Eventing;
 using Ncqrs.Eventing.Sourcing;
 using Ncqrs.Eventing.Sourcing.Mapping;
 
@@ -11,14 +12,14 @@ namespace Ncqrs.Domain
     public abstract class AggregateRoot : EventSource
     {
         [ThreadStatic]
-        private static readonly List<Action<AggregateRoot, ISourcedEvent>> _eventAppliedCallbacks = new List<Action<AggregateRoot, ISourcedEvent>>();
+        private static readonly List<Action<AggregateRoot, UncommittedEvent>> _eventAppliedCallbacks = new List<Action<AggregateRoot, UncommittedEvent>>();
 
-        public static void RegisterThreadStaticEventAppliedCallback(Action<AggregateRoot, ISourcedEvent> callback)
+        public static void RegisterThreadStaticEventAppliedCallback(Action<AggregateRoot, UncommittedEvent> callback)
         {
             _eventAppliedCallbacks.Add(callback);
         }
 
-        public static void UnregisterThreadStaticEventAppliedCallback(Action<AggregateRoot, ISourcedEvent> callback)
+        public static void UnregisterThreadStaticEventAppliedCallback(Action<AggregateRoot, UncommittedEvent> callback)
         {
             _eventAppliedCallbacks.Remove(callback);
         }
@@ -30,7 +31,7 @@ namespace Ncqrs.Domain
         {}
 
         [NoEventHandler]
-        protected override void OnEventApplied(ISourcedEvent appliedEvent)
+        protected override void OnEventApplied(UncommittedEvent appliedEvent)
         {
             var callbacks = _eventAppliedCallbacks;
 

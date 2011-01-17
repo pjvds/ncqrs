@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using Ncqrs.Commanding;
 using Ncqrs.Domain.Storage;
+using Ncqrs.Eventing;
 using Ncqrs.Eventing.Sourcing;
 
 namespace Ncqrs.Domain
@@ -11,14 +13,17 @@ namespace Ncqrs.Domain
         /// <summary>
         /// The <see cref="UnitOfWork"/> that is associated with the current thread.
         /// </summary>
-        [ThreadStatic] private static UnitOfWork _threadInstance;
+        [ThreadStatic]
+        private static UnitOfWork _threadInstance;
 
         /// <summary>
         /// A queue that holds a reference to all instances that have themself registered as a dirty instance during the lifespan of this unit of work instance.
         /// </summary>
         private readonly Queue<AggregateRoot> _dirtyInstances;
 
-        private readonly Action<AggregateRoot, ISourcedEvent> _eventAppliedCallback;
+        private readonly UncommittedEventStream _eventStream;
+
+        private readonly Action<AggregateRoot, UncommittedEvent> _eventAppliedCallback;
 
         /// <summary>
         /// A reference to the repository that is associated with this instance.
@@ -64,8 +69,9 @@ namespace Ncqrs.Domain
         /// <summary>
         /// Initializes a new instance of the <see cref="UnitOfWork"/> class.
         /// </summary>
+        /// <param name="commandId">Id of command being processed.</param>
         /// <param name="domainRepository">The domain repository to use in this unit of work.</param>
-        public UnitOfWork(IDomainRepository domainRepository)
+        public UnitOfWork(Guid commandId, IDomainRepository domainRepository)
         {
             Contract.Requires<InvalidOperationException>(Current == null, "An other UnitOfWork instance already exists in this context.");
             Contract.Requires<ArgumentNullException>(domainRepository != null);
@@ -75,9 +81,10 @@ namespace Ncqrs.Domain
             Contract.Ensures(IsDisposed == false);
 
             _repository = domainRepository;
+            _eventStream = new UncommittedEventStream(commandId);
             _dirtyInstances = new Queue<AggregateRoot>();
             _threadInstance = this;
-            _eventAppliedCallback = new Action<AggregateRoot, ISourcedEvent>(AggregateRootEventAppliedHandler);
+            _eventAppliedCallback = new Action<AggregateRoot, UncommittedEvent>(AggregateRootEventAppliedHandler);
             IsDisposed = false;
 
             InitializeAppliedEventHandler();
@@ -93,9 +100,10 @@ namespace Ncqrs.Domain
             AggregateRoot.UnregisterThreadStaticEventAppliedCallback(_eventAppliedCallback);
         }
 
-        private void AggregateRootEventAppliedHandler(AggregateRoot aggregateRoot, ISourcedEvent evnt)
+        private void AggregateRootEventAppliedHandler(AggregateRoot aggregateRoot, UncommittedEvent evnt)
         {
             RegisterDirtyInstance(aggregateRoot);
+            _eventStream.Append(evnt);
         }
 
         [ContractInvariantMethod]
@@ -110,7 +118,7 @@ namespace Ncqrs.Domain
         /// </summary>
         ~UnitOfWork()
         {
-             Dispose(false);
+            Dispose(false);
         }
 
         /// <summary>
@@ -120,8 +128,8 @@ namespace Ncqrs.Domain
         {
             Contract.Ensures(IsDisposed == true);
 
-             Dispose(true);
-             GC.SuppressFinalize(this);
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         /// <summary>
@@ -145,47 +153,18 @@ namespace Ncqrs.Domain
         }
 
         /// <summary>
-        /// Gets aggregate root by eventSourceId.
-        /// </summary>
-        /// <typeparam name="TAggregateRoot">The type of the aggregate root.</typeparam>
-        /// <param name="eventSourceId">The eventSourceId of the aggregate root.</param>
-        /// <returns>
-        /// A new instance of the aggregate root that contains the latest known state.
-        /// </returns>
-        /// <exception cref="AggregateRootNotFoundException">Occurs when the aggregate root with the
-        /// specified event source id could not be found.</exception>
-        public TAggregateRoot GetById<TAggregateRoot>(Guid eventSourceId) where TAggregateRoot : AggregateRoot
-        {
-            return _repository.GetById<TAggregateRoot>(eventSourceId);
-        }
-
-        /// <summary>
-        /// Gets aggregate root by <see cref="AggregateRoot.EventSourcId">event source id</see>.
+        /// Gets aggregate root by its id.
         /// </summary>
         /// <param name="aggregateRootType">Type of the aggregate root.</param>
         /// <param name="eventSourceId">The eventSourceId of the aggregate root.</param>
+        /// <param name="lastKnownRevision">If specified, the most recent version of event source observed by the client (used for optimistic concurrency).</param>
         /// <returns>
         /// A new instance of the aggregate root that contains the latest known state.
         /// </returns>
-        /// <exception cref="AggregateRootNotFoundException">Occurs when the aggregate root with the
-        /// specified event source id could not be found.</exception>
-        public AggregateRoot GetById(Type aggregateRootType, Guid eventSourceId)
+        public AggregateRoot GetById(Type aggregateRootType, Guid eventSourceId, long? lastKnownRevision)
         {
-            return _repository.GetById(aggregateRootType, eventSourceId);
-        }
-
-        /// <summary>
-        /// Gets aggregate root by <see cref="AggregateRoot.EventSourcId">event source id or null if not found</see>.
-        /// </summary>
-        /// <param name="aggregateRootType">Type of the aggregate root.</param>
-        /// <param name="eventSourceId">The eventSourceId of the aggregate root.</param>        
-        /// <returns>
-        /// A new instance of the aggregate root that contains the latest known state or null if not found.
-        /// </returns>
-        public AggregateRoot TryGetById(Type aggregateRootType, Guid eventSourceId)
-        {
-            return _repository.TryGetById(aggregateRootType, eventSourceId);
-        }
+            return _repository.GetById(aggregateRootType, eventSourceId, lastKnownRevision);
+        }        
 
         /// <summary>
         /// Registers the dirty.
@@ -207,14 +186,7 @@ namespace Ncqrs.Domain
         public void Accept()
         {
             Contract.Requires<ObjectDisposedException>(!IsDisposed);
-
-            while (_dirtyInstances.Count > 0)
-            {
-                var dirtyInstance = _dirtyInstances.Dequeue();
-
-                Contract.Assume(dirtyInstance != null);
-                _repository.Save(dirtyInstance);
-            }
-       }
+            _repository.Store(_eventStream);
+        }
     }
 }

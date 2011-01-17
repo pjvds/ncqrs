@@ -14,9 +14,9 @@ namespace Ncqrs.Eventing.Sourcing
             _wrappedHandler = wrappedHandler;
         }
 
-        public bool HandleEvent(ISourcedEvent sourcedEvent)
+        public bool HandleEvent(object sourcedEvent)
         {
-            var sourcedEntityEvent = sourcedEvent as SourcedEntityEvent;
+            var sourcedEntityEvent = sourcedEvent as ISourcedEntityEvent;
             if (sourcedEntityEvent == null)
             {
                 return false;

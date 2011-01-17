@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using Ncqrs.Eventing.Sourcing;
 
 namespace Ncqrs.Eventing.Storage
@@ -8,55 +6,36 @@ namespace Ncqrs.Eventing.Storage
     /// <summary>
     /// A event store. Can store and load events from an <see cref="IEventSource"/>.
     /// </summary>
-    [ContractClass(typeof(IEventStoreContracts))]
     public interface IEventStore
     {
         /// <summary>
-        /// Get all events provided by an specified event provider.
+        /// Reads from the stream indicated from most recent snapshot, if any, up to and including the version specified
+        /// or (if not specified) up to and including the most recent version.
         /// </summary>
+        /// <remarks>
+        /// Returned event stream contain a lastest snapshot if one exists.
+        /// </remarks>
         /// <param name="id">The id of the event source that owns the events.</param>
+        /// <param name="maxVersion">Maximum version number to be read.</param>
         /// <returns>All the events from the event source.</returns>
-        IEnumerable<ISourcedEvent> GetAllEvents(Guid id);
+        CommittedEventStream ReadUntil(Guid id, long? maxVersion);
 
         /// <summary>
-        /// Get all events provided by an specified event source.
+        /// Reads from the stream indicated from the revision specified until the end of the stream.
         /// </summary>
-        /// <param name="eventSourceId">The id of the event source that owns the events.</param>
+        /// <remarks>
+        /// Returned event stream does not contain snapthots. This method is used when snapshots are stored in a separate store.
+        /// </remarks>
+        /// <param name="id">The id of the event source that owns the events.</param>
+        /// <param name="minVersion">The minimum version number to be read.</param>
         /// <returns>All the events from the event source.</returns>
-        IEnumerable<ISourcedEvent> GetAllEventsSinceVersion(Guid id, long version);
+        CommittedEventStream ReadFrom(Guid id, long minVersion);
 
         /// <summary>
-        /// Save all events from a specific event provider.
+        /// Persist provided stream of events as a single and atomic commit.
         /// </summary>
         /// <exception cref="ConcurrencyException">Occurs when there is already a newer version of the event provider stored in the event store.</exception>
-        /// <param name="source">The source that should be saved.</param>
-        void Save(IEventSource source);
-    }
-
-    [ContractClassFor(typeof(IEventStore))]
-    internal abstract class IEventStoreContracts : IEventStore
-    {
-        public IEnumerable<ISourcedEvent> GetAllEvents(Guid id)
-        {
-            Contract.Ensures(Contract.Result<IEnumerable<ISourcedEvent>>() != null, "Result should never be null.");
-
-            return default(IEnumerable<ISourcedEvent>);
-        }
-
-        public IEnumerable<ISourcedEvent> GetAllEventsSinceVersion(Guid id, long version)
-        {
-            Contract.Ensures(Contract.ForAll(Contract.Result<IEnumerable<ISourcedEvent>>(), e => e.EventSequence > version));
-            return default(IEnumerable<ISourcedEvent>);
-        }
-
-        public void Save(IEventSource source)
-        {
-            Contract.Requires<ArgumentNullException>(source != null, "source cannot be null.");
-        }
-
-        public IEnumerable<ISourcedEvent> GetAllEventsSinceVersion(Guid id)
-        {
-            return default(IEnumerable<ISourcedEvent>);
-        }
-    }
+        /// <param name="eventStream">The stream of evnts to be persisted.</param>
+        void Store(UncommittedEventStream eventStream);
+    }    
 }

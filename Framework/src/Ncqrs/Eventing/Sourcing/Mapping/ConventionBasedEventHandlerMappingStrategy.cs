@@ -68,7 +68,7 @@ namespace Ncqrs.Eventing.Sourcing.Mapping
                 var methodCopy = method.MethodInfo;
                 Type firstParameterType = methodCopy.GetParameters().First().ParameterType;
 
-                Action<IEvent> invokeAction = (e) => methodCopy.Invoke(target, new object[] { e });
+                Action<object> invokeAction = (e) => methodCopy.Invoke(target, new[] { e });
 
                 Logger.DebugFormat("Created event handler for method {0} based on convention.", methodCopy.Name);
 

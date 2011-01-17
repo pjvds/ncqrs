@@ -55,15 +55,12 @@ namespace Ncqrs.Eventing.Sourcing.Snapshotting
             get { throw new NotImplementedException(); }
         }
 
-        public void InitializeFromHistory(IEnumerable<ISourcedEvent> history)
+        public void InitializeFromHistory(CommittedEventStream history)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<ISourcedEvent> GetUncommittedEvents()
-        {
-            throw new NotImplementedException();
-        }
+        public event EventHandler<EventAppliedEventArgs> EventApplied;
 
         public void AcceptChanges()
         {

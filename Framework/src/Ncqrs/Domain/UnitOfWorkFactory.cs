@@ -1,4 +1,5 @@
 ﻿using System;
+using Ncqrs.Commanding;
 using Ncqrs.Domain.Storage;
 using Ncqrs.Eventing.Storage;
 using Ncqrs.Eventing.ServiceModel.Bus;
@@ -7,7 +8,7 @@ namespace Ncqrs.Domain
 {
     public class UnitOfWorkFactory : IUnitOfWorkFactory
     {
-        public IUnitOfWorkContext CreateUnitOfWork()
+        public IUnitOfWorkContext CreateUnitOfWork(Guid commandId)
         {
             if(UnitOfWork.Current != null) throw new InvalidOperationException("There is already a unit of work created for this context.");
 
@@ -15,7 +16,7 @@ namespace Ncqrs.Domain
             var bus = NcqrsEnvironment.Get<IEventBus>();
 
             var repository = new DomainRepository(store, bus);
-            return new UnitOfWork(repository);
+            return new UnitOfWork(commandId, repository);
         }
     }
 }

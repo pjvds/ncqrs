@@ -44,11 +44,14 @@ namespace Ncqrs.Eventing.Sourcing
         {
             get
             {
-                return InitialVersion + _uncommittedEvents.Count;
+                return _currentVersion;
             }
         }
         [NonSerialized]
         private long _initialVersion;
+
+        [NonSerialized]
+        private long _currentVersion;
 
         /// <summary>
         /// Gets the initial version.
@@ -63,15 +66,7 @@ namespace Ncqrs.Eventing.Sourcing
         /// <value>The initial version.</value>
         public long InitialVersion
         {
-            get { return _initialVersion; }
-            protected set
-            {
-                Contract.Requires<InvalidOperationException>(Version == InitialVersion);
-                Contract.Requires<ArgumentOutOfRangeException>(value >= 0);
-
-                _initialVersion = value;
-                _uncommittedEvents.SequenceOffset = value;
-            }
+            get { return _initialVersion; }            
         }
 
         /// <summary>
@@ -79,21 +74,21 @@ namespace Ncqrs.Eventing.Sourcing
         /// </summary>
         [NonSerialized]
         private readonly List<ISourcedEventHandler> _eventHandlers = new List<ISourcedEventHandler>();
+        [NonSerialized]
+        private readonly IUniqueIdentifierGenerator _idGenerator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EventSource"/> class.
         /// </summary>
         protected EventSource()
         {
-            InitialVersion = 0;
-
-            var idGenerator = NcqrsEnvironment.Get<IUniqueIdentifierGenerator>();
-            EventSourceId = idGenerator.GenerateNewId();
+            _idGenerator = NcqrsEnvironment.Get<IUniqueIdentifierGenerator>();
+            EventSourceId = _idGenerator.GenerateNewId();
         }
 
-        protected EventSource(Guid eventSourceId)
+        protected EventSource(Guid eventSourceId) 
+            : this()
         {
-            InitialVersion = 0;
             EventSourceId = eventSourceId;
         }
 
@@ -107,20 +102,27 @@ namespace Ncqrs.Eventing.Sourcing
         /// Initializes from history.
         /// </summary>
         /// <param name="history">The history.</param>
-        public virtual void InitializeFromHistory(IEnumerable<ISourcedEvent> history)
+        public virtual void InitializeFromHistory(CommittedEventStream history)
         {
             Contract.Requires<ArgumentNullException>(history != null, "The history cannot be null.");
-            if (_uncommittedEvents.Count > 0) throw new InvalidOperationException("Cannot apply history when instance has uncommitted changes.");
+            if (_initialVersion != 0) throw new InvalidOperationException("Cannot apply history when instance has uncommitted changes.");
+
+            _initialVersion = history.CurrentSourceVersion;
+            _eventSourceId = history.SourceId;
 
             foreach (var historicalEvent in history)
-            {
-                if (InitialVersion == 0)
-                {
-                    EventSourceId = historicalEvent.EventSourceId;
-                }
+            {                
+                ApplyEventFromHistory(historicalEvent);                
+            }
+        }
 
-                ApplyEventFromHistory(historicalEvent);
-                InitialVersion++; // TODO: Thought... couldn't we get this from the event?
+        public event EventHandler<EventAppliedEventArgs> EventApplied;
+
+        protected virtual void OnEventApplied(UncommittedEvent evnt)
+        {
+            if (EventApplied != null)
+            {
+                EventApplied(this, new EventAppliedEventArgs(evnt));
             }
         }
 
@@ -131,7 +133,7 @@ namespace Ncqrs.Eventing.Sourcing
             _eventHandlers.Add(handler);
         }
 
-        protected virtual void HandleEvent(ISourcedEvent evnt)
+        protected virtual void HandleEvent(object evnt)
         {
             Contract.Requires<ArgumentNullException>(evnt != null, "The Event cannot be null.");
             Boolean handled = false;
@@ -151,22 +153,27 @@ namespace Ncqrs.Eventing.Sourcing
                 throw new EventNotHandledException(evnt);
         }
 
-        internal protected void ApplyEvent(ISourcedEvent evnt)
+        internal protected void ApplyEvent(object evnt)
         {
-            _uncommittedEvents.Append(evnt);
+            var wrappedEvent = new UncommittedEvent(_idGenerator.GenerateNewId(), EventSourceId, GetNextSequence(), _initialVersion, DateTime.UtcNow, evnt);
 
-            HandleEvent(evnt);
-            
-            OnEventApplied(evnt);
+            HandleEvent(wrappedEvent);
+            OnEventApplied(wrappedEvent);
         }
 
-        private void ApplyEventFromHistory(ISourcedEvent evnt)
+        private long GetNextSequence()
+        {
+            _currentVersion++;
+            return _currentVersion;
+        }
+
+        private void ApplyEventFromHistory(CommittedEvent evnt)
         {
             ValidateHistoricalEvent(evnt);
-            HandleEvent(evnt);
+            HandleEvent(evnt.Payload);
         }
 
-        private void ValidateHistoricalEvent(ISourcedEvent evnt)
+        private void ValidateHistoricalEvent(CommittedEvent evnt)
         {
             if (evnt.EventSourceId != EventSourceId)
             {
@@ -191,21 +198,8 @@ namespace Ncqrs.Eventing.Sourcing
         }
 
         public void AcceptChanges()
-        {
-            // Get current version, since when we clear 
-            // the uncommited event stack the version will 
-            // be InitialVersion+0. Since the version is 
-            // the result of InitialVersion+number of uncommited events.
-            long newInitialVersion = Version;
-
-            _uncommittedEvents.Clear();
-
-            InitialVersion = newInitialVersion;
-        }
-
-        protected virtual void OnEventApplied(ISourcedEvent appliedEvent)
-        {
-            // Nothing to do. Allow override from subclassers.
-        }
+        {            
+            _initialVersion = Version;
+        }        
     }
 }

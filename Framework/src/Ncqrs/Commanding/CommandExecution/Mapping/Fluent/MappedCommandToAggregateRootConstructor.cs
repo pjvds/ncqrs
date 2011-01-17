@@ -45,7 +45,7 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Fluent
         void ICommandExecutor<TCommand>.Execute(TCommand command)
         {
             var factory = NcqrsEnvironment.Get<IUnitOfWorkFactory>();
-            using (var work = factory.CreateUnitOfWork())
+            using (var work = factory.CreateUnitOfWork(command.CommandIdentifier))
             {
                 var aggregateroot = _aggregaterootcreatorfunc(command);
 

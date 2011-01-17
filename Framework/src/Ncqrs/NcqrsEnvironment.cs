@@ -32,7 +32,7 @@ namespace Ncqrs
             SetDefault<IClock>(new DateTimeBasedClock());
             SetDefault<IUniqueIdentifierGenerator>(new BasicGuidGenerator());
             SetDefault<IEventBus>(new InProcessEventBus());
-            SetDefault<IEventStore>(new InMemoryEventStore());
+            //SetDefault<IEventStore>(new InMemoryEventStore());
             SetDefault<IUnitOfWorkFactory>(new UnitOfWorkFactory());
             SetDefault<IKnownCommandsEnumerator>(new AllCommandsInAppDomainEnumerator());
         }
