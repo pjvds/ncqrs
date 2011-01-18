@@ -37,14 +37,12 @@ namespace Ncqrs.Eventing.Sourcing
         /// <param name = "eventTypeThreshold">The event type that should be used as threshold.</param>
         /// <param name = "exact">if set to <c>true</c> the threshold will hold all types that are not the same type; otherwise it hold 
         /// all types that are not inhered from the event type threshold or implement the interface that is specified by the threshold type.</param>
-        public TypeThresholdedActionBasedDomainEventHandler(Action<object > handler, Type eventTypeThreshold,
+        public TypeThresholdedActionBasedDomainEventHandler(Action<object> handler, Type eventTypeThreshold,
                                                               Boolean exact = false)
         {
             Contract.Requires<ArgumentNullException>(handler != null, "The handler cannot be null.");
             Contract.Requires<ArgumentNullException>(eventTypeThreshold != null,
                                                      "The eventTypeThreshold cannot be null.");
-            Contract.Requires<ArgumentException>(typeof(IEvent).IsAssignableFrom(eventTypeThreshold),
-                                                 "The eventTypeThreshold should be of a type that implements the IEvent interface.");
 
             _handler = handler;
             _eventTypeThreshold = eventTypeThreshold;
