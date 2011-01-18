@@ -105,10 +105,12 @@ namespace Ncqrs.Tests.Eventing.Sourcing.Mapping
         }
 
         [Test]
-        public void It_should_skip_when_mapped_method_does_not_have_a_DomainEvent_as_parameter()
+        public void It_should_skip_when_mapped_method_does_not_have_a_EventBaseType_as_parameter()
         {
             var aggregate = new NotADomainEventTarget();
             var mapping = new ConventionBasedEventHandlerMappingStrategy();
+
+            mapping.EventBaseType = typeof (ISourcedEvent);
 
             var handlers = mapping.GetEventHandlers(aggregate);
 
