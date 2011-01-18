@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Website", "src\Website\Website.csproj", "{4DFE50BE-A76C-4FD2-904C-BD929FF0C32A}"
@@ -20,7 +20,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{F4DC49ED-1733-4C87-B7B7-6435976CCEA5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApplicationService", "ApplicationService\ApplicationService.csproj", "{B43AEA6E-59C2-4731-91EA-40C36CEE8360}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApplicationService", "src\ApplicationService\ApplicationService.csproj", "{B43AEA6E-59C2-4731-91EA-40C36CEE8360}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
