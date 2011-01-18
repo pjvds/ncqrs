@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="WindsorConfigurationCommandServiceRegistration.cs" />
+    <Compile Include="WindsorConfigurationEventBusTests.cs" />
     <Compile Include="WindsorConfigurationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
