@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Ncqrs.Eventing.Sourcing;
 using Ncqrs.Eventing.Sourcing.Snapshotting;
 
 namespace Ncqrs.Eventing.Storage
@@ -10,7 +9,7 @@ namespace Ncqrs.Eventing.Storage
     /// An in memory event store that can be used for unit testing purpose. We can't
     /// think of any situation where you want to use this in production.
     /// </summary>
-    public class InMemoryEventStore : IEventStore
+    public class InMemoryEventStore : IEventStore, ISnapshotStore
     {
         private readonly Dictionary<Guid, Queue<CommittedEvent>> _events = new Dictionary<Guid, Queue<CommittedEvent>>();
         private readonly Dictionary<Guid, ISnapshot> _snapshots = new Dictionary<Guid, ISnapshot>();
