@@ -49,7 +49,7 @@ namespace Ncqrs.Tests.Eventing.Storage.Serialization
                 Value = 10,
             };
 
-            var result = formatter.Serialize(theEvent);
+            var result = formatter.Serialize(theEvent.EventIdentifier, theEvent.EventTimeStamp, theEvent.EventVersion, theEvent.EventSourceId, theEvent.EventSequence, theEvent);
 
             result.EventName.Should().Be("bob");
             result.EventIdentifier.Should().Be(theEvent.EventIdentifier);
@@ -69,7 +69,15 @@ namespace Ncqrs.Tests.Eventing.Storage.Serialization
         public void Serialize_theEvent_null()
         {
             var formatter = new JsonEventFormatter(_typeResolver);
-            var ex = Assert.Throws<ArgumentNullException>(() => formatter.Serialize(null));
+
+            Guid anIdentifier = Guid.Empty;
+            DateTime aTimeStamp = DateTime.Now;
+            Version aVersion = new Version();
+            long aSequence = 1;
+
+            object theNullEvent = null;
+
+            var ex = Assert.Throws<ArgumentNullException>(() => formatter.Serialize(anIdentifier, aTimeStamp, aVersion, anIdentifier, aSequence, theNullEvent));
             ex.ParamName.Should().Be("theEvent");
         }
 

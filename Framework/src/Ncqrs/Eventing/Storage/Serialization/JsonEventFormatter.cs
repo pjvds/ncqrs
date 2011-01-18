@@ -29,16 +29,19 @@ namespace Ncqrs.Eventing.Storage.Serialization
             _serializer = new JsonSerializer();
         }
 
-        public ISourcedEvent Deserialize(StoredEvent<JObject> obj)
+        public object Deserialize(StoredEvent<JObject> obj)
         {
             var eventType = _typeResolver.ResolveType(obj.EventName);
             var reader = obj.Data.CreateReader();
-            var theEvent = (ISourcedEvent) _serializer.Deserialize(reader, eventType);
+            var theEvent = _serializer.Deserialize(reader, eventType);
             
+            //TODO: WHAT TODO WITH ENTITIES?
             //json deserialization doesn't seem to restore the EntityId for sourced enetity events
-            SetEntityIdIfEntityEvent(obj, theEvent);
+            //SetEntityIdIfEntityEvent(obj, theEvent);
 
-            theEvent.InitializeFrom(obj);
+            // TODO: What todo with this? InitizeFRom is legacy...
+            if(theEvent is ISourcedEvent) { ((ISourcedEvent)theEvent).InitializeFrom(obj);}
+            
             return theEvent;
         }
 
@@ -56,18 +59,18 @@ namespace Ncqrs.Eventing.Storage.Serialization
             }
         }
 
-        public StoredEvent<JObject> Serialize(ISourcedEvent theEvent)
+        public StoredEvent<JObject> Serialize(Guid eventIdentifier, DateTime eventTimeStamp, Version eventVersion, Guid eventSourceId, long eventSequence, object theEvent)
         {
             var eventName = _typeResolver.EventNameFor(theEvent.GetType());
             var data = JObject.FromObject(theEvent, _serializer);
 
             StoredEvent<JObject> obj = new StoredEvent<JObject>(
-                theEvent.EventIdentifier,
-                theEvent.EventTimeStamp,
+                eventIdentifier,
+                eventTimeStamp,
                 eventName,
-                theEvent.EventVersion,
-                theEvent.EventSourceId,
-                theEvent.EventSequence,
+                eventVersion,
+                eventSourceId,
+                eventSequence,
                 data);
 
             data.Remove("EventIdentifier");

@@ -21,17 +21,17 @@ namespace ApplicationService
             bus.RegisterAllHandlersInAssembly(typeof(Program).Assembly);
             var browsableEventStore = new MsSqlServerEventStoreElementStore(Settings.Default.EventStoreConnectionString);
             var buffer = new InMemoryBufferedBrowsableElementStore(browsableEventStore, 20 /*magic number faund in ThresholedFetchPolicy*/);
-            var pipeline = Pipeline.Create(new EventBusProcessor(bus), buffer);
+            //var pipeline = Pipeline.Create("FirstPipeline", new EventBusProcessor(bus), buffer);
 
             BootStrapper.BootUp(buffer);
             var commandServiceHost = new ServiceHost(typeof(CommandWebService));
 
             commandServiceHost.Open();
-            pipeline.Start();
+            //pipeline.Start();
 
             Console.ReadLine();
 
-            pipeline.Stop();
+            //pipeline.Stop();
             commandServiceHost.Close();
         }
     }

@@ -72,7 +72,7 @@ namespace Domain
         public void RestoreFromSnapshot(NoteSnapshot snapshot)
         {
             EventSourceId = snapshot.EventSourceId;
-            InitialVersion = snapshot.EventSourceVersion;   
+            // TODO: InitialVersion = snapshot.EventSourceVersion;   
             _text = snapshot.Text;
             _creationDate = snapshot.CreationDate;
         }
