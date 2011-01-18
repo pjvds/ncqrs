@@ -5,6 +5,7 @@ using System.Reflection;
 using Castle.Windsor;
 using Ncqrs.Eventing;
 using Ncqrs.Eventing.ServiceModel.Bus;
+using Castle.Core;
 
 namespace Ncqrs.Config.Windsor
 {
@@ -29,7 +30,10 @@ namespace Ncqrs.Config.Windsor
                 PublishToHandlers(eventMessage, eventMessageType, handlers);
         }
 
-        public virtual void Publish(IEnumerable<IEvent> eventMessages) { throw new NotImplementedException(); }
+        public virtual void Publish(IEnumerable<IEvent> eventMessages)
+        {
+            eventMessages.ForEach(Publish);
+        }
 
         static void PublishToHandlers(dynamic eventMessage, Type eventMessageType, IEnumerable<dynamic> handlers)
         {
@@ -57,6 +61,7 @@ namespace Ncqrs.Config.Windsor
                 eventTypes.AddRange(interfaces);
                 type = typeof (IEvent).IsAssignableFrom(type.BaseType) ? type.BaseType : null;
             }
+            eventTypes = eventTypes.Distinct().ToList();
             foreach (var eventType in eventTypes)
             {
                 var handlerType = typeof (IEventHandler<>).MakeGenericType(eventType);

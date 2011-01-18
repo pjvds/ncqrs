@@ -37,13 +37,13 @@ namespace Ncqrs.Config.Windsor.Tests
         }
         
         [Test]
-        public void it_should_call_the_class_handler() { _handler1.AssertWasCalled(x => x.Handle(_testEvent)); }
+        public void it_should_call_the_class_handler_once() { _handler1.AssertWasCalled(x => x.Handle(_testEvent), o => o.Repeat.Once()); }
 
         [Test]
-        public void it_should_call_the_base_class_handler() { _handler2.AssertWasCalled(x => x.Handle(_testEvent)); }
+        public void it_should_call_the_base_class_handler_once() { _handler2.AssertWasCalled(x => x.Handle(_testEvent), o => o.Repeat.Once()); }
         
         [Test]
-        public void it_should_call_the_interface_handler() { _handler3.AssertWasCalled(x => x.Handle(_testEvent)); }
+        public void it_should_call_the_interface_handler_once() { _handler3.AssertWasCalled(x => x.Handle(_testEvent), o => o.Repeat.Once()); }
     }
 
     public class FakeEvent : SourcedEvent {}
