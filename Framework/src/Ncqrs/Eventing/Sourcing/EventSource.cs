@@ -147,7 +147,8 @@ namespace Ncqrs.Eventing.Sourcing
 
         internal protected void ApplyEvent(object evnt)
         {
-            var wrappedEvent = new UncommittedEvent(_idGenerator.GenerateNewId(), EventSourceId, GetNextSequence(), _initialVersion, DateTime.UtcNow, evnt);
+            var eventVersion = evnt.GetType().Assembly.GetName().Version;
+            var wrappedEvent = new UncommittedEvent(_idGenerator.GenerateNewId(), EventSourceId, GetNextSequence(), _initialVersion, DateTime.UtcNow, evnt, eventVersion);
 
             HandleEvent(wrappedEvent.Payload);
             OnEventApplied(wrappedEvent);

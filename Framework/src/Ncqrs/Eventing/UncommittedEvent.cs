@@ -12,7 +12,8 @@ namespace Ncqrs.Eventing
         private readonly Guid _eventIdentifier;
         private readonly DateTime _eventTimeStamp;
         private readonly Guid _eventSourceId;
-        private readonly long _initialVersionOfEventSource;        
+        private readonly long _initialVersionOfEventSource;
+        private readonly Version _eventVersion;
 
         /// <summary>
         /// Gets the initial version of event source (the version it was just after creating/retrieving from the store)
@@ -69,9 +70,10 @@ namespace Ncqrs.Eventing
             get { return _eventSequence; }
         }
 
-        public UncommittedEvent(Guid eventIdentifier, Guid eventSourceId, long eventSequence, long initialVersionOfEventSource, DateTime eventTimeStamp, object payload)            
+        public UncommittedEvent(Guid eventIdentifier, Guid eventSourceId, long eventSequence, long initialVersionOfEventSource, DateTime eventTimeStamp, object payload, Version eventVersion)            
         {
-            _payload = payload;            
+            _payload = payload;
+            _eventVersion = eventVersion;
             _initialVersionOfEventSource = initialVersionOfEventSource;
             _eventSourceId = eventSourceId;
             _eventSequence = eventSequence;
@@ -81,7 +83,7 @@ namespace Ncqrs.Eventing
 
         public Version EventVersion
         {
-            get { throw new NotImplementedException(); }
+            get { return _eventVersion; }
         }
     }
 }

@@ -38,13 +38,13 @@ namespace Ncqrs.Tests.Eventing.Storage
             var eventSourceId = Guid.NewGuid();
 
             var stream1 = new UncommittedEventStream(Guid.NewGuid());
-            stream1.Append(new UncommittedEvent(Guid.NewGuid(), eventSourceId, 1, 0, DateTime.UtcNow, new object()));
-            stream1.Append(new UncommittedEvent(Guid.NewGuid(), eventSourceId, 2, 0, DateTime.UtcNow, new object()));
+            stream1.Append(new UncommittedEvent(Guid.NewGuid(), eventSourceId, 1, 0, DateTime.UtcNow, new object(), new Version(1, 0)));
+            stream1.Append(new UncommittedEvent(Guid.NewGuid(), eventSourceId, 2, 0, DateTime.UtcNow, new object(), new Version(1, 0)));
 
             var stream2 = new UncommittedEventStream(Guid.NewGuid());
-            stream2.Append(new UncommittedEvent(Guid.NewGuid(), eventSourceId, 3, 1, DateTime.UtcNow, new object()));
-            stream2.Append(new UncommittedEvent(Guid.NewGuid(), eventSourceId, 4, 1, DateTime.UtcNow, new object()));
-            stream2.Append(new UncommittedEvent(Guid.NewGuid(), eventSourceId, 5, 1, DateTime.UtcNow, new object()));
+            stream2.Append(new UncommittedEvent(Guid.NewGuid(), eventSourceId, 3, 1, DateTime.UtcNow, new object(), new Version(1, 0)));
+            stream2.Append(new UncommittedEvent(Guid.NewGuid(), eventSourceId, 4, 1, DateTime.UtcNow, new object(), new Version(1, 0)));
+            stream2.Append(new UncommittedEvent(Guid.NewGuid(), eventSourceId, 5, 1, DateTime.UtcNow, new object(), new Version(1, 0)));
 
             var store = new InMemoryEventStore();
 
