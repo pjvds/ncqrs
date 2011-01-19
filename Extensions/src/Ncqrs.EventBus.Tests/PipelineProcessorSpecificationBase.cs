@@ -1,6 +1,4 @@
 using System;
-using Ncqrs.Eventing;
-using Ncqrs.Eventing.Sourcing;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -15,7 +13,7 @@ namespace Ncqrs.EventBus.Tests
         [SetUp]
         public void SetUp()
         {
-            _event = new SourcedEventProcessingElement(new UncommittedEvent(Guid.NewGuid(), Guid.NewGuid(), 0,0, DateTime.Now, new object(), new Version(1,0)));
+            _event = new FakeProcessingElement();
             _eventStore = MockRepository.GenerateMock<IBrowsableElementStore>();
             _eventQueue = MockRepository.GenerateMock<IEventQueue>();
         }

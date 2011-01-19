@@ -53,23 +53,11 @@ namespace Ncqrs.EventBus.Tests
 
             sut.Count.Should().Be(1);
             sut.SequenceLength.Should().Be(0);
-        }
-
-        private class FakeProcessingElement : IProcessingElement
-        {
-            public FakeProcessingElement(int sequence)
-            {
-                SequenceNumber = sequence;
-            }
-
-            public int SequenceNumber { get; set; }
-            public string UniqueId { get; private set; }
-            public object GroupingKey { get; private set; }
-        }
+        }        
 
         private static IProcessingElement CreateProcessingEvent(int sequence)
         {
-            return new FakeProcessingElement(sequence);
+            return new FakeProcessingElement {SequenceNumber = sequence};
         }
     }
 }
