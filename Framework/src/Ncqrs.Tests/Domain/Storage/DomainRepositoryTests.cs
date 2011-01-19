@@ -79,7 +79,7 @@ namespace Ncqrs.Tests.Domain.Storage
                 var eventStream = new UncommittedEventStream(commandId);
 
                 store.Expect(s => s.Store(eventStream));
-                bus.Expect(b => b.Publish((IEnumerable<IEvent>) null)).IgnoreArguments();
+                bus.Expect(b => b.Publish((IEnumerable<IPublishableEvent>) null)).IgnoreArguments();
 
                 var repository = new DomainRepository(store, bus);
                 repository.Store(eventStream);
