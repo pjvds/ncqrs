@@ -150,8 +150,8 @@ namespace Ncqrs.Eventing.Storage.MongoDB
 
             foreach (PropertyInfo prop in properties)
             {
-                // we have to workaround the absence of Guid serialization in MongoDB driver
-                dbObject[prop.Name] = prop.PropertyType.Equals(typeof(Guid))
+                // we have to workaround the absence of Guid and System.Version serialization in MongoDB driver
+                dbObject[prop.Name] = prop.PropertyType.Equals(typeof(Guid)) || prop.PropertyType.Equals(typeof(Version))
                                           ? prop.GetValue(@event, new object[] { }).ToString()
                                           : prop.GetValue(@event, new object[] { });
             }
