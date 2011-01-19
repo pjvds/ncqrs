@@ -19,7 +19,7 @@ namespace Ncqrs.EventBus.Tests
         private PipelineProcessor CreateProcessor()
         {
             var pipelineProcessor = new PipelineProcessor(new FailingEventProcessor());
-            pipelineProcessor.EventProcessed += (s, e) => _eventStore.MarkLastProcessedEvent(e.Event);
+            pipelineProcessor.EventProcessed += (s, e) => _eventStore.MarkLastProcessedEvent(e.ProcessedElement);
             return pipelineProcessor;
         }
     }

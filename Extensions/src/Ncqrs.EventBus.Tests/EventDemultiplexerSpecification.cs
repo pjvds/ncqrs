@@ -1,4 +1,5 @@
 using System;
+using Ncqrs.Eventing;
 using NUnit.Framework;
 using FluentAssertions;
 
@@ -52,9 +53,9 @@ namespace Ncqrs.EventBus.Tests
             enqueuedToProcessingCount.Should().Be(1);
         }
 
-        private static SequencedEvent CreateEvent(Guid sourceId)
+        private static IProcessingElement CreateEvent(Guid sourceId)
         {
-            return new SequencedEvent(0, new TestEvent(Guid.NewGuid(), sourceId, 0, DateTime.Now));
+            return new SourcedEventProcessingElement(new UncommittedEvent(Guid.NewGuid(), sourceId, 0, 0, DateTime.Now, new object(), new Version(1,0)));
         }
     }
 }
