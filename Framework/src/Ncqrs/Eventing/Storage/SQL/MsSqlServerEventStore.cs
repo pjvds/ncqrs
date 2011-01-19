@@ -313,7 +313,7 @@ namespace Ncqrs.Eventing.Storage.SQL
             return result;
         }
 
-        public CommittedEventStream ReadUntil(Guid eventSourceId, long? maxVersion)
+        public CommittedEventStream ReadUntil(Guid eventSourceId, long? maxVersion = null)
         {
             // TODO: implement
             if(maxVersion != null) throw new NotSupportedException();
@@ -442,6 +442,8 @@ namespace Ncqrs.Eventing.Storage.SQL
                             {
                                 StoreMultipleSources(eventStream, transaction);
                             }
+
+                            transaction.Commit();
                         }
                         catch
                         {
