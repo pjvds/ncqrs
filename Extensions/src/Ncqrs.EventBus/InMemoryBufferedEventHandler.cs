@@ -1,9 +1,10 @@
-﻿using Ncqrs.Eventing.ServiceModel.Bus;
+﻿using Ncqrs.Eventing;
+using Ncqrs.Eventing.ServiceModel.Bus;
 using Ncqrs.Eventing.Sourcing;
 
 namespace Ncqrs.EventBus
 {
-    public class InMemoryBufferedEventHandler : IEventHandler<SourcedEvent>
+    public class InMemoryBufferedEventHandler : IEventHandler<object>
     {
         private readonly InMemoryBufferedBrowsableElementStore _buffer;
 
@@ -12,7 +13,7 @@ namespace Ncqrs.EventBus
             _buffer = buffer;
         }
 
-        public void Handle(SourcedEvent evnt)
+        public void Handle(IPublishedEvent<object> evnt)
         {
             _buffer.PushElement(new SourcedEventProcessingElement(evnt));
         }

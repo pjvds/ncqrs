@@ -2,7 +2,7 @@
 using System.Diagnostics.Contracts;
 
 namespace Ncqrs.Eventing
-{
+{    
     /// <summary>
     /// Represents an event.
     /// </summary>

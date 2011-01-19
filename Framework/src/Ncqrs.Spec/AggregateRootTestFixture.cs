@@ -53,7 +53,7 @@ namespace Ncqrs.Spec
                                                                    EventSourceId,
                                                                sequence++,
                                                                DateTime.
-                                                                   UtcNow, x))));
+                                                                   UtcNow, x, new Version(1, 0)))));
             }
 
             try

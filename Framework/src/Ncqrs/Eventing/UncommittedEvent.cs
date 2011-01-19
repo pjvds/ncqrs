@@ -1,11 +1,12 @@
 ﻿using System;
+using Ncqrs.Eventing.ServiceModel.Bus;
 
 namespace Ncqrs.Eventing
 {
     /// <summary>
     /// Represents an event which has not been yet persisted.
     /// </summary>
-    public class UncommittedEvent : IEvent
+    public class UncommittedEvent : IPublishableEvent
     {
         private readonly object _payload;
         private readonly long _eventSequence;

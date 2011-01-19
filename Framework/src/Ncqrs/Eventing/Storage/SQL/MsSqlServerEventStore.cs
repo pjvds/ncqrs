@@ -51,44 +51,14 @@ namespace Ncqrs.Eventing.Storage.SQL
 
             // TODO: Legacy stuff... we do not have a dummy id with the current schema.
             var dummyCommitId = Guid.Empty;
-            var evnt = new CommittedEvent(dummyCommitId, document.EventIdentifier, document.EventSourceId, document.EventSequence, document.EventTimeStamp, payload);
+            var evnt = new CommittedEvent(dummyCommitId, document.EventIdentifier, document.EventSourceId, document.EventSequence, document.EventTimeStamp, payload, document.EventVersion);
 
             // TODO: Legacy stuff... should move.
             if(evnt is ISourcedEvent) { ((ISourcedEvent)evnt).InitializeFrom(rawEvent);}
             
             return evnt;
         }
-
-        /// <summary>
-        /// Saves all events from a collection.
-        /// </summary>
-        /// <param name="events">The event collection.</param>
-        private void SaveEvents(IEnumerable<UncommittedEvent> events)
-        {
-            // Create new connection.
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                // Open connection and begin a transaction so we can
-                // commit or rollback all the changes that has been made.
-                connection.Open();
-                using (SqlTransaction transaction = connection.BeginTransaction())
-                {
-                    try
-                    {
-                        // Save all events to the store.
-                        SaveEvents(events, transaction);
-                        // Everything is handled, commint transaction.
-                        transaction.Commit();
-                    }
-                    catch
-                    {
-                        // Something went wrong, rollback transaction.
-                        transaction.Rollback();
-                        throw;
-                    }
-                }
-            }
-        }
+        
 
         /// <summary>
         /// Saves a snapshot of the specified event source.
@@ -372,6 +342,46 @@ namespace Ncqrs.Eventing.Storage.SQL
             }
 
             return new CommittedEventStream(events);
+        }
+
+        /// <summary>
+        /// Get some events after specified event.
+        /// </summary>
+        /// <param name="eventId">The id of last event not to be included in result set.</param>
+        /// <param name="maxCount">Maximum numer of returned events</param>
+        /// <returns>A collection events starting right after <paramref name="eventId"/>.</returns>
+        public IEnumerable<CommittedEvent> GetEventsAfter(Guid? eventId, int maxCount)
+        {
+            var result = new List<CommittedEvent>();
+
+            // Create connection and command.
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                var query = eventId.HasValue
+                    ? Queries.SelectEventsAfterQuery
+                    : Queries.SelectEventsFromBeginningOfTime;
+
+                using (var command = new SqlCommand(string.Format(query, maxCount), connection))
+                {
+                    if (eventId.HasValue)
+                    {
+                        command.Parameters.AddWithValue("EventId", eventId);
+                    }
+                    connection.Open();
+
+                    // Execute query and create reader.
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            var evnt = ReadEventFromDbReader(reader);
+                            result.Add(evnt);
+                        }
+                    }
+                }
+            }
+
+            return result;
         }
 
         /// <summary>

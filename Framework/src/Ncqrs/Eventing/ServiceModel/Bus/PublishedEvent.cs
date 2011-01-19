@@ -1,28 +1,55 @@
 ﻿using System;
-using Ncqrs.Eventing.ServiceModel.Bus;
 
-namespace Ncqrs.Eventing
+namespace Ncqrs.Eventing.ServiceModel.Bus
 {
     /// <summary>
-    /// Represents an event which has been persisted.
+    /// An interface that represents an event during its publishing and handling. At this stage event objects are genericaly typed
+    /// to the actual payload type.
     /// </summary>
-    public class CommittedEvent : IPublishableEvent
+    /// <remarks>
+    /// This interface is internal and is not mean to be implemented in user code. It is necessary because "out" type parameters can
+    /// only be declared by interfaces (not classes). <see cref="IEventHandler{TEvent}"/> needs to declare "in" type parameter so
+    /// <see cref="IPublishedEvent{TEvent}"/> have to have "out" modifier.
+    /// </remarks>
+    /// <typeparam name="TEvent">Type of the payload.</typeparam>
+    public interface IPublishedEvent<out TEvent> : IPublishableEvent
+    {        
+        /// <summary>
+        /// Gets the payload of the event.
+        /// </summary>
+        new TEvent Payload { get;}
+    }
+
+    /// <summary>
+    /// Provides default <see cref="IPublishedEvent{TEvent}"/> interface implementation.
+    /// </summary>
+    /// <typeparam name="TEvent">Type of the event.</typeparam>
+    public class PublishedEvent<TEvent> : PublishedEvent, IPublishedEvent<TEvent>
+    {
+        /// <summary>
+        /// Gets the payload of the event.
+        /// </summary>
+        public new TEvent Payload
+        {
+            get { return (TEvent)base.Payload; }
+        }
+
+        public PublishedEvent(IPublishableEvent evnt) : base(evnt)
+        {
+        }
+    }
+
+    /// <summary>
+    /// Base clas for representing published events. Can be used when type of the event payload does not matter.
+    /// </summary>
+    public abstract class PublishedEvent : IPublishableEvent
     {
         private readonly object _payload;
         private readonly long _eventSequence;
         private readonly Guid _eventIdentifier;
         private readonly DateTime _eventTimeStamp;
         private readonly Guid _eventSourceId;
-        private readonly Guid _commitId;
-        private readonly Version _eventVersion;
-
-        /// <summary>
-        /// If of a commit in which this event was stored (usually corresponds to a command id which caused this event).
-        /// </summary>
-        public Guid CommitId
-        {
-            get { return _commitId; }
-        }
+        private readonly Version _eventVersion;        
 
         /// <summary>
         /// Gets the payload of the event.
@@ -79,15 +106,14 @@ namespace Ncqrs.Eventing
             get { return _eventSequence; }
         }
 
-        public CommittedEvent(Guid commitId, Guid eventIdentifier, Guid eventSourceId, long eventSequence, DateTime eventTimeStamp, object payload, Version eventVersion)            
+        protected PublishedEvent(IPublishableEvent evnt)            
         {            
-            _payload = payload;
-            _eventVersion = eventVersion;
-            _commitId = commitId;
-            _eventSourceId = eventSourceId;
-            _eventSequence = eventSequence;
-            _eventIdentifier = eventIdentifier;
-            _eventTimeStamp = eventTimeStamp;
+            _payload = evnt.Payload;
+            _eventVersion = evnt.EventVersion;            
+            _eventSourceId = evnt.EventSourceId;
+            _eventSequence = evnt.EventSequence;
+            _eventIdentifier = evnt.EventIdentifier;
+            _eventTimeStamp = evnt.EventTimeStamp;
         }
     }
 }

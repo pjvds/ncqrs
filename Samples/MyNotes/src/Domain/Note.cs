@@ -26,6 +26,7 @@ namespace Domain
             // this event (the OnNewNoteAdded method).
             ApplyEvent(new NewNoteAdded
             {
+                NoteId = noteId,
                 Text = text,
                 CreationDate = clock.UtcNow()
             });
