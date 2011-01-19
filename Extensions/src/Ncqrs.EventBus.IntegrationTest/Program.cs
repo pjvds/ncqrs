@@ -2,6 +2,7 @@
 using System.Configuration;
 using System.Linq;
 using System.Text;
+using Ncqrs.Eventing;
 using Ncqrs.Eventing.Storage.SQL;
 
 namespace Ncqrs.EventBus.IntegrationTest
@@ -10,7 +11,7 @@ namespace Ncqrs.EventBus.IntegrationTest
     {        
         static void Main(string[] args)
         {
-            GenerateEvents();
+            //GenerateEvents();
             //GenerateEventsForAggregateRoots();
             ProcessEvents();
 
@@ -38,7 +39,8 @@ namespace Ncqrs.EventBus.IntegrationTest
             var eventStore = new MsSqlServerEventStore(ConfigurationManager.ConnectionStrings["Main"].ConnectionString);
             for (int i = 0; i < 1000; i++)
             {
-                eventStore.SaveEvents(new[] { new RandomEvent(i) });
+                var uncommittedEventStream = new UncommittedEventStream(Guid.NewGuid());
+                uncommittedEventStream.Append(new UncommittedEvent(Guid.NewGuid(), Guid.NewGuid(), i, i, DateTime.Now, new object(), new Version(1, 0)));                
             }
         }
 
@@ -52,7 +54,9 @@ namespace Ncqrs.EventBus.IntegrationTest
             for (int i = 0; i < 1000; i++)
             {
                 Guid rootId = aggregateRoots[random.Next(aggregateRootCount)];
-                eventStore.SaveEvents(new[] { new RandomEvent(rootId, i) });
+
+                var uncommittedEventStream = new UncommittedEventStream(Guid.NewGuid());
+                uncommittedEventStream.Append(new UncommittedEvent(Guid.NewGuid(), rootId, i, i, DateTime.Now, new object(), new Version(1, 0)));                
             }
         }
     }
