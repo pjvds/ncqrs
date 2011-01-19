@@ -22,18 +22,7 @@ namespace Ncqrs.Tests.Domain
         {
             NcqrsEnvironment.Deconfigure();
         }
-
-        [Test]
-        public void When_a_new_instance_is_initialized_with_a_type_that_is_not_of_an_event_it_should_throw_an_exception()
-        {
-            var wrongEventType = typeof (String);
-            Action<object > action = (e) => e.ToString();
-
-            Action creatingNewEventHandlerWithWrongEventType = () => new TypeThresholdedActionBasedDomainEventHandler(action, wrongEventType);
-
-            creatingNewEventHandlerWithWrongEventType.ShouldThrow<ArgumentException>();
-        }
-
+        
         [Test]
         public void Threshold_should_hold_event_when_it_is_of_a_higher_type_when_exact_is_true()
         {
