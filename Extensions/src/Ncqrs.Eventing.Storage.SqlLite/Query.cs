@@ -3,11 +3,13 @@
     internal class Query {
         internal const string DeleteUnusedProviders="DELETE FROM [EventSources] WHERE (SELECT Count(EventSourceId) FROM [Events] WHERE [EventSourceId]=[EventSources].[Id]) = 0";
 
-        internal const string InsertNewEventQuery="INSERT INTO [Events]([EventSourceId], [Name], [Data], [Sequence], [TimeStamp]) VALUES (@Id, @Name, @Data, @Sequence, @Timestamp)";
+        internal const string InsertNewEventQuery="INSERT INTO [Events]([EventSourceId], [EventId], [Name], [Data], [Sequence], [TimeStamp]) VALUES (@SourceId, @EventId, @Name, @Data, @Sequence, @Timestamp)";
 
         internal const string InsertNewProviderQuery="INSERT INTO [EventSources](Id, Type, Version) VALUES (@Id, @Type, @Version)";
 
-        internal const string SelectAllEventsQuery="SELECT [TimeStamp], [Data], [Sequence] FROM [Events] WHERE [EventSourceId] = @EventSourceId AND [Sequence] >= @EventSourceVersion ORDER BY [Sequence]";
+        internal const string SelectAllEventsFromQuery = "SELECT [TimeStamp], [EventId], [Data], [Sequence] FROM [Events] WHERE [EventSourceId] = @EventSourceId AND [Sequence] >= @EventSourceVersion ORDER BY [Sequence]";
+
+        internal const string SelectAllEventsUntilQuery = "SELECT [TimeStamp], [EventId], [Data], [Sequence] FROM [Events] WHERE [EventSourceId] = @EventSourceId AND [Sequence] <= @EventSourceVersion ORDER BY [Sequence]";
 
         internal const string SelectAllIdsForTypeQuery="SELECT [Id] FROM [EventSources] WHERE [Type] = @Type";
 
@@ -22,6 +24,7 @@
         internal const string CreateTables=
                       @"CREATE TABLE [Events] (
                             [EventSourceId] GUID  NOT NULL,
+                            [EventId] GUID  NOT NULL,
                             [Sequence] INTEGER  NOT NULL,
                             [TimeStamp] INTEGER NOT NULL,
                             [Data] BLOB  NOT NULL,

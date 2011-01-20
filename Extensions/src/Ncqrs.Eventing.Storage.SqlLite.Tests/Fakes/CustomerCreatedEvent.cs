@@ -5,13 +5,12 @@
     using Ncqrs.Eventing.Sourcing;
 
     [Serializable]
-    public class CustomerCreatedEvent : SourcedEvent
+    public class CustomerCreatedEvent
     {
         public CustomerCreatedEvent()
         { }
-
-        public CustomerCreatedEvent(Guid eventIdentifier, Guid eventSourceId, long eventSequence, DateTime eventTimeStamp, string name, int age)
-            : base(eventIdentifier, eventSourceId, eventSequence, eventTimeStamp)
+        
+        public CustomerCreatedEvent(string name, int age)
         {
             Name = name;
             Age = age;
@@ -25,9 +24,7 @@
         {
             var other = obj as CustomerCreatedEvent;
             if (other == null) return false;
-            var result = EventIdentifier.Equals(other.EventIdentifier) &&
-                EventSourceId.Equals(other.EventSourceId) &&
-                EventSequence.Equals(other.EventSequence) &&
+            var result = 
                 Name.Equals(other.Name) &&
                 Age.Equals(other.Age);
             return result;

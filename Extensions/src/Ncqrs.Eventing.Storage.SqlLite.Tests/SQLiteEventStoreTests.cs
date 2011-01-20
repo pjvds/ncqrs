@@ -43,60 +43,72 @@ namespace Ncqrs.Eventing.Storage.SQLite.Tests{
         {
             var sequenceCounter = 0;
             var id=Guid.NewGuid();
-            var events = new SourcedEvent[]{
-                new CustomerCreatedEvent(Guid.NewGuid(), id, sequenceCounter++, DateTime.UtcNow, "Foo", 35), 
-                new CustomerNameChanged(Guid.NewGuid(), id, sequenceCounter++, DateTime.UtcNow, "Name" + sequenceCounter), 
-                new CustomerNameChanged(Guid.NewGuid(), id, sequenceCounter++, DateTime.UtcNow, "Name" + sequenceCounter)
-            };
-            var source = MockRepository.GenerateMock<IEventSource>();
-            source.Stub(e => e.EventSourceId).Return(id);
-            source.Stub(e => e.InitialVersion).Return(0);
-            source.Stub(e => e.Version).Return(events.Length);
-            source.Stub(e => e.GetUncommittedEvents()).Return(events);
-            _store.Save(source);
+            var stream = new UncommittedEventStream(Guid.NewGuid());
+            stream.Append(
+                new UncommittedEvent(Guid.NewGuid(), id, sequenceCounter++, 0, DateTime.UtcNow, new CustomerCreatedEvent("Foo", 35),
+                                     new Version(1, 0)));
+            stream.Append(
+                new UncommittedEvent(Guid.NewGuid(), id, sequenceCounter++, 0, DateTime.UtcNow,
+                                     new CustomerNameChanged("Name" + sequenceCounter), new Version(1, 0)));
+            stream.Append(
+                new UncommittedEvent(Guid.NewGuid(), id, sequenceCounter++, 0, DateTime.UtcNow,
+                                     new CustomerNameChanged("Name" + sequenceCounter), new Version(1, 0)));
+                        
+            _store.Store(stream);
         }
 
         [Test]
         public void Retrieving_all_events_should_return_the_same_as_added() {
             var id=Guid.NewGuid();
             var sequenceCounter=0;
-            var events=new SourcedEvent[]
-                             {
-                                 new CustomerCreatedEvent(Guid.NewGuid(), id, sequenceCounter++, DateTime.UtcNow, "Foo",35),
-                                 new CustomerNameChanged(Guid.NewGuid(), id, sequenceCounter++, DateTime.UtcNow,"Name" + sequenceCounter),
-                                 new CustomerNameChanged(Guid.NewGuid(), id, sequenceCounter++, DateTime.UtcNow,"Name" + sequenceCounter),
-                                 new CustomerNameChanged(Guid.NewGuid(), id, sequenceCounter++, DateTime.UtcNow,"Name" + sequenceCounter)
-                             };
 
-            var eventSource=MockRepository.GenerateMock<IEventSource>();
-            eventSource.Stub(e => e.EventSourceId).Return(id);
-            eventSource.Stub(e => e.InitialVersion).Return(0);
-            eventSource.Stub(e => e.Version).Return(events.Length);
-            eventSource.Stub(e => e.GetUncommittedEvents()).Return(events);
-            _store.Save(eventSource);
+            var stream = new UncommittedEventStream(Guid.NewGuid());
+            stream.Append(
+                new UncommittedEvent(Guid.NewGuid(), id, sequenceCounter++, 0, DateTime.UtcNow, new CustomerCreatedEvent("Foo", 35),
+                                     new Version(1, 0)));
+            stream.Append(
+                new UncommittedEvent(Guid.NewGuid(), id, sequenceCounter++, 0, DateTime.UtcNow,
+                                     new CustomerNameChanged("Name" + sequenceCounter), new Version(1, 0)));
+            stream.Append(
+                new UncommittedEvent(Guid.NewGuid(), id, sequenceCounter++, 0, DateTime.UtcNow,
+                                     new CustomerNameChanged("Name" + sequenceCounter), new Version(1, 0)));
             
-            var result=_store.GetAllEvents(id);
-            result.Count().Should().Be(events.Length);
-            result.First().EventIdentifier.Should().Be(events.First().EventIdentifier);
-            Assert.IsTrue(result.SequenceEqual(events));
+            _store.Store(stream);
+
+            var result=_store.ReadUntil(id, null);
+            result.Count().Should().Be(stream.Count());
+            result.First().EventIdentifier.Should().Be(stream.First().EventIdentifier);
+            //TODO:
+
+            var streamList = stream.ToList();
+            var resultList = result.ToList();
+
+            for (int i = 0; i < resultList.Count; i++)
+            {
+                Assert.IsTrue(AreEqual(streamList[i], resultList[i]));
+            }
+        }
+
+        private static bool AreEqual(UncommittedEvent uncommitted, CommittedEvent committed)
+        {
+            return uncommitted.EventIdentifier == committed.EventIdentifier
+                   && uncommitted.EventSourceId == committed.EventSourceId
+                   && uncommitted.Payload.Equals(committed.Payload)
+                   && uncommitted.EventTimeStamp == committed.EventTimeStamp
+                   && uncommitted.EventSequence == committed.EventSequence;
         }
 
         [Test]
         public void Retrieved_event_should_having_identical_timestamp_as_persisted() {
             var id = Guid.NewGuid();
             var utcNow = DateTime.UtcNow.Date.AddHours(9).AddTicks(-1);
-            
-            var events = new SourcedEvent[]
-            {
-                new CustomerCreatedEvent(Guid.NewGuid(), id, 0, utcNow, "Foo", 35)
-            };
 
-            var eventSource = MockRepository.GenerateMock<IEventSource>();
-            eventSource.Stub(e => e.EventSourceId).Return(id);
-            eventSource.Stub(e => e.InitialVersion).Return(0);
-            eventSource.Stub(e => e.Version).Return(events.Length);
-            eventSource.Stub(e => e.GetUncommittedEvents()).Return(events);
-            _store.Save(eventSource);
+            var stream = new UncommittedEventStream(Guid.NewGuid());
+            stream.Append(
+                new UncommittedEvent(Guid.NewGuid(), id, 1, 0, utcNow, new CustomerCreatedEvent("Foo", 35),
+                                     new Version(1, 0)));
+            
+            _store.Store(stream);
 
             using (var conn = new SQLiteConnection(_connString))
             {

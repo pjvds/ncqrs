@@ -15,6 +15,7 @@ namespace Ncqrs.Eventing
         private Guid? _singleSource;
         private bool _hasSingleSource = true;
         private readonly List<UncommittedEvent> _events = new List<UncommittedEvent>();
+        private readonly Dictionary<Guid, EventSourceInformation> _eventSourceInformation = new Dictionary<Guid, EventSourceInformation>();
 
         /// <summary>
         /// Creates new uncommitted event stream.
@@ -43,6 +44,21 @@ namespace Ncqrs.Eventing
                 _singleSource = evnt.EventSourceId;
             }
             _events.Add(evnt);
+            UpdateEventSourceInformation(evnt);
+        }
+
+        private void UpdateEventSourceInformation(UncommittedEvent evnt)
+        {
+            var newInformation = new EventSourceInformation(evnt.EventSourceId, evnt.InitialVersionOfEventSource, evnt.EventSequence);
+            _eventSourceInformation[evnt.EventSourceId] = newInformation;
+        }
+
+        /// <summary>
+        /// Gets information about sources of events in this stream.
+        /// </summary>
+        public IEnumerable<EventSourceInformation> Sources
+        {
+            get { return _eventSourceInformation.Values; }
         }
 
         /// <summary>

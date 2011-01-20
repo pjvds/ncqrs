@@ -104,6 +104,7 @@
     <Compile Include="Domain\Storage\SimpleAggregateRootCreationStrategy.cs" />
     <Compile Include="Eventing\CommittedEvent.cs" />
     <Compile Include="Eventing\CommittedEventStream.cs" />
+    <Compile Include="Eventing\EventSourceInformation.cs" />
     <Compile Include="Eventing\ServiceModel\Bus\IPublishableEvent.cs" />
     <Compile Include="Eventing\ServiceModel\Bus\PublishedEvent.cs" />
     <Compile Include="Eventing\Sourcing\EntityThresholdedDomainEventHandlerWrapper.cs" />

@@ -4,18 +4,15 @@
     using Ncqrs.Eventing.Sourcing;
 
     [Serializable]
-    public class CustomerNameChanged : SourcedEvent{
+    public class CustomerNameChanged {
         public CustomerNameChanged()
         {
         }
-
-        public CustomerNameChanged(Guid eventIdentifier, Guid eventSourceId, long eventSequence, DateTime eventTimeStamp, string newName)
-            : base(eventIdentifier, eventSourceId, eventSequence, eventTimeStamp)
+        
+        public CustomerNameChanged(string newName)
         {
             NewName = newName;
         }
-
-        public Guid CustomerId { get { return EventSourceId; } }
 
         public string NewName { get; set; }
 
@@ -23,10 +20,7 @@
         {
             var other = obj as CustomerNameChanged;
             if (other == null) return false;
-            var result = EventIdentifier.Equals(other.EventIdentifier) &&
-                EventSourceId.Equals(other.EventSourceId) && 
-                EventSequence.Equals(other.EventSequence) && 
-                CustomerId.Equals(other.CustomerId) && 
+            var result = 
                 NewName.Equals(other.NewName);
             return result;
         }
