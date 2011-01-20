@@ -134,6 +134,7 @@
     <Compile Include="Eventing\Storage\Serialization\StringEventTranslatorTests.cs" />
     <Compile Include="Eventing\Storage\SimpleEventTypeResolverTests.cs" />
     <Compile Include="Eventing\Storage\SQL\MsSqlServerEventStoreTests.cs" />
+    <Compile Include="Eventing\UncommittedEventStreamTests.cs" />
     <Compile Include="GuidCombGenerator.cs" />
     <Compile Include="InternalExtensionsTests.cs" />
     <Compile Include="NcqrsEnvironmentConfigurationExceptionSpecs.cs" />

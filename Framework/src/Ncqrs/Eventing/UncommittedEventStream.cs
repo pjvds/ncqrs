@@ -68,7 +68,7 @@ namespace Ncqrs.Eventing
         {
             get
             {
-                return _singleSource.HasValue;
+                return _hasSingleSource;
             }
         }
 

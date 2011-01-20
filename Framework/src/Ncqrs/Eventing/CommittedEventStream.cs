@@ -26,7 +26,7 @@ namespace Ncqrs.Eventing
             }
         }
 
-        public bool IsEmpy
+        public bool IsEmpty
         {
             get { return _events.Count == 0; }
         }

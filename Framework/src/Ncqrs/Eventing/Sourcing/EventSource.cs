@@ -93,7 +93,7 @@ namespace Ncqrs.Eventing.Sourcing
             Contract.Requires<ArgumentNullException>(history != null, "The history cannot be null.");
             if (_initialVersion != 0) throw new InvalidOperationException("Cannot apply history when instance has uncommitted changes.");
 
-            if (history.IsEmpy)
+            if (history.IsEmpty)
             {
                 return;                
             }
