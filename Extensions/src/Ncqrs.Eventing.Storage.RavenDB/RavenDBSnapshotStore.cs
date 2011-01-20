@@ -9,8 +9,12 @@ namespace Ncqrs.Eventing.Storage.RavenDB
     {
         private readonly IDocumentStore _documentStore;
 
+        public int SnapshotIntervalInEvents { get; set; }
+
         public RavenDBSnapshotStore(string ravenUrl)
         {
+            SnapshotIntervalInEvents = 15;
+
             _documentStore = new DocumentStore
             {
                 Url = ravenUrl,                
@@ -20,6 +24,8 @@ namespace Ncqrs.Eventing.Storage.RavenDB
 
         public RavenDBSnapshotStore(DocumentStore externalDocumentStore)
         {
+            SnapshotIntervalInEvents = 15;
+
             externalDocumentStore.Conventions = CreateConventions();
             _documentStore = externalDocumentStore;            
         }
