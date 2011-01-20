@@ -24,3 +24,6 @@ bin
 /lib/*
 release
 *.pidb
+/debug_build_output
+/release_build_output
+*.vs10x
