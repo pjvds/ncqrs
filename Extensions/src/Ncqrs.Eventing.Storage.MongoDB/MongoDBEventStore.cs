@@ -40,7 +40,7 @@ namespace Ncqrs.Eventing.Storage.MongoDB
             var eventsAsDbObjects = ((DBObjectArray)source["_Events"]).Values.Cast<IDBObject>();
 
             //no benefit yield now we have single doc - might confused people due to lazy style invocation - esp if exception thrown
-            var events = new List<SourcedEvent>();
+            var events = new List<ISourcedEvent>();
 
             foreach (var eventDbObject in eventsAsDbObjects)
             {
@@ -159,13 +159,13 @@ namespace Ncqrs.Eventing.Storage.MongoDB
             return dbObject;
         }
 
-        protected static SourcedEvent DeserializeToEventIDBObject(IDBObject dbObject)
+        protected static ISourcedEvent DeserializeToEventIDBObject(IDBObject dbObject)
         {
             Type eventType = Type.GetType((string)dbObject["_AssemblyQualifiedEventTypeName"]);
 
             var sourceId = Guid.Parse(dbObject["_SourceId"].ToString());
 
-            var deserializedEvent = Activator.CreateInstance(eventType) as SourcedEvent;
+            var deserializedEvent = Activator.CreateInstance(eventType) as ISourcedEvent;
 
             foreach (string key in dbObject.Keys)
             {
