@@ -78,9 +78,9 @@ namespace Ncqrs.Messaging.Tests
             object message = sendingStrategy.DequeueMessage();
             messageService.Process(message);
 
-            using (var uow = NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork())
+            using (var uow = NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork(Guid.NewGuid()))
             {
-                var cargo = uow.GetById<Cargo>(cargoId);
+                var cargo = (Cargo)uow.GetById(typeof(Cargo),cargoId, null);
                 Assert.AreEqual(1, cargo.HandlingEventCount);
             }
         }

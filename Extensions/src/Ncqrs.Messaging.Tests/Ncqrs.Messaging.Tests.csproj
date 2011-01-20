@@ -32,19 +32,19 @@
   <ItemGroup>
     <Reference Include="Ncqrs">
       <HintPath>..\..\..\lib\$(Configuration)\Ncqrs\Ncqrs.dll</HintPath>
-      <Private>False</Private>
+      <Private>True</Private>
     </Reference>
     <Reference Include="FluentAssertions">
       <HintPath>..\..\..\lib\ThirdParty\FluentAssertions\FluentAssertions.dll</HintPath>
-      <Private>False</Private>
+      <Private>True</Private>
     </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\..\..\lib\ThirdParty\Nunit\nunit.framework.dll</HintPath>
-      <Private>False</Private>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Rhino.Mocks">
       <HintPath>..\..\..\lib\ThirdParty\RhinoMocks\Rhino.Mocks.dll</HintPath>
-      <Private>False</Private>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -65,7 +65,7 @@
     <ProjectReference Include="..\Ncqrs.Messaging\Ncqrs.Messaging.csproj">
       <Project>{3624C541-6D6E-4AAC-B70A-7A769FB5C442}</Project>
       <Name>Ncqrs.Messaging</Name>
-      <Private>False</Private>
+      <Private>True</Private>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
