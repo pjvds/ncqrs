@@ -21,9 +21,9 @@ namespace Ncqrs.Messaging
 
         public void Process(object message)
         {
-            using (var work = NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork())
+            var incomingMessage = ReceiveMessage(message);
+            using (var work = NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork(incomingMessage.MessageId))
             {
-                var incomingMessage = ReceiveMessage(message);
                 var targetAggregateRoot = GetReceiver(work, incomingMessage);
                 targetAggregateRoot.ProcessMessage(incomingMessage);
                 work.Accept();
@@ -32,7 +32,7 @@ namespace Ncqrs.Messaging
 
         private static IMessagingAggregateRoot GetReceiver(IUnitOfWorkContext work, IncomingMessage message)
         {                        
-            var existingReceiver = (IMessagingAggregateRoot)work.TryGetById(message.ReceiverType, message.ReceiverId);
+            var existingReceiver = (IMessagingAggregateRoot)work.GetById(message.ReceiverType, message.ReceiverId, null);
             CheckProcessingRequirements(message, existingReceiver);
 
             return existingReceiver ?? CreateNewAggregateInstance(message.ReceiverType, message.ReceiverId);
