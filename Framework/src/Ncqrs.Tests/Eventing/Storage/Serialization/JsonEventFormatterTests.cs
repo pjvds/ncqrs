@@ -59,7 +59,7 @@ namespace Ncqrs.Tests.Eventing.Storage.Serialization
             result.EventVersion.Should().Be(theEvent.EventVersion);
 
             result.Data.Should().NotBeNull();
-            result.Data.Count.Should().Be(3);
+            result.Data.Count.Should().Be(4);
             result.Data.Value<string>("Name").Should().Be(theEvent.Name);
             result.Data.Value<int>("Value").Should().Be(theEvent.Value);
             result.Data.Value<DateTime>("Day").Should().Be(theEvent.Day);
