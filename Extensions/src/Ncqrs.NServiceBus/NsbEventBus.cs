@@ -37,8 +37,9 @@ namespace Ncqrs.NServiceBus
             get { return NcqrsEnvironment.Get<IBus>(); }
         }
 
-        private static IMessage CreateEventMessage(IEvent payload)
+        private static IMessage CreateEventMessage(IPublishableEvent publishableEvent)
         {
+            object payload = publishableEvent.Payload;
             Type factoryType =
                typeof(EventMessageFactory<>).MakeGenericType(payload.GetType());
             var factory =
@@ -48,12 +49,12 @@ namespace Ncqrs.NServiceBus
 
         public interface IEventMessageFactory
         {
-            IMessage CreateEventMessage(IEvent payload);
+            IMessage CreateEventMessage(object payload);
         }
 
-        private class EventMessageFactory<T> : IEventMessageFactory where T : IEvent
+        private class EventMessageFactory<T> : IEventMessageFactory
         {
-            IMessage IEventMessageFactory.CreateEventMessage(IEvent payload)
+            IMessage IEventMessageFactory.CreateEventMessage(object payload)
             {
                 return new EventMessage<T>
                           {
