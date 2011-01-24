@@ -15,17 +15,15 @@ namespace Ncqrs.Eventing.Storage.RavenDB.Tests
     public class RavenDBEventStoreTests : RavenDBTestBase
     {
         [Serializable]
-        public class CustomerCreatedEvent : SourcedEvent
+        public class CustomerCreatedEvent
         {
-            public CustomerCreatedEvent(Guid eventIdentifier, Guid eventSourceId, long eventSequence, DateTime eventTimeStamp, string name, int age)
-                : base(eventIdentifier, eventSourceId, eventSequence, eventTimeStamp)
+            public CustomerCreatedEvent(string name, int age)
             {
                 Name = name;
                 Age = age;
             }
 
-            public string Name
-            { get; set; }
+            public string Name { get; set; }
 
             public int Age
             {
@@ -40,32 +38,18 @@ namespace Ncqrs.Eventing.Storage.RavenDB.Tests
                 {
                     return false;
                 }
-                bool result = EventIdentifier.Equals(other.EventIdentifier)
-                       && EventSourceId.Equals(other.EventSourceId)
-                       && EventSequence.Equals(other.EventSequence)
-                       //&& EventTimeStamp.Equals(other.EventTimeStamp)
-                       && Name.Equals(other.Name)
+                bool result = Name.Equals(other.Name)
                        && Age.Equals(other.Age);
                 return result;
             }
         }
 
         [Serializable]
-        public class CustomerNameChanged : SourcedEvent
+        public class CustomerNameChanged
         {
-            public Guid CustomerId
-            {
-                get
-                {
-                    return EventSourceId;
-                }
-            }
+            public string NewName { get; set; }
 
-            public string NewName
-            { get; set; }
-
-            public CustomerNameChanged(Guid eventIdentifier, Guid eventSourceId, long eventSequence, DateTime eventTimeStamp, string newName)
-                : base(eventIdentifier, eventSourceId, eventSequence, eventTimeStamp)
+            public CustomerNameChanged(string newName)
             {
                 NewName = newName;
             }
@@ -77,12 +61,7 @@ namespace Ncqrs.Eventing.Storage.RavenDB.Tests
                 {
                     return false;
                 }
-                bool result = EventIdentifier.Equals(other.EventIdentifier)
-                       && EventSourceId.Equals(other.EventSourceId)
-                       && EventSequence.Equals(other.EventSequence)
-                       //&& EventTimeStamp.Equals(other.EventTimeStamp)
-                       && CustomerId.Equals(other.CustomerId)
-                       && NewName.Equals(other.NewName);
+                bool result = NewName.Equals(other.NewName);
                 return result;
             }
         }
@@ -90,32 +69,30 @@ namespace Ncqrs.Eventing.Storage.RavenDB.Tests
         
 
         [Test]
-        public void Saving_event_source_should_succeed()
+        public void Event_saving_smoke_test()
         {
             var targetStore = new RavenDBEventStore(_documentStore);
             var id = Guid.NewGuid();
 
             int sequenceCounter = 0;
 
-            var events = new SourcedEvent[]
-                             {
-                                 new CustomerCreatedEvent(Guid.NewGuid(), id, sequenceCounter++, DateTime.UtcNow, "Foo",
-                                                          35),
-                                 new CustomerNameChanged(Guid.NewGuid(), id, sequenceCounter++, DateTime.UtcNow,
-                                                         "Name" + sequenceCounter),
-                                 new CustomerNameChanged(Guid.NewGuid(), id, sequenceCounter++, DateTime.UtcNow,
-                                                         "Name" + sequenceCounter),
-                                 new CustomerNameChanged(Guid.NewGuid(), id, sequenceCounter++, DateTime.UtcNow,
-                                                         "Name" + sequenceCounter)
-                             };
+            var events = new UncommittedEventStream(Guid.NewGuid());
 
-            var eventSource = MockRepository.GenerateMock<IEventSource>();
-            eventSource.Stub(e => e.EventSourceId).Return(id);
-            eventSource.Stub(e => e.InitialVersion).Return(0);
-            eventSource.Stub(e => e.Version).Return(events.Length);
-            eventSource.Stub(e => e.GetUncommittedEvents()).Return(events);
+            events.Append(new UncommittedEvent(Guid.NewGuid(), id, sequenceCounter++, 0, DateTime.UtcNow, new CustomerCreatedEvent("Foo",
+                                                                                                                                   35),
+                                               new Version(1, 0)));
+            events.Append(new UncommittedEvent(Guid.NewGuid(), id, sequenceCounter++, 0, DateTime.UtcNow, new CustomerNameChanged(
+                                                                                                              "Name" + sequenceCounter),
+                                               new Version(1, 0)));
+            events.Append(new UncommittedEvent(Guid.NewGuid(), id, sequenceCounter++, 0, DateTime.UtcNow, new CustomerNameChanged(
+                                                                                                              "Name" + sequenceCounter),
+                                               new Version(1, 0)));
+            events.Append(new UncommittedEvent(Guid.NewGuid(), id, sequenceCounter++, 0, DateTime.UtcNow, new CustomerNameChanged(
+                                                                                                              "Name" + sequenceCounter),
+                                               new Version(1, 0)));
+                             
 
-            targetStore.Save(eventSource);
+            targetStore.Store(events);
         }
 
         [Test]
@@ -126,23 +103,18 @@ namespace Ncqrs.Eventing.Storage.RavenDB.Tests
 
             int sequenceCounter = 0;
 
-            var events = new SourcedEvent[]
-                             {
-                                 new CustomerCreatedEvent(Guid.NewGuid(), id, sequenceCounter++, DateTime.UtcNow, "Foo",
-                                                          35),
-                                 new CustomerNameChanged(Guid.NewGuid(), id, sequenceCounter++, DateTime.UtcNow,
-                                                         "Name" + sequenceCounter)
-                             };
-            
-            var eventSource = MockRepository.GenerateMock<IEventSource>();
-            eventSource.Stub(e => e.EventSourceId).Return(id).Repeat.Any();
-            eventSource.Stub(e => e.InitialVersion).Return(0).Repeat.Any();
-            eventSource.Stub(e => e.Version).Return(events.Length).Repeat.Any();
-            eventSource.Stub(e => e.GetUncommittedEvents()).Return(events).Repeat.Any();
+            var events = new UncommittedEventStream(Guid.NewGuid());
 
-            targetStore.Save(eventSource);
+            events.Append(new UncommittedEvent(Guid.NewGuid(), id, sequenceCounter++, 0, DateTime.UtcNow, new CustomerCreatedEvent("Foo",
+                                                                                                                                   35),
+                                               new Version(1, 0)));
+            events.Append(new UncommittedEvent(Guid.NewGuid(), id, sequenceCounter++, 0, DateTime.UtcNow, new CustomerNameChanged(
+                                                                                                              "Name" + sequenceCounter),
+                                               new Version(1, 0)));
             
-            Action act = () => targetStore.Save(eventSource);
+            targetStore.Store(events);
+
+            Action act = () => targetStore.Store(events);
             act.ShouldThrow<ConcurrencyException>();
         }
 
@@ -154,30 +126,43 @@ namespace Ncqrs.Eventing.Storage.RavenDB.Tests
 
             int sequenceCounter = 0;
 
-            var events = new SourcedEvent[]
-                             {
-                                 new CustomerCreatedEvent(Guid.NewGuid(), id, sequenceCounter++, DateTime.UtcNow, "Foo",
-                                                          35),
-                                 new CustomerNameChanged(Guid.NewGuid(), id, sequenceCounter++, DateTime.UtcNow,
-                                                         "Name" + sequenceCounter),
-                                 new CustomerNameChanged(Guid.NewGuid(), id, sequenceCounter++, DateTime.UtcNow,
-                                                         "Name" + sequenceCounter),
-                                 new CustomerNameChanged(Guid.NewGuid(), id, sequenceCounter++, DateTime.UtcNow,
-                                                         "Name" + sequenceCounter)
-                             };
+            var events = new UncommittedEventStream(Guid.NewGuid());
 
-            var eventSource = MockRepository.GenerateMock<IEventSource>();
-            eventSource.Stub(e => e.EventSourceId).Return(id);
-            eventSource.Stub(e => e.InitialVersion).Return(0);
-            eventSource.Stub(e => e.Version).Return(events.Length);
-            eventSource.Stub(e => e.GetUncommittedEvents()).Return(events);
+            events.Append(new UncommittedEvent(Guid.NewGuid(), id, sequenceCounter++, 0, DateTime.UtcNow, new CustomerCreatedEvent("Foo",
+                                                                                                                                   35),
+                                               new Version(1, 0)));
+            events.Append(new UncommittedEvent(Guid.NewGuid(), id, sequenceCounter++, 0, DateTime.UtcNow, new CustomerNameChanged(
+                                                                                                              "Name" + sequenceCounter),
+                                               new Version(1, 0)));
+            events.Append(new UncommittedEvent(Guid.NewGuid(), id, sequenceCounter++, 0, DateTime.UtcNow, new CustomerNameChanged(
+                                                                                                              "Name" + sequenceCounter),
+                                               new Version(1, 0)));
+            events.Append(new UncommittedEvent(Guid.NewGuid(), id, sequenceCounter++, 0, DateTime.UtcNow, new CustomerNameChanged(
+                                                                                                              "Name" + sequenceCounter),
+                                               new Version(1, 0)));
 
-            targetStore.Save(eventSource);
+            targetStore.Store(events);
 
-            var result = targetStore.GetAllEvents(id);
-            result.Count().Should().Be(events.Length);
+            var result = targetStore.ReadUntil(id, null);
+            result.Count().Should().Be(events.Count());
             result.First().EventIdentifier.Should().Be(events.First().EventIdentifier);
-            Assert.IsTrue(result.SequenceEqual(events));
-        }        
+
+            var streamList = events.ToList();
+            var resultList = result.ToList();
+
+            for (int i = 0; i < resultList.Count; i++)
+            {
+                Assert.IsTrue(AreEqual(streamList[i], resultList[i]));
+            }
+        }
+
+        private static bool AreEqual(UncommittedEvent uncommitted, CommittedEvent committed)
+        {
+            return uncommitted.EventIdentifier == committed.EventIdentifier
+                   && uncommitted.EventSourceId == committed.EventSourceId
+                   && uncommitted.Payload.Equals(committed.Payload)
+                   && uncommitted.EventTimeStamp == committed.EventTimeStamp
+                   && uncommitted.EventSequence == committed.EventSequence;
+        }
     }
 }
