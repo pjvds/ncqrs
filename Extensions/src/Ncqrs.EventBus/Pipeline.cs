@@ -9,11 +9,11 @@ namespace Ncqrs.EventBus
     public class Pipeline
     {
         private const int MaxDegreeOfParallelismForProcessing = 1;
-        private readonly EventFetcher _fetcher;
+        private readonly ElementFetcher _fetcher;
         private readonly PipelineProcessor _processor;
         private readonly string _name;
         private readonly IBrowsableElementStore _elementStore;
-        private readonly EventDemultiplexer _eventDemultiplexer;
+        private readonly Demultiplexer _demultiplexer;
         private readonly BlockingCollection<IProcessingElement> _preProcessingQueue = new BlockingCollection<IProcessingElement>();
         private readonly BlockingCollection<IProcessingElement> _postProcessingQueue = new BlockingCollection<IProcessingElement>();
         private readonly BlockingCollection<Action> _preDemultiplexingQueue = new BlockingCollection<Action>();
@@ -24,11 +24,11 @@ namespace Ncqrs.EventBus
         {
             _name = name;
             _elementStore = elementStore;
-            _eventDemultiplexer = new EventDemultiplexer();
-            _eventDemultiplexer.EventDemultiplexed += OnEventDemultiplexed;
+            _demultiplexer = new Demultiplexer();
+            _demultiplexer.EventDemultiplexed += OnDemultiplexed;
             _processor = new PipelineProcessor(elementProcessor);
             _processor.EventProcessed += OnEventProcessed;
-            _fetcher = new EventFetcher(fetchPolicy, _elementStore, name);
+            _fetcher = new ElementFetcher(fetchPolicy, _elementStore, name);
             _fetcher.ElementFetched += OnElementFetched;
             _fetchTimer = new Timer(x => EvaluateFetchPolicy(), null, TimeSpan.Zero, TimeSpan.FromSeconds(1));
         }
@@ -46,20 +46,20 @@ namespace Ncqrs.EventBus
             return new Pipeline(name, elementProcessor, elementStore, new ThresholdedFetchPolicy(minimumPendingEvents, batchSize));
         }
 
-        private void OnEventDemultiplexed(object sender, ElementDemultiplexedEventArgs e)
+        private void OnDemultiplexed(object sender, ElementDemultiplexedEventArgs e)
         {
             _preProcessingQueue.Add(e.DemultiplexedElement);
         }
 
         private void OnEventProcessed(object sender, ElementProcessedEventArgs e)
         {
-            _preDemultiplexingQueue.Add(() => _eventDemultiplexer.MarkAsProcessed(e.ProcessedElement));
+            _preDemultiplexingQueue.Add(() => _demultiplexer.MarkAsProcessed(e.ProcessedElement));
             _postProcessingQueue.Add(e.ProcessedElement);
         }
 
         private void OnElementFetched(object sender, ElementFetchedEventArgs e)
         {
-            _preDemultiplexingQueue.Add(() => _eventDemultiplexer.Demultiplex(e.ProcessingElement));
+            _preDemultiplexingQueue.Add(() => _demultiplexer.Demultiplex(e.ProcessingElement));
         }        
 
         public void Start()
@@ -106,11 +106,11 @@ namespace Ncqrs.EventBus
         {
             for (int i = 0; i < MaxDegreeOfParallelismForProcessing; i++)
             {
-                Task.Factory.StartNew(ProcessEvents, _cancellation.Token, TaskCreationOptions.LongRunning);
+                Task.Factory.StartNew(ProcessElements, _cancellation.Token, TaskCreationOptions.LongRunning);
             }
         }
 
-        private void ProcessEvents(object cancellationToken)
+        private void ProcessElements(object cancellationToken)
         {
             try
             {
@@ -122,16 +122,16 @@ namespace Ncqrs.EventBus
             }
             catch (OperationCanceledException)
             {
-                Debug.WriteLine("ProcessEvents operation cancelled.");
+                Debug.WriteLine("ProcessElements operation cancelled.");
             }            
         }
 
         private void StartPostProcessor()
         {
-            Task.Factory.StartNew(PostProcessEvents, _cancellation.Token, TaskCreationOptions.LongRunning);
+            Task.Factory.StartNew(PostProcessElements, _cancellation.Token, TaskCreationOptions.LongRunning);
         }                
 
-        private void PostProcessEvents(object cancellationToken)
+        private void PostProcessElements(object cancellationToken)
         {
             try
             {
@@ -143,7 +143,7 @@ namespace Ncqrs.EventBus
             }
             catch (OperationCanceledException)
             {
-                Debug.WriteLine("PostProcessEvents operation cancelled.");
+                Debug.WriteLine("PostProcessElements operation cancelled.");
             }
         }
     }

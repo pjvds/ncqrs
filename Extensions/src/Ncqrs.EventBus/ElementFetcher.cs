@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Ncqrs.EventBus
 {
-    public class EventFetcher
+    public class ElementFetcher
     {
         private readonly IFetchPolicy _fetchPolicy;
         private readonly IBrowsableElementStore _elementStore;
@@ -12,7 +12,7 @@ namespace Ncqrs.EventBus
         private int _sequence = 1;
         private readonly string _pipelineName;
 
-        public EventFetcher(IFetchPolicy fetchPolicy, IBrowsableElementStore elementStore, string pipelineName)
+        public ElementFetcher(IFetchPolicy fetchPolicy, IBrowsableElementStore elementStore, string pipelineName)
         {
             _fetchPolicy = fetchPolicy;
             _pipelineName = pipelineName;

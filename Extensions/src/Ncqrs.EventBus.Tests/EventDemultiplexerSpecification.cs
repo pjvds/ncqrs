@@ -13,7 +13,7 @@ namespace Ncqrs.EventBus.Tests
             Guid eventSourceId = Guid.NewGuid();
             int enqueuedToProcessingCount = 0;
 
-            var sut = new EventDemultiplexer();
+            var sut = new Demultiplexer();
             sut.EventDemultiplexed += (s, e) => { enqueuedToProcessingCount++; };
             sut.Demultiplex(CreateEvent(eventSourceId));
 
@@ -29,7 +29,7 @@ namespace Ncqrs.EventBus.Tests
 
             int enqueuedToProcessingCount = 0;
 
-            var sut = new EventDemultiplexer();
+            var sut = new Demultiplexer();
             sut.EventDemultiplexed += (s, e) => { enqueuedToProcessingCount++; };
             sut.Demultiplex(CreateEvent(firstEventSourceId));
             sut.Demultiplex(CreateEvent(secondEventSourceId));
@@ -44,7 +44,7 @@ namespace Ncqrs.EventBus.Tests
 
             int enqueuedToProcessingCount = 0;
 
-            var sut = new EventDemultiplexer();
+            var sut = new Demultiplexer();
             sut.EventDemultiplexed += (s, e) => { enqueuedToProcessingCount++; };
             sut.Demultiplex(CreateEvent(eventSourceId));
             sut.Demultiplex(CreateEvent(eventSourceId));

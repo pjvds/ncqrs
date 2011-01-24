@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Ncqrs.EventBus
 {
-    public class EventDemultiplexer// : IEventQueue
+    public class Demultiplexer// : IEventQueue
     {
         private readonly List<DemultiplexerQueue> _queues = new List<DemultiplexerQueue>();
         private readonly Dictionary<string, DemultiplexerQueue> _queueMap = new Dictionary<string, DemultiplexerQueue>();
