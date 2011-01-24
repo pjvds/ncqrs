@@ -24,8 +24,8 @@ namespace Ncqrs.NServiceBus
             var registeredExecutor = base.GetCommandExecutorForCommand(commandType);
             if (registeredExecutor == null)
             {
-                var factory = new AttributeBasedMappingFactory();
-                if (factory.IsCommandMapped(commandType))
+                var factory = new AttributeBasedCommandMapper();
+                if (factory.CanMapCommand(commandType))
                 {
                     registeredExecutor = GetMappedExecutorAction(commandType);
                 }
@@ -53,7 +53,7 @@ namespace Ncqrs.NServiceBus
 
             public MappedCommandExecutorProxy()
             {
-                var factory = new AttributeBasedMappingFactory();
+                var factory = new AttributeBasedCommandMapper();
                 _executor = factory.CreateExecutorForCommand<T>();
             }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using Ncqrs.Commanding;
 using Ncqrs.Commanding.CommandExecution;
+using Ncqrs.Commanding.CommandExecution.Mapping;
 using Ncqrs.Commanding.CommandExecution.Mapping.Attributes;
 using Ncqrs.Commanding.ServiceModel;
 using Ncqrs.Domain;
@@ -201,12 +202,13 @@ namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Attributes
         public void Setup()
         {
             var service = new CommandService();
-            service.RegisterExecutor(new AttributeMappedCommandExecutor<AggregateRootTargetUpdateTitleCommand>());
-            service.RegisterExecutor(new AttributeMappedCommandExecutor<AggregateRootTargetCreateNewCommand>());
-            service.RegisterExecutor(new AttributeMappedCommandExecutor<ComplexAggregateRootTargetCreateNewCommand1>());
-            service.RegisterExecutor(new AttributeMappedCommandExecutor<ComplexAggregateRootTargetCreateNewCommand2>());
-            service.RegisterExecutor(new AttributeMappedCommandExecutor<ComplexAggregateRootTargetCreateNewCommand3>());
-            service.RegisterExecutor(new AttributeMappedCommandExecutor<ComplexAggregateRootTargetCreateNewCommand4>());
+            var attributeMapper = new AttributeBasedCommandMapper();
+            service.RegisterExecutor(typeof (AggregateRootTargetUpdateTitleCommand), new UoWMappedCommandExecutor(attributeMapper));
+            service.RegisterExecutor(typeof(AggregateRootTargetCreateNewCommand), new UoWMappedCommandExecutor(attributeMapper));
+            service.RegisterExecutor(typeof(ComplexAggregateRootTargetCreateNewCommand1), new UoWMappedCommandExecutor(attributeMapper));
+            service.RegisterExecutor(typeof(ComplexAggregateRootTargetCreateNewCommand2), new UoWMappedCommandExecutor(attributeMapper));
+            service.RegisterExecutor(typeof(ComplexAggregateRootTargetCreateNewCommand3), new UoWMappedCommandExecutor(attributeMapper));
+            service.RegisterExecutor(typeof(ComplexAggregateRootTargetCreateNewCommand4), new UoWMappedCommandExecutor(attributeMapper));
 
             TheService = service;
         }

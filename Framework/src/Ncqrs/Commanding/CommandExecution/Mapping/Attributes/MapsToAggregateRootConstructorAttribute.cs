@@ -8,7 +8,8 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
     /// <summary>
     /// Defines that the command maps directly to a constructor on an aggregate root.
     /// </summary>
-    public class MapsToAggregateRootConstructorAttribute : CommandMappingAttribute
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+    public class MapsToAggregateRootConstructorAttribute : Attribute
     {
         private Type _type;
 
@@ -59,39 +60,6 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
 
             _type = type;
             TypeName = type.AssemblyQualifiedName;
-        }
-
-        public override ICommandExecutor<TCommand> CreateExecutor<TCommand>()
-        {
-            var commandType = typeof (TCommand);
-            ValidateCommandType(commandType);
-
-            var match = GetMatchingConstructor(commandType);
-            Func<TCommand, AggregateRoot> create = (c) =>
-            {
-                var parameter = match.Item2.Select(p => p.GetValue(c, null));
-                return
-                    (AggregateRoot) match.Item1.Invoke(parameter.ToArray());
-            };
-
-            return new CreatingCommandExecutor<TCommand, AggregateRoot>(create);
-        }
-
-        private Tuple<ConstructorInfo, PropertyInfo[]> GetMatchingConstructor(Type commandType)
-        {
-            var strategy = new AttributePropertyMappingStrategy();
-            var sources = strategy.GetMappedProperties(commandType);
-
-            return PropertiesToMethodMapper.GetConstructor(sources, Type);
-        }
-
-        private void ValidateCommandType(Type mappedCommandType)
-        {
-            bool containsThisAttribute = mappedCommandType.IsDefined(GetType(), false);
-
-            if(!containsThisAttribute) throw new ArgumentException("The given command type does not contain "+
-                                                                   "MapsToAggregateRootConstructorAttribute.",
-                                                                   "mappedCommandType");
-        }
+        }        
     }
 }
