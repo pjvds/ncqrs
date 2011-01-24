@@ -53,7 +53,6 @@
     <Compile Include="FetchResult.cs" />
     <Compile Include="FixedSizeChunkBuffer.cs" />
     <Compile Include="IFetchPolicy.cs" />
-    <Compile Include="IEventQueue.cs" />
     <Compile Include="IBrowsableElementStore.cs" />
     <Compile Include="CursorPositionCalculator.cs" />
     <Compile Include="EventDemultiplexer.cs" />
@@ -69,7 +68,6 @@
     <Compile Include="PipelineStateChangedEventArgs.cs" />
     <Compile Include="ProcessingElement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SequencedEvent.cs" />
     <Compile Include="SourcedEventProcessingElement.cs" />
     <Compile Include="ThresholdedFetchPolicy.cs" />
     <Compile Include="LazyMarkingBrowsableElementStore.cs" />

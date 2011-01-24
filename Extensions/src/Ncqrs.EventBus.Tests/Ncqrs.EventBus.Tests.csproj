@@ -59,9 +59,7 @@
     <Compile Include="CursorPositionCalculatorSpecification.cs" />
     <Compile Include="EventDemultiplexerSpecification.cs" />
     <Compile Include="TestEvent.cs" />
-    <Compile Include="When_processing_fails.cs" />
-    <Compile Include="When_processing_succeeds.cs" />
-    <Compile Include="PipelineProcessorSpecificationBase.cs" />
+    <Compile Include="PipelineProcessorSpecification.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

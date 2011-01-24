@@ -52,9 +52,9 @@ namespace Ncqrs.EventBus.Tests
             enqueuedToProcessingCount.Should().Be(1);
         }
 
-        private static SequencedEvent CreateEvent(Guid sourceId)
+        private static SourcedEventProcessingElement CreateEvent(Guid sourceId)
         {
-            return new SequencedEvent(0, new TestEvent(Guid.NewGuid(), sourceId, 0, DateTime.Now));
+            return new SourcedEventProcessingElement(0, new TestEvent(Guid.NewGuid(), sourceId, 0, DateTime.Now));
         }
     }
 }

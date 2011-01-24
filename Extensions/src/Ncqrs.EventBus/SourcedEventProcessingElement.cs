@@ -11,6 +11,12 @@ namespace Ncqrs.EventBus
             _event = @event;
         }
 
+        public SourcedEventProcessingElement(int sequenceNumber, SourcedEvent @event)
+        {
+            SequenceNumber = sequenceNumber;
+            _event = @event;
+        }
+
         public int SequenceNumber { get; set; }
 
         public string UniqueId
