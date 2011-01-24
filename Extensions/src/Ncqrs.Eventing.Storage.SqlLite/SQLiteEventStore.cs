@@ -36,7 +36,7 @@ namespace Ncqrs.Eventing.Storage.SQLite
         {
             if (!maxVersion.HasValue)
             {
-                maxVersion = int.MaxValue;
+                maxVersion = long.MaxValue;
             }
             var results = new List<CommittedEvent>();
             _context.WithConnection(connection =>
