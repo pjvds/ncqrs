@@ -47,7 +47,7 @@
     <Compile Include="ElementDemultiplexedEventArgs.cs" />
     <Compile Include="DemultiplexerQueue.cs" />
     <Compile Include="ElementFetchedEventArgs.cs" />
-    <Compile Include="EventFetcher.cs" />
+    <Compile Include="ElementFetcher.cs" />
     <Compile Include="ElementProcessedEventArgs.cs" />
     <Compile Include="FetchDirective.cs" />
     <Compile Include="FetchResult.cs" />
@@ -55,7 +55,7 @@
     <Compile Include="IFetchPolicy.cs" />
     <Compile Include="IBrowsableElementStore.cs" />
     <Compile Include="CursorPositionCalculator.cs" />
-    <Compile Include="EventDemultiplexer.cs" />
+    <Compile Include="Demultiplexer.cs" />
     <Compile Include="IElementProcessor.cs" />
     <Compile Include="InMemoryBufferedBrowsableElementStore.cs" />
     <Compile Include="InMemoryBufferedEventHandler.cs" />
