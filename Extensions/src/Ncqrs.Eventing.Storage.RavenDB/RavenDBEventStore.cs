@@ -46,55 +46,78 @@ namespace Ncqrs.Eventing.Storage.RavenDB
             return null;
         }
 
-        public IEnumerable<ISourcedEvent> GetAllEvents(Guid id)
+        public CommittedEventStream ReadUntil(Guid id, long? maxVersion)
         {
+            maxVersion = maxVersion ?? long.MaxValue;
             using (var session = _documentStore.OpenSession())
             {
-                return session.Query<StoredEvent>()
+                var storedEvents = session.Query<StoredEvent>()
                     .WaitForNonStaleResults()
                     .Where(x => x.EventSourceId == id)
-                    .ToList().OrderBy(x => x.EventSequence)
-                    .Select(x => x.Data);                   
+                    .Where(x => x.EventSequence <= maxVersion)
+                    .ToList().OrderBy(x => x.EventSequence);
+                return new CommittedEventStream(storedEvents.Select(ToComittedEvent));
             }
         }
 
-        public IEnumerable<ISourcedEvent> GetAllEventsSinceVersion(Guid id, long version)
+        public CommittedEventStream ReadFrom(Guid id, long minVersion)
         {
             using (var session = _documentStore.OpenSession())
             {
-                return session.Query<StoredEvent>()
+                var storedEvents = session.Query<StoredEvent>()
                     .WaitForNonStaleResults()
                     .Where(x => x.EventSourceId == id)
-                    .Where(x => x.EventSequence >= version)
-                    .ToList().OrderBy(x => x.EventSequence)
-                    .Select(x => x.Data);                   
+                    .Where(x => x.EventSequence >= minVersion)
+                    .ToList().OrderBy(x => x.EventSequence);
+                return new CommittedEventStream(storedEvents.Select(ToComittedEvent));
             }
         }
 
-        public void Save(IEventSource source)
+        private static CommittedEvent ToComittedEvent(StoredEvent x)
+        {
+            return new CommittedEvent(x.CommitId, x.EventIdentifier, x.EventSourceId,x.EventSequence, x.EventTimeStamp, x.Data, x.Version);
+        }
+
+        public void Store(UncommittedEventStream eventStream)
         {
             try
             {
                 using (var session = _documentStore.OpenSession())
                 {
                     session.UseOptimisticConcurrency = true;
-                    foreach (var sourcedEvent in source.GetUncommittedEvents())
+                    foreach (var uncommittedEvent in eventStream)
                     {
-                        session.Store(new StoredEvent
-                        {
-                            Data = sourcedEvent,
-                            EventSequence = sourcedEvent.EventSequence,
-                            EventSourceId = sourcedEvent.EventSourceId,
-                            Id = sourcedEvent.EventSourceId + "/" + sourcedEvent.EventSequence
-                        });
+                        session.Store(ToStoredEvent(eventStream.CommitId, uncommittedEvent));
                     }
                     session.SaveChanges();
                 }
             }
             catch (Raven.Database.Exceptions.ConcurrencyException)
             {
-                throw new ConcurrencyException(source.EventSourceId, source.Version);
+                Guid sourceId = Guid.Empty;
+                long version = 0;
+                if (eventStream.HasSingleSource)
+                {
+                    sourceId = eventStream.SourceId;
+                    version = eventStream.Sources.Single().CurrentVersion;
+                }
+                throw new ConcurrencyException(sourceId, version);
             }
-        }        
+        }
+
+        private static StoredEvent ToStoredEvent(Guid commitId, UncommittedEvent uncommittedEvent)
+        {
+            return new StoredEvent
+                       {
+                           Id = uncommittedEvent.EventSourceId + "/" + uncommittedEvent.EventSequence,
+                           EventIdentifier = uncommittedEvent.EventIdentifier,
+                           EventTimeStamp = uncommittedEvent.EventTimeStamp,
+                           Version = uncommittedEvent.EventVersion,
+                           CommitId = commitId,
+                           Data = uncommittedEvent.Payload,
+                           EventSequence = uncommittedEvent.EventSequence,
+                           EventSourceId = uncommittedEvent.EventSourceId,
+                       };
+        }
     }
 }
