@@ -21,7 +21,17 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
                         match.Item1.Invoke(agg, parameter.ToArray());
                     };
 
-            executor.ExecuteActionOnExistingInstance(GetAggregateRootId, GetAggregateRootType, action);
+            Action executorAction = () => executor.ExecuteActionOnExistingInstance(GetAggregateRootId, GetAggregateRootType, action);
+
+            if (commandType.IsDefined(typeof(TransactionalAttribute), false))
+            {
+                var transactionService = NcqrsEnvironment.Get<ITransactionService>();
+                transactionService.ExecuteInTransaction(executorAction);
+            }
+            else
+            {
+                executorAction();
+            }
         }
 
         private static Tuple<MethodInfo, PropertyInfo[]> GetMatchingMethod(MapsToAggregateRootMethodAttribute attribute, Type commandType, string methodName)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Reflection;
 using Ncqrs.Commanding;
+using Ncqrs.Commanding.CommandExecution;
 using Ncqrs.Config;
 using Ncqrs.Domain;
 using Ncqrs.Eventing.ServiceModel.Bus;
@@ -35,6 +36,7 @@ namespace Ncqrs
             SetDefault<IEventStore>(new InMemoryEventStore());
             SetDefault<IUnitOfWorkFactory>(new UnitOfWorkFactory());
             SetDefault<IKnownCommandsEnumerator>(new AllCommandsInAppDomainEnumerator());
+            SetDefault<ITransactionService>(new DefaultTransactionService());
         }
 
         /// <summary>

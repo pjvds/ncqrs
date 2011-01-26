@@ -19,7 +19,17 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
                                                            return (AggregateRoot)match.Item1.Invoke(parameter.ToArray());
                                                        };
 
-            executor.ExecuteActionCreatingNewInstance(create);
+            Action executorAction = () => executor.ExecuteActionCreatingNewInstance(create);
+
+            if (commandType.IsDefined(typeof(TransactionalAttribute), false))
+            {
+                var transactionService = NcqrsEnvironment.Get<ITransactionService>();
+                transactionService.ExecuteInTransaction(executorAction);
+            }
+            else
+            {
+                executorAction();
+            }
         }
 
         private static Tuple<ConstructorInfo, PropertyInfo[]> GetMatchingConstructor(MapsToAggregateRootConstructorAttribute attribute, Type commandType)
