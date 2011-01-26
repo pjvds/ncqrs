@@ -9,7 +9,7 @@ using Ncqrs.Commanding;
 namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Attributes
 {
     [TestFixture]
-    public class AttributeBasedMappingFactoryTests
+    public class AttributeBasedCommandMapperTests
     {
         [MapsToAggregateRootConstructor("foo")]
         public class NonCommandTypeButWithCorrectAttribute

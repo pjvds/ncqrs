@@ -48,7 +48,7 @@ namespace Ncqrs.Domain
         /// </summary>
         /// <typeparam name="T">This should always be a <see cref="ISourcedEvent"/>.</typeparam>
         /// <returns>An <see cref="ExpressionHandler{T}"/>which allows us to define the mapping to a handler.</returns>
-        protected ExpressionHandler<T> Map<T>() where T : ISourcedEvent
+        protected ExpressionHandler<T> Map<T>()
         {
             var handler = new ExpressionHandler<T>();
             _mappinghandlers.Add(handler);
