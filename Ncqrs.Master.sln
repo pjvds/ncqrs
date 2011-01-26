@@ -169,7 +169,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Eventing.Storage.Mong
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Config.Ninject", "Extensions\src\Ncqrs.Config.Ninject\Ncqrs.Config.Ninject.csproj", "{E7EF81C1-4896-446D-B761-3BDA111E09D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Config.Ninject.Tests", "Ncqrs.Config.Ninject.Tests\Ncqrs.Config.Ninject.Tests.csproj", "{7F74C778-717A-4395-BA6B-14335E6C9753}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Config.Ninject.Tests", "Extensions\src\Ncqrs.Config.Ninject.Tests\Ncqrs.Config.Ninject.Tests.csproj", "{7F74C778-717A-4395-BA6B-14335E6C9753}"
 EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
