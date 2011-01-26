@@ -42,42 +42,22 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
             return type.GetCustomAttributes(false).Any(x => _handlers.ContainsKey(x.GetType()));
         }
 
-        private static Attribute GetCommandMappingAttributeFromType(Type target)
-        {
-            var attributes = (Attribute[])target.GetCustomAttributes(typeof(Attribute), false);
-
-            if (attributes.Length == 0)
-            {
-                var msg = string.Format("Could not create executor for command {0} based on " +
-                    "attribute mapping. It does not contain a MapsToAggregateRootConstructorAttribute " +
-                    "or MapsToAggregateRootMethodAttribute.", target.FullName);
-
-                throw new CommandMappingException(msg);
-            }
-
-            if (attributes.Length > 1)
-            {
-                var msg = string.Format("Could not create executor for command {0} based on " +
-                    "attribute mapping. It does contain multiple mapping attributes.",
-                    target.FullName);
-
-                throw new CommandMappingException(msg);
-            }
-
-            return attributes.Single();
-        }
-
         public void Map(ICommand command, IMappedCommandExecutor executor)
         {
             var commandType = command.GetType();
-            dynamic mappingAttr = GetCommandMappingAttributeFromType(commandType);
+            IEnumerable<dynamic> attributes = commandType.GetCustomAttributes(false);
 
             dynamic attributeHandler;
-            if (!_handlers.TryGetValue(mappingAttr.GetType(), out attributeHandler))
+
+            foreach (dynamic attribute in attributes)
             {
-                throw new CommandMappingException(string.Format("Coulnd not find attribute handler for mapping attribute of type {0}.", mappingAttr.GetType().AssemblyQualifiedName));
+                if (_handlers.TryGetValue(attribute.GetType(), out attributeHandler))
+                {
+                    attributeHandler.Map(attribute, command, executor);
+                    return;
+                }
             }
-            attributeHandler.Map(mappingAttr, command, executor);
+            throw new CommandMappingException(string.Format("Coulnd not find any mapping attribute handlers for mapping command of type {0}.", command.GetType().AssemblyQualifiedName));
         }
     }
 }
