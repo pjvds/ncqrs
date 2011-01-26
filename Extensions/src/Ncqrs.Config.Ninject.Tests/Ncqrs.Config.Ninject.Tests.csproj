@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\..\..\lib\Debug\Ncqrs.Config.Ninject.Tests\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -25,24 +25,24 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\..\..\lib\Release\Ncqrs.Config.Ninject.Tests\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="FluentAssertions">
-      <HintPath>..\lib\ThirdParty\FluentAssertions\FluentAssertions.dll</HintPath>
+      <HintPath>..\..\..\lib\ThirdParty\FluentAssertions\FluentAssertions.dll</HintPath>
     </Reference>
     <Reference Include="Ncqrs, Version=0.8.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\lib\Debug\Ncqrs\Ncqrs.dll</HintPath>
     </Reference>
     <Reference Include="Ninject">
-      <HintPath>..\lib\ThirdParty\Ninject\Ninject.dll</HintPath>
+      <HintPath>..\..\..\lib\ThirdParty\Ninject\Ninject.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
-      <HintPath>..\lib\ThirdParty\Nunit\nunit.framework.dll</HintPath>
+      <HintPath>..\..\..\lib\ThirdParty\Nunit\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
