@@ -101,7 +101,7 @@ namespace Ncqrs.Eventing.Storage.MongoDB
                                    {"_SourceId", source.EventSourceId.ToString()},
                                    {"_Version", source.InitialVersion}
                                }
-                           , Do.AddEachToSet("Events", arrayOfEventsAsIdbObjects
+                           , Do.AddEachToSet("_Events", arrayOfEventsAsIdbObjects
                                  ).Set("_Version", source.Version));
         }
 
@@ -120,8 +120,8 @@ namespace Ncqrs.Eventing.Storage.MongoDB
         protected void VerifyUpdateSuccessful(IEventSource source)
         {
             var lastError = database.GetLastError();
-            var lastErrorData = lastError.Object as IDictionary<string, object>;
-            var isUpdated = (bool)(lastErrorData["updatedExisting"]);
+//            var lastErrorData = lastError.Object as IDictionary<string, object>;
+            var isUpdated = String.IsNullOrEmpty(lastError.ErrorMessage);
             if (!isUpdated)
             {
                 throw new ConcurrencyException(source.EventSourceId, source.Version);
@@ -172,7 +172,7 @@ namespace Ncqrs.Eventing.Storage.MongoDB
                 var propertyOnEvent = eventType.GetProperty(key, BindingFlags.Public | BindingFlags.Instance);
 
                 // TODO: Add warning to the log file when the prop was not found or writable.
-                if (propertyOnEvent == null || !propertyOnEvent.CanWrite) continue;
+                if (propertyOnEvent == null || !propertyOnEvent.CanWrite || dbObject[key] == null) continue;
 
                 var propertyTypesMatch = propertyOnEvent.PropertyType.Equals(dbObject[key].GetType());
 
