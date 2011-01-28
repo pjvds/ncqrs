@@ -33,7 +33,7 @@ namespace Ncqrs.Eventing.Storage.MongoDB
             IDBCollection eventSources = database.GetCollection("Events");
 
             var query = new DBQuery("_SourceId", id.ToString());
-            IDocument source = eventSources.FindOne();
+            IDocument source = eventSources.FindOne(query);
 
             if (source == null) return new SourcedEvent[] { };
 
