@@ -83,7 +83,7 @@ namespace Ncqrs.Commanding.ServiceModel
         /// <exception cref="ArgumentNullException">Occurs when the <i>commandType</i> or <i>executor</i> was a <c>null</c> dereference.</exception>
         public virtual void RegisterExecutor<TCommand>(ICommandExecutor<TCommand> executor) where TCommand : ICommand
         {
-            if (_executors.ContainsKey(typeof(TCommand)));
+            if (_executors.ContainsKey(typeof(TCommand))) return;
             Action<ICommand> action = (cmd) => executor.Execute((TCommand) cmd);
             _executors.Add(typeof(TCommand), action);
         }
