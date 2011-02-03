@@ -11,16 +11,29 @@ namespace Ncqrs.Domain
     public abstract class AggregateRoot : EventSource
     {
         [ThreadStatic]
-        private static readonly List<Action<AggregateRoot, ISourcedEvent>> _eventAppliedCallbacks = new List<Action<AggregateRoot, ISourcedEvent>>();
+        private static List<Action<AggregateRoot, ISourcedEvent>> _eventAppliedCallbacks;
+
+        private static List<Action<AggregateRoot, ISourcedEvent>> EventAppliedCallbacks
+        {
+            get
+            {
+                if (_eventAppliedCallbacks == null)
+                {
+                    _eventAppliedCallbacks = new List<Action<AggregateRoot, ISourcedEvent>>();
+                }
+
+                return _eventAppliedCallbacks;
+            }
+        }
 
         public static void RegisterThreadStaticEventAppliedCallback(Action<AggregateRoot, ISourcedEvent> callback)
         {
-            _eventAppliedCallbacks.Add(callback);
+            EventAppliedCallbacks.Add(callback);
         }
 
         public static void UnregisterThreadStaticEventAppliedCallback(Action<AggregateRoot, ISourcedEvent> callback)
         {
-            _eventAppliedCallbacks.Remove(callback);
+            EventAppliedCallbacks.Remove(callback);
         }
 
         protected AggregateRoot()
@@ -32,7 +45,7 @@ namespace Ncqrs.Domain
         [NoEventHandler]
         protected override void OnEventApplied(ISourcedEvent appliedEvent)
         {
-            var callbacks = _eventAppliedCallbacks;
+            var callbacks = EventAppliedCallbacks;
 
             foreach(var callback in callbacks)
             {
