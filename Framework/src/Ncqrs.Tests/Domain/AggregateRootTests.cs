@@ -360,5 +360,28 @@ namespace Ncqrs.Tests.Domain
 
             theAggregate.FooEventHandlerInvokeCount.Should().Be(eventHandlerCountAfterInitialization + 1);
         }
+
+        [Test]
+        public void Should_be_able_to_register_RegisterThreadStaticEventAppliedCallbacks_from_parallel_threads()
+        {
+            Action<AggregateRoot, ISourcedEvent> callback = (x, y) => { };
+
+            Action registerOneCallbackOnAggregateRoot = () => AggregateRoot.RegisterThreadStaticEventAppliedCallback(callback);
+            Action registerTwoCallbacksOnAggregateRoot = () => 
+            {
+                AggregateRoot.RegisterThreadStaticEventAppliedCallback(callback);
+                AggregateRoot.RegisterThreadStaticEventAppliedCallback(callback);
+            };
+
+            System.Threading.Tasks.Parallel.Invoke(
+                registerOneCallbackOnAggregateRoot,
+                registerTwoCallbacksOnAggregateRoot,
+                registerOneCallbackOnAggregateRoot,
+                registerTwoCallbacksOnAggregateRoot,
+                registerOneCallbackOnAggregateRoot,
+                registerTwoCallbacksOnAggregateRoot,
+                registerOneCallbackOnAggregateRoot,
+                registerTwoCallbacksOnAggregateRoot);
+        }
     }
 }
