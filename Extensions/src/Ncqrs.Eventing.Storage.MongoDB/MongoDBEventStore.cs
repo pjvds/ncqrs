@@ -33,7 +33,7 @@ namespace Ncqrs.Eventing.Storage.MongoDB
             IDBCollection eventSources = database.GetCollection("Events");
 
             var query = new DBQuery("_SourceId", id.ToString());
-            IDocument source = eventSources.FindOne();
+            IDocument source = eventSources.FindOne(query);
 
             if (source == null) return new SourcedEvent[] { };
 
@@ -101,7 +101,7 @@ namespace Ncqrs.Eventing.Storage.MongoDB
                                    {"_SourceId", source.EventSourceId.ToString()},
                                    {"_Version", source.InitialVersion}
                                }
-                           , Do.AddEachToSet("Events", arrayOfEventsAsIdbObjects
+                           , Do.AddEachToSet("_Events", arrayOfEventsAsIdbObjects
                                  ).Set("_Version", source.Version));
         }
 
@@ -120,8 +120,7 @@ namespace Ncqrs.Eventing.Storage.MongoDB
         protected void VerifyUpdateSuccessful(IEventSource source)
         {
             var lastError = database.GetLastError();
-            var lastErrorData = lastError.Object as IDictionary<string, object>;
-            var isUpdated = (bool)(lastErrorData["updatedExisting"]);
+            var isUpdated = String.IsNullOrEmpty(lastError.ErrorMessage);
             if (!isUpdated)
             {
                 throw new ConcurrencyException(source.EventSourceId, source.Version);
@@ -150,10 +149,9 @@ namespace Ncqrs.Eventing.Storage.MongoDB
 
             foreach (PropertyInfo prop in properties)
             {
-                // we have to workaround the absence of Guid serialization in MongoDB driver
-                dbObject[prop.Name] = prop.PropertyType.Equals(typeof(Guid))
-                                          ? prop.GetValue(@event, new object[] { }).ToString()
-                                          : prop.GetValue(@event, new object[] { });
+                dbObject[prop.Name] = prop.PropertyType.Equals(typeof(Guid)) || prop.PropertyType.Equals(typeof(Version))
+                                           ? prop.GetValue(@event, new object[] { }).ToString()
+                                           : prop.GetValue(@event, new object[] { });
             }
 
             return dbObject;
@@ -172,7 +170,7 @@ namespace Ncqrs.Eventing.Storage.MongoDB
                 var propertyOnEvent = eventType.GetProperty(key, BindingFlags.Public | BindingFlags.Instance);
 
                 // TODO: Add warning to the log file when the prop was not found or writable.
-                if (propertyOnEvent == null || !propertyOnEvent.CanWrite) continue;
+                if (propertyOnEvent == null || !propertyOnEvent.CanWrite || dbObject[key] == null) continue;
 
                 var propertyTypesMatch = propertyOnEvent.PropertyType.Equals(dbObject[key].GetType());
 
