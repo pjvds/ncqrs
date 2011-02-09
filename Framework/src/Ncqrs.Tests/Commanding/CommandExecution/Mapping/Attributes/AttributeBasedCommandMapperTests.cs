@@ -1,5 +1,6 @@
 ﻿using System;
 using FluentAssertions;
+using Ncqrs.Commanding.CommandExecution.Mapping;
 using Ncqrs.Domain;
 using NUnit.Framework;
 using Ncqrs.Commanding.CommandExecution.Mapping.Attributes;
@@ -8,7 +9,7 @@ using Ncqrs.Commanding;
 namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Attributes
 {
     [TestFixture]
-    public class AttributeBasedMappingFactoryTests
+    public class AttributeBasedCommandMapperTests
     {
         [MapsToAggregateRootConstructor("foo")]
         public class NonCommandTypeButWithCorrectAttribute
@@ -61,22 +62,10 @@ namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Attributes
         }
 
         [Test]
-        public void Creating_executor_with_runtime_determed_type_should_not_return_null()
-        {
-            var factory = new AttributeBasedMappingFactory();
-            var commandType = typeof (CorrectlyMappedCommand);
-
-            var result = factory.CreateExecutorForCommand(commandType);
-
-            result.Should().NotBeNull();
-        }
-
-        [Test]
         public void Creating_executor_with_runtime_determed_type_should_create_working_executor()
         {
-            var factory = new AttributeBasedMappingFactory();
-            var commandType = typeof(CorrectlyMappedCommand);
-            var executor = factory.CreateExecutorForCommand(commandType);
+            var mapper = new AttributeBasedCommandMapper();
+            var executor = new UoWMappedCommandExecutor(mapper);
 
             var command = new CorrectlyMappedCommand { Bar = 25, Foo = "Hello world" };
             executor.Execute(command);
@@ -88,29 +77,29 @@ namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Attributes
         [Test]
         public void IsCommandMapped_should_return_false_for_non_command_types()
         {
-            var factory = new AttributeBasedMappingFactory();
-            factory.IsCommandMapped(typeof(string)).Should().BeFalse();
+            var factory = new AttributeBasedCommandMapper();
+            factory.CanMapCommand(typeof(string)).Should().BeFalse();
         }
 
         [Test]
         public void IsCommandMapped_should_return_false_for_non_command_types_that_do_have_the_required_attribute()
         {
-            var factory = new AttributeBasedMappingFactory();
-            factory.IsCommandMapped(typeof(NonCommandTypeButWithCorrectAttribute)).Should().BeFalse();
+            var factory = new AttributeBasedCommandMapper();
+            factory.CanMapCommand(typeof(NonCommandTypeButWithCorrectAttribute)).Should().BeFalse();
         }
 
         [Test]
         public void IsCommandMapped_should_return_false_for_correct_command_types_but_that_does__not_have_the_required_attribute()
         {
-            var factory = new AttributeBasedMappingFactory();
-            factory.IsCommandMapped(typeof(CommandTypeButWithoutAttribute)).Should().BeFalse();
+            var factory = new AttributeBasedCommandMapper();
+            factory.CanMapCommand(typeof(CommandTypeButWithoutAttribute)).Should().BeFalse();
         }
 
         [Test]
         public void IsCommandMapped_should_return_true_for_correct_command_types_with_correct_attribute()
         {
-            var factory = new AttributeBasedMappingFactory();
-            factory.IsCommandMapped(typeof(CommandTypeAndWithAttribute)).Should().BeTrue();
+            var factory = new AttributeBasedCommandMapper();
+            factory.CanMapCommand(typeof(CommandTypeAndWithAttribute)).Should().BeTrue();
         }
     }
 }

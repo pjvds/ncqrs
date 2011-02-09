@@ -55,6 +55,6 @@ namespace Ncqrs.Spec
             }
         }
 
-        protected abstract ICommandExecutor<TCommand> BuildCommandExecutor();
+        protected abstract ICommandExecutor<ICommand> BuildCommandExecutor();
     }
 }

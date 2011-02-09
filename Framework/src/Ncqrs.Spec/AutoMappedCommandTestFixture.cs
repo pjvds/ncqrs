@@ -1,5 +1,6 @@
 ﻿using Ncqrs.Commanding;
 using Ncqrs.Commanding.CommandExecution;
+using Ncqrs.Commanding.CommandExecution.Mapping;
 using Ncqrs.Commanding.CommandExecution.Mapping.Attributes;
 
 namespace Ncqrs.Spec
@@ -8,11 +9,11 @@ namespace Ncqrs.Spec
     public abstract class AutoMappedCommandTestFixture<TCommand> : CommandTestFixture<TCommand> 
         where TCommand : ICommand 
     {
-        private readonly AttributeBasedMappingFactory _factory = new AttributeBasedMappingFactory();
+        private readonly AttributeBasedCommandMapper _mapper = new AttributeBasedCommandMapper();
 
-        protected override ICommandExecutor<TCommand> BuildCommandExecutor()
+        protected override ICommandExecutor<ICommand> BuildCommandExecutor()
         {
-            return _factory.CreateExecutorForCommand<TCommand>();
+            return new UoWMappedCommandExecutor(_mapper);
         }
     }
 }

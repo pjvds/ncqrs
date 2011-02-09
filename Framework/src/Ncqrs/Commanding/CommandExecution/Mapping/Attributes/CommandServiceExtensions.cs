@@ -10,11 +10,11 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
 
         public static void RegisterExecutorsInAssembly(this CommandService target, Assembly asm)
         {
-            var factory = new AttributeBasedMappingFactory();
+            var mapper = new AttributeBasedCommandMapper();
 
-            foreach(var mappedCommand in asm.GetTypes().Where(t=>factory.IsCommandMapped(t)))
+            foreach(var mappedCommand in asm.GetTypes().Where(mapper.CanMapCommand))
             {
-                var executor = factory.CreateExecutorForCommand(mappedCommand);
+                var executor = new UoWMappedCommandExecutor(mapper);
                 target.RegisterExecutor(mappedCommand, executor);
             }
         }

@@ -97,6 +97,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commanding\AllCommandsInAppDomainEnumerator.cs" />
+    <Compile Include="Commanding\CommandExecution\DefaultTransactionService.cs" />
+    <Compile Include="Commanding\CommandExecution\ITransactionService.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\Attributes\MapsToAggregateRootConstructorAttributeHandler.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\Attributes\IMappingAttributeHandler.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\Attributes\MapsToAggregateRootMethodAttributeHandler.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\ICommandMapper.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\UoWMappedCommandExecutor.cs" />
     <Compile Include="Commanding\IKnownCommandsEnumerator.cs" />
     <Compile Include="Domain\Entity.cs" />
     <Compile Include="Domain\EntityMappedByConvention.cs" />
@@ -123,18 +130,16 @@
     <Compile Include="Commanding\CommandExecution\CreatingCommandExecutor.cs" />
     <Compile Include="Commanding\CommandExecution\DirectActionCommandExecutor.cs" />
     <Compile Include="Commanding\CommandExecution\ICommandExecutorExtensions.cs" />
-    <Compile Include="Commanding\CommandExecution\Mapping\Attributes\AttributeBasedMappingFactory.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\Attributes\AttributeBasedCommandMapper.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Attributes\AttributePropertyMappingStrategy.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Attributes\CommandServiceExtensions.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Fluent\Map.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\PropertiesToMethodMapper.cs" />
-    <Compile Include="Commanding\CommandExecution\Mapping\Attributes\CommandMappingAttribute.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Attributes\ParameterAttribute.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Fluent\MappedCommand.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Fluent\MappedCommandToAggregateRoot.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Fluent\MappedCommandToAggregateRootConstructor.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Fluent\MappedCommandToAggregateRootMethod.cs" />
-    <Compile Include="Commanding\CommandExecution\Mapping\Attributes\AttributeMappedCommandExecutor.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\CommandMappingException.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\PropertyToParameterMappingInfo.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\MappingNotFoundException.cs" />
