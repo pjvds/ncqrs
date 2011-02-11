@@ -50,24 +50,25 @@ namespace Ncqrs.Domain.Storage
         public AggregateRoot GetById(Type aggregateRootType, Guid eventSourceId, long? lastKnownRevision)
         {
             AggregateRoot aggregateRoot = null;
+            long maxVersion = lastKnownRevision.HasValue ? lastKnownRevision.Value : long.MaxValue;
             if (_snapshotStore != null)
             {
                 var snapshot = _snapshotStore.GetSnapshot(eventSourceId);
 
                 if (snapshot != null)
                 {
-                    aggregateRoot = GetByIdFromSnapshot(aggregateRootType, snapshot);
+                    aggregateRoot = GetByIdFromSnapshot(aggregateRootType, snapshot, maxVersion);
                 }
             }
 
             if (aggregateRoot == null)
             {
-                aggregateRoot = GetByIdFromScratch(aggregateRootType, eventSourceId, lastKnownRevision);
+                aggregateRoot = GetByIdFromScratch(aggregateRootType, eventSourceId, maxVersion);
             }
             return aggregateRoot;
         }
 
-        protected AggregateRoot GetByIdFromSnapshot(Type aggregateRootType, ISnapshot snapshot)
+        protected AggregateRoot GetByIdFromSnapshot(Type aggregateRootType, ISnapshot snapshot, long lastKnownRevision)
         {
             AggregateRoot aggregateRoot;
 
@@ -80,22 +81,22 @@ namespace Ncqrs.Domain.Storage
                 restoreMethod.Invoke(aggregateRoot, new object[] { snapshot });
 
                 var nextId = snapshot.EventSourceVersion + 1;
-                var events = _store.ReadFrom(aggregateRoot.EventSourceId, nextId);
+                var events = _store.ReadFrom(aggregateRoot.EventSourceId, nextId, int.MaxValue);
                 aggregateRoot.InitializeFromHistory(events);
             }
             else
             {
-                aggregateRoot = GetByIdFromScratch(aggregateRootType, snapshot.EventSourceId, null);
+                aggregateRoot = GetByIdFromScratch(aggregateRootType, snapshot.EventSourceId, lastKnownRevision);
             }
 
             return aggregateRoot;
         }
 
-        protected AggregateRoot GetByIdFromScratch(Type aggregateRootType, Guid id, long ? lastKnownRevision)
+        protected AggregateRoot GetByIdFromScratch(Type aggregateRootType, Guid id, long lastKnownRevision)
         {
             AggregateRoot aggregateRoot = null;
 
-            var events = _store.ReadUntil(id, lastKnownRevision);
+            var events = _store.ReadFrom(id, long.MinValue, lastKnownRevision);
 
             if (events.Count() > 0)
             {

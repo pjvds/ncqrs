@@ -136,7 +136,7 @@ namespace Ncqrs.EventBus
                 var eventStream = _postProcessingQueue.GetConsumingEnumerable((CancellationToken)cancellationToken);
                 foreach (var evnt in eventStream)
                 {
-                    _elementStore.MarkLastProcessedEvent(evnt);
+                    _elementStore.MarkLastProcessedElement(evnt);
                 }
             }
             catch (OperationCanceledException)

@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{DCA6E39A-8D6B-4531-ACA7-33D790D27878}</ProjectGuid>
+    <ProjectGuid>{7C4B1AD0-C354-47D1-A9AB-793AE2AD52A2}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Ncqrs.Eventing.Storage.JOliver</RootNamespace>
-    <AssemblyName>Ncqrs.Eventing.Storage.JOliver</AssemblyName>
+    <RootNamespace>Ncqrs.Eventing.Storage.JOliver.Tests</RootNamespace>
+    <AssemblyName>Ncqrs.Eventing.Storage.JOliver.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\lib\Debug\Ncqrs.Eventing.Storage.JOliver\</OutputPath>
+    <OutputPath>..\..\..\lib\Debug\Ncqrs.Eventing.Storage.JOliver.Tests\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -34,15 +34,23 @@
     <Reference Include="EventStore">
       <HintPath>..\..\..\lib\ThirdParty\EventStore\EventStore.dll</HintPath>
     </Reference>
+    <Reference Include="FluentAssertions">
+      <HintPath>..\..\..\lib\ThirdParty\FluentAssertions\FluentAssertions.dll</HintPath>
+    </Reference>
     <Reference Include="Ncqrs">
       <HintPath>..\..\..\lib\Debug\Ncqrs\Ncqrs.dll</HintPath>
     </Reference>
     <Reference Include="Ncqrs.EventBus">
       <HintPath>..\..\..\lib\Debug\Ncqrs.EventBus\Ncqrs.EventBus.dll</HintPath>
     </Reference>
+    <Reference Include="Ncqrs.Eventing.Storage.JOliver">
+      <HintPath>..\..\..\lib\Debug\Ncqrs.Eventing.Storage.JOliver\Ncqrs.Eventing.Storage.JOliver.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework">
+      <HintPath>..\..\..\lib\ThirdParty\Nunit\nunit.framework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -50,12 +58,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CommitProcessingElement.cs" />
-    <Compile Include="IStreamProcessingStateStore.cs" />
-    <Compile Include="JOliveBrowsableEventStore.cs" />
-    <Compile Include="JOliverEventStoreAdapter.cs" />
+    <Compile Include="CommitExtensionMethods.cs" />
+    <Compile Include="JOliverEventStoreAdapterTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StoredEvent.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

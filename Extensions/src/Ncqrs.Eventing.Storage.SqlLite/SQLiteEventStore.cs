@@ -32,32 +32,17 @@ namespace Ncqrs.Eventing.Storage.SQLite
             _converter = converter;
         }
         
-        public CommittedEventStream ReadUntil(Guid id, long? maxVersion)
-        {
-            if (!maxVersion.HasValue)
-            {
-                maxVersion = long.MaxValue;
-            }
-            var results = new List<CommittedEvent>();
-            _context.WithConnection(connection =>
-            {
-                using (var cmd = new SQLiteCommand(Query.SelectAllEventsUntilQuery, connection))
-                {
-                    cmd.AddParam("EventSourceId", id).AddParam("EventSourceVersion", maxVersion);
-                    results.AddRange(ReadEvents(cmd, id));
-                }
-            });
-            return new CommittedEventStream(results);
-        }
 
-        public CommittedEventStream ReadFrom(Guid id, long minVersion)
+        public CommittedEventStream ReadFrom(Guid id, long minVersion, long maxVersion)
         {
             var results = new List<CommittedEvent>();
             _context.WithConnection(connection =>
             {
                 using (var cmd = new SQLiteCommand(Query.SelectAllEventsFromQuery, connection))
                 {
-                    cmd.AddParam("EventSourceId", id).AddParam("EventSourceVersion", minVersion);
+                    cmd.AddParam("EventSourceId", id)
+                        .AddParam("EventSourceMinVersion", minVersion)
+                        .AddParam("EventSourceMaxVersion", maxVersion);
                     results.AddRange(ReadEvents(cmd, id));
                 }
             });

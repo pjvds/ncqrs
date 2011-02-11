@@ -9,27 +9,16 @@ namespace Ncqrs.Eventing.Storage
     public interface IEventStore
     {
         /// <summary>
-        /// Reads from the stream indicated from most recent snapshot, if any, up to and including the version specified
-        /// or (if not specified) up to and including the most recent version.
-        /// </summary>
-        /// <remarks>
-        /// Returned event stream contain a lastest snapshot if one exists.
-        /// </remarks>
-        /// <param name="id">The id of the event source that owns the events.</param>
-        /// <param name="maxVersion">Maximum version number to be read.</param>
-        /// <returns>All the events from the event source.</returns>
-        CommittedEventStream ReadUntil(Guid id, long? maxVersion);
-
-        /// <summary>
-        /// Reads from the stream indicated from the revision specified until the end of the stream.
+        /// Reads from the stream from the <paramref name="minVersion"/> up until <paramref name="maxVersion"/>.
         /// </summary>
         /// <remarks>
         /// Returned event stream does not contain snapthots. This method is used when snapshots are stored in a separate store.
         /// </remarks>
         /// <param name="id">The id of the event source that owns the events.</param>
         /// <param name="minVersion">The minimum version number to be read.</param>
-        /// <returns>All the events from the event source.</returns>
-        CommittedEventStream ReadFrom(Guid id, long minVersion);
+        /// <param name="maxVersion">The maximum version numebr to be read</param>
+        /// <returns>All the events from the event source between specified version numbers.</returns>
+        CommittedEventStream ReadFrom(Guid id, long minVersion, long maxVersion);
 
         /// <summary>
         /// Persist provided stream of events as a single and atomic commit.

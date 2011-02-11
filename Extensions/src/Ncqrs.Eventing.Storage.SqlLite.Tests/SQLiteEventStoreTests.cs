@@ -75,7 +75,7 @@ namespace Ncqrs.Eventing.Storage.SQLite.Tests{
             
             _store.Store(stream);
 
-            var result=_store.ReadUntil(id, null);
+            var result=_store.ReadFrom(id, long.MinValue, long.MaxValue);
             result.Count().Should().Be(stream.Count());
             result.First().EventIdentifier.Should().Be(stream.First().EventIdentifier);
             //TODO:

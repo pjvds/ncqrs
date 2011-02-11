@@ -385,15 +385,16 @@ namespace Ncqrs.Eventing.Storage.SQL
         }
 
         /// <summary>
-        /// Reads from the stream indicated from the revision specified until the end of the stream.
+        /// Reads from the stream from the <paramref name="minVersion"/> up until <paramref name="maxVersion"/>.
         /// </summary>
         /// <remarks>
         /// Returned event stream does not contain snapthots. This method is used when snapshots are stored in a separate store.
         /// </remarks>
-        /// <param name="eventSourceId">The id of the event source that owns the events.</param>
+        /// <param name="id">The id of the event source that owns the events.</param>
         /// <param name="minVersion">The minimum version number to be read.</param>
-        /// <returns>All the events from the event source.</returns>
-        public CommittedEventStream ReadFrom(Guid eventSourceId, long minVersion)
+        /// <param name="maxVersion">The maximum version numebr to be read</param>
+        /// <returns>All the events from the event source between specified version numbers.</returns>
+        public CommittedEventStream ReadFrom(Guid id, long minVersion, long maxVersion)
         {
             var events = new List<CommittedEvent>();
 
@@ -402,8 +403,9 @@ namespace Ncqrs.Eventing.Storage.SQL
             using (var command = new SqlCommand(Queries.SelectAllEventsQuery, connection))
             {
                 // Add EventSourceId parameter and open connection.
-                command.Parameters.AddWithValue("EventSourceId", eventSourceId);
-                command.Parameters.AddWithValue("EventSourceVersion", minVersion);
+                command.Parameters.AddWithValue("EventSourceId", id);
+                command.Parameters.AddWithValue("EventSourceMinVersion", minVersion);
+                command.Parameters.AddWithValue("EventSourceMaxVersion", maxVersion);
                 connection.Open();
 
                 // Execute query and create reader.

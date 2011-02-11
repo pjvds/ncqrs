@@ -143,7 +143,7 @@ namespace Ncqrs.Eventing.Storage.RavenDB.Tests
 
             targetStore.Store(events);
 
-            var result = targetStore.ReadUntil(id, null);
+            var result = targetStore.ReadFrom(id, long.MinValue, long.MaxValue);
             result.Count().Should().Be(events.Count());
             result.First().EventIdentifier.Should().Be(events.First().EventIdentifier);
 
@@ -161,7 +161,6 @@ namespace Ncqrs.Eventing.Storage.RavenDB.Tests
             return uncommitted.EventIdentifier == committed.EventIdentifier
                    && uncommitted.EventSourceId == committed.EventSourceId
                    && uncommitted.Payload.Equals(committed.Payload)
-                   && uncommitted.EventTimeStamp == committed.EventTimeStamp
                    && uncommitted.EventSequence == committed.EventSequence;
         }
     }

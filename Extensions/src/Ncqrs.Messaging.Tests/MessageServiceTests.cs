@@ -72,7 +72,7 @@ namespace Ncqrs.Messaging.Tests
 
         private void ExpectToFindExistingAggregate()
         {
-            _eventStore.Expect(x => x.ReadUntil(Guid.Empty, null))
+            _eventStore.Expect(x => x.ReadFrom(Guid.Empty, long.MinValue, long.MaxValue))
                .Return(new CommittedEventStream(new[] { new CommittedEvent(Guid.NewGuid(), Guid.NewGuid(), _aggregateRootId, 1, DateTime.Now, new TestEvent(), new Version(1,0)) }))
                .IgnoreArguments()
                .Repeat.Any();
@@ -81,7 +81,7 @@ namespace Ncqrs.Messaging.Tests
         private void ExpectToFindExistingInvalidAggregate()
         {
             ResolveInvalidReceiver();
-            _eventStore.Expect(x => x.ReadUntil(Guid.Empty, null))
+            _eventStore.Expect(x => x.ReadFrom(Guid.Empty, long.MinValue, long.MaxValue))
                .Return(new CommittedEventStream(new[] { new CommittedEvent(Guid.NewGuid(), Guid.NewGuid(), _aggregateRootId, 1, DateTime.Now, new TestEvent(), new Version(1,0)) }))
                .IgnoreArguments()
                .Repeat.Any();
@@ -89,7 +89,7 @@ namespace Ncqrs.Messaging.Tests
 
         private void ExpectNotToFindExistingAggregate()
         {
-            _eventStore.Expect(x => x.ReadUntil(Guid.Empty, null))
+            _eventStore.Expect(x => x.ReadFrom(Guid.Empty, long.MinValue, long.MaxValue))
                .Return(new CommittedEventStream())
                .IgnoreArguments()
                .Repeat.Any();

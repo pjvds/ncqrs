@@ -32,7 +32,7 @@ namespace Ncqrs.EventBus.IntegrationTest
             }
         }
 
-        public void MarkLastProcessedEvent(IProcessingElement evnt)
+        public void MarkLastProcessedElement(IProcessingElement evnt)
         {            
         }
     }

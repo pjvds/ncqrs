@@ -17,13 +17,13 @@ namespace Ncqrs.EventBus.Tests
             var sut = CreateProcessor();
             sut.ProcessNext(_event);
 
-            _eventStore.AssertWasCalled(x => x.MarkLastProcessedEvent(_event));
+            _eventStore.AssertWasCalled(x => x.MarkLastProcessedElement(_event));
         }        
 
         private PipelineProcessor CreateProcessor()
         {
             var pipelineProcessor = new PipelineProcessor(new SucceedingEventProcessor());
-            pipelineProcessor.EventProcessed += (s, e) => _eventStore.MarkLastProcessedEvent(e.ProcessedElement);
+            pipelineProcessor.EventProcessed += (s, e) => _eventStore.MarkLastProcessedElement(e.ProcessedElement);
             return pipelineProcessor;
         }
     }

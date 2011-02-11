@@ -30,27 +30,14 @@ namespace Ncqrs.Eventing.Storage
             return _snapshots[eventSourceId];
         }
 
-        public CommittedEventStream ReadUntil(Guid id, long? maxVersion)
-        {
-            Queue<CommittedEvent> events;
-
-            if (_events.TryGetValue(id, out events))
-            {
-                var committedEvents = events
-                    .Where(x => !maxVersion.HasValue || x.EventSequence <= maxVersion.Value);
-                return new CommittedEventStream(committedEvents);
-            }
-            return new CommittedEventStream();
-        }
-
-        public CommittedEventStream ReadFrom(Guid id, long minVersion)
+        public CommittedEventStream ReadFrom(Guid id, long minVersion, long maxVersion)
         {
             Queue<CommittedEvent> events;
             
             if (_events.TryGetValue(id, out events))
             {
                 var committedEvents = events
-                    .Where(x => x.EventSequence >= minVersion);                    
+                    .Where(x => x.EventSequence >= minVersion && x.EventSequence <= maxVersion);                    
                 return new CommittedEventStream(committedEvents);
             }
             return new CommittedEventStream();

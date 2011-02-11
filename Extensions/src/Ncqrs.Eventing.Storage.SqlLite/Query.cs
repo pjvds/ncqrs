@@ -7,9 +7,7 @@
 
         internal const string InsertNewProviderQuery="INSERT INTO [EventSources](Id, Type, Version) VALUES (@Id, @Type, @Version)";
 
-        internal const string SelectAllEventsFromQuery = "SELECT [TimeStamp], [EventId], [Data], [Sequence] FROM [Events] WHERE [EventSourceId] = @EventSourceId AND [Sequence] >= @EventSourceVersion ORDER BY [Sequence]";
-
-        internal const string SelectAllEventsUntilQuery = "SELECT [TimeStamp], [EventId], [Data], [Sequence] FROM [Events] WHERE [EventSourceId] = @EventSourceId AND [Sequence] <= @EventSourceVersion ORDER BY [Sequence]";
+        internal const string SelectAllEventsFromQuery = "SELECT [TimeStamp], [EventId], [Data], [Sequence] FROM [Events] WHERE [EventSourceId] = @EventSourceId AND [Sequence] >= @EventSourceMinVersion AND [Sequence] <= @EventSourceMaxVersion ORDER BY [Sequence]";
 
         internal const string SelectAllIdsForTypeQuery="SELECT [Id] FROM [EventSources] WHERE [Type] = @Type";
 

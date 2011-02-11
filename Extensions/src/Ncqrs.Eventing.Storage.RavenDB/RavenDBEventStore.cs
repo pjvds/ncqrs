@@ -46,21 +46,7 @@ namespace Ncqrs.Eventing.Storage.RavenDB
             return null;
         }
 
-        public CommittedEventStream ReadUntil(Guid id, long? maxVersion)
-        {
-            maxVersion = maxVersion ?? long.MaxValue;
-            using (var session = _documentStore.OpenSession())
-            {
-                var storedEvents = session.Query<StoredEvent>()
-                    .WaitForNonStaleResults()
-                    .Where(x => x.EventSourceId == id)
-                    .Where(x => x.EventSequence <= maxVersion)
-                    .ToList().OrderBy(x => x.EventSequence);
-                return new CommittedEventStream(storedEvents.Select(ToComittedEvent));
-            }
-        }
-
-        public CommittedEventStream ReadFrom(Guid id, long minVersion)
+        public CommittedEventStream ReadFrom(Guid id, long minVersion, long maxVersion)
         {
             using (var session = _documentStore.OpenSession())
             {
@@ -68,6 +54,7 @@ namespace Ncqrs.Eventing.Storage.RavenDB
                     .WaitForNonStaleResults()
                     .Where(x => x.EventSourceId == id)
                     .Where(x => x.EventSequence >= minVersion)
+                    .Where(x => x.EventSequence <= maxVersion)
                     .ToList().OrderBy(x => x.EventSequence);
                 return new CommittedEventStream(storedEvents.Select(ToComittedEvent));
             }
