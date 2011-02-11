@@ -43,6 +43,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -51,10 +52,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommitProcessingElement.cs" />
-    <Compile Include="IStreamProcessingStateStore.cs" />
+    <Compile Include="SqlPersistence\IStreamProcessingStateStore.cs" />
+    <Compile Include="SqlPersistence\IStreamProcessingStateStoreSqlDialect.cs" />
     <Compile Include="JOliveBrowsableEventStore.cs" />
     <Compile Include="JOliverEventStoreAdapter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SqlPersistence\SqlStreamProcessingStateStore.cs" />
     <Compile Include="StoredEvent.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

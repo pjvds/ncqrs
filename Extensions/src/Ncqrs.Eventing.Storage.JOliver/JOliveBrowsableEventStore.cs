@@ -4,6 +4,7 @@ using System.Linq;
 using EventStore;
 using EventStore.Persistence;
 using Ncqrs.EventBus;
+using Ncqrs.Eventing.Storage.JOliver.SqlPersistence;
 
 namespace Ncqrs.Eventing.Storage.JOliver
 {
