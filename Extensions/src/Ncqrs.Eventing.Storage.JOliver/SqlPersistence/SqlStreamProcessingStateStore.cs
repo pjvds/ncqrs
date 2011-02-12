@@ -22,7 +22,7 @@ namespace Ncqrs.Eventing.Storage.JOliver.SqlPersistence
             _dialect = dialect;
         }
 
-        public DateTime? GetLastProcessedCommitTimestamp()
+        public DateTime GetLastProcessedCommitTimestamp()
         {
             return Execute(x =>
                                {
@@ -58,7 +58,7 @@ namespace Ncqrs.Eventing.Storage.JOliver.SqlPersistence
             }
         }
 
-        private static DateTime? ToDateTime(object value)
+        private static DateTime ToDateTime(object value)
         {
             value = value is decimal ? (long)(decimal)value : value;
             return value is long ? new DateTime((long)value) : (DateTime)value;
