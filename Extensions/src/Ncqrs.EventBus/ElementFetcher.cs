@@ -3,17 +3,19 @@ using System.Threading.Tasks;
 
 namespace Ncqrs.EventBus
 {
-    public class EventFetcher
+    public class ElementFetcher
     {
         private readonly IFetchPolicy _fetchPolicy;
         private readonly IBrowsableElementStore _elementStore;
         private bool _activeFetchRequest;
         private readonly object _fetchLock = new object();
         private int _sequence = 1;
+        private readonly string _pipelineName;
 
-        public EventFetcher(IFetchPolicy fetchPolicy, IBrowsableElementStore elementStore)
+        public ElementFetcher(IFetchPolicy fetchPolicy, IBrowsableElementStore elementStore, string pipelineName)
         {
             _fetchPolicy = fetchPolicy;
+            _pipelineName = pipelineName;
             _elementStore = elementStore;
         }
 
@@ -51,7 +53,7 @@ namespace Ncqrs.EventBus
             lock (_fetchLock)
             {
                 _activeFetchRequest = true;
-                var elements = _elementStore.Fetch(directive.MaxCount);
+                var elements = _elementStore.Fetch(_pipelineName, directive.MaxCount);
                 foreach (var element in elements)
                 {
                     element.SequenceNumber = _sequence++;

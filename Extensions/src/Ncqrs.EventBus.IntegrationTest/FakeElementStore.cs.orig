@@ -32,7 +32,11 @@ namespace Ncqrs.EventBus.IntegrationTest
             }
         }
 
-        public void MarkLastProcessedElement(string pipelineName, IProcessingElement evnt)
+<<<<<<< HEAD
+        public void MarkLastProcessedElement(IProcessingElement evnt)
+=======
+        public void MarkLastProcessedEvent(string pipelineName, IProcessingElement evnt)
+>>>>>>> development
         {            
         }
     }

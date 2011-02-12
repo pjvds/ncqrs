@@ -58,9 +58,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="MongoDB.Driver">
-      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\lib\ThirdParty\mongodb-net\MongoDB.Driver.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="Ncqrs">
       <SpecificVersion>False</SpecificVersion>

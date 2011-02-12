@@ -19,7 +19,6 @@ namespace Ncqrs.Config.Windsor
         public WindsorCommandService(IWindsorContainer container)
         {
             _container = container;
-            var interceptors = _container.ResolveAll<ICommandServiceInterceptor>().ToList();
         }
 
         public virtual void Execute(ICommand command)
@@ -34,8 +33,7 @@ namespace Ncqrs.Config.Windsor
                 if (executor == null) throw new ExecutorForCommandNotFoundException(command.GetType());
                 context = new CommandContext(command, CommandExecutionState.Resolved);
                 interceptors.ForEach(i => i.OnBeforeExecution(context));
-
-                executor.GetType().GetMethod("Execute").Invoke(executor, new[] { command });
+                executor.Execute((dynamic) command);
                 context = new CommandContext(command, CommandExecutionState.Called);
             }
             catch (Exception ex)
@@ -49,7 +47,7 @@ namespace Ncqrs.Config.Windsor
             }
         }
 
-        object GetExecutorForCommand(ICommand command)
+        dynamic GetExecutorForCommand(ICommand command)
         {
             Type commandType = command.GetType();
             var exType = typeof(ICommandExecutor<>).MakeGenericType(commandType);

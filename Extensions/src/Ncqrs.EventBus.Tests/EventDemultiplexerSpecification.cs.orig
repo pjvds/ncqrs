@@ -53,6 +53,7 @@ namespace Ncqrs.EventBus.Tests
             enqueuedToProcessingCount.Should().Be(1);
         }
 
+<<<<<<< HEAD
         private static IProcessingElement CreateElement(Guid sourceId)
         {
             return new FakeProcessingElement
@@ -60,6 +61,11 @@ namespace Ncqrs.EventBus.Tests
                            GroupingKey = sourceId,
                            UniqueId = Guid.NewGuid().ToString()
                        };
+=======
+        private static SourcedEventProcessingElement CreateEvent(Guid sourceId)
+        {
+            return new SourcedEventProcessingElement(0, new TestEvent(Guid.NewGuid(), sourceId, 0, DateTime.Now));
+>>>>>>> development
         }
     }
 }

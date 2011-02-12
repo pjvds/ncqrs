@@ -47,7 +47,11 @@ namespace Ncqrs.EventBus
             }
         }
 
-        public void MarkLastProcessedElement(string pipelineName, IProcessingElement processingElement)
+<<<<<<< HEAD
+        public void MarkLastProcessedElement(IProcessingElement processingElement)
+=======
+        public void MarkLastProcessedEvent(string pipelineName, IProcessingElement processingElement)
+>>>>>>> development
         {
             var typedElement = (SourcedEventProcessingElement) processingElement;
             using (var connection = new SqlConnection(_connectionString))
