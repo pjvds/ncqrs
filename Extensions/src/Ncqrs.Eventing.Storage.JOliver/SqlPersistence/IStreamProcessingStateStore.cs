@@ -4,7 +4,8 @@ namespace Ncqrs.Eventing.Storage.JOliver.SqlPersistence
 {
     public interface IStreamProcessingStateStore
     {
-        DateTime GetLastProcessedCommitTimestamp();
-        void MarkLastProcessedCommitTimestamp(DateTime timestamp);
+        DateTime GetLastProcessedCommitTimestamp(string pipelineName);
+        void MarkLastProcessedCommitTimestamp(string pipelineName, DateTime timestamp);
+        void Initialize();
     }
 }

@@ -22,14 +22,14 @@ namespace Ncqrs.Eventing.Storage.JOliver.SqlPersistence {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class CommonSqlStatements {
+    internal class MsSqlStatements {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal CommonSqlStatements() {
+        internal MsSqlStatements() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace Ncqrs.Eventing.Storage.JOliver.SqlPersistence {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Ncqrs.Eventing.Storage.JOliver.SqlPersistence.CommonSqlStatements", typeof(CommonSqlStatements).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Ncqrs.Eventing.Storage.JOliver.SqlPersistence.MsSqlStatements", typeof(MsSqlStatements).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,20 +61,21 @@ namespace Ncqrs.Eventing.Storage.JOliver.SqlPersistence {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SELECT TOP 1 [CommitTimestamp] FROM [PipelineState] WHERE [PipelineName] = @PipelineName ORDER BY [CheckPointId] DESC.
+        ///   Looks up a localized string similar to IF EXISTS(SELECT * FROM sysobjects WHERE name=&apos;PipelineState&apos; AND xtype = &apos;U&apos;) RETURN;
+        ///
+        ///CREATE TABLE [dbo].[PipelineState](
+        ///	[CheckPointId] [int] IDENTITY(1,1) NOT NULL,
+        ///	[PipelineName] [varchar](255) NOT NULL,
+        ///	[CommitTimestamp] [datetime] NULL,
+        /// CONSTRAINT [PK_MainPipelineState] PRIMARY KEY CLUSTERED 
+        ///(
+        ///	[CheckPointId] ASC
+        ///)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+        ///) ON [PRIMARY].
         /// </summary>
-        internal static string GetLastProcessedCommitTimestamp {
+        internal static string Initialize {
             get {
-                return ResourceManager.GetString("GetLastProcessedCommitTimestamp", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO [PipelineState] ([PipelineName], [CommitTimestamp]) VALUES (@PipelineName, @CommitTimestamp).
-        /// </summary>
-        internal static string MarkLastProcessedCommitTimestamp {
-            get {
-                return ResourceManager.GetString("MarkLastProcessedCommitTimestamp", resourceCulture);
+                return ResourceManager.GetString("Initialize", resourceCulture);
             }
         }
     }

@@ -8,20 +8,16 @@ using EventStore.Persistence;
 
 namespace Ncqrs.Eventing.Storage.JOliver
 {
-    public class JOliverEventStoreAdapter : IEventStore
+    public class JoesEventStoreAdapter : IEventStore
     {
         private readonly OptimisticEventStore _wrappedEventStore;
 
-        public JOliverEventStoreAdapter(IPersistStreams streamPersister)
+        public JoesEventStoreAdapter(IPersistStreams streamPersister)
         {
             _wrappedEventStore = new OptimisticEventStore(streamPersister, new NullDispatcher());
         }
         
-        private static CommittedEvent Convert(StoredEvent x, Guid id)
-        {
-            return new CommittedEvent(x.CommitId, x.EventId, id, x.Sequence, x.TimeStamp, x.Body,
-                                      new Version(x.MajorVersion, x.MinorVersion));
-        }
+        
 
         public CommittedEventStream ReadFrom(Guid id, long minVersion, long maxVersion)
         {
@@ -32,7 +28,7 @@ namespace Ncqrs.Eventing.Storage.JOliver
                 .SelectMany(x => x.Events)
                 .Select(x => x.Body)
                 .Cast<StoredEvent>()
-                .Select(x => Convert(x, id));
+                .Select(x => x.Convert(id));
             return new CommittedEventStream(committedEvents);
         }
 
@@ -61,12 +57,19 @@ namespace Ncqrs.Eventing.Storage.JOliver
 
             var commitAttempt = new Commit(eventStream.SourceId, (int)sourceInformation.CurrentVersion,
                                     eventStream.CommitId,
-                                    (int)sourceInformation.InitialVersion,
+                                    GetInitialVersion(sourceInformation),
                                     DateTime.UtcNow,
                                     new Dictionary<string, object>(),
                                     events);
             
             _wrappedEventStore.Commit(commitAttempt);
+        }
+
+        private static int GetInitialVersion(EventSourceInformation sourceInformation)
+        {
+            //JO Event Store assumes, that version number starts from 1.
+            var value = (int)sourceInformation.InitialVersion;
+            return value == 0 ? 1 : value; 
         }
 
         private class NullDispatcher : IDispatchCommits

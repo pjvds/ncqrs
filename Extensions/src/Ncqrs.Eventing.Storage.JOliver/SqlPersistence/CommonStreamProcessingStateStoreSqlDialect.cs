@@ -7,16 +7,16 @@ namespace Ncqrs.Eventing.Storage.JOliver.SqlPersistence
 {
     public abstract class CommonStreamProcessingStateStoreSqlDialect : IStreamProcessingStateStoreSqlDialect
     {
-        public abstract void InitializeStrorage();
+        public abstract string Initialize { get; }
 
         public string GetLastProcessedCommitTimestamp
         {
-            get { throw new NotImplementedException(); }
+            get { return CommonSqlStatements.GetLastProcessedCommitTimestamp; }
         }
 
         public string MarkLastProcessedCommitTimestamp
         {
-            get { throw new NotImplementedException(); }
+            get { return CommonSqlStatements.MarkLastProcessedCommitTimestamp; }
         }
 
         public string CommitTimestamp { get { return "@CommitTimestamp"; } }

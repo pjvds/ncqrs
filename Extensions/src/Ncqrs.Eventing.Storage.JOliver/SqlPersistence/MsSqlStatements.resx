@@ -117,10 +117,17 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="GetLastProcessedCommitTimestamp" xml:space="preserve">
-    <value>SELECT TOP 1 [CommitTimestamp] FROM [PipelineState] WHERE [PipelineName] = @PipelineName ORDER BY [CheckPointId] DESC</value>
-  </data>
-  <data name="MarkLastProcessedCommitTimestamp" xml:space="preserve">
-    <value>INSERT INTO [PipelineState] ([PipelineName], [CommitTimestamp]) VALUES (@PipelineName, @CommitTimestamp)</value>
+  <data name="Initialize" xml:space="preserve">
+    <value>IF EXISTS(SELECT * FROM sysobjects WHERE name='PipelineState' AND xtype = 'U') RETURN;
+
+CREATE TABLE [dbo].[PipelineState](
+	[CheckPointId] [int] IDENTITY(1,1) NOT NULL,
+	[PipelineName] [varchar](255) NOT NULL,
+	[CommitTimestamp] [datetime] NULL,
+ CONSTRAINT [PK_MainPipelineState] PRIMARY KEY CLUSTERED 
+(
+	[CheckPointId] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]</value>
   </data>
 </root>

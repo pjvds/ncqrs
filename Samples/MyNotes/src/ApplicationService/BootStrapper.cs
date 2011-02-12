@@ -1,5 +1,7 @@
 ﻿using ApplicationService.Properties;
 using Commands;
+using EventStore.Persistence.SqlPersistence;
+using EventStore.Serialization;
 using Ncqrs;
 using Ncqrs.Commanding;
 using Ncqrs.Commanding.CommandExecution.Mapping.Attributes;
@@ -8,6 +10,7 @@ using Ncqrs.CommandService.Infrastructure;
 using Ncqrs.EventBus;
 using Ncqrs.Eventing.ServiceModel.Bus;
 using Ncqrs.Eventing.Storage;
+using Ncqrs.Eventing.Storage.JOliver;
 using Ncqrs.Eventing.Storage.SQL;
 
 namespace ApplicationService
@@ -20,7 +23,7 @@ namespace ApplicationService
             {
                 cfg.For<ICommandService>().Use(InitializeCommandService);
                 cfg.For<IEventBus>().Use(x => InitializeEventBus(buffer));
-                cfg.For<IEventStore>().Use(InitializeEventStore);
+                cfg.For<IEventStore>().Singleton().Use(InitializeEventStore);
                 cfg.For<IKnownCommandsEnumerator>().Use(new AllCommandsInAppDomainEnumerator());
             });
 
@@ -40,7 +43,10 @@ namespace ApplicationService
 
         private static IEventStore InitializeEventStore()
         {
-            var store = new MsSqlServerEventStore(Settings.Default.EventStoreConnectionString);
+            var factory = new SqlPersistenceFactory("EventStore", new BinarySerializer());
+            var streamPersister = factory.Build();
+            streamPersister.Initialize();
+            var store = new JoesEventStoreAdapter(streamPersister);
             return store;
         }
 

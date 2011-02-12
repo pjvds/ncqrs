@@ -205,12 +205,12 @@ namespace Ncqrs.Tests.Domain
             theAggregate.MethodThatCausesAnEventThatHasAHandler();
             theAggregate.Version.Should().Be(1);
             theAggregate.GetUncommittedEvents().Last().EventSequence.Should().Be(1);
-            theAggregate.GetUncommittedEvents().Last().InitialVersionOfEventSource.Should().Be(1);
+            theAggregate.GetUncommittedEvents().Last().InitialVersionOfEventSource.Should().Be(0);
 
             theAggregate.MethodThatCausesAnEventThatHasAHandler();
             theAggregate.Version.Should().Be(2);
             theAggregate.GetUncommittedEvents().Last().EventSequence.Should().Be(2);
-            theAggregate.GetUncommittedEvents().Last().InitialVersionOfEventSource.Should().Be(1);
+            theAggregate.GetUncommittedEvents().Last().InitialVersionOfEventSource.Should().Be(0);
 
             theAggregate.MethodThatCausesAnEventThatHasAHandler();
         }

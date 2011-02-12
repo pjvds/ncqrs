@@ -35,6 +35,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EventStore">
+      <HintPath>..\..\..\..\lib\ThirdParty\EventStore\EventStore.dll</HintPath>
+    </Reference>
+    <Reference Include="EventStore.Serialization.Json">
+      <HintPath>..\..\..\..\lib\ThirdParty\EventStore\EventStore.Serialization.Json.dll</HintPath>
+    </Reference>
     <Reference Include="Ncqrs">
       <HintPath>..\..\..\..\lib\Debug\Ncqrs\Ncqrs.dll</HintPath>
     </Reference>
@@ -49,6 +55,9 @@
     </Reference>
     <Reference Include="Ncqrs.EventBus">
       <HintPath>..\..\..\..\lib\Debug\Ncqrs.EventBus\Ncqrs.EventBus.dll</HintPath>
+    </Reference>
+    <Reference Include="Ncqrs.Eventing.Storage.JOliver">
+      <HintPath>..\..\..\..\lib\Debug\Ncqrs.Eventing.Storage.JOliver\Ncqrs.Eventing.Storage.JOliver.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\..\..\lib\ThirdParty\json.net\Newtonsoft.Json.dll</HintPath>

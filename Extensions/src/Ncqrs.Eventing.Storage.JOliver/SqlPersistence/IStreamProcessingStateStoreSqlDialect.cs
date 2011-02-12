@@ -6,7 +6,7 @@ namespace Ncqrs.Eventing.Storage.JOliver.SqlPersistence
 {
     public interface IStreamProcessingStateStoreSqlDialect
     {
-        void InitializeStrorage();
+        string Initialize { get; }
 
         string GetLastProcessedCommitTimestamp { get; }
         string MarkLastProcessedCommitTimestamp { get; }

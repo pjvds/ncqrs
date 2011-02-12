@@ -12,7 +12,7 @@ namespace Ncqrs.Eventing.Storage.JOliver.Tests
     public class JOliverEventStoreAdapterTests
     {
         private InMemoryPersistenceEngine _persistenceEngine;
-        private JOliverEventStoreAdapter _sut;
+        private JoesEventStoreAdapter _sut;
         private Guid _streamId;
         private Guid _firstCommitId;
 
@@ -93,7 +93,7 @@ namespace Ncqrs.Eventing.Storage.JOliver.Tests
         public void Initialize()
         {
             _persistenceEngine = new InMemoryPersistenceEngine();
-            _sut = new JOliverEventStoreAdapter(_persistenceEngine);
+            _sut = new JoesEventStoreAdapter(_persistenceEngine);
             _streamId = Guid.NewGuid();
             
         }
