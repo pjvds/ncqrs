@@ -22,6 +22,8 @@ namespace Ncqrs.Eventing
             {
                 var last = _events.Last();
                 _currentSourceVersion = last.EventSequence;
+
+                _currentSourceVersion = _events.OrderByDescending(evnt => evnt.EventSequence).First().EventSequence;
                 _sourceId = last.EventSourceId;
             }
         }

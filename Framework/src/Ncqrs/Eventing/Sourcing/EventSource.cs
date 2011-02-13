@@ -147,12 +147,12 @@ namespace Ncqrs.Eventing.Sourcing
 
         internal protected void ApplyEvent(object evnt)
         {
-            var eventVersion = evnt.GetType().Assembly.GetName().Version;
-            var eventSequence = GetNextSequence();
-            var wrappedEvent = new UncommittedEvent(_idGenerator.GenerateNewId(), EventSourceId, eventSequence, _initialVersion, DateTime.UtcNow, evnt, eventVersion);
+            Version eventVersion = evnt.GetType().Assembly.GetName().Version;
+            long eventSequence = GetNextSequence();
+            UncommittedEvent wrappedEvent = new UncommittedEvent(_idGenerator.GenerateNewId(), EventSourceId, eventSequence, _initialVersion, DateTime.UtcNow, evnt, eventVersion);
 
             //Legacy stuff...
-            var sourcedEvent = evnt as ISourcedEvent;
+            ISourcedEvent sourcedEvent = evnt as ISourcedEvent;
             if (sourcedEvent != null)
             {
                 sourcedEvent.ClaimEvent(EventSourceId, eventSequence);
@@ -164,6 +164,12 @@ namespace Ncqrs.Eventing.Sourcing
 
         private long GetNextSequence()
         {
+            // 628426 31 Feb 2011 - the following absolutely needed to ensure correct sequencing, as incorrect versions were being passed to event store
+            // TODO: I don't think this should stay here
+            if (_initialVersion > 0 && _currentVersion == 0)
+            {
+                _currentVersion = _initialVersion;
+            }
             _currentVersion++;
             return _currentVersion;
         }
@@ -193,6 +199,8 @@ namespace Ncqrs.Eventing.Sourcing
             //}
         }
         
+        // 628426 13 Feb 2011
+        // TODO: Remove this method.  Its logic needs to exist elsewhere though... stashed it in GetNextSequence for now
         public void AcceptChanges()
         {            
             _initialVersion = Version;

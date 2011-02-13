@@ -143,7 +143,21 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.NServiceBus.EventBus"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApplicationService", "Samples\MyNotes\ApplicationService\ApplicationService.csproj", "{B43AEA6E-59C2-4731-91EA-40C36CEE8360}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Eventing.Storage.WindowsAzure", "Extensions\src\Ncqrs.Eventing.Storage.WindowsAzure\Ncqrs.Eventing.Storage.WindowsAzure.csproj", "{6535AFF3-E730-4916-9CF6-1186F3C1DAFE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Eventing.Storage.WindowsAzure.Tests", "Extensions\src\Ncqrs.Eventing.Storage.WindowsAzure.Tests\Ncqrs.Eventing.Storage.WindowsAzure.Tests.csproj", "{693DEFC5-355C-4F62-B424-3119046B5F6D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9961F987-2519-493C-83E6-5E8AFCD32291}"
+	ProjectSection(SolutionItems) = preProject
+		Local.testsettings = Local.testsettings
+		Ncqrs.Master.vsmdi = Ncqrs.Master.vsmdi
+		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
+	EndProjectSection
+EndProject
 Global
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = Ncqrs.Master.vsmdi
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|Mixed Platforms = Debug|Mixed Platforms
@@ -509,6 +523,26 @@ Global
 		{B43AEA6E-59C2-4731-91EA-40C36CEE8360}.Release|Mixed Platforms.Build.0 = Release|x86
 		{B43AEA6E-59C2-4731-91EA-40C36CEE8360}.Release|x86.ActiveCfg = Release|x86
 		{B43AEA6E-59C2-4731-91EA-40C36CEE8360}.Release|x86.Build.0 = Release|x86
+		{6535AFF3-E730-4916-9CF6-1186F3C1DAFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6535AFF3-E730-4916-9CF6-1186F3C1DAFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6535AFF3-E730-4916-9CF6-1186F3C1DAFE}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{6535AFF3-E730-4916-9CF6-1186F3C1DAFE}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{6535AFF3-E730-4916-9CF6-1186F3C1DAFE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6535AFF3-E730-4916-9CF6-1186F3C1DAFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6535AFF3-E730-4916-9CF6-1186F3C1DAFE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6535AFF3-E730-4916-9CF6-1186F3C1DAFE}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{6535AFF3-E730-4916-9CF6-1186F3C1DAFE}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{6535AFF3-E730-4916-9CF6-1186F3C1DAFE}.Release|x86.ActiveCfg = Release|Any CPU
+		{693DEFC5-355C-4F62-B424-3119046B5F6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{693DEFC5-355C-4F62-B424-3119046B5F6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{693DEFC5-355C-4F62-B424-3119046B5F6D}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{693DEFC5-355C-4F62-B424-3119046B5F6D}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{693DEFC5-355C-4F62-B424-3119046B5F6D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{693DEFC5-355C-4F62-B424-3119046B5F6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{693DEFC5-355C-4F62-B424-3119046B5F6D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{693DEFC5-355C-4F62-B424-3119046B5F6D}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{693DEFC5-355C-4F62-B424-3119046B5F6D}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{693DEFC5-355C-4F62-B424-3119046B5F6D}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -536,6 +570,9 @@ Global
 		{76062319-4F5D-4055-9D1A-5680DD2DA882} = {4EAA1C9A-E268-4BA7-A73E-940E3D769C3A}
 		{EE6E54C8-D108-49E7-9E2A-6BAEF6D5339F} = {4EAA1C9A-E268-4BA7-A73E-940E3D769C3A}
 		{B8B5FD78-06BE-4BC0-8A0A-7C63C3FEB63C} = {4EAA1C9A-E268-4BA7-A73E-940E3D769C3A}
+		{6535AFF3-E730-4916-9CF6-1186F3C1DAFE} = {4EAA1C9A-E268-4BA7-A73E-940E3D769C3A}
+		{693DEFC5-355C-4F62-B424-3119046B5F6D} = {4EAA1C9A-E268-4BA7-A73E-940E3D769C3A}
+		{9961F987-2519-493C-83E6-5E8AFCD32291} = {4EAA1C9A-E268-4BA7-A73E-940E3D769C3A}
 		{8478A8FA-7295-4098-866D-47F458C766C8} = {84A6E29C-BC29-4348-BA51-4218E75CED1A}
 		{963C0C88-DCB6-4944-94EC-728CBB3C2778} = {84A6E29C-BC29-4348-BA51-4218E75CED1A}
 		{E7C55656-EC73-4802-9ED4-1BC321C86ABA} = {84A6E29C-BC29-4348-BA51-4218E75CED1A}

@@ -11,17 +11,19 @@ namespace Ncqrs.Domain
     /// </summary>
     public abstract class AggregateRoot : EventSource
     {
-        [ThreadStatic]
-        private static readonly List<Action<AggregateRoot, UncommittedEvent>> _eventAppliedCallbacks = new List<Action<AggregateRoot, UncommittedEvent>>();
+        // 628426 13 Feb 2011
+        // Previous ThreadStatic was null referencing at random times under load 
+        // These things work great
+        private static System.Threading.ThreadLocal<List<Action<AggregateRoot, UncommittedEvent>>> _eventAppliedCallbacks = new System.Threading.ThreadLocal<List<Action<AggregateRoot, UncommittedEvent>>>(() => new List<Action<AggregateRoot, UncommittedEvent>>());
 
         public static void RegisterThreadStaticEventAppliedCallback(Action<AggregateRoot, UncommittedEvent> callback)
         {
-            _eventAppliedCallbacks.Add(callback);
+            _eventAppliedCallbacks.Value.Add(callback);
         }
 
         public static void UnregisterThreadStaticEventAppliedCallback(Action<AggregateRoot, UncommittedEvent> callback)
         {
-            _eventAppliedCallbacks.Remove(callback);
+            _eventAppliedCallbacks.Value.Remove(callback);
         }
 
         protected AggregateRoot()
@@ -34,7 +36,7 @@ namespace Ncqrs.Domain
         protected override void OnEventApplied(UncommittedEvent appliedEvent)
         {
             base.OnEventApplied(appliedEvent);
-            var callbacks = _eventAppliedCallbacks;
+            var callbacks = _eventAppliedCallbacks.Value;
 
             foreach(var callback in callbacks)
             {
