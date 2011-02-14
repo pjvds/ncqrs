@@ -80,7 +80,7 @@ namespace Ncqrs.Eventing.Sourcing.Mapping
 
                 Logger.DebugFormat("Created event handler for method {0} based on convention.", methodCopy.Name);
 
-                var handler = new TypeThresholdedActionBasedDomainEventHandler(invokeAction, firstParameterType, true);
+                var handler = new TypeThresholdedActionBasedDomainEventHandler(invokeAction, firstParameterType, methodCopy.Name, true);
                 handlers.Add(handler);
             }
 

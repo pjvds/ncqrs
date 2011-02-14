@@ -14,6 +14,8 @@ namespace Ncqrs.Eventing.Sourcing
         /// </summary>
         private readonly Type _eventTypeThreshold;
 
+        private readonly string _handlerName;
+
         /// <summary>
         ///   Specifies whether the event type threshold should be used as an exact or at least threshold.
         /// </summary>
@@ -35,9 +37,10 @@ namespace Ncqrs.Eventing.Sourcing
         /// </summary>
         /// <param name = "handler">The handler that will be called to handle a event when the threshold did not hold the event.</param>
         /// <param name = "eventTypeThreshold">The event type that should be used as threshold.</param>
+        /// <param name="handlerName">The name of the handler.</param>
         /// <param name = "exact">if set to <c>true</c> the threshold will hold all types that are not the same type; otherwise it hold 
         /// all types that are not inhered from the event type threshold or implement the interface that is specified by the threshold type.</param>
-        public TypeThresholdedActionBasedDomainEventHandler(Action<object> handler, Type eventTypeThreshold,
+        public TypeThresholdedActionBasedDomainEventHandler(Action<object> handler, Type eventTypeThreshold, string handlerName,
                                                               Boolean exact = false)
         {
             Contract.Requires<ArgumentNullException>(handler != null, "The handler cannot be null.");
@@ -46,6 +49,7 @@ namespace Ncqrs.Eventing.Sourcing
 
             _handler = handler;
             _eventTypeThreshold = eventTypeThreshold;
+            _handlerName = handlerName;
             _exact = exact;
         }
 
@@ -120,6 +124,11 @@ namespace Ncqrs.Eventing.Sourcing
             }
 
             return shouldHandle;
+        }
+
+        public override string ToString()
+        {
+            return _handlerName;
         }
     }
 

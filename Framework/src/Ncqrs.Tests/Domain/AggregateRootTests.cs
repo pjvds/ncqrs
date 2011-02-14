@@ -39,17 +39,17 @@ namespace Ncqrs.Tests.Domain
 
             public MyAggregateRoot()
             {
-                RegisterHandler(new TypeThresholdedActionBasedDomainEventHandler(OnFoo, typeof(HandledEvent), false));
+                RegisterHandler(new TypeThresholdedActionBasedDomainEventHandler(OnFoo, typeof(HandledEvent), "", false));
             }
 
             public MyAggregateRoot(Guid id) : base(id)
             {
-                RegisterHandler(new TypeThresholdedActionBasedDomainEventHandler(OnFoo, typeof(HandledEvent), false));
+                RegisterHandler(new TypeThresholdedActionBasedDomainEventHandler(OnFoo, typeof(HandledEvent), "", false));
             }
 
             public MyAggregateRoot(IEnumerable<SourcedEvent> history)
             {
-                RegisterHandler(new TypeThresholdedActionBasedDomainEventHandler(OnFoo, typeof(HandledEvent), false));
+                RegisterHandler(new TypeThresholdedActionBasedDomainEventHandler(OnFoo, typeof(HandledEvent), "", false));
 
                 InitializeFromHistory(history);
             }

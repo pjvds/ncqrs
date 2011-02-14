@@ -11,6 +11,7 @@ namespace Ncqrs.Domain.Storage
 {
     public class DomainRepository : IDomainRepository
     {
+        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         //private const int SnapshotIntervalInEvents = 15;
 
         private readonly IEventBus _eventBus;
@@ -49,6 +50,13 @@ namespace Ncqrs.Domain.Storage
         /// <returns>A new instance of the aggregate root that contains the latest known state or null if aggregate does not exist.</returns>
         public AggregateRoot GetById(Type aggregateRootType, Guid eventSourceId, long? lastKnownRevision)
         {
+            Log.DebugFormat("Retrieving aggregate root of {0}[{1}] (revision: {0}) from the repository",
+                aggregateRootType.FullName, eventSourceId.ToString("D"), lastKnownRevision.HasValue ? lastKnownRevision.ToString() : "latest");
+            if (!lastKnownRevision.HasValue)
+            {
+                Log.WarnFormat("Retrieving aggregate root of {0}[{1}] withous specifying revision. No optimistic concurrency check will be done",
+                  aggregateRootType.FullName, eventSourceId.ToString("D"));  
+            }
             AggregateRoot aggregateRoot = null;
             long maxVersion = lastKnownRevision.HasValue ? lastKnownRevision.Value : long.MaxValue;
             if (_snapshotStore != null)
@@ -74,6 +82,8 @@ namespace Ncqrs.Domain.Storage
 
             if(AggregateRootSupportsSnapshot(aggregateRootType, snapshot))
             {
+                Log.DebugFormat("Reconstructing agregate root {0}[{1}] from snapshot", aggregateRootType.FullName,
+                                snapshot.EventSourceId.ToString("D"));
                 aggregateRoot = CreateEmptyAggRoot(aggregateRootType);
                 var memType = GetSnapshotInterfaceType(aggregateRootType);
                 var restoreMethod = memType.GetMethod("RestoreFromSnapshot");
@@ -82,10 +92,15 @@ namespace Ncqrs.Domain.Storage
 
                 var nextId = snapshot.EventSourceVersion + 1;
                 var events = _store.ReadFrom(aggregateRoot.EventSourceId, nextId, int.MaxValue);
+                Log.DebugFormat("Appying remaining historic event to reconstructed aggregate root {0}[{1}]",
+                    aggregateRootType.FullName, snapshot.EventSourceId.ToString("D"));
                 aggregateRoot.InitializeFromHistory(events);
             }
             else
             {
+                Log.WarnFormat(
+                    "Found snapshot for aggregate root {0}[{1}], but aggregate root class does not support snapshots",
+                    aggregateRootType.FullName, snapshot.EventSourceId.ToString("D"));
                 aggregateRoot = GetByIdFromScratch(aggregateRootType, snapshot.EventSourceId, lastKnownRevision);
             }
 
@@ -95,7 +110,8 @@ namespace Ncqrs.Domain.Storage
         protected AggregateRoot GetByIdFromScratch(Type aggregateRootType, Guid id, long lastKnownRevision)
         {
             AggregateRoot aggregateRoot = null;
-
+            Log.DebugFormat("Reconstructing agregate root {0}[{1}] directly from event stream", aggregateRootType.FullName,
+                               id.ToString("D"));
             var events = _store.ReadFrom(id, long.MinValue, lastKnownRevision);
 
             if (events.Count() > 0)
@@ -123,7 +139,9 @@ namespace Ncqrs.Domain.Storage
 
         public void Store(UncommittedEventStream eventStream)
         {
+            Log.DebugFormat("Storing the event stream for command {0} to event store", eventStream.CommitId);
             _store.Store(eventStream);
+            Log.DebugFormat("Publishing events for command {0} to event bus", eventStream.CommitId);
             _eventBus.Publish(eventStream);
         }
 

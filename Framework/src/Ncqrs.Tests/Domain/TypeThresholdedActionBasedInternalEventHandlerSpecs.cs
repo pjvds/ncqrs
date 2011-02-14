@@ -29,7 +29,7 @@ namespace Ncqrs.Tests.Domain
             Boolean handlerActionWasCalled = false;
             Action<object> handlerAction = (e) => handlerActionWasCalled = true;
 
-            var handler = new TypeThresholdedActionBasedDomainEventHandler(handlerAction, typeof (FooEvent), true);
+            var handler = new TypeThresholdedActionBasedDomainEventHandler(handlerAction, typeof (FooEvent), "", true);
             var handeled = handler.HandleEvent(new BarEvent());
 
             handeled.Should().Be(false);
@@ -42,7 +42,7 @@ namespace Ncqrs.Tests.Domain
             Boolean handlerActionWasCalled = false;
             Action<object> handlerAction = (e) => handlerActionWasCalled = true;
 
-            var handler = new TypeThresholdedActionBasedDomainEventHandler(handlerAction, typeof(FooEvent), false);
+            var handler = new TypeThresholdedActionBasedDomainEventHandler(handlerAction, typeof(FooEvent), "", false);
             var handeled = handler.HandleEvent(new BarEvent());
 
             handeled.Should().Be(true);
@@ -55,7 +55,7 @@ namespace Ncqrs.Tests.Domain
             Boolean handlerActionWasCalled = false;
             Action<object> handlerAction = (e) => handlerActionWasCalled = true;
 
-            var handler = new TypeThresholdedActionBasedDomainEventHandler(handlerAction, typeof(FooEvent), true);
+            var handler = new TypeThresholdedActionBasedDomainEventHandler(handlerAction, typeof(FooEvent), "", true);
             var handeled = handler.HandleEvent(new FooEvent());
 
             handeled.Should().Be(true);
@@ -68,7 +68,7 @@ namespace Ncqrs.Tests.Domain
             Boolean handlerActionWasCalled = false;
             Action<object> handlerAction = (e) => handlerActionWasCalled = true;
 
-            var handler = new TypeThresholdedActionBasedDomainEventHandler(handlerAction, typeof(BarEvent), true);
+            var handler = new TypeThresholdedActionBasedDomainEventHandler(handlerAction, typeof(BarEvent), "", true);
             var handeled = handler.HandleEvent(new FooEvent());
 
             handeled.Should().Be(false);
@@ -81,7 +81,7 @@ namespace Ncqrs.Tests.Domain
             Boolean handlerActionWasCalled = false;
             Action<object> handlerAction = (e) => handlerActionWasCalled = true;
 
-            var handler = new TypeThresholdedActionBasedDomainEventHandler(handlerAction, typeof(BarEvent), false);
+            var handler = new TypeThresholdedActionBasedDomainEventHandler(handlerAction, typeof(BarEvent), "", false);
             var handeled = handler.HandleEvent(new FooEvent());
 
             handeled.Should().Be(false);

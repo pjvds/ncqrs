@@ -21,7 +21,7 @@ namespace Ncqrs.Domain
 
             foreach(var directHandler in handlers)
             {
-                var handler = new EntityThresholdedDomainEventHandlerWrapper(EntityId,directHandler);
+                var handler = new EntityThresholdedDomainEventHandlerWrapper(EntityId, GetType(), directHandler);
 
                 parent.RegisterHandler(handler);
             }

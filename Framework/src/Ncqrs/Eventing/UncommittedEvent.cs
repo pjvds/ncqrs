@@ -86,5 +86,10 @@ namespace Ncqrs.Eventing
         {
             get { return _eventVersion; }
         }
+
+        public override string ToString()
+        {
+            return string.Format("{0}[{1}]", Payload.GetType().FullName, EventIdentifier.ToString("D"));
+        }
     }
 }

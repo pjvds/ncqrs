@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.Reflection;
+using System.Threading;
 using Ncqrs.Commanding;
 using Ncqrs.Domain.Storage;
 using Ncqrs.Eventing;
@@ -10,6 +12,7 @@ namespace Ncqrs.Domain
 {
     public sealed class UnitOfWork : IUnitOfWorkContext
     {
+        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         /// <summary>
         /// The <see cref="UnitOfWork"/> that is associated with the current thread.
         /// </summary>
@@ -80,6 +83,9 @@ namespace Ncqrs.Domain
             Contract.Ensures(_threadInstance == this, "The _threadInstance member should be initialized with this instance.");
             Contract.Ensures(IsDisposed == false);
 
+            Log.DebugFormat("Creating new unit of work for command {0} on thread {1}", commandId,
+                            Thread.CurrentThread.ManagedThreadId);
+
             _repository = domainRepository;
             _eventStream = new UncommittedEventStream(commandId);
             _dirtyInstances = new Queue<AggregateRoot>();
@@ -92,16 +98,18 @@ namespace Ncqrs.Domain
 
         private void InitializeAppliedEventHandler()
         {
+            Log.DebugFormat("Registering event applied callback into AggregateRoot from unit of work {0}", this);
             AggregateRoot.RegisterThreadStaticEventAppliedCallback(_eventAppliedCallback);
         }
 
         private void DestroyAppliedEventHandler()
         {
+            Log.DebugFormat("Deregistering event applied callback from AggregateRoot from unit of work {0}", this);
             AggregateRoot.UnregisterThreadStaticEventAppliedCallback(_eventAppliedCallback);
         }
 
         private void AggregateRootEventAppliedHandler(AggregateRoot aggregateRoot, UncommittedEvent evnt)
-        {
+        {           
             RegisterDirtyInstance(aggregateRoot);
             _eventStream.Append(evnt);
         }
@@ -144,6 +152,7 @@ namespace Ncqrs.Domain
             {
                 if (disposing)
                 {
+                    Log.DebugFormat("Disposing unit of work {0}", this);
                     DestroyAppliedEventHandler();
                     _threadInstance = null;
                 }
@@ -176,6 +185,8 @@ namespace Ncqrs.Domain
 
             if (!_dirtyInstances.Contains(dirtyInstance))
             {
+                Log.DebugFormat("Registering aggregate root {0} as dirty in unit of work {1}",
+                           dirtyInstance, this);
                 _dirtyInstances.Enqueue(dirtyInstance);
             }
         }
@@ -186,7 +197,13 @@ namespace Ncqrs.Domain
         public void Accept()
         {
             Contract.Requires<ObjectDisposedException>(!IsDisposed);
+            Log.DebugFormat("Accepting unit of work {0}", this);
             _repository.Store(_eventStream);
+        }
+
+        public override string ToString()
+        {
+            return string.Format("{0}@{1}", _eventStream.CommitId, Thread.CurrentThread.ManagedThreadId);
         }
     }
 }

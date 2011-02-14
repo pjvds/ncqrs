@@ -4,13 +4,15 @@ namespace Ncqrs.Eventing.Sourcing
 {
     public class EntityThresholdedDomainEventHandlerWrapper : ISourcedEventHandler
     {
+        private readonly Type _entityType;
         private readonly Guid _entityId;
         private readonly ISourcedEventHandler _wrappedHandler;
 
-        public EntityThresholdedDomainEventHandlerWrapper(Guid entityId, ISourcedEventHandler wrappedHandler)
+        public EntityThresholdedDomainEventHandlerWrapper(Guid entityId, Type entityType, ISourcedEventHandler wrappedHandler)
 
         {
             _entityId = entityId;
+            _entityType = entityType;
             _wrappedHandler = wrappedHandler;
         }
 
@@ -26,6 +28,11 @@ namespace Ncqrs.Eventing.Sourcing
                 return false;
             }
             return _wrappedHandler.HandleEvent(sourcedEvent);
+        }
+
+        public override string ToString()
+        {
+            return _entityType.Name + "." + _wrappedHandler.ToString();
         }
     }
 }

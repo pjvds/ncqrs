@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.Reflection;
 using Ncqrs.Domain;
 
 namespace Ncqrs.Eventing.Sourcing
 {
     public abstract class EventSource : IEventSource
     {
+        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
         [NonSerialized]
         private Guid _eventSourceId;
         
@@ -73,7 +76,7 @@ namespace Ncqrs.Eventing.Sourcing
         /// Initializes a new instance of the <see cref="EventSource"/> class.
         /// </summary>
         protected EventSource()
-        {
+        {            
             _idGenerator = NcqrsEnvironment.Get<IUniqueIdentifierGenerator>();
             EventSourceId = _idGenerator.GenerateNewId();
         }
@@ -92,7 +95,7 @@ namespace Ncqrs.Eventing.Sourcing
         {
             Contract.Requires<ArgumentNullException>(history != null, "The history cannot be null.");
             if (_initialVersion != 0) throw new InvalidOperationException("Cannot apply history when instance has uncommitted changes.");
-
+            Log.DebugFormat("Initializing event source {0} from history.", history.SourceId);
             if (history.IsEmpty)
             {
                 return;                
@@ -101,10 +104,14 @@ namespace Ncqrs.Eventing.Sourcing
             _eventSourceId = history.SourceId;
 
             foreach (var historicalEvent in history)
-            {                
+            {
+                Log.DebugFormat("Appying historic event {0} to event source {1}", historicalEvent.EventIdentifier,
+                                history.SourceId);
                 ApplyEventFromHistory(historicalEvent);                
             }
 
+            Log.DebugFormat("Finished initializing event source {0} from history. Current event source version is {1}",
+                            history.SourceId, history.CurrentSourceVersion);
             _initialVersion = history.CurrentSourceVersion;
         }
 
@@ -138,6 +145,8 @@ namespace Ncqrs.Eventing.Sourcing
 
             foreach (var handler in handlers)
             {
+                Log.DebugFormat("Applying handler {0} of event source {1} to event {2}",
+                                handler, this, evnt);
                 handled |= handler.HandleEvent(evnt);
             }
 
@@ -147,6 +156,7 @@ namespace Ncqrs.Eventing.Sourcing
 
         internal protected void ApplyEvent(object evnt)
         {
+            Log.DebugFormat("Applying an event to event source {0}", evnt);
             var eventVersion = evnt.GetType().Assembly.GetName().Version;
             var eventSequence = GetNextSequence();
             var wrappedEvent = new UncommittedEvent(_idGenerator.GenerateNewId(), EventSourceId, eventSequence, _initialVersion, DateTime.UtcNow, evnt, eventVersion);
@@ -157,8 +167,9 @@ namespace Ncqrs.Eventing.Sourcing
             {
                 sourcedEvent.ClaimEvent(EventSourceId, eventSequence);
             }
-
+            Log.DebugFormat("Handling event {0} in event source {1}", wrappedEvent, this);
             HandleEvent(wrappedEvent.Payload);
+            Log.DebugFormat("Notifying about application of an event {0} to event source {1}", wrappedEvent, this);
             OnEventApplied(wrappedEvent);
         }
 
@@ -171,6 +182,7 @@ namespace Ncqrs.Eventing.Sourcing
         private void ApplyEventFromHistory(CommittedEvent evnt)
         {
             ValidateHistoricalEvent(evnt);
+            Log.DebugFormat("Handling historical event {0} in event source {1}", evnt, this);
             HandleEvent(evnt.Payload);
         }
 
@@ -194,8 +206,14 @@ namespace Ncqrs.Eventing.Sourcing
         }
         
         public void AcceptChanges()
-        {            
+        {
+            Log.DebugFormat("Accepting changes done to event source {0} up to version {1}", this, Version);
             _initialVersion = Version;
-        }        
+        }
+
+        public override string ToString()
+        {
+            return string.Format("{0}[{1}]", GetType().FullName, EventSourceId.ToString("D"));
+        }
     }
 }
