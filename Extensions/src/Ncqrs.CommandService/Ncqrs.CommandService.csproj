@@ -34,6 +34,9 @@
       <HintPath>..\..\..\lib\$(Configuration)\Ncqrs\Ncqrs.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Ncqrs.CommandService.Contracts">
+      <HintPath>..\..\..\lib\$(Configuration)\Ncqrs.CommandService.Contracts\Ncqrs.CommandService.Contracts.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
@@ -46,13 +49,6 @@
     <Compile Include="CommandWebService.cs" />
     <Compile Include="Infrastructure\ThrowOnExceptionInterceptor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Ncqrs.CommandService.Contracts\Ncqrs.CommandService.Contracts.csproj">
-      <Project>{76062319-4F5D-4055-9D1A-5680DD2DA882}</Project>
-      <Name>Ncqrs.CommandService.Contracts</Name>
-      <Private>False</Private>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
