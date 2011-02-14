@@ -19,11 +19,16 @@ bin
 *.DS_Store
 
 # Ncqrs in non framework solution
-/Extensions/lib/Ncqrs/*
-/Samples/MyNotes/lib/*
-/lib/*
+release
+*.vs10x
+release/debug_build_output
+/release_build_output
+
+/debug_build_output
+/Framework/NcqrsFramework.sln.VisualState.xml
+/Framework/TestResult.xml
 release
 *.pidb
-/debug_build_output
-/release_build_output
-*.vs10x
+/lib/Debug
+/lib/Release
+/Samples/MyNotes/lib
