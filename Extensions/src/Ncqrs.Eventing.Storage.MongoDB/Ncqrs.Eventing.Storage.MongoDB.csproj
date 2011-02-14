@@ -78,6 +78,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MongoCommit.cs" />
     <Compile Include="MongoDBEventStore.cs" />
     <Compile Include="MongoEventStream.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

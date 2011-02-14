@@ -29,7 +29,8 @@ namespace Ncqrs.Eventing.Storage.MongoDB
 
 
         private readonly MongoDatabase _database;
-        private readonly MongoCollection<MongoEventStream> _eventStreams;
+        private readonly MongoCollection<MongoCommit> _commits;
+        private readonly MongoCollection<BsonDocument> _events;
 
         private IEventFormatter<JObject> _formatter;
         private IEventTranslator<string> _translator;
@@ -39,7 +40,8 @@ namespace Ncqrs.Eventing.Storage.MongoDB
         public MongoDBEventStore(string connectionString = DEFAULT_DATABASE_URI, IEventTypeResolver typeResolver = null, IEventConverter converter = null)
         {
             _database = MongoDatabase.Create(connectionString);
-            _eventStreams = _database.GetCollection<MongoEventStream>("EventStreams");
+            _commits = _database.GetCollection<MongoCommit>("Commits");
+            _events = _database.GetCollection<BsonDocument>("SourcedEvents");
 
             _converter = converter ?? new NullEventConverter();
             _formatter = new JsonEventFormatter(typeResolver ?? new SimpleEventTypeResolver());
@@ -50,20 +52,32 @@ namespace Ncqrs.Eventing.Storage.MongoDB
 
         private void EnsureIndexes()
         {
-            _eventStreams.EnsureIndex(
+            _commits.EnsureIndex(
+                IndexKeys.Ascending("CommitId"),
+                IndexOptions.SetName("CommitIdIndex"));
+
+            _commits.EnsureIndex(
+                IndexKeys.Ascending("Processed"),
+                IndexOptions.SetName("ProcessedIndex"));
+
+            _commits.EnsureIndex(
                 IndexKeys.Descending("EventSourceId", "FromVersion"),
                 IndexOptions.SetName("OptimisticEventSourceConcurrencyIndex").SetUnique(true));
+
+            _events.EnsureIndex(
+                IndexKeys.Ascending("EventIdentifier"),
+                IndexOptions.SetName("EventIdentifierIndex"));
         }
 
         public CommittedEventStream ReadUntil(Guid id, long? maxVersion)
         {
-            var query = Query.EQ("SourceId", id);
+            //var query = Query.EQ("SourceId", id);
                 
-            // TODO: We can select events above maxversion since a commit can have the correct FromVersion, but contain events higher then max version.
-            if(maxVersion.HasValue)
-                query = Query.And(query, Query.LTE("FromVersion", maxVersion));
+            //// TODO: We can select events above maxversion since a commit can have the correct FromVersion, but contain events higher then max version.
+            //if(maxVersion.HasValue)
+            //    query = Query.And(query, Query.LTE("FromVersion", maxVersion));
 
-            var streams = _eventStreams.Find(query).SetSortOrder("FromVersion");
+            //var streams = _events.Find(query).SetSortOrder("FromVersion");
             //var events = streams.Select(strm => strm.Events);           
             //return CommittedEventStream.Combine(streams);
             return null;
@@ -71,10 +85,10 @@ namespace Ncqrs.Eventing.Storage.MongoDB
 
         public CommittedEventStream ReadFrom(Guid id, long minVersion)
         {
-            // TODO: We can select events above maxversion since a commit can have the correct FromVersion, but contain events higher then max version.
-            var query = Query.And(Query.EQ("SourceId", id), Query.GTE("FromVersion", minVersion));
+            //// TODO: We can select events above maxversion since a commit can have the correct FromVersion, but contain events higher then max version.
+            //var query = Query.And(Query.EQ("SourceId", id), Query.GTE("FromVersion", minVersion));
 
-            var streams = _eventStreams.Find(query).SetSortOrder("FromVersion");
+            //var streams = _eventStreams.Find(query).SetSortOrder("FromVersion");
 
             //return CommittedEventStream.Combine(streams);
             return null;
@@ -82,32 +96,88 @@ namespace Ncqrs.Eventing.Storage.MongoDB
 
         public void Store(UncommittedEventStream eventStream)
         {
-            var eventDocuments = eventStream.Select(evnt=>
+            var commit = new MongoCommit
             {
-                var document = _formatter.Serialize(evnt.EventIdentifier, evnt.EventTimeStamp, evnt.EventVersion, evnt.EventSourceId, evnt.EventSequence, evnt.Payload);
+                CommitId = eventStream.CommitId,
+                EventSourceId = eventStream.SourceId,
+                FromVersion = eventStream.InitialVersion,
+                ToVersion = eventStream.Last().EventSequence,
+                Events = eventStream.Select(e=>e.EventIdentifier).ToArray(),
+                Processed = false
+            };
+
+            try
+            {
+                try
+                {
+                    SafellyInsertCommit(commit);
+                    InsertEvents(eventStream);
+                    MarkCommitAsProcessed(commit.CommitId);
+                }
+                catch
+                {
+                    RemoveUnprocessedCommit(commit.CommitId);
+                    throw;
+                }
+            }
+            catch (MongoSafeModeException ex)
+            {
+                if (ex.Message.Contains(CONCURRENCY_ERROR_CODE))
+                    throw new ConcurrencyException(eventStream.SourceId, -1);
+            }
+        }
+
+        private void InsertEvents(IEnumerable<UncommittedEvent> events)
+        {
+            var docs = events.Select(evnt =>
+            {
+                var document = _formatter.Serialize(evnt.EventIdentifier, evnt.EventTimeStamp, evnt.EventVersion,
+                                                    evnt.EventSourceId, evnt.EventSequence, evnt.Payload);
                 var raw = _translator.TranslateToRaw(document);
                 var bsonDocument = raw.ToBsonDocument();
 
                 return bsonDocument;
             });
 
-            var mongoStream = new MongoEventStream
-            {
-                CommitId = eventStream.CommitId,
-                EventSourceId = eventStream.SourceId,
-                FromVersion = eventStream.InitialVersion,
-                ToVersion = eventStream.CurrentVersion,
-                Payload = BsonArray.Create(eventDocuments)
-            };
+            _commits.Insert(docs, SafeMode.True);
+        }
 
+        private void RemoveUnprocessedCommit(Guid commitId)
+        {
+            var query = Query.EQ("CommitId", BsonValue.Create(commitId));
+
+            var commitToRemove = _commits.FindOne(query);
+
+            if (commitToRemove != null)
+            {
+                RemoveEventsForCommit(commitToRemove);
+
+                _commits.Remove(Query.EQ("CommitId", commitId));
+            }
+        }
+
+        private void MarkCommitAsProcessed(Guid commitId)
+        {
+            _commits.Update(Query.EQ("CommitId", BsonValue.Create(commitId)),
+                            Update.Push("Processed", BsonValue.Create(true)));
+        }
+
+        private void RemoveEventsForCommit(MongoCommit commit)
+        {
+            _events.Remove(Query.In("EventIdentifier", BsonArray.Create(commit.Events)));            
+        }
+
+        private void SafellyInsertCommit(MongoCommit commit)
+        {
             try
             {
-                _eventStreams.Insert(mongoStream, SafeMode.True);
+                var result = _commits.Insert(commit, SafeMode.True);
+                _commits.Validate();
             }
-            catch(MongoSafeModeException ex)
+            catch (MongoSafeModeException ex)
             {
-                if(ex.Message.Contains(CONCURRENCY_ERROR_CODE))
-                    throw new ConcurrencyException(eventStream.SourceId, -1);
+                if (ex.Message.Contains(CONCURRENCY_ERROR_CODE))
+                    throw new ConcurrencyException(commit.EventSourceId, commit.FromVersion);
             }
         }
 
