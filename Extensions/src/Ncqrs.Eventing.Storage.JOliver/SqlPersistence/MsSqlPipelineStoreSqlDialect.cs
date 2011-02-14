@@ -1,6 +1,6 @@
 ﻿namespace Ncqrs.Eventing.Storage.JOliver.SqlPersistence
 {
-    public class MsSqlStreamProcessingStateStoreSqlDialect : CommonStreamProcessingStateStoreSqlDialect
+    public class MsSqlPipelineStoreSqlDialect : CommonPipelineStoreSqlDialect
     {
         public override string Initialize
         {

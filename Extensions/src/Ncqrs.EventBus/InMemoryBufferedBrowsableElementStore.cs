@@ -29,8 +29,8 @@ namespace Ncqrs.EventBus
             lock (_lock)
             {
                 return _inMemoryMode 
-                    ? FetchFromBuffer() 
-                    : FetchFromPersistentStoreAndCorrelateWithBuffer();
+                    ? FetchFromBuffer()
+                    : FetchFromPersistentStoreAndCorrelateWithBuffer(pipelineName);
             }
         }
 
@@ -39,9 +39,9 @@ namespace Ncqrs.EventBus
             return _buffer.TakeOne();
         }
 
-        private IEnumerable<IProcessingElement> FetchFromPersistentStoreAndCorrelateWithBuffer()
+        private IEnumerable<IProcessingElement> FetchFromPersistentStoreAndCorrelateWithBuffer(string pipelineName)
         {
-            var fetchedFromPersistentStore = _persistentStore.Fetch(null, _fetchSize);
+            var fetchedFromPersistentStore = _persistentStore.Fetch(pipelineName, _fetchSize);
             if (!fetchedFromPersistentStore.Any() || CorrelateWithBufffer(fetchedFromPersistentStore))
             {
                 _inMemoryMode = true;

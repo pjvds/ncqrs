@@ -49,7 +49,16 @@ namespace Ncqrs.Eventing.ServiceModel.Bus
         private readonly Guid _eventIdentifier;
         private readonly DateTime _eventTimeStamp;
         private readonly Guid _eventSourceId;
-        private readonly Version _eventVersion;        
+        private readonly Version _eventVersion;
+        private readonly Guid _commitId;
+
+        /// <summary>
+        /// Id of the commit this event belongs to (usually corresponds to command id).
+        /// </summary>
+        public Guid CommitId
+        {
+            get { return _commitId; }
+        }
 
         /// <summary>
         /// Gets the payload of the event.
@@ -114,6 +123,7 @@ namespace Ncqrs.Eventing.ServiceModel.Bus
             _eventSequence = evnt.EventSequence;
             _eventIdentifier = evnt.EventIdentifier;
             _eventTimeStamp = evnt.EventTimeStamp;
+            _commitId = evnt.CommitId;
         }
     }
 }

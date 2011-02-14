@@ -15,6 +15,7 @@ namespace Ncqrs.Eventing
         private readonly Guid _eventSourceId;
         private readonly long _initialVersionOfEventSource;
         private readonly Version _eventVersion;
+        private Guid _commitId;
 
         /// <summary>
         /// Gets the initial version of event source (the version it was just after creating/retrieving from the store)
@@ -69,6 +70,19 @@ namespace Ncqrs.Eventing
         public long EventSequence
         {
             get { return _eventSequence; }
+        }
+
+        /// <summary>
+        /// If of a commit in which this event is to be stored (usually corresponds to a command id which caused this event).
+        /// </summary>
+        public Guid CommitId
+        {
+            get { return _commitId; }
+        }
+
+        public void OnAppendedToStream(Guid streamCommitId)
+        {
+            _commitId = streamCommitId;
         }
 
         public UncommittedEvent(Guid eventIdentifier, Guid eventSourceId, long eventSequence, long initialVersionOfEventSource, DateTime eventTimeStamp, object payload, Version eventVersion)            

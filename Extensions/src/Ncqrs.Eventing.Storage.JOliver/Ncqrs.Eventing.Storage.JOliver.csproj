@@ -52,17 +52,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IPersistStreamsWithAbsouluteOrdering.cs" />
+    <Compile Include="SqlPersistence\AbsoluteOrderingSqlPersistenceFactory.cs" />
+    <Compile Include="SqlPersistence\SqlAbsoluteOrderingPersistenceEngine.cs" />
     <Compile Include="CommitProcessingElement.cs" />
     <Compile Include="SqlPersistence\CommonSqlStatements.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>CommonSqlStatements.resx</DependentUpon>
     </Compile>
-    <Compile Include="SqlPersistence\CommonStreamProcessingStateStoreSqlDialect.cs" />
-    <Compile Include="SqlPersistence\DelegateStreamProcessingStateStoreConnectionFactory.cs" />
-    <Compile Include="SqlPersistence\IStreamProcessingStateStore.cs" />
-    <Compile Include="SqlPersistence\IStreamProcessingStateStoreConnectionFactory.cs" />
-    <Compile Include="SqlPersistence\IStreamProcessingStateStoreSqlDialect.cs" />
+    <Compile Include="SqlPersistence\CommonPipelineStoreSqlDialect.cs" />
+    <Compile Include="SqlPersistence\IPipelineStoreSqlDialect.cs" />
     <Compile Include="JoesBrowsableEventStore.cs" />
     <Compile Include="JoesEventStoreAdapter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -71,9 +71,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>MsSqlStatements.resx</DependentUpon>
     </Compile>
-    <Compile Include="SqlPersistence\MsSqlStreamProcessingStateStoreSqlDialect.cs" />
-    <Compile Include="SqlPersistence\SqlStreamProcessingStateStore.cs" />
-    <Compile Include="SqlPersistence\SqlStreamProcessingStateStoreFactory.cs" />
+    <Compile Include="SqlPersistence\MsSqlPipelineStoreSqlDialect.cs" />
     <Compile Include="StoredEvent.cs" />
     <Compile Include="StoredEventExtensions.cs" />
   </ItemGroup>
@@ -81,6 +79,7 @@
     <EmbeddedResource Include="SqlPersistence\CommonSqlStatements.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>CommonSqlStatements.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="SqlPersistence\MsSqlStatements.resx">
       <Generator>ResXFileCodeGenerator</Generator>

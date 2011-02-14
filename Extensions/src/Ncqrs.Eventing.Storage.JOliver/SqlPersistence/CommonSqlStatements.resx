@@ -117,10 +117,18 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="GetLastProcessedCommitTimestamp" xml:space="preserve">
-    <value>SELECT TOP 1 [CommitTimestamp] FROM [PipelineState] WHERE [PipelineName] = @PipelineName ORDER BY [CheckPointId] DESC</value>
+  <data name="GetCommitsAfter" xml:space="preserve">
+    <value>SELECT StreamId, StreamRevision, Commits.CommitId, CommitSequence, CommitStamp, Headers, Payload
+, SequentialId  FROM Commits
+ INNER JOIN CommitSequence ON Commits.CommitId = CommitSequence.CommitId WHERE SequentialId &gt;= @SequentialId ORDER BY SequentialId ASC</value>
   </data>
-  <data name="MarkLastProcessedCommitTimestamp" xml:space="preserve">
-    <value>INSERT INTO [PipelineState] ([PipelineName], [CommitTimestamp]) VALUES (@PipelineName, @CommitTimestamp)</value>
+  <data name="GetLastProcessedCommit" xml:space="preserve">
+    <value>SELECT TOP 1 SequentialId FROM PipelineState WHERE PipelineName = @PipelineName ORDER BY SequentialId DESC</value>
+  </data>
+  <data name="MarkLastProcessedCommit" xml:space="preserve">
+    <value>INSERT INTO PipelineState (PipelineName, SequentialId) VALUES (@PipelineName, (SELECT SequentialId FROM CommitSequence WHERE CommitId = @CommitId))</value>
+  </data>
+  <data name="RegisterSequentialId" xml:space="preserve">
+    <value>INSERT INTO CommitSequence (CommitId) VALUES (@CommitId)</value>
   </data>
 </root>

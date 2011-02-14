@@ -28,6 +28,11 @@ namespace Ncqrs.Eventing.ServiceModel.Bus
         long EventSequence { get; }
 
         /// <summary>
+        /// Id of the commit this event belongs to (usually corresponds to command id).
+        /// </summary>
+        Guid CommitId { get; }
+
+        /// <summary>
         /// Gets the event payload.
         /// </summary>
         object Payload { get; }

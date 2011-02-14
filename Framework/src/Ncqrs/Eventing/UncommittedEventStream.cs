@@ -44,6 +44,7 @@ namespace Ncqrs.Eventing
                 _singleSource = evnt.EventSourceId;
             }
             _events.Add(evnt);
+            evnt.OnAppendedToStream(_commitId);
             UpdateEventSourceInformation(evnt);
         }
 

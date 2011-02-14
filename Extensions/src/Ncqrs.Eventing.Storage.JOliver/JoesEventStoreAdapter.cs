@@ -10,10 +10,14 @@ namespace Ncqrs.Eventing.Storage.JOliver
 {
     public class JoesEventStoreAdapter : IEventStore
     {
-        private readonly OptimisticEventStore _wrappedEventStore;
+        private readonly ICommitEvents _wrappedEventStore;
 
         public JoesEventStoreAdapter(IPersistStreams streamPersister)
         {
+            if (!(streamPersister is IPersistStreamsWithAbsouluteOrdering))
+            {
+                throw new ArgumentException("The stream store must impement IPersistStreamsWithAbsouluteOrdering in order to be used with JoesEventStoreAdapter", "streamStore");
+            }
             _wrappedEventStore = new OptimisticEventStore(streamPersister, new NullDispatcher());
         }
         

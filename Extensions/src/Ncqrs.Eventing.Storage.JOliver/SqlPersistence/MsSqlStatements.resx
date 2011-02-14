@@ -123,11 +123,30 @@
 CREATE TABLE [dbo].[PipelineState](
 	[CheckPointId] [int] IDENTITY(1,1) NOT NULL,
 	[PipelineName] [varchar](255) NOT NULL,
-	[CommitTimestamp] [datetime] NULL,
- CONSTRAINT [PK_MainPipelineState] PRIMARY KEY CLUSTERED 
+	[SequentialId] [bigint] NULL,
+ CONSTRAINT [PK_PipelineState] PRIMARY KEY CLUSTERED 
 (
 	[CheckPointId] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
-) ON [PRIMARY]</value>
+) ON [PRIMARY];
+
+CREATE NONCLUSTERED INDEX IX_PipelineSate_Name ON dbo.PipelineState
+	(
+	PipelineName
+	) WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
+
+CREATE TABLE [dbo].[CommitSequence](
+	[SequentialId] [bigint] IDENTITY(1,1) NOT NULL,
+	[CommitId] [uniqueidentifier] NOT NULL,
+ CONSTRAINT [PK_CommitSequence] PRIMARY KEY CLUSTERED 
+(
+	[SequentialId] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY];
+
+CREATE NONCLUSTERED INDEX IX_Commits_CommitId ON dbo.Commits
+	(
+	CommitId
+	) WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];</value>
   </data>
 </root>

@@ -3,15 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using EventStore;
 using EventStore.Persistence;
+using EventStore.Serialization;
+using Ncqrs.Eventing.Storage.JOliver.SqlPersistence;
 using NUnit.Framework;
 using FluentAssertions;
 
 namespace Ncqrs.Eventing.Storage.JOliver.Tests
 {
     [TestFixture]
-    public class JOliverEventStoreAdapterTests
+    public class JoesEventStoreAdapterTests
     {
-        private InMemoryPersistenceEngine _persistenceEngine;
+        private IPersistStreamsWithAbsouluteOrdering _persistenceEngine;
         private JoesEventStoreAdapter _sut;
         private Guid _streamId;
         private Guid _firstCommitId;
@@ -43,7 +45,7 @@ namespace Ncqrs.Eventing.Storage.JOliver.Tests
             _persistenceEngine.Commit(secondCommit);
             _persistenceEngine.Commit(thirdCommit);
 
-            var stream = _sut.ReadFrom(_streamId, long.MinValue, 4);
+            var stream = _sut.ReadFrom(_streamId, long.MinValue, 3);
 
             stream.Should().HaveCount(4);
             stream.Last().EventSequence.Should().Be(4);
@@ -92,7 +94,8 @@ namespace Ncqrs.Eventing.Storage.JOliver.Tests
         [SetUp]
         public void Initialize()
         {
-            _persistenceEngine = new InMemoryPersistenceEngine();
+            var factory = new AbsoluteOrderingSqlPersistenceFactory("EventStore", new BinarySerializer());
+            _persistenceEngine = (IPersistStreamsWithAbsouluteOrdering) factory.Build();
             _sut = new JoesEventStoreAdapter(_persistenceEngine);
             _streamId = Guid.NewGuid();
             

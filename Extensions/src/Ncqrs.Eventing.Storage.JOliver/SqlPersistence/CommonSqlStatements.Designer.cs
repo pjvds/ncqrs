@@ -61,20 +61,40 @@ namespace Ncqrs.Eventing.Storage.JOliver.SqlPersistence {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SELECT TOP 1 [CommitTimestamp] FROM [PipelineState] WHERE [PipelineName] = @PipelineName ORDER BY [CheckPointId] DESC.
+        ///   Looks up a localized string similar to SELECT StreamId, StreamRevision, Commits.CommitId, CommitSequence, CommitStamp, Headers, Payload
+        ///, SequentialId  FROM Commits
+        /// INNER JOIN CommitSequence ON Commits.CommitId = CommitSequence.CommitId WHERE SequentialId &gt;= @SequentialId ORDER BY SequentialId ASC.
         /// </summary>
-        internal static string GetLastProcessedCommitTimestamp {
+        internal static string GetCommitsAfter {
             get {
-                return ResourceManager.GetString("GetLastProcessedCommitTimestamp", resourceCulture);
+                return ResourceManager.GetString("GetCommitsAfter", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO [PipelineState] ([PipelineName], [CommitTimestamp]) VALUES (@PipelineName, @CommitTimestamp).
+        ///   Looks up a localized string similar to SELECT TOP 1 SequentialId FROM PipelineState WHERE PipelineName = @PipelineName ORDER BY SequentialId DESC.
         /// </summary>
-        internal static string MarkLastProcessedCommitTimestamp {
+        internal static string GetLastProcessedCommit {
             get {
-                return ResourceManager.GetString("MarkLastProcessedCommitTimestamp", resourceCulture);
+                return ResourceManager.GetString("GetLastProcessedCommit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to INSERT INTO PipelineState (PipelineName, SequentialId) VALUES (@PipelineName, (SELECT SequentialId FROM CommitSequence WHERE CommitId = @CommitId)).
+        /// </summary>
+        internal static string MarkLastProcessedCommit {
+            get {
+                return ResourceManager.GetString("MarkLastProcessedCommit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to INSERT INTO CommitSequence (CommitId) VALUES (@CommitId).
+        /// </summary>
+        internal static string RegisterSequentialId {
+            get {
+                return ResourceManager.GetString("RegisterSequentialId", resourceCulture);
             }
         }
     }

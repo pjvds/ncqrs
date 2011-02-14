@@ -66,12 +66,14 @@ namespace Ncqrs.Eventing.Storage.JOliver.SqlPersistence {
         ///CREATE TABLE [dbo].[PipelineState](
         ///	[CheckPointId] [int] IDENTITY(1,1) NOT NULL,
         ///	[PipelineName] [varchar](255) NOT NULL,
-        ///	[CommitTimestamp] [datetime] NULL,
-        /// CONSTRAINT [PK_MainPipelineState] PRIMARY KEY CLUSTERED 
+        ///	[SequentialId] [bigint] NULL,
+        /// CONSTRAINT [PK_PipelineState] PRIMARY KEY CLUSTERED 
         ///(
         ///	[CheckPointId] ASC
         ///)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
-        ///) ON [PRIMARY].
+        ///) ON [PRIMARY];
+        ///
+        ///CREATE NONCLUSTERED INDEX I [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Initialize {
             get {

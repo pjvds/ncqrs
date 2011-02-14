@@ -11,6 +11,7 @@ using Ncqrs.EventBus;
 using Ncqrs.Eventing.ServiceModel.Bus;
 using Ncqrs.Eventing.Storage;
 using Ncqrs.Eventing.Storage.JOliver;
+using Ncqrs.Eventing.Storage.JOliver.SqlPersistence;
 using Ncqrs.Eventing.Storage.SQL;
 
 namespace ApplicationService
@@ -43,7 +44,7 @@ namespace ApplicationService
 
         private static IEventStore InitializeEventStore()
         {
-            var factory = new SqlPersistenceFactory("EventStore", new BinarySerializer());
+            var factory = new AbsoluteOrderingSqlPersistenceFactory("EventStore", new BinarySerializer());
             var streamPersister = factory.Build();
             streamPersister.Initialize();
             var store = new JoesEventStoreAdapter(streamPersister);
