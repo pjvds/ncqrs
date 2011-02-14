@@ -17,6 +17,7 @@ bin
 *.swp
 *.user
 *.DS_Store
+*.vs10x
 
 # Ncqrs in non framework solution
 /Extensions/lib/Ncqrs/*
@@ -25,3 +26,7 @@ bin
 /lib/Release
 release
 *.pidb
+/debug_build_output
+/release_build_output
+/Framework/NcqrsFramework.sln.VisualState.xml
+/Framework/TestResult.xml
