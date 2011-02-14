@@ -17,16 +17,13 @@ bin
 *.swp
 *.user
 *.DS_Store
-*.vs10x
 
 # Ncqrs in non framework solution
 /Extensions/lib/Ncqrs/*
 /Samples/MyNotes/lib/*
-/lib/Debug
-/lib/Release
+/lib/*
 release
 *.pidb
 /debug_build_output
 /release_build_output
-/Framework/NcqrsFramework.sln.VisualState.xml
-/Framework/TestResult.xml
+*.vs10x

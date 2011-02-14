@@ -26,7 +26,7 @@ namespace Ncqrs.Eventing.Storage.Serialization
             Contract.Requires<ArgumentNullException>(typeResolver != null, "typeResolver");
 
             _typeResolver = typeResolver;
-            _serializer = new JsonSerializer();
+            _serializer = new JsonSerializer() { TypeNameHandling = Newtonsoft.Json.TypeNameHandling.All };
         }
 
         public ISourcedEvent Deserialize(StoredEvent<JObject> obj)

@@ -13,8 +13,18 @@ namespace Ncqrs.Domain
 
             var store = NcqrsEnvironment.Get<IEventStore>();
             var bus = NcqrsEnvironment.Get<IEventBus>();
+            ISnapshotStore snapshotStore = null;
+            try
+            {
+                snapshotStore = NcqrsEnvironment.Get<ISnapshotStore>();
+            }
+            catch (Ncqrs.Config.InstanceNotFoundInEnvironmentConfigurationException)
+            {
+                snapshotStore = null;
+            }
 
-            var repository = new DomainRepository(store, bus);
+
+            var repository = new DomainRepository(store, bus, snapshotStore);
             return new UnitOfWork(repository);
         }
     }

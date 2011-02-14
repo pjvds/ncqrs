@@ -16,6 +16,9 @@ namespace Ncqrs.Eventing.Storage
         /// Gets a snapshot of a particular event source, if one exists. Otherwise, returns <c>null</c>.
         /// </summary>
         ISnapshot GetSnapshot(Guid eventSourceId);
+
+        int SnapshotIntervalInEvents{get ; set;}
+
     }
 
     [ContractClassFor(typeof(ISnapshotStore))]
@@ -32,5 +35,7 @@ namespace Ncqrs.Eventing.Storage
 
             return default(ISnapshot);
         }
+
+        public int SnapshotIntervalInEvents { get; set; }
     }
 }
