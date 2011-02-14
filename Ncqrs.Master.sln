@@ -154,6 +154,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Eventing.Storage.MongoDB.Tests", "Extensions\src\Ncqrs.Eventing.Storage.MongoDB.Tests\Ncqrs.Eventing.Storage.MongoDB.Tests.csproj", "{DB52AAE4-6E2D-4B6F-99E2-19B83E84CF20}"
+	ProjectSection(ProjectDependencies) = postProject
+		{01F84441-80D3-49B4-AB18-96894ACB2F90} = {01F84441-80D3-49B4-AB18-96894ACB2F90}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = Ncqrs.Master.vsmdi
@@ -543,6 +548,16 @@ Global
 		{693DEFC5-355C-4F62-B424-3119046B5F6D}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{693DEFC5-355C-4F62-B424-3119046B5F6D}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{693DEFC5-355C-4F62-B424-3119046B5F6D}.Release|x86.ActiveCfg = Release|Any CPU
+		{DB52AAE4-6E2D-4B6F-99E2-19B83E84CF20}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{DB52AAE4-6E2D-4B6F-99E2-19B83E84CF20}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{DB52AAE4-6E2D-4B6F-99E2-19B83E84CF20}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{DB52AAE4-6E2D-4B6F-99E2-19B83E84CF20}.Debug|x86.ActiveCfg = Debug|x86
+		{DB52AAE4-6E2D-4B6F-99E2-19B83E84CF20}.Debug|x86.Build.0 = Debug|x86
+		{DB52AAE4-6E2D-4B6F-99E2-19B83E84CF20}.Release|Any CPU.ActiveCfg = Release|x86
+		{DB52AAE4-6E2D-4B6F-99E2-19B83E84CF20}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{DB52AAE4-6E2D-4B6F-99E2-19B83E84CF20}.Release|Mixed Platforms.Build.0 = Release|x86
+		{DB52AAE4-6E2D-4B6F-99E2-19B83E84CF20}.Release|x86.ActiveCfg = Release|x86
+		{DB52AAE4-6E2D-4B6F-99E2-19B83E84CF20}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -573,6 +588,7 @@ Global
 		{6535AFF3-E730-4916-9CF6-1186F3C1DAFE} = {4EAA1C9A-E268-4BA7-A73E-940E3D769C3A}
 		{693DEFC5-355C-4F62-B424-3119046B5F6D} = {4EAA1C9A-E268-4BA7-A73E-940E3D769C3A}
 		{9961F987-2519-493C-83E6-5E8AFCD32291} = {4EAA1C9A-E268-4BA7-A73E-940E3D769C3A}
+		{DB52AAE4-6E2D-4B6F-99E2-19B83E84CF20} = {4EAA1C9A-E268-4BA7-A73E-940E3D769C3A}
 		{8478A8FA-7295-4098-866D-47F458C766C8} = {84A6E29C-BC29-4348-BA51-4218E75CED1A}
 		{963C0C88-DCB6-4944-94EC-728CBB3C2778} = {84A6E29C-BC29-4348-BA51-4218E75CED1A}
 		{E7C55656-EC73-4802-9ED4-1BC321C86ABA} = {84A6E29C-BC29-4348-BA51-4218E75CED1A}

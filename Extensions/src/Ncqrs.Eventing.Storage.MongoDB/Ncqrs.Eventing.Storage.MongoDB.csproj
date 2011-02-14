@@ -57,15 +57,14 @@
       <HintPath>..\..\..\lib\ThirdParty\log4net\log4net.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="MongoDB.Bson">
+      <HintPath>..\..\..\lib\ThirdParty\MongoDB\MongoDB.Bson.dll</HintPath>
+    </Reference>
     <Reference Include="MongoDB.Driver">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\lib\ThirdParty\mongodb-net\MongoDB.Driver.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\..\lib\ThirdParty\MongoDB\MongoDB.Driver.dll</HintPath>
     </Reference>
     <Reference Include="Ncqrs">
-      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\lib\$(Configuration)\Ncqrs\Ncqrs.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\..\lib\ThirdParty\json.net\Newtonsoft.Json.dll</HintPath>
