@@ -15,18 +15,29 @@ namespace Ncqrs.Domain
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         [ThreadStatic]
-        private static readonly List<Action<AggregateRoot, UncommittedEvent>> _eventAppliedCallbacks = new List<Action<AggregateRoot, UncommittedEvent>>();
+        private static List<Action<AggregateRoot, UncommittedEvent>> _eventAppliedCallbacks;
+        private static List<Action<AggregateRoot, UncommittedEvent>> EventAppliedCallbacks
+        {
+            get
+            {
+                if (_eventAppliedCallbacks == null)
+                {
+                    _eventAppliedCallbacks = new List<Action<AggregateRoot, UncommittedEvent>>();
+                }
+                return _eventAppliedCallbacks;
+            }
+        }
 
         public static void RegisterThreadStaticEventAppliedCallback(Action<AggregateRoot, UncommittedEvent> callback)
         {
             Log.DebugFormat("Registering event applied callback {0}", callback.GetHashCode());
-            _eventAppliedCallbacks.Add(callback);
+            EventAppliedCallbacks.Add(callback);
         }
 
         public static void UnregisterThreadStaticEventAppliedCallback(Action<AggregateRoot, UncommittedEvent> callback)
         {
             Log.DebugFormat("Deregistering event applied callback {0}", callback.GetHashCode());
-            _eventAppliedCallbacks.Remove(callback);
+            EventAppliedCallbacks.Remove(callback);
         }
 
         protected AggregateRoot()
@@ -39,7 +50,7 @@ namespace Ncqrs.Domain
         protected override void OnEventApplied(UncommittedEvent appliedEvent)
         {
             base.OnEventApplied(appliedEvent);
-            var callbacks = _eventAppliedCallbacks;
+            var callbacks = EventAppliedCallbacks;
 
             foreach(var callback in callbacks)
             {
