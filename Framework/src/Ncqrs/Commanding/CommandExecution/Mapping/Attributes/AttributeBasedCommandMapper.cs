@@ -33,7 +33,7 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
         {
             if (type == null) throw new ArgumentNullException("type");
 
-            return type.Implements<ICommand>() &&
+            return type.Implements<ICommand>() && !type.IsAbstract &&
                    IsAttributeHandlerRegistered(type);
         }
 
