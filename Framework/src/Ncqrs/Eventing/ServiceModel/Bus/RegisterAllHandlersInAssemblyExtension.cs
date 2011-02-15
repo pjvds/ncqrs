@@ -16,11 +16,11 @@ namespace Ncqrs.Eventing.ServiceModel.Bus
 
         public static void RegisterAllHandlersInAssembly(this InProcessEventBus target, Assembly asm, Func<Type, object> handlerFactory)
         {
-            foreach(var type in asm.GetTypes().Where(ImplementsAtLeastOneIEventHandlerInterface))
+            foreach (var type in asm.GetTypes().Where(ImplementsAtLeastOneIEventHandlerInterface))
             {
                 var handler = handlerFactory(type);
 
-                foreach(var handlerInterfaceType in type.GetInterfaces().Where(IsIEventHandlerInterface))
+                foreach (var handlerInterfaceType in type.GetInterfaces().Where(IsIEventHandlerInterface))
                 {
                     var eventDataType = handlerInterfaceType.GetGenericArguments().First();
                     RegisterHandler(handler, eventDataType, target);
@@ -49,7 +49,7 @@ namespace Ncqrs.Eventing.ServiceModel.Bus
 
         private static bool ImplementsAtLeastOneIEventHandlerInterface(Type type)
         {
-            return type.IsClass &&
+            return type.IsClass && !type.IsAbstract &&
                    type.GetInterfaces().Any(IsIEventHandlerInterface);
         }
 
@@ -57,7 +57,7 @@ namespace Ncqrs.Eventing.ServiceModel.Bus
         {
             return type.IsInterface &&
                    type.IsGenericType &&
-                   type.GetGenericTypeDefinition() == typeof (IEventHandler<>);
+                   type.GetGenericTypeDefinition() == typeof(IEventHandler<>);
         }
     }
 }

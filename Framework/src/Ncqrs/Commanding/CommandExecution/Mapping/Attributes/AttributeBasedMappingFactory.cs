@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Linq;
 using System.Diagnostics.Contracts;
+using System.Linq;
 
 namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
 {
@@ -8,7 +8,7 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
     {
         public ICommandExecutor<TCommand> CreateExecutorForCommand<TCommand>() where TCommand : ICommand
         {
-            Contract.Ensures(Contract.Result <ICommandExecutor<TCommand>>() != null);
+            Contract.Ensures(Contract.Result<ICommandExecutor<TCommand>>() != null);
 
             var commandType = typeof(TCommand);
             var mappingAttr = GetCommandMappingAttributeFromType(commandType);
@@ -58,13 +58,13 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
         {
             if (type == null) throw new ArgumentNullException("type");
 
-            return type.Implements<ICommand>() &&
+            return type.Implements<ICommand>() && !type.IsAbstract &&
                    type.IsDefined(typeof(CommandMappingAttribute), false);
         }
 
         private CommandMappingAttribute GetCommandMappingAttributeFromType(Type target)
         {
-            var attributes = (CommandMappingAttribute[]) target.GetCustomAttributes(typeof (CommandMappingAttribute), false);
+            var attributes = (CommandMappingAttribute[])target.GetCustomAttributes(typeof(CommandMappingAttribute), false);
 
             if (attributes.Length == 0)
             {
