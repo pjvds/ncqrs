@@ -49,7 +49,7 @@ namespace Ncqrs.Eventing.ServiceModel.Bus
 
         private static bool ImplementsAtLeastOneIEventHandlerInterface(Type type)
         {
-            return type.IsClass && type.IsAbstract &&
+            return type.IsClass && !type.IsAbstract &&
                    type.GetInterfaces().Any(IsIEventHandlerInterface);
         }
 
