@@ -18,13 +18,13 @@ namespace ApplicationService
 {
     public static class BootStrapper
     {
-        public static void BootUp(InMemoryBufferedBrowsableElementStore buffer)
+        public static void BootUp(InMemoryBufferedBrowsableElementStore buffer, IEventStore eventStore)
         {
             var config = new Ncqrs.Config.StructureMap.StructureMapConfiguration(cfg =>
             {
                 cfg.For<ICommandService>().Use(InitializeCommandService);
                 cfg.For<IEventBus>().Use(x => InitializeEventBus(buffer));
-                cfg.For<IEventStore>().Singleton().Use(InitializeEventStore);
+                cfg.For<IEventStore>().Singleton().Use(eventStore);
                 cfg.For<IKnownCommandsEnumerator>().Use(new AllCommandsInAppDomainEnumerator());
             });
 
@@ -40,16 +40,7 @@ namespace ApplicationService
             service.AddInterceptor(new ThrowOnExceptionInterceptor());
 
             return service;
-        }
-
-        private static IEventStore InitializeEventStore()
-        {
-            var factory = new AbsoluteOrderingSqlPersistenceFactory("EventStore", new BinarySerializer());
-            var streamPersister = factory.Build();
-            streamPersister.Initialize();
-            var store = new JoesEventStoreAdapter(streamPersister);
-            return store;
-        }
+        }       
 
         private static IEventBus InitializeEventBus(InMemoryBufferedBrowsableElementStore buffer)
         {
