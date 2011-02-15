@@ -15,6 +15,11 @@ namespace Ncqrs.Eventing
         {            
         }
 
+        public CommittedEventStream(params CommittedEvent[] events)
+            : this ((IEnumerable<CommittedEvent>)events)
+        {
+        }
+
         public CommittedEventStream(IEnumerable<CommittedEvent> events)
         {
             _events.AddRange(events);

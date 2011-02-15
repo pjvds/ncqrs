@@ -94,7 +94,10 @@ namespace Ncqrs.Eventing.Sourcing
         public virtual void InitializeFromHistory(CommittedEventStream history)
         {
             Contract.Requires<ArgumentNullException>(history != null, "The history cannot be null.");
-            if (_initialVersion != 0) throw new InvalidOperationException("Cannot apply history when instance has uncommitted changes.");
+            if (_initialVersion != 0 || Version != 0)
+            {
+                throw new InvalidOperationException("Cannot apply history when instance has uncommitted changes.");
+            }
             Log.DebugFormat("Initializing event source {0} from history.", history.SourceId);
             if (history.IsEmpty)
             {
@@ -184,6 +187,7 @@ namespace Ncqrs.Eventing.Sourcing
             ValidateHistoricalEvent(evnt);
             Log.DebugFormat("Handling historical event {0} in event source {1}", evnt, this);
             HandleEvent(evnt.Payload);
+            _currentVersion++;
         }
 
         private void ValidateHistoricalEvent(CommittedEvent evnt)
@@ -196,13 +200,13 @@ namespace Ncqrs.Eventing.Sourcing
 
             //Do we really really need this check? Why don't we trust IEventStore?
 
-            //if (evnt.EventSequence != InitialVersion + 1)
-            //{
-            //    var message = String.Format("Cannot apply event with sequence {0}. Since the initial version of the " +
-            //                                "aggregate root is {1}. Only an event with sequence number {2} can be applied.",
-            //                                evnt.EventSequence, InitialVersion, InitialVersion + 1);
-            //    throw new InvalidOperationException(message);
-            //}
+            if (evnt.EventSequence != Version + 1)
+            {
+                var message = String.Format("Cannot apply event with sequence {0}. Since the initial version of the " +
+                                            "aggregate root is {1}. Only an event with sequence number {2} can be applied.",
+                                            evnt.EventSequence, Version, Version + 1);
+                throw new InvalidOperationException(message);
+            }
         }
         
         public void AcceptChanges()
