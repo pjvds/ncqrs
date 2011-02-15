@@ -34,6 +34,14 @@ namespace Ncqrs.Eventing.Storage.JOliver.SqlPersistence
                 return _dialect;
             }
 
+            var settings = this.GetConnectionSettings(Guid.Empty);
+            var providerName = (settings.ProviderName ?? string.Empty).ToUpperInvariant();
+
+            if (providerName.Contains("SQLSERVERCE"))
+            {
+                return new SqlCePipelineStoreSqlDialect();
+            }
+
             return new MsSqlPipelineStoreSqlDialect();
         }
     }

@@ -72,6 +72,12 @@
       <DependentUpon>MsSqlStatements.resx</DependentUpon>
     </Compile>
     <Compile Include="SqlPersistence\MsSqlPipelineStoreSqlDialect.cs" />
+    <Compile Include="SqlPersistence\SqlCePipelineStoreSqlDialect.cs" />
+    <Compile Include="SqlPersistence\SqlCeStatements.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SqlCeStatements.resx</DependentUpon>
+    </Compile>
     <Compile Include="StoredEvent.cs" />
     <Compile Include="StoredEventExtensions.cs" />
   </ItemGroup>
@@ -84,6 +90,10 @@
     <EmbeddedResource Include="SqlPersistence\MsSqlStatements.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>MsSqlStatements.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SqlPersistence\SqlCeStatements.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SqlCeStatements.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

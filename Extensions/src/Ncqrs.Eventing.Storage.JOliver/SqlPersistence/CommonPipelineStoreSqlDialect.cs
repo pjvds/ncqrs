@@ -4,22 +4,22 @@
     {
         public abstract string Initialize { get; }
 
-        public string GetCommitsAfter
+        public virtual string GetCommitsAfter
         {
             get { return CommonSqlStatements.GetCommitsAfter; }
         }
 
-        public string MarkLastProcessedCommit
+        public virtual string MarkLastProcessedCommit
         {
             get { return CommonSqlStatements.MarkLastProcessedCommit; }
         }
 
-        public string GetLastProcessedCommit
+        public virtual string GetLastProcessedCommit
         {
             get { return CommonSqlStatements.GetLastProcessedCommit; }
         }
 
-        public string RegisterSequentialId
+        public virtual string RegisterSequentialId
         {
             get { return CommonSqlStatements.RegisterSequentialId; }
         }
