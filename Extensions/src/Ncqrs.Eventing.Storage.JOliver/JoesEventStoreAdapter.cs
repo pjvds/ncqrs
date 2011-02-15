@@ -14,9 +14,9 @@ namespace Ncqrs.Eventing.Storage.JOliver
 
         public JoesEventStoreAdapter(IPersistStreams streamPersister)
         {
-            if (!(streamPersister is IPersistStreamsWithAbsouluteOrdering))
+            if (!(streamPersister is IPersistStreamsWithAbsoluteOrdering))
             {
-                throw new ArgumentException("The stream store must impement IPersistStreamsWithAbsouluteOrdering in order to be used with JoesEventStoreAdapter", "streamStore");
+                throw new ArgumentException("The stream store must impement IPersistStreamsWithAbsoluteOrdering in order to be used with JoesEventStoreAdapter", "streamStore");
             }
             _wrappedEventStore = new OptimisticEventStore(streamPersister, new NullDispatcher());
         }

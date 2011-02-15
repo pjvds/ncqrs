@@ -8,7 +8,7 @@ using EventStore.Serialization;
 
 namespace Ncqrs.Eventing.Storage.JOliver.SqlPersistence
 {
-    public class AbsoluteOrderingSqlPersistenceEngine : SqlPersistenceEngine, IPersistStreamsWithAbsouluteOrdering
+    public class AbsoluteOrderingSqlPersistenceEngine : SqlPersistenceEngine, IPersistStreamsWithAbsoluteOrdering
     {
         private readonly IPipelineStoreSqlDialect _dialect;
         private readonly ISerialize _serializer;

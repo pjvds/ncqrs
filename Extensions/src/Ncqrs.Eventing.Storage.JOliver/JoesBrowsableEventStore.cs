@@ -11,17 +11,17 @@ namespace Ncqrs.Eventing.Storage.JOliver
     {
         private const int EmtpySequentialIdValue = 0;
 
-        private readonly IPersistStreamsWithAbsouluteOrdering _streamStore;
+        private readonly IPersistStreamsWithAbsoluteOrdering _streamStore;
         private long _lastCommitSequentialId = EmtpySequentialIdValue;
         private bool _firstCommitFetched;
 
         public JoesBrowsableEventStore(IPersistStreams streamStore)
         {
-            if (!(streamStore is IPersistStreamsWithAbsouluteOrdering))
+            if (!(streamStore is IPersistStreamsWithAbsoluteOrdering))
             {
-                throw new ArgumentException("The stream store must impement IPersistStreamsWithAbsouluteOrdering in order to be used with JoesBrowsableEventStore", "streamStore");
+                throw new ArgumentException("The stream store must impement IPersistStreamsWithAbsoluteOrdering in order to be used with JoesBrowsableEventStore", "streamStore");
             }
-            _streamStore = (IPersistStreamsWithAbsouluteOrdering)streamStore;
+            _streamStore = (IPersistStreamsWithAbsoluteOrdering)streamStore;
         }        
 
         public IEnumerable<IProcessingElement> Fetch(string pipelineName, int maxCount)

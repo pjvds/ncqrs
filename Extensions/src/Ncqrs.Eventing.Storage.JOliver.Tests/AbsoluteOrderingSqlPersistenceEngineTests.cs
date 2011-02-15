@@ -12,7 +12,7 @@ namespace Ncqrs.Eventing.Storage.JOliver.Tests
     [TestFixture]
     public class AbsoluteOrderingSqlPersistenceEngineTests
     {
-        private IPersistStreamsWithAbsouluteOrdering _sut;
+        private IPersistStreamsWithAbsoluteOrdering _sut;
 
         [Test]
         public void Pipeline_state_is_persisted()
@@ -55,7 +55,7 @@ namespace Ncqrs.Eventing.Storage.JOliver.Tests
         public void Initialize()
         {
             var factory = new AbsoluteOrderingSqlPersistenceFactory("EventStore", new BinarySerializer());
-            _sut = (IPersistStreamsWithAbsouluteOrdering)factory.Build();
+            _sut = (IPersistStreamsWithAbsoluteOrdering)factory.Build();
         }
     }
 

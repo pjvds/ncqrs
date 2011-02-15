@@ -13,7 +13,7 @@ namespace Ncqrs.Eventing.Storage.JOliver.Tests
     [TestFixture]
     public class JoesEventStoreAdapterTests
     {
-        private IPersistStreamsWithAbsouluteOrdering _persistenceEngine;
+        private IPersistStreamsWithAbsoluteOrdering _persistenceEngine;
         private JoesEventStoreAdapter _sut;
         private Guid _streamId;
         private Guid _firstCommitId;
@@ -95,7 +95,7 @@ namespace Ncqrs.Eventing.Storage.JOliver.Tests
         public void Initialize()
         {
             var factory = new AbsoluteOrderingSqlPersistenceFactory("EventStore", new BinarySerializer());
-            _persistenceEngine = (IPersistStreamsWithAbsouluteOrdering) factory.Build();
+            _persistenceEngine = (IPersistStreamsWithAbsoluteOrdering) factory.Build();
             _sut = new JoesEventStoreAdapter(_persistenceEngine);
             _streamId = Guid.NewGuid();
             

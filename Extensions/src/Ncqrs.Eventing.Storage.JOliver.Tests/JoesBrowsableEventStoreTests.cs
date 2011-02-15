@@ -14,7 +14,7 @@ namespace Ncqrs.Eventing.Storage.JOliver.Tests
         [Test]
         public void When_fetching_for_the_first_time_and_pipeline_has_no_state_events_are_fetched_from_the_beginning()
         {
-            var engine = MockRepository.GenerateMock<IPersistStreamsWithAbsouluteOrdering>();
+            var engine = MockRepository.GenerateMock<IPersistStreamsWithAbsoluteOrdering>();
             engine.Expect(x => x.GetLastProcessedSequentialNumber("Pipeline")).Return(0);
             engine.Expect(x => x.Fetch(0)).Return(new Commit[] {});
             var sut = new JoesBrowsableEventStore(engine);
@@ -26,7 +26,7 @@ namespace Ncqrs.Eventing.Storage.JOliver.Tests
         [Test]
         public void When_fetching_for_the_first_time_first_returned_commit_is_returned()
         {
-            var engine = MockRepository.GenerateMock<IPersistStreamsWithAbsouluteOrdering>();
+            var engine = MockRepository.GenerateMock<IPersistStreamsWithAbsoluteOrdering>();
             engine.Expect(x => x.GetLastProcessedSequentialNumber("Pipeline")).Return(0);
             var streamId = Guid.NewGuid();
             engine.Expect(x => x.Fetch(0)).Return(
@@ -45,7 +45,7 @@ namespace Ncqrs.Eventing.Storage.JOliver.Tests
         [Test]
         public void When_fetching_subsequent_time_first_returned_commit_is_skipped()
         {
-            var engine = MockRepository.GenerateMock<IPersistStreamsWithAbsouluteOrdering>();
+            var engine = MockRepository.GenerateMock<IPersistStreamsWithAbsoluteOrdering>();
             engine.Expect(x => x.GetLastProcessedSequentialNumber("Pipeline")).Return(0);
             var streamId = Guid.NewGuid();
             engine.Expect(x => x.Fetch(0)).Return(

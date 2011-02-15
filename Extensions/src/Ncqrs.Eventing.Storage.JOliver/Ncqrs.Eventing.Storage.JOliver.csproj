@@ -52,7 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IPersistStreamsWithAbsouluteOrdering.cs" />
+    <Compile Include="IPersistStreamsWithAbsoluteOrdering.cs" />
     <Compile Include="SqlPersistence\AbsoluteOrderingSqlPersistenceFactory.cs" />
     <Compile Include="SqlPersistence\SqlAbsoluteOrderingPersistenceEngine.cs" />
     <Compile Include="CommitProcessingElement.cs" />
