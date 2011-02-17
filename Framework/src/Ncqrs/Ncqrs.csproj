@@ -122,6 +122,7 @@
     <Compile Include="Eventing\Storage\NoDB\NoDBSnapshotStore.cs" />
     <Compile Include="Eventing\Storage\NoDB\StoredEventExtensions.cs" />
     <Compile Include="Eventing\Sourcing\UndefinedValues.cs" />
+    <Compile Include="Eventing\Storage\NullSnapshotStore.cs" />
     <Compile Include="Eventing\UncommittedEvent.cs" />
     <Compile Include="Eventing\UncommittedEventStream.cs" />
     <Compile Include="GuidCombGenerator.cs" />

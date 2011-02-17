@@ -5,12 +5,14 @@ using System.Text;
 using EventStore;
 using EventStore.Dispatcher;
 using EventStore.Persistence;
+using Snapshot = Ncqrs.Eventing.Sourcing.Snapshotting.Snapshot;
 
 namespace Ncqrs.Eventing.Storage.JOliver
 {
-    public class JoesEventStoreAdapter : IEventStore
+    public class JoesEventStoreAdapter : IEventStore, ISnapshotStore
     {
-        private readonly ICommitEvents _wrappedEventStore;
+        private readonly ICommitEvents _eventCommitter;
+        private readonly IAccessSnapshots _snapshotAccessor;
 
         public JoesEventStoreAdapter(IPersistStreams streamPersister)
         {
@@ -18,7 +20,9 @@ namespace Ncqrs.Eventing.Storage.JOliver
             {
                 throw new ArgumentException("The stream store must impement IPersistStreamsWithAbsoluteOrdering in order to be used with JoesEventStoreAdapter", "streamStore");
             }
-            _wrappedEventStore = new OptimisticEventStore(streamPersister, new NullDispatcher());
+            var store = new OptimisticEventStore(streamPersister, new NullDispatcher());
+            _eventCommitter = store;
+            _snapshotAccessor = store;
         }
         
         
@@ -28,12 +32,12 @@ namespace Ncqrs.Eventing.Storage.JOliver
             int maxRevision = maxVersion == long.MaxValue ? int.MaxValue : (int) maxVersion;
             int minRevision = minVersion == long.MinValue ? int.MinValue : (int) minVersion;
 
-            var committedEvents = _wrappedEventStore.GetFrom(id, minRevision, maxRevision)
+            var committedEvents = _eventCommitter.GetFrom(id, minRevision, maxRevision)
                 .SelectMany(x => x.Events)
                 .Select(x => x.Body)
                 .Cast<StoredEvent>()
                 .Select(x => x.Convert(id));
-            return new CommittedEventStream(committedEvents);
+            return new CommittedEventStream(id, committedEvents);
         }
 
         public void Store(UncommittedEventStream eventStream)
@@ -59,14 +63,15 @@ namespace Ncqrs.Eventing.Storage.JOliver
                                                                     }
                                                      }).ToList();
 
-            var commitAttempt = new Commit(eventStream.SourceId, (int)sourceInformation.CurrentVersion,
-                                    eventStream.CommitId,
-                                    GetInitialVersion(sourceInformation),
-                                    DateTime.UtcNow,
-                                    new Dictionary<string, object>(),
-                                    events);
+            var commitAttempt = new Commit(eventStream.SourceId,
+                                           (int) sourceInformation.CurrentVersion,
+                                           eventStream.CommitId,
+                                           (int) sourceInformation.CurrentVersion,
+                                           DateTime.UtcNow,
+                                           new Dictionary<string, object>(),
+                                           events);
             
-            _wrappedEventStore.Commit(commitAttempt);
+            _eventCommitter.Commit(commitAttempt);
         }
 
         private static int GetInitialVersion(EventSourceInformation sourceInformation)
@@ -85,6 +90,23 @@ namespace Ncqrs.Eventing.Storage.JOliver
             public void Dispatch(Commit commit)
             {             
             }
+        }
+
+        public void SaveShapshot(Snapshot snapshot)
+        {
+            _snapshotAccessor.AddSnapshot(new EventStore.Snapshot(snapshot.EventSourceId, (int) snapshot.Version,
+                                                                  snapshot.Payload));
+        }
+
+        public Snapshot GetSnapshot(Guid eventSourceId, long maxVersion)
+        {
+            int maxRevision = maxVersion == long.MaxValue ? int.MaxValue : (int) maxVersion;
+            var result = _snapshotAccessor.GetSnapshot(eventSourceId, maxRevision);
+            if (result != null)
+            {
+                return new Snapshot(result.StreamId, result.StreamRevision, result.Payload);
+            }
+            return null;
         }
     }
 }

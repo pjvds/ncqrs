@@ -34,6 +34,7 @@ namespace Ncqrs
             SetDefault<IUniqueIdentifierGenerator>(new BasicGuidGenerator());
             SetDefault<IEventBus>(new InProcessEventBus());
             SetDefault<IEventStore>(new InMemoryEventStore());
+            SetDefault<ISnapshotStore>(new NullSnapshotStore());
             SetDefault<IUnitOfWorkFactory>(new UnitOfWorkFactory());
             SetDefault<IKnownCommandsEnumerator>(new AllCommandsInAppDomainEnumerator());
             SetDefault<ITransactionService>(new DefaultTransactionService());

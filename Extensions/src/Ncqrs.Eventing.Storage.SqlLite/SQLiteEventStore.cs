@@ -46,7 +46,7 @@ namespace Ncqrs.Eventing.Storage.SQLite
                     results.AddRange(ReadEvents(cmd, id));
                 }
             });
-            return new CommittedEventStream(results);
+            return new CommittedEventStream(id, results);
         }
 
         private IEnumerable<CommittedEvent> ReadEvents(SQLiteCommand cmd, Guid id)

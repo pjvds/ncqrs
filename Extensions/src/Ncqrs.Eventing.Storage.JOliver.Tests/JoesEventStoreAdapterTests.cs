@@ -86,7 +86,7 @@ namespace Ncqrs.Eventing.Storage.JOliver.Tests
                 events[i + 1].EventSequence.Should().Be(events[i].EventSequence + 1);
             }
             var commits = _persistenceEngine.GetFrom(_streamId, int.MinValue, int.MaxValue).ToList();
-            commits[0].CommitSequence.Should().Be(1);
+            commits[0].CommitSequence.Should().Be(3);
             commits[0].StreamRevision.Should().Be(3);
         }
 
@@ -96,6 +96,7 @@ namespace Ncqrs.Eventing.Storage.JOliver.Tests
         {
             var factory = new AbsoluteOrderingSqlPersistenceFactory("EventStore", new BinarySerializer());
             _persistenceEngine = (IPersistStreamsWithAbsoluteOrdering) factory.Build();
+            _persistenceEngine.Initialize();
             _sut = new JoesEventStoreAdapter(_persistenceEngine);
             _streamId = Guid.NewGuid();
             

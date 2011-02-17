@@ -254,13 +254,13 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
 
             var anId = Guid.NewGuid();
             var aVersion = 12;
-            var snapshot = new MySnapshot { EventSourceId = anId, EventSourceVersion = aVersion };
+            var snapshot = new Snapshot(anId, aVersion, new MySnapshot());
 
             targetStore.SaveShapshot(snapshot);
 
-            var savedSnapshot = targetStore.GetSnapshot(anId);
+            var savedSnapshot = targetStore.GetSnapshot(anId, long.MaxValue);
             savedSnapshot.EventSourceId.Should().Be(anId);
-            savedSnapshot.EventSourceVersion.Should().Be(aVersion);
+            savedSnapshot.Version.Should().Be(aVersion);
         }
     }
 }

@@ -24,6 +24,12 @@ namespace Ncqrs.Domain.Storage
         /// </summary>
         /// <param name="eventStream">The stream of events to persist.</param>
         void Store(UncommittedEventStream eventStream);
+
+        /// <summary>
+        /// Creates snapshot if necessary.
+        /// </summary>
+        /// <param name="aggregateRoot">Aggregate root to be snapshotted.</param>
+        void CreateSnapshotIfNecessary(AggregateRoot aggregateRoot);
     }
 
     [ContractClassFor(typeof(IDomainRepository))]
@@ -39,6 +45,11 @@ namespace Ncqrs.Domain.Storage
         public void Store(UncommittedEventStream eventStream)
         {
             Contract.Requires<ArgumentNullException>(eventStream != null);
+        }
+
+        public void CreateSnapshotIfNecessary(AggregateRoot aggregateRoot)
+        {
+            Contract.Requires<ArgumentNullException>(aggregateRoot != null);
         }
     }
 

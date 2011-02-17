@@ -63,7 +63,7 @@ namespace Ncqrs.Eventing.Storage.SQL
         /// <summary>
         /// Saves a snapshot of the specified event source.
         /// </summary>
-        public void SaveShapshot(ISnapshot snapshot)
+        public void SaveShapshot(Snapshot snapshot)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -77,14 +77,14 @@ namespace Ncqrs.Eventing.Storage.SQL
                         using (var dataStream = new MemoryStream())
                         {
                             var formatter = new BinaryFormatter();
-                            formatter.Serialize(dataStream, snapshot);
+                            formatter.Serialize(dataStream, snapshot.Payload);
                             byte[] data = dataStream.ToArray();
 
                             using (var command = new SqlCommand(Queries.InsertSnapshot, transaction.Connection))
                             {
                                 command.Transaction = transaction;
                                 command.Parameters.AddWithValue("EventSourceId", snapshot.EventSourceId);
-                                command.Parameters.AddWithValue("Version", snapshot.EventSourceVersion);
+                                command.Parameters.AddWithValue("Version", snapshot.Version);
                                 command.Parameters.AddWithValue("Type", snapshot.GetType().AssemblyQualifiedName);
                                 command.Parameters.AddWithValue("Data", data);
                                 command.ExecuteNonQuery();
@@ -107,10 +107,8 @@ namespace Ncqrs.Eventing.Storage.SQL
         /// <summary>
         /// Gets a snapshot of a particular event source, if one exists. Otherwise, returns <c>null</c>.
         /// </summary>
-        public ISnapshot GetSnapshot(Guid eventSourceId)
+        public Snapshot GetSnapshot(Guid eventSourceId, long maxVersion)
         {
-            ISnapshot theSnapshot = null;
-
             using (var connection = new SqlConnection(_connectionString))
             {
                 // Open connection and begin a transaction so we can
@@ -129,14 +127,17 @@ namespace Ncqrs.Eventing.Storage.SQL
                             using (var buffer = new MemoryStream(snapshotData))
                             {
                                 var formatter = new BinaryFormatter();
-                                theSnapshot = (ISnapshot)formatter.Deserialize(buffer);
+                                object payload = formatter.Deserialize(buffer);
+                                var theSnapshot = new Snapshot(eventSourceId, (long)reader["Version"], payload);
+                                return theSnapshot.Version > maxVersion
+                                           ? null
+                                           : theSnapshot;
                             }
                         }
+                        return null;
                     }
                 }
             }
-
-            return theSnapshot;
         }
 
         public IEnumerable<Guid> GetAllIdsForType(Type eventProviderType)
@@ -391,7 +392,7 @@ namespace Ncqrs.Eventing.Storage.SQL
                 }
             }
 
-            return new CommittedEventStream(events);
+            return new CommittedEventStream(id, events);
         }
 
         public void Store(UncommittedEventStream eventStream)

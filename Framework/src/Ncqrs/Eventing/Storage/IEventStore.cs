@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.Contracts;
 using Ncqrs.Eventing.Sourcing;
 
 namespace Ncqrs.Eventing.Storage
@@ -6,6 +7,7 @@ namespace Ncqrs.Eventing.Storage
     /// <summary>
     /// A event store. Can store and load events from an <see cref="IEventSource"/>.
     /// </summary>
+    [ContractClass(typeof(IEventStoreContracts))]
     public interface IEventStore
     {
         /// <summary>
@@ -26,5 +28,21 @@ namespace Ncqrs.Eventing.Storage
         /// <exception cref="ConcurrencyException">Occurs when there is already a newer version of the event provider stored in the event store.</exception>
         /// <param name="eventStream">The stream of evnts to be persisted.</param>
         void Store(UncommittedEventStream eventStream);
-    }    
+    }
+
+    [ContractClassFor(typeof(IEventStore))]
+    internal abstract class IEventStoreContracts : IEventStore
+    {
+        public CommittedEventStream ReadFrom(Guid id, long minVersion, long maxVersion)
+        {
+            Contract.Ensures(Contract.Result<CommittedEventStream>().SourceId == id);
+            Contract.Ensures(Contract.Result<CommittedEventStream>().CurrentSourceVersion <= maxVersion);
+            return default(CommittedEventStream);
+        }
+
+        public void Store(UncommittedEventStream eventStream)
+        {
+            Contract.Requires<ArgumentNullException>(eventStream != null, "The stream cannot be null.");
+        }
+    }
 }

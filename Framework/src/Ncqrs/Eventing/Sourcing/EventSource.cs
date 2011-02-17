@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Reflection;
 using Ncqrs.Domain;
+using Ncqrs.Eventing.Sourcing.Snapshotting;
 
 namespace Ncqrs.Eventing.Sourcing
 {
@@ -87,6 +88,15 @@ namespace Ncqrs.Eventing.Sourcing
             EventSourceId = eventSourceId;
         }
 
+        public virtual void InitializeFromSnapshot(Snapshot snapshot)
+        {
+            Contract.Requires<ArgumentNullException>(snapshot != null, "The snapshot cannot be null.");
+            Log.DebugFormat("Initializing event source {0} from snapshot (version {1}).", snapshot.EventSourceId, snapshot.Version);
+
+            _eventSourceId = snapshot.EventSourceId;
+            _initialVersion = _currentVersion = snapshot.Version;
+        }
+
         /// <summary>
         /// Initializes from history.
         /// </summary>
@@ -94,7 +104,7 @@ namespace Ncqrs.Eventing.Sourcing
         public virtual void InitializeFromHistory(CommittedEventStream history)
         {
             Contract.Requires<ArgumentNullException>(history != null, "The history cannot be null.");
-            if (_initialVersion != 0 || Version != 0)
+            if (_initialVersion != Version)
             {
                 throw new InvalidOperationException("Cannot apply history when instance has uncommitted changes.");
             }

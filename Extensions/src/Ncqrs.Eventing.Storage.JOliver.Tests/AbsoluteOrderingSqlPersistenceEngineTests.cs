@@ -56,6 +56,7 @@ namespace Ncqrs.Eventing.Storage.JOliver.Tests
         {
             var factory = new AbsoluteOrderingSqlPersistenceFactory("EventStore", new BinarySerializer());
             _sut = (IPersistStreamsWithAbsoluteOrdering)factory.Build();
+            _sut.Initialize();
         }
     }
 

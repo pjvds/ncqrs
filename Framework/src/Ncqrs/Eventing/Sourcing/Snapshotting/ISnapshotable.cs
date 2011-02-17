@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using Ncqrs.Domain;
 
 namespace Ncqrs.Eventing.Sourcing.Snapshotting
 {    
@@ -17,54 +18,22 @@ namespace Ncqrs.Eventing.Sourcing.Snapshotting
     /// instance.
     /// </remarks>
     [ContractClass(typeof(SnapshotableContracts<>))]
-    public interface ISnapshotable<TSnapshot> : IEventSource where TSnapshot : ISnapshot
+    public interface ISnapshotable<TSnapshot>
     {
         TSnapshot CreateSnapshot();
         void RestoreFromSnapshot(TSnapshot snapshot);
     }
 
     [ContractClassFor(typeof(ISnapshotable<>))]
-    internal abstract class SnapshotableContracts<TSnapshot> : ISnapshotable<TSnapshot> where TSnapshot : ISnapshot
+    internal abstract class SnapshotableContracts<TSnapshot> : ISnapshotable<TSnapshot>
     {
         public void RestoreFromSnapshot(TSnapshot snapshot)
         {
-            Contract.Ensures(EventSourceId == snapshot.EventSourceId, "Restoring from snapshot should initialize the Id.");
-            Contract.Ensures(InitialVersion == snapshot.EventSourceVersion, "Restoring from snapshot should initialize the initial version.");
         }
 
         public TSnapshot CreateSnapshot()
         {
-            Contract.Ensures(Contract.Result<TSnapshot>().EventSourceId == EventSourceId, "The EventSourceId of the snapshot should be initialized with the Id value of the event source.");
-            Contract.Ensures(Contract.Result<TSnapshot>().EventSourceVersion == Version, "The EventSourceVersion of the snapshot should be initialized with the Version value of the event source.");
-
             return default(TSnapshot);
-        }
-
-        public Guid EventSourceId
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public long Version
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public long InitialVersion
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public void InitializeFromHistory(CommittedEventStream history)
-        {
-            throw new NotImplementedException();
-        }
-
-        public event EventHandler<EventAppliedEventArgs> EventApplied;
-
-        public void AcceptChanges()
-        {
-            throw new NotImplementedException();
         }
     }
 }

@@ -56,7 +56,7 @@ namespace Ncqrs.Eventing.Storage.RavenDB
                     .Where(x => x.EventSequence >= minVersion)
                     .Where(x => x.EventSequence <= maxVersion)
                     .ToList().OrderBy(x => x.EventSequence);
-                return new CommittedEventStream(storedEvents.Select(ToComittedEvent));
+                return new CommittedEventStream(id, storedEvents.Select(ToComittedEvent));
             }
         }
 

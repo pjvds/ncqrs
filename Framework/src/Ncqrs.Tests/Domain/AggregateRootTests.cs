@@ -216,7 +216,7 @@ namespace Ncqrs.Tests.Domain
         {
             var theAggregate = new MyAggregateRoot();
             const long wrongSequence = 3;
-            var stream = new CommittedEventStream(
+            var stream = new CommittedEventStream(theAggregate.EventSourceId,
                 new CommittedEvent(Guid.NewGuid(), Guid.NewGuid(), theAggregate.EventSourceId, wrongSequence, DateTime.UtcNow, new HandledEvent(), new Version(1, 0)));
 
             Action act = ()=> theAggregate.InitializeFromHistory(stream);
@@ -228,7 +228,7 @@ namespace Ncqrs.Tests.Domain
         {
             var theAggregate = new MyAggregateRoot();
 
-            var stream = new CommittedEventStream(
+            var stream = new CommittedEventStream(theAggregate.EventSourceId,
                 new CommittedEvent(Guid.NewGuid(), Guid.NewGuid(), theAggregate.EventSourceId, 1, DateTime.UtcNow, new HandledEvent(), new Version(1, 0)),
                 new CommittedEvent(Guid.NewGuid(), Guid.NewGuid(), theAggregate.EventSourceId, 2, DateTime.UtcNow, new HandledEvent(), new Version(1, 0)),
                 new CommittedEvent(Guid.NewGuid(), Guid.NewGuid(), theAggregate.EventSourceId, 3, DateTime.UtcNow, new HandledEvent(), new Version(1, 0)),
@@ -244,7 +244,7 @@ namespace Ncqrs.Tests.Domain
             var theAggregate = new MyAggregateRoot();
             const long wrongSequence = 8;
 
-            var stream = new CommittedEventStream(
+            var stream = new CommittedEventStream(theAggregate.EventSourceId,
                 new CommittedEvent(Guid.NewGuid(), Guid.NewGuid(), theAggregate.EventSourceId, 0, DateTime.UtcNow, new HandledEvent(), new Version(1, 0)),
                 new CommittedEvent(Guid.NewGuid(), Guid.NewGuid(), theAggregate.EventSourceId, 1, DateTime.UtcNow, new HandledEvent(), new Version(1, 0)),
                 new CommittedEvent(Guid.NewGuid(), Guid.NewGuid(), theAggregate.EventSourceId, wrongSequence, DateTime.UtcNow, new HandledEvent(), new Version(1, 0)));
@@ -303,7 +303,7 @@ namespace Ncqrs.Tests.Domain
 
             IEnumerable<CommittedEvent> history = new[] { event1, event2, event3, event4, event5 };
 
-            ((IEventSource)theAggregate).InitializeFromHistory(new CommittedEventStream(history));
+            ((IEventSource)theAggregate).InitializeFromHistory(new CommittedEventStream(theAggregate.EventSourceId, history));
 
             var eventHandlerCountAfterInitialization = theAggregate.FooEventHandlerInvokeCount;
 

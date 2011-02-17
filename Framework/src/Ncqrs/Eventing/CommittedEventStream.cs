@@ -15,19 +15,19 @@ namespace Ncqrs.Eventing
         {            
         }
 
-        public CommittedEventStream(params CommittedEvent[] events)
-            : this ((IEnumerable<CommittedEvent>)events)
+        public CommittedEventStream(Guid sourceId, params CommittedEvent[] events)
+            : this (sourceId, (IEnumerable<CommittedEvent>)events)
         {
         }
 
-        public CommittedEventStream(IEnumerable<CommittedEvent> events)
+        public CommittedEventStream(Guid sourceId, IEnumerable<CommittedEvent> events)
         {
+            _sourceId = sourceId;
             _events.AddRange(events);
             if (_events.Count > 0)
             {
                 var last = _events.Last();
                 _currentSourceVersion = last.EventSequence;
-                _sourceId = last.EventSourceId;
             }
         }
 

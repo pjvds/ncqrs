@@ -12,12 +12,12 @@ namespace Ncqrs.Eventing.Storage
     public class InMemoryEventStore : IEventStore, ISnapshotStore
     {
         private readonly Dictionary<Guid, Queue<CommittedEvent>> _events = new Dictionary<Guid, Queue<CommittedEvent>>();
-        private readonly Dictionary<Guid, ISnapshot> _snapshots = new Dictionary<Guid, ISnapshot>();
+        private readonly Dictionary<Guid, Snapshot> _snapshots = new Dictionary<Guid, Snapshot>();
         
         /// <summary>
         /// Saves a snapshot of the specified event source.
         /// </summary>
-        public void SaveShapshot(ISnapshot snapshot)
+        public void SaveShapshot(Snapshot snapshot)
         {
             _snapshots[snapshot.EventSourceId] = snapshot;
         }
@@ -25,9 +25,12 @@ namespace Ncqrs.Eventing.Storage
         /// <summary>
         /// Gets a snapshot of a particular event source, if one exists. Otherwise, returns <c>null</c>.
         /// </summary>
-        public ISnapshot GetSnapshot(Guid eventSourceId)
+        public Snapshot GetSnapshot(Guid eventSourceId, long maxVersion)
         {
-            return _snapshots[eventSourceId];
+            var result = _snapshots[eventSourceId];
+            return result.Version > maxVersion 
+                ? null 
+                : result;
         }
 
         public CommittedEventStream ReadFrom(Guid id, long minVersion, long maxVersion)
@@ -38,9 +41,9 @@ namespace Ncqrs.Eventing.Storage
             {
                 var committedEvents = events
                     .Where(x => x.EventSequence >= minVersion && x.EventSequence <= maxVersion);                    
-                return new CommittedEventStream(committedEvents);
+                return new CommittedEventStream(id, committedEvents);
             }
-            return new CommittedEventStream();
+            return new CommittedEventStream(id);
         }
 
         public void Store(UncommittedEventStream eventStream)

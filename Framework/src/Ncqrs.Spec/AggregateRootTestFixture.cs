@@ -45,15 +45,8 @@ namespace Ncqrs.Spec
             if(history != null)
             {
                 long sequence = 0;
-                AggregateRoot.InitializeFromHistory(
-                    new CommittedEventStream(
-                        history.Select(x => new CommittedEvent(commitId,
-                                                               Guid.NewGuid(),
-                                                               AggregateRoot.
-                                                                   EventSourceId,
-                                                               sequence++,
-                                                               DateTime.
-                                                                   UtcNow, x, new Version(1, 0)))));
+                var stream = Prepare.Events(history).ForSource(AggregateRoot.EventSourceId);
+                AggregateRoot.InitializeFromHistory(stream);
             }
 
             try

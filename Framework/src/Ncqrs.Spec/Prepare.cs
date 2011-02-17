@@ -29,7 +29,7 @@ namespace Ncqrs.Spec
                     sequence++;
                     comittedEvents.Add(committedEvent);
                 }
-                return new CommittedEventStream(comittedEvents);
+                return new CommittedEventStream(id, comittedEvents);
             }
 
             public UncommittedEventStream ForSourceUncomitted(Guid id, Guid commitId, int sequenceOffset = 0)

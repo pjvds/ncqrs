@@ -14,8 +14,9 @@ namespace Ncqrs.Domain
 
             var store = NcqrsEnvironment.Get<IEventStore>();
             var bus = NcqrsEnvironment.Get<IEventBus>();
+            var snapshotStore = NcqrsEnvironment.Get<ISnapshotStore>();
 
-            var repository = new DomainRepository(store, bus);
+            var repository = new DomainRepository(store, bus, snapshotStore);
             return new UnitOfWork(commandId, repository);
         }
     }

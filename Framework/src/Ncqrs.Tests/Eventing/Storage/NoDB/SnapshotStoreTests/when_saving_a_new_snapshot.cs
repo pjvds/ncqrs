@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using FluentAssertions;
+using Ncqrs.Eventing.Sourcing.Snapshotting;
 using Ncqrs.Eventing.Storage.NoDB.Tests.Fakes;
 using Newtonsoft.Json;
 using NUnit.Framework;
@@ -14,7 +16,7 @@ namespace Ncqrs.Eventing.Storage.NoDB.Tests.SnapshotStoreTests
         [TestFixtureSetUp]
         public void SetUp()
         {
-            Snapshot = new TestSnapshot { EventSourceId = Guid.NewGuid(), EventSourceVersion = 1, Name = "TestName"};
+            Snapshot = new Snapshot(Guid.NewGuid(), 1, new TestSnapshot { Name = "TestName"});
             _foldername = Snapshot.EventSourceId.ToString().Substring(0, 2);
             _filename = Snapshot.EventSourceId.ToString().Substring(2) + ".ss";
             SnapshotStore.SaveShapshot(Snapshot);
@@ -33,8 +35,9 @@ namespace Ncqrs.Eventing.Storage.NoDB.Tests.SnapshotStoreTests
             {
                 reader.ReadLine(); //Throw out type line
                 var jsonSerializer = JsonSerializer.Create(null);
-                var snapshot = jsonSerializer.Deserialize<TestSnapshot>(new JsonTextReader(reader));
-                Assert.That(snapshot, Is.EqualTo(Snapshot));
+                var snapshot = jsonSerializer.Deserialize<Snapshot>(new JsonTextReader(reader));
+                snapshot.EventSourceId.Should().Be(Snapshot.EventSourceId);
+                snapshot.Version.Should().Be(Snapshot.Version);
             }
 
         }

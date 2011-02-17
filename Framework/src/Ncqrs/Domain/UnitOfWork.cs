@@ -199,6 +199,15 @@ namespace Ncqrs.Domain
             Contract.Requires<ObjectDisposedException>(!IsDisposed);
             Log.DebugFormat("Accepting unit of work {0}", this);
             _repository.Store(_eventStream);
+            CreateSnapshots();
+        }
+
+        private void CreateSnapshots()
+        {
+            foreach (AggregateRoot savedInstance in _dirtyInstances)
+            {
+                _repository.CreateSnapshotIfNecessary(savedInstance);
+            }
         }
 
         public override string ToString()

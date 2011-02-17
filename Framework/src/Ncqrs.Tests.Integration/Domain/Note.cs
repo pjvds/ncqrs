@@ -26,6 +26,11 @@ namespace Ncqrs.Tests.Integration.Domain
             });
         }
 
+        public string Text
+        {
+            get { return _text; }
+        }
+
         public void ChangeText(String newText)
         {
             ApplyEvent(new NoteTextChangedEvent
@@ -49,23 +54,19 @@ namespace Ncqrs.Tests.Integration.Domain
         {
             return new NoteSnapshot
                        {
-                           EventSourceId = EventSourceId,
-                           EventSourceVersion = Version,
-                           Text = _text,
+                           Text = Text,
                            CreationDate = _creationDate
                        };
         }
 
         public void RestoreFromSnapshot(NoteSnapshot snapshot)
         {
-            EventSourceId = snapshot.EventSourceId;
-            // TODO: InitialVersion = snapshot.EventSourceVersion;   
             _text = snapshot.Text;
             _creationDate = snapshot.CreationDate;
         }
     }
     [Serializable]
-    public class NoteSnapshot : Snapshot
+    public class NoteSnapshot
     {
         public string Text { get; set; }
 
