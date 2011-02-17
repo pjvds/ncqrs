@@ -5,6 +5,7 @@ using Ncqrs.Eventing;
 using Ncqrs.Eventing.Sourcing;
 using Ncqrs.Eventing.Sourcing.Snapshotting;
 using Ncqrs.Eventing.Storage.SQL;
+using Ncqrs.Spec;
 using NUnit.Framework;
 using Rhino.Mocks;
 using System.Data.SqlClient;
@@ -102,6 +103,15 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
             try
             {
                 connection.Open();
+                var cmd = connection.CreateCommand();
+                cmd.CommandText = "TRUNCATE TABLE [Events]";
+                cmd.ExecuteNonQuery();
+
+                cmd.CommandText = "TRUNCATE TABLE [EventSources]";
+                cmd.ExecuteNonQuery();
+
+                cmd.CommandText = "TRUNCATE TABLE [Snapshots]";
+                cmd.ExecuteNonQuery();
             }
             catch (SqlException caught)
             {
@@ -111,28 +121,6 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
             finally
             {
                 connection.Dispose();
-            }
-        }
-
-        [TearDown]
-        public void Clean()
-        {
-            if (!_ignored)
-            {
-                var connectionString = ConfigurationManager.ConnectionStrings[DEFAULT_CONNECTIONSTRING_KEY].ConnectionString;
-                using (var connection = new SqlConnection(connectionString))
-                {
-                    connection.Open();
-                    var cmd = connection.CreateCommand();
-                    cmd.CommandText = "TRUNCATE TABLE [Events]";
-                    cmd.ExecuteNonQuery();
-
-                    cmd.CommandText = "TRUNCATE TABLE [EventSources]";
-                    cmd.ExecuteNonQuery();
-
-                    cmd.CommandText = "TRUNCATE TABLE [Snapshots]";
-                    cmd.ExecuteNonQuery();
-                }
             }
         }
 
@@ -149,59 +137,49 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
         {
             var targetStore = new MsSqlServerEventStore(connectionString);
             var theEventSourceId = Guid.NewGuid();
-            const int theInitialEventSourceVersion = 0;
             var theCommitId = Guid.NewGuid();
-            var theVersion = new Version(1, 0);
-            
-            int sequenceCounter = 1;
 
-            var events = new []
-            {
-                new UncommittedEvent
-                (
-                    Guid.NewGuid(), theEventSourceId, sequenceCounter++, theInitialEventSourceVersion, DateTime.Now, 
-                    new CustomerCreatedEvent("Foo",35),
-                    theVersion
-                ),
-                new UncommittedEvent
-                (
-                    Guid.NewGuid(), theEventSourceId, sequenceCounter++, theInitialEventSourceVersion, DateTime.Now, 
-                    new CustomerNameChanged("Name"+sequenceCounter),
-                    theVersion
-                ),
-                new UncommittedEvent
-                (
-                    Guid.NewGuid(), theEventSourceId, sequenceCounter++, theInitialEventSourceVersion, DateTime.Now, 
-                    new CustomerNameChanged("Name"+sequenceCounter),
-                    theVersion
-                ),
-                new UncommittedEvent
-                (
-                    Guid.NewGuid(), theEventSourceId, sequenceCounter++, theInitialEventSourceVersion, DateTime.Now, 
-                    new CustomerNameChanged("Name"+sequenceCounter),
-                    theVersion
-                ),
-            };
-
-            var eventStream = new UncommittedEventStream(theCommitId);
-            foreach(var e in events) eventStream.Append(e);
+            var eventStream = Prepare.Events(
+                new CustomerCreatedEvent("Foo", 35),
+                new CustomerNameChanged("Name" + 2),
+                new CustomerNameChanged("Name" + 3),
+                new CustomerNameChanged("Name" + 4))
+                .ForSourceUncomitted(theEventSourceId, theCommitId);
 
             targetStore.Store(eventStream);
 
-            var eventsFromStore = targetStore.ReadUntil(theEventSourceId);
-            eventsFromStore.Count().Should().Be(events.Count());
+            var eventsFromStore = targetStore.ReadFrom(theEventSourceId, long.MinValue, long.MaxValue);
+            eventsFromStore.Count().Should().Be(eventStream.Count());
 
             for (int i = 0; i < eventsFromStore.Count(); i++)
             {
-                var uncommittedEvent = events.ElementAt(i);
+                var uncommittedEvent = eventStream.ElementAt(i);
                 var committedEvent = eventsFromStore.ElementAt(i);
 
                 committedEvent.EventSourceId.Should().Be(uncommittedEvent.EventSourceId);
                 committedEvent.EventIdentifier.Should().Be(uncommittedEvent.EventIdentifier);
                 committedEvent.EventSequence.Should().Be(uncommittedEvent.EventSequence);
-                committedEvent.EventTimeStamp.Should().Be(uncommittedEvent.EventTimeStamp);
                 committedEvent.Payload.GetType().Should().Be(uncommittedEvent.Payload.GetType());
             }
+        }
+
+        [Test]
+        public void Storing_entity_sourced_event_should_preserve_entity_id()
+        {
+            var targetStore = new MsSqlServerEventStore(connectionString);
+            var theEventSourceId = Guid.NewGuid();
+            var theCommitId = Guid.NewGuid();
+
+            var theEntityId = Guid.NewGuid();
+            var eventStream = Prepare.Events(new AccountNameChangedEvent(theEntityId, "NewName"))
+                .ForSourceUncomitted(theEventSourceId, theCommitId);
+
+            targetStore.Store(eventStream);
+
+            var restoredEvent = targetStore.ReadFrom(theEventSourceId, long.MinValue, long.MaxValue).Single();
+
+            var payload = (AccountNameChangedEvent) restoredEvent.Payload;
+            payload.EntityId.Should().Be(theEntityId);
         }
 
         //[Test]

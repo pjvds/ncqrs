@@ -31,6 +31,23 @@ namespace Ncqrs.Spec
                 }
                 return new CommittedEventStream(comittedEvents);
             }
+
+            public UncommittedEventStream ForSourceUncomitted(Guid id, Guid commitId, int sequenceOffset = 0)
+            {
+                int sequence = sequenceOffset + 1;
+                int initialVersion = sequenceOffset == 0 ? 1 : sequenceOffset;
+
+                var comittedEvents = new List<CommittedEvent>();
+                var result = new UncommittedEventStream(commitId);
+                foreach (var evnt in _events)
+                {
+                    var uncommittedEvent = new UncommittedEvent(Guid.NewGuid(), id, sequence, initialVersion, DateTime.UtcNow,
+                                                            evnt, new Version(1, 0));
+                    result.Append(uncommittedEvent);
+                    sequence++;
+                }
+                return result;
+            }
         }
 
         public static PrepareTheseEvents Events(IEnumerable<object> events)

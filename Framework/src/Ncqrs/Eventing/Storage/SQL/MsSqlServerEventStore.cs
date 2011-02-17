@@ -314,38 +314,7 @@ namespace Ncqrs.Eventing.Storage.SQL
             }
 
             return result;
-        }
-
-        public CommittedEventStream ReadUntil(Guid eventSourceId, long? maxVersion = null)
-        {
-            // TODO: implement
-            if(maxVersion != null) throw new NotSupportedException();
-
-            var events = new List<CommittedEvent>();
-
-            // Create connection and command.
-            using (var connection = new SqlConnection(_connectionString))
-            using (var command = new SqlCommand(Queries.SelectAllEventsQuery, connection))
-            {
-                // Add EventSourceId parameter and open connection.
-                command.Parameters.AddWithValue("EventSourceId", eventSourceId);
-                command.Parameters.AddWithValue("EventSourceVersion", 0);
-
-                connection.Open();
-
-                // Execute query and create reader.
-                using (SqlDataReader reader = command.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        var evnt = ReadEventFromDbReader(reader);
-                        events.Add(evnt);
-                    }
-                }
-            }
-
-            return new CommittedEventStream(events);
-        }
+        }        
 
         /// <summary>
         /// Get some events after specified event.
