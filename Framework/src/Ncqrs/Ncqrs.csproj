@@ -109,6 +109,8 @@
     <Compile Include="Domain\EntityMappedByConvention.cs" />
     <Compile Include="Domain\Storage\IAggregateRootCreationStrategy.cs" />
     <Compile Include="Domain\Storage\SimpleAggregateRootCreationStrategy.cs" />
+    <Compile Include="Domain\UnitOfWorkBase.cs" />
+    <Compile Include="Domain\UnitOfWorkContext.cs" />
     <Compile Include="Eventing\CommittedEvent.cs" />
     <Compile Include="Eventing\CommittedEventStream.cs" />
     <Compile Include="Eventing\EventSourceInformation.cs" />

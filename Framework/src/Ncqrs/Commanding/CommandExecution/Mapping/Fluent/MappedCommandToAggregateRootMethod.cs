@@ -25,7 +25,7 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Fluent
             _getidfromcommandfunc = getidfromcommandfunc;
             _aggregaterootfetchfunc = delegate(Guid guid)
                                           {
-                                              IUnitOfWorkContext uow = UnitOfWork.Current;
+                                              IUnitOfWorkContext uow = UnitOfWorkContext.Current;
                                               return (TAggRoot) uow.GetById(typeof (TAggRoot), guid, null);
                                           };
         }

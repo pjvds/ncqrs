@@ -10,14 +10,19 @@ namespace Ncqrs.Domain
     {
         public IUnitOfWorkContext CreateUnitOfWork(Guid commandId)
         {
-            if(UnitOfWork.Current != null) throw new InvalidOperationException("There is already a unit of work created for this context.");
+            if(UnitOfWorkContext.Current != null)
+            {
+                throw new InvalidOperationException("There is already a unit of work created for this context.");
+            }
 
             var store = NcqrsEnvironment.Get<IEventStore>();
             var bus = NcqrsEnvironment.Get<IEventBus>();
             var snapshotStore = NcqrsEnvironment.Get<ISnapshotStore>();
 
             var repository = new DomainRepository(store, bus, snapshotStore);
-            return new UnitOfWork(commandId, repository);
+            var unitOfWork = new UnitOfWork(commandId, repository);
+            UnitOfWorkContext.Bind(unitOfWork);
+            return unitOfWork;
         }
     }
 }
