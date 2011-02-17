@@ -80,6 +80,7 @@
     </Compile>
     <Compile Include="StoredEvent.cs" />
     <Compile Include="StoredEventExtensions.cs" />
+    <Compile Include="TransactionalSqlPersistenceEngine.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="SqlPersistence\CommonSqlStatements.resx">

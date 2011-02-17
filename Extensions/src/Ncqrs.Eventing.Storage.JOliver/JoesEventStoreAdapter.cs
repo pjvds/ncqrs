@@ -24,8 +24,6 @@ namespace Ncqrs.Eventing.Storage.JOliver
             _eventCommitter = store;
             _snapshotAccessor = store;
         }
-        
-        
 
         public CommittedEventStream ReadFrom(Guid id, long minVersion, long maxVersion)
         {
@@ -46,22 +44,30 @@ namespace Ncqrs.Eventing.Storage.JOliver
             {
                 throw new NotSupportedException("This event store don't support events streams with multiple sources.");
             }
-            
-            var sourceInformation = eventStream.Sources.Single();
 
-            var events = eventStream.Select(x => new EventMessage
-                                                     {
-                                                         Body = new StoredEvent
-                                                                    {
-                                                                        Body = x.Payload,
-                                                                        CommitId = eventStream.CommitId,
-                                                                        EventId = x.EventIdentifier,
-                                                                        MajorVersion = x.EventVersion.Major,
-                                                                        MinorVersion = x.EventVersion.Minor,
-                                                                        Sequence = x.EventSequence,
-                                                                        TimeStamp = x.EventTimeStamp
-                                                                    }
-                                                     }).ToList();
+            foreach (EventSourceInformation source in eventStream.Sources)
+            {
+                StoreSingleSource(source, eventStream);
+            }
+        }
+
+        private void StoreSingleSource(EventSourceInformation sourceInformation, UncommittedEventStream eventStream)
+        {
+            var events = eventStream
+                .Where(x => x.EventSourceId == sourceInformation.Id)
+                .Select(x => new EventMessage
+                                 {
+                                     Body = new StoredEvent
+                                                {
+                                                    Body = x.Payload,
+                                                    CommitId = eventStream.CommitId,
+                                                    EventId = x.EventIdentifier,
+                                                    MajorVersion = x.EventVersion.Major,
+                                                    MinorVersion = x.EventVersion.Minor,
+                                                    Sequence = x.EventSequence,
+                                                    TimeStamp = x.EventTimeStamp
+                                                }
+                                 }).ToList();
 
             var commitAttempt = new Commit(eventStream.SourceId,
                                            (int) sourceInformation.CurrentVersion,
@@ -72,13 +78,6 @@ namespace Ncqrs.Eventing.Storage.JOliver
                                            events);
             
             _eventCommitter.Commit(commitAttempt);
-        }
-
-        private static int GetInitialVersion(EventSourceInformation sourceInformation)
-        {
-            //JO Event Store assumes, that version number starts from 1.
-            var value = (int)sourceInformation.InitialVersion;
-            return value == 0 ? 1 : value; 
         }
 
         private class NullDispatcher : IDispatchCommits
