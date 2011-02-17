@@ -183,7 +183,6 @@
     <Compile Include="Eventing\Sourcing\Snapshotting\Snapshot.cs" />
     <Compile Include="Eventing\Sourcing\SourcedEvent.cs" />
     <Compile Include="Eventing\Sourcing\SourcedEventHandler.cs" />
-    <Compile Include="Eventing\Sourcing\SourcedEventStream.cs" />
     <Compile Include="Eventing\Storage\AttributeEventTypeResolver.cs" />
     <Compile Include="Eventing\Storage\IEventTypeResolver.cs" />
     <Compile Include="Eventing\Storage\IPropertyBagConverter.cs" />
