@@ -18,21 +18,19 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
     public class MsSqlServerEventStoreTests
     {
         [Serializable]
-        public class CustomerCreatedEvent : SourcedEvent
+        public class CustomerCreatedEvent
         {
             protected CustomerCreatedEvent()
             {
             }
 
-            public CustomerCreatedEvent(Guid eventIdentifier, Guid aggregateRootId, long eventSequence, DateTime eventTimeStamp, string name, int age)
-                : base(eventIdentifier, aggregateRootId, eventSequence, eventTimeStamp)
+            public CustomerCreatedEvent(string name, int age)
             {
                 Name = name;
                 Age = age;
             }
 
-            public string Name
-            { get; set; }
+            public string Name { get; set; }
 
             public int Age
             {
@@ -42,36 +40,27 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
         }
 
         [Serializable]
-        public class CustomerNameChanged : SourcedEvent
+        public class CustomerNameChanged
         {
-            public Guid CustomerId
-            {
-                get
-                {
-                    return EventSourceId;
-                }
-            }
-
-            public string NewName
-            { get; set; }
+            public Guid CustomerId { get; set; }
+            public string NewName { get; set; }
 
             protected CustomerNameChanged()
             {
 
             }
 
-            public CustomerNameChanged(Guid eventIdentifier, Guid aggregateRootId, long eventSequence, DateTime eventTimeStamp, string newName)
-                : base(eventIdentifier, aggregateRootId, eventSequence, eventTimeStamp)
+            public CustomerNameChanged(string newName)
             {
                 NewName = newName;
             }
         }
 
         [Serializable]
-        public class AccountNameChangedEvent : SourcedEntityEvent
+        public class AccountNameChangedEvent : IEntitySourcedEvent
         {
-            public Guid CustomerId { get { return EventSourceId; } }
-            public Guid AccountId { get { return EntityId; } }
+            public Guid CustomerId { get; set; }
+            public Guid AccountId { get; set;}
             public string NewAccountName { get; set; }
 
             public AccountNameChangedEvent()
@@ -79,10 +68,15 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
 
             }
 
-            public AccountNameChangedEvent(Guid eventIdentifier, Guid aggregateRootId, Guid entityId, long eventSequence, DateTime eventTimeStamp, string newAccountName)
-                : base(eventIdentifier, aggregateRootId, entityId, eventSequence, eventTimeStamp)
+            public AccountNameChangedEvent(Guid accountId, string newAccountName)
             {
                 NewAccountName = newAccountName;
+                AccountId = accountId;
+            }
+
+            public Guid EntityId
+            {
+                get { return AccountId; }
             }
         }
 
@@ -155,7 +149,7 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
         {
             var targetStore = new MsSqlServerEventStore(connectionString);
             var theEventSourceId = Guid.NewGuid();
-            var theInitialEventSourceVersion = 0;
+            const int theInitialEventSourceVersion = 0;
             var theCommitId = Guid.NewGuid();
             var theVersion = new Version(1, 0);
             
@@ -166,25 +160,25 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
                 new UncommittedEvent
                 (
                     Guid.NewGuid(), theEventSourceId, sequenceCounter++, theInitialEventSourceVersion, DateTime.Now, 
-                    new CustomerCreatedEvent(Guid.NewGuid(), theEventSourceId, sequenceCounter, DateTime.UtcNow, "Foo",35),
+                    new CustomerCreatedEvent("Foo",35),
                     theVersion
                 ),
                 new UncommittedEvent
                 (
                     Guid.NewGuid(), theEventSourceId, sequenceCounter++, theInitialEventSourceVersion, DateTime.Now, 
-                    new CustomerNameChanged(Guid.NewGuid(), theEventSourceId, sequenceCounter, DateTime.UtcNow, "Name"+sequenceCounter),
+                    new CustomerNameChanged("Name"+sequenceCounter),
                     theVersion
                 ),
                 new UncommittedEvent
                 (
                     Guid.NewGuid(), theEventSourceId, sequenceCounter++, theInitialEventSourceVersion, DateTime.Now, 
-                    new CustomerNameChanged(Guid.NewGuid(), theEventSourceId, sequenceCounter, DateTime.UtcNow, "Name"+sequenceCounter),
+                    new CustomerNameChanged("Name"+sequenceCounter),
                     theVersion
                 ),
                 new UncommittedEvent
                 (
                     Guid.NewGuid(), theEventSourceId, sequenceCounter++, theInitialEventSourceVersion, DateTime.Now, 
-                    new CustomerNameChanged(Guid.NewGuid(), theEventSourceId, sequenceCounter, DateTime.UtcNow, "Name"+sequenceCounter),
+                    new CustomerNameChanged("Name"+sequenceCounter),
                     theVersion
                 ),
             };

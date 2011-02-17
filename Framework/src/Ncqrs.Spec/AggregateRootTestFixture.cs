@@ -21,7 +21,7 @@ namespace Ncqrs.Spec
 
         protected List<UncommittedEvent> PublishedEvents { get; private set; }
         
-        protected virtual IEnumerable<SourcedEvent> Given()
+        protected virtual IEnumerable<object> Given()
         {
             return null;
         }

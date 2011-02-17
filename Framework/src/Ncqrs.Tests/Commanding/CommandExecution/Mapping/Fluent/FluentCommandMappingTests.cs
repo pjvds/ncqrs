@@ -52,13 +52,13 @@ namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Fluent
             { get; set; }
         }
 
-        public class AggregateRootTargetTitleUpdatedEvent : SourcedEvent
+        public class AggregateRootTargetTitleUpdatedEvent
         {
             public string Title
             { get; set; }
         }
 
-        public class AggregateRootTargetCreatedNewEvent : SourcedEvent
+        public class AggregateRootTargetCreatedNewEvent
         {
             public string Title
             { get; set; }

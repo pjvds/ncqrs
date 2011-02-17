@@ -13,7 +13,7 @@ namespace Ncqrs.Tests.Eventing.Sourcing.Mapping
     {
         public class IlligalStaticMethodTarget : AggregateRootMappedByConvention
         {
-            public static void OnDomainEvent(SourcedEvent e)
+            public static void OnDomainEvent(object e)
             { }
         }
 
@@ -26,7 +26,7 @@ namespace Ncqrs.Tests.Eventing.Sourcing.Mapping
 
         public class MoreThenOneParameterMethodTarget : AggregateRootMappedByConvention
         {
-            public void OnDomainEvent(SourcedEvent e1, SourcedEvent e2)
+            public void OnDomainEvent(object e1, object e2)
             {
             }
         }
@@ -40,10 +40,10 @@ namespace Ncqrs.Tests.Eventing.Sourcing.Mapping
 
         public class GoodTarget : AggregateRootMappedByConvention
         {
-            public class PublicEvent : SourcedEvent { }
-            public class ProtectedEvent : SourcedEvent { }
-            public class InternalEvent : SourcedEvent { }
-            public class PrivateEvent : SourcedEvent { }
+            public class PublicEvent { }
+            public class ProtectedEvent { }
+            public class InternalEvent { }
+            public class PrivateEvent  { }
 
             public int PublicEventHandlerInvokeCount;
             public int ProtectedEventHandlerInvokeCount;

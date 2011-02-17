@@ -60,7 +60,7 @@ namespace Ncqrs.Tests.Domain
             }
         }
 
-        public class OrderCreatedEvent : SourcedEvent
+        public class OrderCreatedEvent
         {
             private readonly Guid _orderId;
 
@@ -75,7 +75,7 @@ namespace Ncqrs.Tests.Domain
             }
         }
 
-        public class OrderLineCreatedEvent : SourcedEntityEvent
+        public class OrderLineCreatedEvent : EntitySourcedEventBase
         {
             private readonly decimal _value;
 

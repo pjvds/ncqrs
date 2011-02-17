@@ -7,7 +7,7 @@ namespace AwesomeAppRefactored.Events
     [Serializable]
     [EventName("MyCompany:AwesomeApp:Events:NameChanged")]
     [EventNameAlias("MyCompany:AwesomeApp:NameChangedEventttt")]
-    public class NameChangedEvent : SourcedEvent
+    public class NameChangedEvent
     {
         public string Forename { get; set; }
         public string Surname { get; set; }

@@ -22,9 +22,9 @@ namespace Ncqrs.Eventing.Storage.SQL
         private static int FirstVersion = 0;
         private readonly String _connectionString;
 
-        private IEventFormatter<JObject> _formatter;
-        private IEventTranslator<string> _translator;
-        private IEventConverter _converter;
+        private readonly IEventFormatter<JObject> _formatter;
+        private readonly IEventTranslator<string> _translator;
+        private readonly IEventConverter _converter;
 
         public MsSqlServerEventStore(String connectionString)
             : this(connectionString, null, null)
@@ -47,7 +47,7 @@ namespace Ncqrs.Eventing.Storage.SQL
             var document = _translator.TranslateToCommon(rawEvent);
             _converter.Upgrade(document);
 
-            var payload = _formatter.Deserialize(document);
+            var payload = _formatter.Deserialize(document.Data, document.EventName);
 
             // TODO: Legacy stuff... we do not have a dummy id with the current schema.
             var dummyCommitId = Guid.Empty;
@@ -231,15 +231,18 @@ namespace Ncqrs.Eventing.Storage.SQL
         /// Saves the event to the data store.
         /// </summary>
         /// <param name="evnt">The event to save.</param>
-        /// <param name="eventSourceId">The id of the event source that owns the event.</param>
         /// <param name="transaction">The transaction.</param>
         private void SaveEvent(UncommittedEvent evnt, SqlTransaction transaction)
         {
             Contract.Requires<ArgumentNullException>(evnt != null, "The argument evnt could not be null.");
             Contract.Requires<ArgumentNullException>(transaction != null, "The argument transaction could not be null.");
 
-            var document = _formatter.Serialize(evnt.EventIdentifier, evnt.EventTimeStamp, evnt.EventVersion, evnt.EventSourceId, evnt.EventSequence, evnt.Payload);
-            var raw = _translator.TranslateToRaw(document);
+            string eventName;
+            var document = _formatter.Serialize(evnt.Payload, out eventName);
+            var storedEvent = new StoredEvent<JObject>(evnt.EventIdentifier, evnt.EventTimeStamp,
+                                                      eventName, evnt.EventVersion, evnt.EventSourceId,
+                                                      evnt.EventSequence, document);
+            var raw = _translator.TranslateToRaw(storedEvent);
 
             using (var command = new SqlCommand(Queries.InsertNewEventQuery, transaction.Connection))
             {

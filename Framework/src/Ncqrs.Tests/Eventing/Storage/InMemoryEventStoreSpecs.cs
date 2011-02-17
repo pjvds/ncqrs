@@ -12,12 +12,8 @@ namespace Ncqrs.Tests.Eventing.Storage
     [TestFixture]
     public class InMemoryEventStoreSpecs
     {        
-        public class SomethingDoneEvent : SourcedEvent
+        public class SomethingDoneEvent
         {
-            public SomethingDoneEvent(Guid sourceId)
-            {
-                GetType().GetProperty("EventSourceId").SetValue(this, sourceId, null);
-            }
         }
 
         [Test]

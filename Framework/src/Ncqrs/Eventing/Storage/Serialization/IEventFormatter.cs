@@ -27,28 +27,29 @@ namespace Ncqrs.Eventing.Storage.Serialization
         /// Serializes a strongly typed event.
         /// </summary>
         /// <returns>A serialized representation of <paramref name="theEvent"/>.</returns>
-        StoredEvent<T> Serialize(Guid eventIdentifier, DateTime eventTimeStamp, Version eventVersion, Guid eventSourceId,
-                                 long eventSequence, object theEvent);
+        T Serialize(object theEvent, out string eventName);
 
         /// <summary>
         /// De-serializes a serialized event to a strongly typed event.
         /// </summary>
         /// <param name="obj">The serialized event to be de-serialized.</param>
+        /// <param name="eventName">A name of serialized event type.</param>
         /// <returns>A strongly typed event from <paramref name="obj"/>.</returns>
-        object Deserialize(StoredEvent<T> obj);
+        object Deserialize(T obj, string eventName);
     }
 
     [ContractClassFor(typeof(IEventFormatter<>))]
     internal abstract class IEventFormatterContracts<T> : IEventFormatter<T>
     {
-        public StoredEvent<T> Serialize(Guid eventIdentifier, DateTime eventTimeStamp, Version eventVersion, Guid eventSourceId, long eventSequence, object theEvent)
+        public T Serialize(object theEvent, out string eventName)
         {
             Contract.Requires<ArgumentNullException>(theEvent != null, "theEvent");
-            Contract.Ensures(Contract.Result<StoredEvent<T>>() != null);
-            return default(StoredEvent<T>);
+            Contract.Ensures(Contract.Result<T>() != null);
+            eventName = null;
+            return default(T);
         }
 
-        public object Deserialize(StoredEvent<T> obj)
+        public object Deserialize(T obj, string eventName)
         {
             Contract.Requires<ArgumentNullException>(obj != null, "obj");
             Contract.Ensures(Contract.Result<object>() != null);

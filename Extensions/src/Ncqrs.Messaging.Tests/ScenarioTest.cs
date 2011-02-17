@@ -171,16 +171,16 @@ namespace Ncqrs.Messaging.Tests
             }
         }
 
-        public class HandlingEventRegistered : SourcedEvent
+        public class HandlingEventRegistered
         {
             public Guid CargoId { get; set; }
         }
 
-        public class CargoBooked : SourcedEvent
+        public class CargoBooked
         {            
         }
 
-        public class CargoHandled : SourcedEvent
+        public class CargoHandled
         {
         }
     }

@@ -116,8 +116,8 @@
     <Compile Include="Eventing\ServiceModel\Bus\PublishedEvent.cs" />
     <Compile Include="Eventing\Sourcing\EntityThresholdedDomainEventHandlerWrapper.cs" />
     <Compile Include="Eventing\Sourcing\EventAppliedEventArgs.cs" />
-    <Compile Include="Eventing\Sourcing\ISourcedEntityEvent.cs" />
-    <Compile Include="Eventing\Sourcing\SourcedEntityEvent.cs" />
+    <Compile Include="Eventing\Sourcing\IEntitySourcedEvent.cs" />
+    <Compile Include="Eventing\Sourcing\EntitySourcedEventBase.cs" />
     <Compile Include="Eventing\Storage\NoDB\NoDBEventStore.cs" />
     <Compile Include="Eventing\Storage\NoDB\NoDBSnapshotStore.cs" />
     <Compile Include="Eventing\Storage\NoDB\StoredEventExtensions.cs" />
@@ -188,7 +188,6 @@
     <Compile Include="Eventing\Storage\IEventTypeResolver.cs" />
     <Compile Include="Eventing\Storage\IPropertyBagConverter.cs" />
     <Compile Include="Eventing\Storage\IPropertyBagPostConverter.cs" />
-    <Compile Include="Eventing\Storage\IReadableEventStore.cs" />
     <Compile Include="Eventing\Storage\ISnapshotStore.cs" />
     <Compile Include="Eventing\Storage\Serialization\EventConverter.cs" />
     <Compile Include="Eventing\Storage\Serialization\IEventConverter.cs" />

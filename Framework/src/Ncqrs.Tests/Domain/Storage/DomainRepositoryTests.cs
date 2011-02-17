@@ -15,38 +15,16 @@ namespace Ncqrs.Tests.Domain.Storage
     [TestFixture]
     public class DomainRepositoryTests
     {
-        public class FooEvent : SourcedEvent
+        public class FooEvent
         {
-            public FooEvent()
-            {
-            }
-
-            public FooEvent(Guid eventIdentifier, Guid aggregateRootId, long eventSequence, DateTime eventTimeStamp) : base(eventIdentifier, aggregateRootId, eventSequence, eventTimeStamp)
-            {
-            }
         }
 
-        public class BarEvent : SourcedEvent
+        public class BarEvent
         {
-            public BarEvent()
-            {
-            }
-
-            public BarEvent(Guid eventIdentifier, Guid aggregateRootId, long eventSequence, DateTime eventTimeStamp) : base(eventIdentifier, aggregateRootId, eventSequence, eventTimeStamp)
-            {
-            }
         }
 
-        public class BarEvent_v2 : SourcedEvent
+        public class BarEvent_v2
         {
-            public BarEvent_v2()
-            {
-            }
-
-            public BarEvent_v2(Guid eventIdentifier, Guid aggregateRootId, long eventSequence, DateTime eventTimeStamp)
-                : base(eventIdentifier, aggregateRootId, eventSequence, eventTimeStamp)
-            {
-            }
         }
 
         public class MyAggregateRoot : AggregateRootMappedWithAttributes
@@ -64,7 +42,7 @@ namespace Ncqrs.Tests.Domain.Storage
             }
 
             [EventHandler]
-            private void CatchAllHandler(SourcedEvent e)
+            private void CatchAllHandler(object e)
             {}
         }
 

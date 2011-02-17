@@ -4,13 +4,8 @@ using Ncqrs.Eventing.Sourcing;
 namespace Events
 {
     [Serializable]
-    public class NoteTextChanged : SourcedEvent
+    public class NoteTextChanged
     {
-        public Guid NoteId
-        {
-            get { return EventSourceId; }
-        }
-
         public String NewText
         {
             get;

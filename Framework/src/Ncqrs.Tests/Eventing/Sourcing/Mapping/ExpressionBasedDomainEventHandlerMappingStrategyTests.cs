@@ -15,10 +15,10 @@ namespace Ncqrs.Tests.Eventing.Sourcing.Mapping
         {
             public override void InitializeEventHandlers()
             {
-                Map<SourcedEvent>().ToHandler(x => OnDomainEvent(x));
+                Map<object>().ToHandler(OnDomainEvent);
             }
 
-            public static void OnDomainEvent(SourcedEvent e)
+            public static void OnDomainEvent(object e)
             { }
         }
 
@@ -26,16 +26,16 @@ namespace Ncqrs.Tests.Eventing.Sourcing.Mapping
         {
             public override void InitializeEventHandlers()
             {
-                Map<PublicEvent>().ToHandler(x => OnPublicEvent(x));
-                Map<ProtectedEvent>().ToHandler(x => OnProtectedEvent(x));
-                Map<InternalEvent>().ToHandler(x => OnInternalEvent(x));
-                Map<PrivateEvent>().ToHandler(x => OnPrivateEvent(x));
+                Map<PublicEvent>().ToHandler(OnPublicEvent);
+                Map<ProtectedEvent>().ToHandler(OnProtectedEvent);
+                Map<InternalEvent>().ToHandler(OnInternalEvent);
+                Map<PrivateEvent>().ToHandler(OnPrivateEvent);
             }
 
-            public class PublicEvent : SourcedEvent { }
-            public class ProtectedEvent : SourcedEvent { }
-            public class InternalEvent : SourcedEvent { }
-            public class PrivateEvent : SourcedEvent { }
+            public class PublicEvent { }
+            public class ProtectedEvent { }
+            public class InternalEvent { }
+            public class PrivateEvent { }
 
             public int PublicEventHandlerInvokeCount;
             public int ProtectedEventHandlerInvokeCount;
@@ -67,13 +67,13 @@ namespace Ncqrs.Tests.Eventing.Sourcing.Mapping
         {
             public override void InitializeEventHandlers()
             {
-                Map<DerivedEvent>().ToHandler(x => OnPublicEvent(x));
+                Map<DerivedEvent>().ToHandler(OnPublicEvent);
             }
 
             public void OnPublicEvent(BaseEvent e)
             { }
 
-            public class BaseEvent : SourcedEvent
+            public class BaseEvent
             { }
 
             public class DerivedEvent : BaseEvent
@@ -84,10 +84,10 @@ namespace Ncqrs.Tests.Eventing.Sourcing.Mapping
         {
             public override void InitializeEventHandlers()
             {
-                Map<BaseEvent>().ToHandler(x => OnPublicEvent(x)).MatchExact();
+                Map<BaseEvent>().ToHandler(OnPublicEvent).MatchExact();
             }
 
-            public class BaseEvent : SourcedEvent
+            public class BaseEvent
             { }
 
             public class DerivedEvent : BaseEvent
@@ -101,10 +101,10 @@ namespace Ncqrs.Tests.Eventing.Sourcing.Mapping
         {
             public override void InitializeEventHandlers()
             {
-                Map<BaseEvent>().ToHandler(x => OnPublicEvent(x));
+                Map<BaseEvent>().ToHandler(OnPublicEvent);
             }
 
-            public class BaseEvent : SourcedEvent
+            public class BaseEvent
             { }
 
             public class DerivedEvent : BaseEvent

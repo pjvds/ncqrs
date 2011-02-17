@@ -34,7 +34,7 @@ namespace ApplicationService.Denormalizers
         {
             using (var context = new ReadModelContainer())
             {
-                var itemToUpdate = context.NoteItemSet.Single(item => item.Id == evnt.Payload.NoteId);
+                var itemToUpdate = context.NoteItemSet.Single(item => item.Id == evnt.EventSourceId);
                 itemToUpdate.Text = evnt.Payload.NewText;
 
                 context.SaveChanges();

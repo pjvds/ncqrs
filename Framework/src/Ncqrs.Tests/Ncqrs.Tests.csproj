@@ -110,7 +110,6 @@
     <Compile Include="Domain\NoUnitOfWorkAvailableInThisContextExceptionTests.cs" />
     <Compile Include="Domain\Storage\AggregateRootCreationExceptionTests.cs" />
     <Compile Include="Domain\Storage\DomainRepositoryTests.cs" />
-    <Compile Include="Eventing\Sourcing\SourcedEventStreamTests.cs" />
     <Compile Include="Eventing\Storage\AttributeEventTypeResolverTests.cs" />
     <Compile Include="Eventing\Storage\ConcurrencyExceptionSpecs.cs" />
     <Compile Include="Eventing\Storage\NoDB\EventStoreTests\NoDBEventStoreTests.cs" />

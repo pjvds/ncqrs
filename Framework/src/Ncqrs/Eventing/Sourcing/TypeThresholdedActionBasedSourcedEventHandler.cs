@@ -131,13 +131,4 @@ namespace Ncqrs.Eventing.Sourcing
             return _handlerName;
         }
     }
-
-    //public class TypeThresholdedActionBasedDomainEventHandler<TEvent> : TypeThresholdedActionBasedDomainEventHandler
-    //    where TEvent : UncommittedEvent
-    //{
-    //    public TypeThresholdedActionBasedDomainEventHandler(Action<TEvent> handler, bool exact)
-    //        : base((e)=> handler((TEvent)e), typeof(TEvent), exact)
-    //    {
-    //    }
-    //}
 }

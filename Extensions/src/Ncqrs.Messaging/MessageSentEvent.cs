@@ -1,10 +1,9 @@
 ﻿using System;
-using Ncqrs.Eventing.Sourcing;
 
 namespace Ncqrs.Messaging
 {
    [Serializable]
-   public class MessageSentEvent : SourcedEvent
+   public class MessageSentEvent
    {
       public DateTime SentTime { get; set; }
       public OutgoingMessage Message { get; set; }

@@ -12,19 +12,19 @@ namespace Ncqrs.Tests.Domain
     [TestFixture]
     public class AggregateRootMappedByExpressionTests
     {
-        public class EventForPublicMethod : SourcedEvent
+        public class EventForPublicMethod
         {}
 
-        public class EventForProtectedMethod : SourcedEvent
+        public class EventForProtectedMethod
         {}
 
-        public class EventForPrivateMethod : SourcedEvent
+        public class EventForPrivateMethod
         {}
 
-        public class EventForNoEventHandlerMethod : SourcedEvent
+        public class EventForNoEventHandlerMethod
         {}
 
-        public class EventForMethodWithWrongMethodName : SourcedEvent
+        public class EventForMethodWithWrongMethodName
         {}
 
         public class TheAggregateRoot : AggregateRootMappedWithExpressions
