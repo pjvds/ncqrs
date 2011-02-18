@@ -1,6 +1,7 @@
 using System;
 using Ncqrs.Commanding.ServiceModel;
 using Ncqrs.Domain;
+using Ncqrs.Eventing.Sourcing.Snapshotting;
 using Ncqrs.Eventing.Storage;
 using Ncqrs.Tests.Integration.Domain;
 using NUnit.Framework;
@@ -18,6 +19,7 @@ namespace Ncqrs.Tests.Integration
             var commandService = new CommandService();
             commandService.RegisterExecutorsInAssembly(typeof(Snapshotting).Assembly);
             NcqrsEnvironment.SetDefault(BuildEventStore());
+            NcqrsEnvironment.SetDefault<ISnapshottingPolicy>(new SimpleSnapshottingPolicy(2));
 
             var noteId = Guid.NewGuid();
             var createNewCommand = new CreateNewNoteCommand(noteId, "Note One");
