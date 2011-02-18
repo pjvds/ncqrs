@@ -53,7 +53,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IPersistStreamsWithAbsoluteOrdering.cs" />
-    <Compile Include="JoesCommitTracker.cs" />
     <Compile Include="JoesUnitOfWork.cs" />
     <Compile Include="JoesUnitOfWorkFactory.cs" />
     <Compile Include="NullDispatcher.cs" />
@@ -84,7 +83,6 @@
     </Compile>
     <Compile Include="StoredEvent.cs" />
     <Compile Include="StoredEventExtensions.cs" />
-    <Compile Include="TransactionalSqlPersistenceEngine.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="SqlPersistence\CommonSqlStatements.resx">

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Transactions;
 using EventStore;
 using EventStore.Persistence.SqlPersistence;
 using EventStore.Serialization;
@@ -12,14 +13,16 @@ namespace Ncqrs.Eventing.Storage.JOliver.SqlPersistence
     {
         private readonly IPipelineStoreSqlDialect _dialect;
         private readonly ISerialize _serializer;
+        private readonly bool _transactional;
 
         public AbsoluteOrderingSqlPersistenceEngine(IConnectionFactory connectionFactory, 
             ISqlDialect dialect, 
             IPipelineStoreSqlDialect pipelineStoreSqlDialect,
-            ISerialize serializer)
+            ISerialize serializer, bool transactional)
             : base(connectionFactory, dialect, serializer)
         {
             _dialect = pipelineStoreSqlDialect;
+            _transactional = transactional;
             _serializer = serializer;
         }
 
@@ -78,6 +81,27 @@ namespace Ncqrs.Eventing.Storage.JOliver.SqlPersistence
                                    command.AddParameter(_dialect.CommitId, lastProcessedCommitId);
                                    command.Execute(_dialect.MarkLastProcessedCommit);
                                });
+        }
+
+        protected override TransactionScope OpenCommandScope()
+        {
+            return _transactional 
+                ? new TransactionScope(TransactionScopeOption.Required, GetTransactionOptions()) 
+                : new TransactionScope(TransactionScopeOption.Suppress);
+        }
+
+        protected override TransactionScope OpenQueryScope()
+        {
+            return new TransactionScope(TransactionScopeOption.Suppress);
+        }
+
+        private static TransactionOptions GetTransactionOptions()
+        {
+            return new TransactionOptions
+            {
+                IsolationLevel = System.Transactions.IsolationLevel.ReadCommitted,
+                Timeout = TransactionManager.MaximumTimeout
+            };
         }
     }
 }

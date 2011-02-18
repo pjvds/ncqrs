@@ -20,7 +20,7 @@ namespace Ncqrs.Tests.Integration
 
         protected override void InitializeEnvironment()
         {
-            var factory = new AbsoluteOrderingSqlPersistenceFactory("SqlCeEventStore", new BinarySerializer());
+            var factory = new AbsoluteOrderingSqlPersistenceFactory("SqlCeEventStore", new BinarySerializer(), false);
             var streamPersister = factory.Build();
             streamPersister.Initialize();
             var store = new OptimisticEventStore(streamPersister, new NullDispatcher());

@@ -8,23 +8,26 @@ namespace Ncqrs.Eventing.Storage.JOliver.SqlPersistence
     public class AbsoluteOrderingSqlPersistenceFactory : SqlPersistenceFactory
     {
         private readonly ISerialize _serializer;
+        private readonly bool _transactional;
         private readonly IPipelineStoreSqlDialect _dialect;
 
-        public AbsoluteOrderingSqlPersistenceFactory(string connectionName, ISerialize serializer) : base(connectionName, serializer)
+        public AbsoluteOrderingSqlPersistenceFactory(string connectionName, ISerialize serializer, bool transactional) : base(connectionName, serializer)
         {
             _serializer = serializer;
+            _transactional = transactional;
         }
 
-        public AbsoluteOrderingSqlPersistenceFactory(string connectionName, ISerialize serializer, ISqlDialect dialect, IPipelineStoreSqlDialect pipelineStoreSqlDialect) : base(connectionName, serializer, dialect)
+        public AbsoluteOrderingSqlPersistenceFactory(string connectionName, ISerialize serializer, bool transactional, ISqlDialect dialect, IPipelineStoreSqlDialect pipelineStoreSqlDialect) : base(connectionName, serializer, dialect)
         {
             _serializer = serializer;
+            _transactional = transactional;
             _dialect = pipelineStoreSqlDialect;
         }
 
         public override IPersistStreams Build()
         {
             return new AbsoluteOrderingSqlPersistenceEngine(
-                new DelegateConnectionFactory(OpenConnection), GetDialect(), GetPipelineStoreDialect(), _serializer);
+                new DelegateConnectionFactory(OpenConnection), GetDialect(), GetPipelineStoreDialect(), _serializer, _transactional);
         }
 
         protected virtual IPipelineStoreSqlDialect GetPipelineStoreDialect()

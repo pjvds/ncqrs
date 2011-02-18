@@ -97,7 +97,7 @@ namespace Ncqrs.Eventing.Storage.JOliver
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
-            foreach (IEventStream trackedStream in _trackedStreams.Values)
+            foreach (var trackedStream in _trackedStreams.Values)
             {
                 trackedStream.Dispose();
             }
@@ -111,6 +111,7 @@ namespace Ncqrs.Eventing.Storage.JOliver
                 trackedStream.CommitChanges(_commitId);
                 trackedStream.Dispose();
             }
+            _trackedStreams.Clear();
             Log.DebugFormat("Storing the event stream for command {0} to event store", _commitId);
             Log.DebugFormat("Publishing events for command {0} to event bus", _commitId);
             _eventBus.Publish(_eventStream);
