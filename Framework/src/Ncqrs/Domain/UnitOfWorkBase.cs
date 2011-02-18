@@ -8,9 +8,18 @@ namespace Ncqrs.Domain
 {
     public abstract class UnitOfWorkBase : IUnitOfWorkContext
     {
+        private readonly Guid _commandId;
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         private readonly Action<AggregateRoot, UncommittedEvent> _eventAppliedCallback;
+
+        /// <summary>
+        /// Gets the id of command which triggered this unit of work.
+        /// </summary>
+        protected Guid CommandId
+        {
+            get { return _commandId; }
+        }
 
         /// <summary>
         /// Gets or sets a value indicating whether this instance is disposed.
@@ -30,6 +39,7 @@ namespace Ncqrs.Domain
         /// <param name="commandId">Id of command being processed.</param>
         protected UnitOfWorkBase(Guid commandId)
         {
+            _commandId = commandId;
             Contract.Ensures(IsDisposed == false);
 
             Log.DebugFormat("Creating new unit of work for command {0} on thread {1}", commandId,

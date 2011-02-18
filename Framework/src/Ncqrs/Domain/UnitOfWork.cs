@@ -132,7 +132,7 @@ namespace Ncqrs.Domain
 
         public override string ToString()
         {
-            return string.Format("{0}@{1}", _eventStream.CommitId, Thread.CurrentThread.ManagedThreadId);
+            return string.Format("{0}@{1}", CommandId, Thread.CurrentThread.ManagedThreadId);
         }
     }
 }
