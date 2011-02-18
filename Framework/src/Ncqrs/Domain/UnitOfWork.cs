@@ -6,7 +6,10 @@ using System.Threading;
 using Ncqrs.Commanding;
 using Ncqrs.Domain.Storage;
 using Ncqrs.Eventing;
+using Ncqrs.Eventing.ServiceModel.Bus;
 using Ncqrs.Eventing.Sourcing;
+using Ncqrs.Eventing.Sourcing.Snapshotting;
+using Ncqrs.Eventing.Storage;
 
 namespace Ncqrs.Domain
 {
@@ -19,15 +22,25 @@ namespace Ncqrs.Domain
         /// </summary>
         private readonly Queue<AggregateRoot> _dirtyInstances;
         private readonly UncommittedEventStream _eventStream;
-        private readonly IDomainRepository _repository;       
+        private readonly IDomainRepository _repository;
+        private readonly IEventStore _eventStore;
+        private readonly ISnapshotStore _snapshotStore;
+        private readonly IEventBus _eventBus;
+        private readonly ISnapshottingPolicy _snapshottingPolicy;
 
-        public UnitOfWork(Guid commandId, IDomainRepository domainRepository) : base(commandId)
+        public UnitOfWork(Guid commandId, IDomainRepository domainRepository, IEventStore eventStore, ISnapshotStore snapshotStore, IEventBus eventBus, ISnapshottingPolicy snapshottingPolicy) : base(commandId)
         {
             Contract.Requires<ArgumentNullException>(domainRepository != null);
-
-            Contract.Ensures(_repository == domainRepository, "The _repository member should be initialized with the one given by the domainRepository parameter.");
+            Contract.Requires<ArgumentNullException>(snapshotStore != null);
+            Contract.Requires<ArgumentNullException>(eventStore != null);
+            Contract.Requires<ArgumentNullException>(eventBus != null);
+            Contract.Requires<ArgumentNullException>(snapshottingPolicy != null);
 
             _repository = domainRepository;
+            _snapshottingPolicy = snapshottingPolicy;
+            _eventBus = eventBus;
+            _snapshotStore = snapshotStore;
+            _eventStore = eventStore;
             _eventStream = new UncommittedEventStream(commandId);
             _dirtyInstances = new Queue<AggregateRoot>();
         }
@@ -55,7 +68,16 @@ namespace Ncqrs.Domain
         /// </returns>
         public override AggregateRoot GetById(Type aggregateRootType, Guid eventSourceId, long? lastKnownRevision)
         {
-            return _repository.GetById(aggregateRootType, eventSourceId, lastKnownRevision);
+            long maxVersion = lastKnownRevision.HasValue ? lastKnownRevision.Value : long.MaxValue;
+            Snapshot snapshot = null;
+            long minVersion = long.MinValue;
+            snapshot = _snapshotStore.GetSnapshot(eventSourceId, maxVersion);
+            if (snapshot != null)
+            {
+                minVersion = snapshot.Version + 1;
+            }
+            var eventStream = _eventStore.ReadFrom(eventSourceId, minVersion, maxVersion);
+            return _repository.Load(aggregateRootType, snapshot, eventStream);
         }
 
         /// <summary>
@@ -65,7 +87,10 @@ namespace Ncqrs.Domain
         {
             Contract.Requires<ObjectDisposedException>(!IsDisposed);
             Log.DebugFormat("Accepting unit of work {0}", this);
-            _repository.Store(_eventStream);
+            Log.DebugFormat("Storing the event stream for command {0} to event store", _eventStream.CommitId);
+            _eventStore.Store(_eventStream);
+            Log.DebugFormat("Publishing events for command {0} to event bus", _eventStream.CommitId);
+            _eventBus.Publish(_eventStream);
             CreateSnapshots();
         }
 
@@ -73,7 +98,19 @@ namespace Ncqrs.Domain
         {
             foreach (AggregateRoot savedInstance in _dirtyInstances)
             {
-                _repository.CreateSnapshotIfNecessary(savedInstance);
+                TryCreateCreateSnapshot(savedInstance);
+            }
+        }
+
+        private void TryCreateCreateSnapshot(AggregateRoot savedInstance)
+        {
+            if (_snapshottingPolicy.ShouldCreateSnapshot(savedInstance))
+            {
+                var snapshot = _repository.TryTakeSnapshot(savedInstance);
+                if (snapshot != null)
+                {
+                    _snapshotStore.SaveShapshot(snapshot);
+                }
             }
         }
 

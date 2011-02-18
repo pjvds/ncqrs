@@ -120,6 +120,9 @@
     <Compile Include="Eventing\Sourcing\EventAppliedEventArgs.cs" />
     <Compile Include="Eventing\Sourcing\IEntitySourcedEvent.cs" />
     <Compile Include="Eventing\Sourcing\EntitySourcedEventBase.cs" />
+    <Compile Include="Eventing\Sourcing\Snapshotting\ISnapshottingPolicy.cs" />
+    <Compile Include="Eventing\Sourcing\Snapshotting\NoSnapshottingPolicy.cs" />
+    <Compile Include="Eventing\Sourcing\Snapshotting\SimpleSnapshottingPolicy.cs" />
     <Compile Include="Eventing\Storage\NoDB\NoDBEventStore.cs" />
     <Compile Include="Eventing\Storage\NoDB\NoDBSnapshotStore.cs" />
     <Compile Include="Eventing\Storage\NoDB\StoredEventExtensions.cs" />

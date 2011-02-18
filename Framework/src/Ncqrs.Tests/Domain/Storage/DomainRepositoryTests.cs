@@ -44,27 +44,6 @@ namespace Ncqrs.Tests.Domain.Storage
             [EventHandler]
             private void CatchAllHandler(object e)
             {}
-        }
-
-        [Test]
-        public void Save_test()
-        {
-            var commandId = Guid.NewGuid();
-            using (NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork(commandId))
-            {
-                var store = MockRepository.GenerateMock<IEventStore>();
-                var bus = MockRepository.GenerateMock<IEventBus>();
-                var eventStream = new UncommittedEventStream(commandId);
-
-                store.Expect(s => s.Store(eventStream));
-                bus.Expect(b => b.Publish((IEnumerable<IPublishableEvent>) null)).IgnoreArguments();
-
-                var repository = new DomainRepository(store, bus);
-                repository.Store(eventStream);
-
-                bus.VerifyAllExpectations();
-                store.VerifyAllExpectations();
-            }
-        }
+        }        
     }
 }

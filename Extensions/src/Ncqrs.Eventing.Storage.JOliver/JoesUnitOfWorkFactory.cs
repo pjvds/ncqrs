@@ -1,17 +1,16 @@
-﻿using System;
-using Ncqrs.Commanding;
+using System;
+using Ncqrs.Domain;
 using Ncqrs.Domain.Storage;
-using Ncqrs.Eventing.Sourcing.Snapshotting;
-using Ncqrs.Eventing.Storage;
 using Ncqrs.Eventing.ServiceModel.Bus;
+using Ncqrs.Eventing.Sourcing.Snapshotting;
 
-namespace Ncqrs.Domain
+namespace Ncqrs.Eventing.Storage.JOliver
 {
-    public class UnitOfWorkFactory : IUnitOfWorkFactory
+    public class JoesUnitOfWorkFactory : IUnitOfWorkFactory
     {
         public IUnitOfWorkContext CreateUnitOfWork(Guid commandId)
         {
-            if(UnitOfWorkContext.Current != null)
+            if (UnitOfWorkContext.Current != null)
             {
                 throw new InvalidOperationException("There is already a unit of work created for this context.");
             }
