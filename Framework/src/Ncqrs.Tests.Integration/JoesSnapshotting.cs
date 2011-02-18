@@ -1,5 +1,7 @@
 ﻿using System.IO;
+using EventStore;
 using EventStore.Serialization;
+using Ncqrs.Domain;
 using Ncqrs.Eventing.Storage;
 using Ncqrs.Eventing.Storage.JOliver;
 using Ncqrs.Eventing.Storage.JOliver.SqlPersistence;
@@ -16,14 +18,17 @@ namespace Ncqrs.Tests.Integration
             File.Copy("NcqrsIntegrationTestsClean.sdf", "NcqrsIntegrationTests.sdf", true);
         }
 
-        protected override IEventStore BuildEventStore()
+        protected override void InitializeEnvironment()
         {
             var factory = new AbsoluteOrderingSqlPersistenceFactory("SqlCeEventStore", new BinarySerializer());
             var streamPersister = factory.Build();
             streamPersister.Initialize();
-            var store = new JoesEventStoreAdapter(streamPersister);
-            NcqrsEnvironment.SetDefault<ISnapshotStore>(store);
-            return store;
+            var store = new OptimisticEventStore(streamPersister, new NullDispatcher());
+            var snapshotStore = new JoesSnapshotStoreAdapter(streamPersister);
+            NcqrsEnvironment.SetDefault<ISnapshotStore>(snapshotStore);
+            var uowFactory = new JoesUnitOfWorkFactory(store);
+            NcqrsEnvironment.SetDefault<IUnitOfWorkFactory>(uowFactory);
         }
+
     }
 }

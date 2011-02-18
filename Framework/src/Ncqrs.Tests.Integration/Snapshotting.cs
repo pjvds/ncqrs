@@ -16,9 +16,9 @@ namespace Ncqrs.Tests.Integration
         [Test]
         public void Snapshotting_should_persist_state()
         {
+            InitializeEnvironment();
             var commandService = new CommandService();
             commandService.RegisterExecutorsInAssembly(typeof(Snapshotting).Assembly);
-            NcqrsEnvironment.SetDefault(BuildEventStore());
             NcqrsEnvironment.SetDefault<ISnapshottingPolicy>(new SimpleSnapshottingPolicy(2));
 
             var noteId = Guid.NewGuid();
@@ -42,6 +42,6 @@ namespace Ncqrs.Tests.Integration
             }
         }
 
-        protected abstract IEventStore BuildEventStore();
+        protected abstract void InitializeEnvironment();
     }
 }

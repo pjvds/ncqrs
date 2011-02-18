@@ -25,7 +25,7 @@ namespace Ncqrs.Eventing.Storage.JOliver
         private readonly Dictionary<Guid, IEventStream> _trackedStreams = new Dictionary<Guid, IEventStream>();
         private readonly UncommittedEventStream _eventStream;
 
-        public JoesUnitOfWork(Guid commandId, IStoreEvents eventStore, IDomainRepository domainRepository, ISnapshotStore snapshotStore, IEventBus eventBus, ISnapshottingPolicy snapshottingPolicy)
+        public JoesUnitOfWork(Guid commandId, IDomainRepository domainRepository, IStoreEvents eventStore, ISnapshotStore snapshotStore, IEventBus eventBus, ISnapshottingPolicy snapshottingPolicy)
             : base(commandId)
         {
             _eventStream = new UncommittedEventStream(commandId);
@@ -52,7 +52,13 @@ namespace Ncqrs.Eventing.Storage.JOliver
                                                  TimeStamp = evnt.EventTimeStamp
                                              }
                               };
-            var stream = _trackedStreams[aggregateRoot.EventSourceId];
+            IEventStream stream;
+            var id = aggregateRoot.EventSourceId;
+            if (!_trackedStreams.TryGetValue(id, out stream))
+            {
+                stream = _eventStore.CreateStream(id);
+                _trackedStreams[id] = stream;
+            }
             stream.Add(message);
             _eventStream.Append(evnt);
             _dirtyInstances.Add(aggregateRoot);

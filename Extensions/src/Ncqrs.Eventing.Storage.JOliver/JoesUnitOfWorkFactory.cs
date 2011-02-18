@@ -1,4 +1,5 @@
 using System;
+using EventStore;
 using Ncqrs.Domain;
 using Ncqrs.Domain.Storage;
 using Ncqrs.Eventing.ServiceModel.Bus;
@@ -8,6 +9,13 @@ namespace Ncqrs.Eventing.Storage.JOliver
 {
     public class JoesUnitOfWorkFactory : IUnitOfWorkFactory
     {
+        private readonly IStoreEvents _eventStore;
+
+        public JoesUnitOfWorkFactory(IStoreEvents eventStore)
+        {
+            _eventStore = eventStore;
+        }
+
         public IUnitOfWorkContext CreateUnitOfWork(Guid commandId)
         {
             if (UnitOfWorkContext.Current != null)
@@ -21,7 +29,7 @@ namespace Ncqrs.Eventing.Storage.JOliver
             var snapshottingPolicy = NcqrsEnvironment.Get<ISnapshottingPolicy>();
 
             var repository = new DomainRepository();
-            var unitOfWork = new UnitOfWork(commandId, repository, store, snapshotStore, bus, snapshottingPolicy);
+            var unitOfWork = new JoesUnitOfWork(commandId, repository, _eventStore, snapshotStore, bus, snapshottingPolicy);
             UnitOfWorkContext.Bind(unitOfWork);
             return unitOfWork;
         }

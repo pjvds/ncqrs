@@ -53,7 +53,7 @@ namespace ApplicationService
             var factory = new AbsoluteOrderingSqlPersistenceFactory("EventStore", new BinarySerializer());
             var streamPersister = factory.Build();
             streamPersister.Initialize();
-            var store = new JoesEventStoreAdapter(streamPersister);
+            var store = new JoesSnapshotStoreAdapter(streamPersister);
             return store;
         }
 

@@ -56,6 +56,7 @@
     <Compile Include="JoesCommitTracker.cs" />
     <Compile Include="JoesUnitOfWork.cs" />
     <Compile Include="JoesUnitOfWorkFactory.cs" />
+    <Compile Include="NullDispatcher.cs" />
     <Compile Include="SqlPersistence\AbsoluteOrderingSqlPersistenceFactory.cs" />
     <Compile Include="SqlPersistence\SqlAbsoluteOrderingPersistenceEngine.cs" />
     <Compile Include="CommitProcessingElement.cs" />
@@ -67,7 +68,7 @@
     <Compile Include="SqlPersistence\CommonPipelineStoreSqlDialect.cs" />
     <Compile Include="SqlPersistence\IPipelineStoreSqlDialect.cs" />
     <Compile Include="JoesBrowsableEventStore.cs" />
-    <Compile Include="JoesEventStoreAdapter.cs" />
+    <Compile Include="JoesSnapshotStoreAdapter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SqlPersistence\MsSqlStatements.Designer.cs">
       <AutoGen>True</AutoGen>

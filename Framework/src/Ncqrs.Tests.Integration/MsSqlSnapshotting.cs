@@ -32,11 +32,11 @@ namespace Ncqrs.Tests.Integration
             return ConfigurationManager.ConnectionStrings["MsSqlEventStore"].ConnectionString;
         }
 
-        protected override IEventStore BuildEventStore()
+        protected override void InitializeEnvironment()
         {
             var store = new MsSqlServerEventStore(GetConnectionString());
             NcqrsEnvironment.SetDefault<ISnapshotStore>(store);
-            return store;
+            NcqrsEnvironment.SetDefault<IEventStore>(store);
         }
     }
 }
