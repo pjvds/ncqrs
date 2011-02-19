@@ -16,7 +16,7 @@ namespace Ncqrs.Eventing.Storage.JOliver.Tests
         {
             var engine = MockRepository.GenerateMock<IPersistStreamsWithAbsoluteOrdering>();
             engine.Expect(x => x.GetLastProcessedSequentialNumber("Pipeline")).Return(0);
-            engine.Expect(x => x.Fetch(0)).Return(new Commit[] {});
+            engine.Expect(x => x.Fetch(0,0)).IgnoreArguments().Return(new Commit[] {});
             var sut = new JoesBrowsableEventStore(engine);
             sut.Fetch("Pipeline", 10).ToList();
 
@@ -29,7 +29,7 @@ namespace Ncqrs.Eventing.Storage.JOliver.Tests
             var engine = MockRepository.GenerateMock<IPersistStreamsWithAbsoluteOrdering>();
             engine.Expect(x => x.GetLastProcessedSequentialNumber("Pipeline")).Return(0);
             var streamId = Guid.NewGuid();
-            engine.Expect(x => x.Fetch(0)).Return(
+            engine.Expect(x => x.Fetch(0,0)).IgnoreArguments().Return(
                 new[]
                     {
                         CreateCommit(streamId, 1),
@@ -48,13 +48,13 @@ namespace Ncqrs.Eventing.Storage.JOliver.Tests
             var engine = MockRepository.GenerateMock<IPersistStreamsWithAbsoluteOrdering>();
             engine.Expect(x => x.GetLastProcessedSequentialNumber("Pipeline")).Return(0);
             var streamId = Guid.NewGuid();
-            engine.Expect(x => x.Fetch(0)).Return(
+            engine.Expect(x => x.Fetch(0,10)).Return(
                 new[]
                     {
                         CreateCommit(streamId, 1),
                         CreateCommit(streamId, 2)
                     });
-            engine.Expect(x => x.Fetch(2)).Return(
+            engine.Expect(x => x.Fetch(2,10)).Return(
                 new[]
                     {
                         CreateCommit(streamId, 3),

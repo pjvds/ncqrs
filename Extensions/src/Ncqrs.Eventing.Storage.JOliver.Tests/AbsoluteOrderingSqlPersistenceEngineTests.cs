@@ -41,11 +41,11 @@ namespace Ncqrs.Eventing.Storage.JOliver.Tests
             _sut.Commit(secondCommit);
             _sut.Commit(thirdCommit);
 
-            var all = _sut.Fetch(0).ToList();
+            var all = _sut.Fetch(0,100).ToList();
             var second = all[all.Count-2];
             second.CommitId.Should().Be(secondCommit.CommitId);
 
-            var secondAndLater = _sut.Fetch((long)second.Headers["SequentialId"]).ToList();
+            var secondAndLater = _sut.Fetch((long)second.Headers["SequentialId"],100).ToList();
             secondAndLater.Count.Should().Be(2);
             second = secondAndLater[0];
             second.CommitId.Should().Be(secondCommit.CommitId);
@@ -54,7 +54,7 @@ namespace Ncqrs.Eventing.Storage.JOliver.Tests
         [SetUp]
         public void Initialize()
         {
-            var factory = new AbsoluteOrderingSqlPersistenceFactory("EventStore", new BinarySerializer());
+            var factory = new AbsoluteOrderingSqlPersistenceFactory("EventStore", new BinarySerializer(), false);
             _sut = (IPersistStreamsWithAbsoluteOrdering)factory.Build();
             _sut.Initialize();
         }

@@ -48,14 +48,14 @@ namespace ApplicationService
             commandServiceHost.Close();
         }
 
-        private static IEventStore GetJoesEventStore()
-        {
-            var factory = new AbsoluteOrderingSqlPersistenceFactory("EventStore", new BinarySerializer());
-            var streamPersister = factory.Build();
-            streamPersister.Initialize();
-            var store = new JoesSnapshotStoreAdapter(streamPersister);
-            return store;
-        }
+        //private static IEventStore GetJoesEventStore()
+        //{
+        //    var factory = new AbsoluteOrderingSqlPersistenceFactory("EventStore", new BinarySerializer(), false);
+        //    var streamPersister = factory.Build();
+        //    streamPersister.Initialize();
+        //    var store = new JoesSnapshotStoreAdapter(streamPersister);
+        //    return store;
+        //}
 
         private static IEventStore GetBuiltInEventStore()
         {
@@ -63,13 +63,13 @@ namespace ApplicationService
             return new MsSqlServerEventStore(connectionString);
         }
 
-        private static IBrowsableElementStore GetJoesBrowsableElementStore()
-        {
-            var factory = new AbsoluteOrderingSqlPersistenceFactory("EventStore", new BinarySerializer());
-            var store = factory.Build();
-            store.Initialize();
-            return new JoesBrowsableEventStore(store);
-        }
+        //private static IBrowsableElementStore GetJoesBrowsableElementStore()
+        //{
+        //    var factory = new AbsoluteOrderingSqlPersistenceFactory("EventStore", new BinarySerializer(), false);
+        //    var store = factory.Build();
+        //    store.Initialize();
+        //    return new JoesBrowsableEventStore(store);
+        //}
 
         private static IBrowsableElementStore GetBuiltInBrowsableElementStore()
         {

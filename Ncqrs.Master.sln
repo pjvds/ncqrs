@@ -149,6 +149,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApplicationService", "Sampl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Tests.Integration", "Framework\src\Ncqrs.Tests.Integration\Ncqrs.Tests.Integration.csproj", "{D300CE86-E8DF-4E9A-9FEB-A2355661A9F2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Eventing.Storage.JOliver.RavenPersistence", "Extensions\src\Ncqrs.Eventing.Storage.JOliver.RavenPersistence\Ncqrs.Eventing.Storage.JOliver.RavenPersistence.csproj", "{A2ADE0B3-D3C0-4D6B-8701-C0F5E509A69A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -544,6 +546,16 @@ Global
 		{D300CE86-E8DF-4E9A-9FEB-A2355661A9F2}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{D300CE86-E8DF-4E9A-9FEB-A2355661A9F2}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{D300CE86-E8DF-4E9A-9FEB-A2355661A9F2}.Release|x86.ActiveCfg = Release|Any CPU
+		{A2ADE0B3-D3C0-4D6B-8701-C0F5E509A69A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2ADE0B3-D3C0-4D6B-8701-C0F5E509A69A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2ADE0B3-D3C0-4D6B-8701-C0F5E509A69A}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{A2ADE0B3-D3C0-4D6B-8701-C0F5E509A69A}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{A2ADE0B3-D3C0-4D6B-8701-C0F5E509A69A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A2ADE0B3-D3C0-4D6B-8701-C0F5E509A69A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2ADE0B3-D3C0-4D6B-8701-C0F5E509A69A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2ADE0B3-D3C0-4D6B-8701-C0F5E509A69A}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{A2ADE0B3-D3C0-4D6B-8701-C0F5E509A69A}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{A2ADE0B3-D3C0-4D6B-8701-C0F5E509A69A}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -574,6 +586,7 @@ Global
 		{B8B5FD78-06BE-4BC0-8A0A-7C63C3FEB63C} = {4EAA1C9A-E268-4BA7-A73E-940E3D769C3A}
 		{DCA6E39A-8D6B-4531-ACA7-33D790D27878} = {4EAA1C9A-E268-4BA7-A73E-940E3D769C3A}
 		{7C4B1AD0-C354-47D1-A9AB-793AE2AD52A2} = {4EAA1C9A-E268-4BA7-A73E-940E3D769C3A}
+		{A2ADE0B3-D3C0-4D6B-8701-C0F5E509A69A} = {4EAA1C9A-E268-4BA7-A73E-940E3D769C3A}
 		{8478A8FA-7295-4098-866D-47F458C766C8} = {84A6E29C-BC29-4348-BA51-4218E75CED1A}
 		{963C0C88-DCB6-4944-94EC-728CBB3C2778} = {84A6E29C-BC29-4348-BA51-4218E75CED1A}
 		{E7C55656-EC73-4802-9ED4-1BC321C86ABA} = {84A6E29C-BC29-4348-BA51-4218E75CED1A}
