@@ -12,32 +12,23 @@ namespace Ncqrs.Domain
     /// </summary>
     public abstract class AggregateRoot : EventSource
     {
-        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-        [ThreadStatic]
-        private static List<Action<AggregateRoot, UncommittedEvent>> _eventAppliedCallbacks;
-        private static List<Action<AggregateRoot, UncommittedEvent>> EventAppliedCallbacks
-        {
-            get
-            {
-                if (_eventAppliedCallbacks == null)
-                {
-                    _eventAppliedCallbacks = new List<Action<AggregateRoot, UncommittedEvent>>();
-                }
-                return _eventAppliedCallbacks;
-            }
-        }
+         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+    
+        // 628426 13 Feb 2011
+        // Previous ThreadStatic was null referencing at random times under load 
+        // These things work great
+        private static System.Threading.ThreadLocal<List<Action<AggregateRoot, UncommittedEvent>>> _eventAppliedCallbacks = new System.Threading.ThreadLocal<List<Action<AggregateRoot, UncommittedEvent>>>(() => new List<Action<AggregateRoot, UncommittedEvent>>());
 
         public static void RegisterThreadStaticEventAppliedCallback(Action<AggregateRoot, UncommittedEvent> callback)
         {
             Log.DebugFormat("Registering event applied callback {0}", callback.GetHashCode());
-            EventAppliedCallbacks.Add(callback);
+            _eventAppliedCallbacks.Value.Add(callback);
         }
 
         public static void UnregisterThreadStaticEventAppliedCallback(Action<AggregateRoot, UncommittedEvent> callback)
         {
             Log.DebugFormat("Deregistering event applied callback {0}", callback.GetHashCode());
-            EventAppliedCallbacks.Remove(callback);
+            _eventAppliedCallbacks.Value.Remove(callback);
         }
 
         protected AggregateRoot()
@@ -50,7 +41,7 @@ namespace Ncqrs.Domain
         protected override void OnEventApplied(UncommittedEvent appliedEvent)
         {
             base.OnEventApplied(appliedEvent);
-            var callbacks = EventAppliedCallbacks;
+            var callbacks = _eventAppliedCallbacks.Value;
 
             foreach(var callback in callbacks)
             {

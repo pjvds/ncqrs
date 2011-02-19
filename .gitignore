@@ -21,6 +21,7 @@ bin
 # Ncqrs in non framework solution
 /Extensions/lib/Ncqrs/*
 /Samples/MyNotes/lib/*
-/lib/*
+/lib/Debug/*
+/lib/Release/*
 release
 *.pidb

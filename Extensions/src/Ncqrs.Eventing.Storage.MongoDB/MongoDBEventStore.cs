@@ -2,8 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using MongoDB.Driver;
+using log4net;
 using Ncqrs.Eventing.Sourcing;
+using MongoDB.Driver;
+using MongoDB.Driver.Builders;
+using MongoDB.Bson;
+using Ncqrs.Eventing.Storage.Serialization;
+using MongoDB.Bson.IO;
+using Newtonsoft.Json.Linq;
 
 namespace Ncqrs.Eventing.Storage.MongoDB
 {
@@ -14,184 +20,171 @@ namespace Ncqrs.Eventing.Storage.MongoDB
         /// <summary>
         /// The default data uri that points to a local Mongo DB.
         /// </summary>
-        protected const string DEFAULT_DATABASE_URI = "mongo://127.0.0.1:27017/EventStore";
+        protected const string DEFAULT_DATABASE_URI = "mongodb://127.0.0.1:27017/EventStore";
 
-        protected readonly IDatabase database;
+        /// <summary>
+        /// The error code
+        /// </summary>
+        protected const string CONCURRENCY_ERROR_CODE = "E1100";
 
-        public MongoDBEventStore()
-            : this(DEFAULT_DATABASE_URI)
+
+        private readonly MongoDatabase _database;
+        private readonly MongoCollection<MongoCommit> _commits;
+        private readonly MongoCollection<BsonDocument> _events;
+
+        private IEventFormatter<JObject> _formatter;
+        private IEventTranslator<string> _translator;
+        private IEventConverter _converter;
+
+
+        public MongoDBEventStore(string connectionString = DEFAULT_DATABASE_URI, IEventTypeResolver typeResolver = null, IEventConverter converter = null)
         {
+            _database = MongoDatabase.Create(connectionString);
+            _commits = _database.GetCollection<MongoCommit>("Commits");
+            _events = _database.GetCollection<BsonDocument>("SourcedEvents");
+
+            _converter = converter ?? new NullEventConverter();
+            _formatter = new JsonEventFormatter(typeResolver ?? new SimpleEventTypeResolver());
+            _translator = new StringEventTranslator();
+
+            EnsureIndexes();
         }
 
-        public MongoDBEventStore(string databaseUri)
+        private void EnsureIndexes()
         {
-            database = Mongo.GetDatabase(databaseUri);
+            _commits.EnsureIndex(
+                IndexKeys.Ascending("CommitId"),
+                IndexOptions.SetName("CommitIdIndex"));
+
+            _commits.EnsureIndex(
+                IndexKeys.Ascending("Processed"),
+                IndexOptions.SetName("ProcessedIndex"));
+
+            _commits.EnsureIndex(
+                IndexKeys.Descending("EventSourceId", "FromVersion"),
+                IndexOptions.SetName("OptimisticEventSourceConcurrencyIndex").SetUnique(true));
+
+            _events.EnsureIndex(
+                IndexKeys.Ascending("EventIdentifier"),
+                IndexOptions.SetName("EventIdentifierIndex"));
         }
 
-        public IEnumerable<ISourcedEvent> GetAllEventsSinceVersion(Guid id, long version)
+        public CommittedEventStream ReadUntil(Guid id, long? maxVersion)
         {
-            IDBCollection eventSources = database.GetCollection("Events");
+            //var query = Query.EQ("SourceId", id);
+                
+            //// TODO: We can select events above maxversion since a commit can have the correct FromVersion, but contain events higher then max version.
+            //if(maxVersion.HasValue)
+            //    query = Query.And(query, Query.LTE("FromVersion", maxVersion));
 
-            var query = new DBQuery("_SourceId", id.ToString());
-            IDocument source = eventSources.FindOne(query);
+            //var streams = _events.Find(query).SetSortOrder("FromVersion");
+            //var events = streams.Select(strm => strm.Events);           
+            //return CommittedEventStream.Combine(streams);
+            return null;
+        }
 
-            if (source == null) return new SourcedEvent[] { };
+        public CommittedEventStream ReadFrom(Guid id, long minVersion)
+        {
+            //// TODO: We can select events above maxversion since a commit can have the correct FromVersion, but contain events higher then max version.
+            //var query = Query.And(Query.EQ("SourceId", id), Query.GTE("FromVersion", minVersion));
 
-            var eventsAsDbObjects = ((DBObjectArray)source["_Events"]).Values.Cast<IDBObject>();
+            //var streams = _eventStreams.Find(query).SetSortOrder("FromVersion");
 
-            //no benefit yield now we have single doc - might confused people due to lazy style invocation - esp if exception thrown
-            var events = new List<SourcedEvent>();
+            //return CommittedEventStream.Combine(streams);
+            return null;
+        }
 
-            foreach (var eventDbObject in eventsAsDbObjects)
+        public void Store(UncommittedEventStream eventStream)
+        {
+            var commit = new MongoCommit
             {
-                var evnt = DeserializeToEventIDBObject(eventDbObject);
+                CommitId = eventStream.CommitId,
+                EventSourceId = eventStream.SourceId,
+                FromVersion = eventStream.InitialVersion,
+                ToVersion = eventStream.Last().EventSequence,
+                Events = eventStream.Select(e=>e.EventIdentifier).ToArray(),
+                Processed = false
+            };
 
-                // TODO: Optimize: do not first serializing event before event sequence check.
-                if (evnt.EventSequence > version)
-                    events.Add(evnt);
-            }
-
-            // TODO: Add order to the query for optimization.
-            return events.OrderBy(evnt => evnt.EventSequence);
-        }
-
-        public IEnumerable<ISourcedEvent> GetAllEvents(Guid id)
-        {
-            return GetAllEventsSinceVersion(id, 0);
-        }
-
-        public virtual void Save(IEventSource source)
-        {
-            IEnumerable<ISourcedEvent> eventsToSave = source.GetUncommittedEvents();
-
-            IDBCollection sources = database.GetCollection("Events");
-
-            if (IsNewEventSource(source))
+            try
             {
-                InsertNewEventSource(source, eventsToSave, sources);
-                VerifyInsertSuccessful(source);
-            }
-            else
-            {
-                PushOptimisticUpdate(source, eventsToSave, sources);
-                VerifyUpdateSuccessful(source);
-            }
-        }
-
-        private void InsertNewEventSource(IEventSource source, IEnumerable<ISourcedEvent> eventsToSave, IDBCollection sources)
-        {
-            var arrayOfEventsAsIdbObjects = GetArrayOfEventsAsIDBObjects(source, eventsToSave);
-            var doc = new Document
-                          {
-                              {"_SourceId", source.EventSourceId.ToString()},
-                              {"_Events", arrayOfEventsAsIdbObjects},
-                              {"_Version", arrayOfEventsAsIdbObjects.Length} 
-                          };
-
-            // TODO: Add thread safe check. But, the driver should support checks on insert.
-            sources.Insert(doc);
-            VerifyInsertSuccessful(source);
-        }
-
-        private void PushOptimisticUpdate(IEventSource source, IEnumerable<ISourcedEvent> eventsToSave, IDBCollection sources)
-        {
-            var arrayOfEventsAsIdbObjects = GetArrayOfEventsAsIDBObjects(source, eventsToSave);
-            sources.Update(new DBQuery()
-                               {
-                                   {"_SourceId", source.EventSourceId.ToString()},
-                                   {"_Version", source.InitialVersion}
-                               }
-                           , Do.AddEachToSet("_Events", arrayOfEventsAsIdbObjects
-                                 ).Set("_Version", source.Version));
-        }
-
-        protected void VerifyInsertSuccessful(IEventSource source)
-        {
-            var lastError = database.GetLastError();
-            var errorMessage = lastError.ErrorMessage;
-            bool isInserted = String.IsNullOrEmpty(errorMessage);
-
-            if(!isInserted)
-            {
-                throw new MongoException(errorMessage);
-            }
-        }
-
-        protected void VerifyUpdateSuccessful(IEventSource source)
-        {
-            var lastError = database.GetLastError();
-            var isUpdated = String.IsNullOrEmpty(lastError.ErrorMessage);
-            if (!isUpdated)
-            {
-                throw new ConcurrencyException(source.EventSourceId, source.Version);
-            }
-        }
-
-        protected IDBObject[] GetArrayOfEventsAsIDBObjects(IEventSource source, IEnumerable<ISourcedEvent> eventsToSave)
-        {
-            return eventsToSave.Select(ue => ConvertEventToIDBObject(source, ue)).ToArray();
-        }
-
-        private bool IsNewEventSource(IEventSource source)
-        {
-            return source.InitialVersion == 0;
-        }
-
-        protected static IDBObject ConvertEventToIDBObject(IEventSource eventSource, IEvent @event)
-        {
-            // TODO: cache propretyinfo collections per type
-            PropertyInfo[] properties = @event.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public);
-
-            var dbObject = new DBObject();
-            dbObject["_SourceId"] = eventSource.EventSourceId.ToString();
-            dbObject["_TimeStamp"] = DateTime.UtcNow;
-            dbObject["_AssemblyQualifiedEventTypeName"] = @event.GetType().AssemblyQualifiedName;
-
-            foreach (PropertyInfo prop in properties)
-            {
-                dbObject[prop.Name] = prop.PropertyType.Equals(typeof(Guid)) || prop.PropertyType.Equals(typeof(Version))
-                                           ? prop.GetValue(@event, new object[] { }).ToString()
-                                           : prop.GetValue(@event, new object[] { });
-            }
-
-            return dbObject;
-        }
-
-        protected static SourcedEvent DeserializeToEventIDBObject(IDBObject dbObject)
-        {
-            Type eventType = Type.GetType((string)dbObject["_AssemblyQualifiedEventTypeName"]);
-
-            var sourceId = Guid.Parse(dbObject["_SourceId"].ToString());
-
-            var deserializedEvent = Activator.CreateInstance(eventType) as SourcedEvent;
-
-            foreach (string key in dbObject.Keys)
-            {
-                var propertyOnEvent = eventType.GetProperty(key, BindingFlags.Public | BindingFlags.Instance);
-
-                // TODO: Add warning to the log file when the prop was not found or writable.
-                if (propertyOnEvent == null || !propertyOnEvent.CanWrite || dbObject[key] == null) continue;
-
-                var propertyTypesMatch = propertyOnEvent.PropertyType.Equals(dbObject[key].GetType());
-
-                if (propertyTypesMatch)
+                try
                 {
-                    propertyOnEvent.SetValue(deserializedEvent, dbObject[key], new object[] { });
+                    SafellyInsertCommit(commit);
+                    InsertEvents(eventStream);
+                    MarkCommitAsProcessed(commit.CommitId);
                 }
-
-                var propertyOnEventIsGuidAndDbObjectPropertyIsString
-                    = !propertyTypesMatch &&
-                      propertyOnEvent.PropertyType.Equals(typeof(Guid)) &&
-                      dbObject[key].GetType().Equals(typeof(string));
-
-                if (propertyOnEventIsGuidAndDbObjectPropertyIsString)
+                catch
                 {
-                    var parsedGuid = new Guid(dbObject[key].ToString());
-                    propertyOnEvent.SetValue(deserializedEvent, parsedGuid, new object[] { });
+                    RemoveUnprocessedCommit(commit.CommitId);
+                    throw;
                 }
             }
+            catch (MongoSafeModeException ex)
+            {
+                if (ex.Message.Contains(CONCURRENCY_ERROR_CODE))
+                    throw new ConcurrencyException(eventStream.SourceId, -1);
+            }
+        }
 
-            return deserializedEvent;
+        private void InsertEvents(IEnumerable<UncommittedEvent> events)
+        {
+            var docs = events.Select(evnt =>
+            {
+                var document = _formatter.Serialize(evnt.EventIdentifier, evnt.EventTimeStamp, evnt.EventVersion,
+                                                    evnt.EventSourceId, evnt.EventSequence, evnt.Payload);
+                var raw = _translator.TranslateToRaw(document);
+                var bsonDocument = raw.ToBsonDocument();
+
+                return bsonDocument;
+            });
+
+            _commits.Insert(docs, SafeMode.True);
+        }
+
+        private void RemoveUnprocessedCommit(Guid commitId)
+        {
+            var query = Query.EQ("CommitId", BsonValue.Create(commitId));
+
+            var commitToRemove = _commits.FindOne(query);
+
+            if (commitToRemove != null)
+            {
+                RemoveEventsForCommit(commitToRemove);
+
+                _commits.Remove(Query.EQ("CommitId", commitId));
+            }
+        }
+
+        private void MarkCommitAsProcessed(Guid commitId)
+        {
+            _commits.Update(Query.EQ("CommitId", BsonValue.Create(commitId)),
+                            Update.Push("Processed", BsonValue.Create(true)));
+        }
+
+        private void RemoveEventsForCommit(MongoCommit commit)
+        {
+            _events.Remove(Query.In("EventIdentifier", BsonArray.Create(commit.Events)));            
+        }
+
+        private void SafellyInsertCommit(MongoCommit commit)
+        {
+            try
+            {
+                var result = _commits.Insert(commit, SafeMode.True);
+                _commits.Validate();
+            }
+            catch (MongoSafeModeException ex)
+            {
+                if (ex.Message.Contains(CONCURRENCY_ERROR_CODE))
+                    throw new ConcurrencyException(commit.EventSourceId, commit.FromVersion);
+            }
+        }
+
+        private static BsonDocument ToBsonDocument(StoredEvent<string> rawEvent)
+        {
+            var doc = rawEvent.ToBsonDocument();
+            return doc;
         }
     }
 }

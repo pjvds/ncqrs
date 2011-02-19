@@ -188,6 +188,14 @@ namespace Ncqrs.Eventing.Sourcing
 
         private long GetNextSequence()
         {
+
+            // 628426 31 Feb 2011 - the following absolutely needed to ensure correct sequencing, as incorrect versions were being passed to event store
+            // TODO: I don't think this should stay here
+            if (_initialVersion > 0 && _currentVersion == 0)
+            {
+                _currentVersion = _initialVersion;
+            }
+        
             _currentVersion++;
             return _currentVersion;
         }
@@ -208,7 +216,7 @@ namespace Ncqrs.Eventing.Sourcing
                 throw new InvalidOperationException(message);
             }
 
-            //Do we really really need this check? Why don't we trust IEventStore?
+            // TODO: Do we really really need this check? Why don't we trust IEventStore?
 
             if (evnt.EventSequence != Version + 1)
             {

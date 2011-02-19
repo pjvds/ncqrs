@@ -81,11 +81,35 @@ namespace Ncqrs.Eventing
         {
             get
             {
-                if (!_singleSource.HasValue)
+                if (!HasSingleSource)
                 {
                     throw new InvalidOperationException("Event stream must have a single source in order to retrieve its source.");
                 }
                 return _singleSource.Value;
+            }
+        }
+
+        public long InitialVersion
+        {
+            get
+            {
+                if (!HasSingleSource)
+                {
+                    throw new InvalidOperationException("Event stream must have a single source in order to retrieve its source initial version.");
+                }
+                return _eventSourceInformation[SourceId].InitialVersion;
+            }
+        }
+
+        public long CurrentVersion 
+        {
+            get
+            {
+                if (!HasSingleSource)
+                {
+                    throw new InvalidOperationException("Event stream must have a single source in order to retrieve its source current version.");
+                }
+                return _eventSourceInformation[SourceId].InitialVersion;
             }
         }
 
