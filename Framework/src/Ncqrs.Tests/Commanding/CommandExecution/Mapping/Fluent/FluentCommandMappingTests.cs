@@ -105,7 +105,7 @@ namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Fluent
         {
             var service = new CommandService();
 
-            Map.Command<AggregateRootTargetUpdateTitleCommand>().ToAggregateRoot<AggregateRootTarget>().WithId(cmd => cmd.Id, guid => GetAggregateRoot()).ToCallOn((cmd, aggroot) => aggroot.UpdateTitle(cmd.Title)).RegisterWith(service);
+            Map.Command<AggregateRootTargetUpdateTitleCommand>().ToAggregateRoot<AggregateRootTarget>().WithId(cmd => cmd.Id, (guid, knownVersion) => GetAggregateRoot()).ToCallOn((cmd, aggroot) => aggroot.UpdateTitle(cmd.Title)).RegisterWith(service);
             Map.Command<AggregateRootTargetCreateNewCommand>().ToAggregateRoot<AggregateRootTarget>().CreateNew((cmd) => new AggregateRootTarget(cmd.Title)).StoreIn((cmd, aggroot) => AggRoot = aggroot).RegisterWith(service);
 
             TheService = service;

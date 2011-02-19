@@ -58,7 +58,7 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
                     return;
                 }
             }
-            throw new CommandMappingException(string.Format("Coulnd not find any mapping attribute handlers for mapping command of type {0}.", command.GetType().AssemblyQualifiedName));
+            throw new CommandMappingException(string.Format("Could not find any mapping attribute handlers for mapping command of type {0}.", command.GetType().AssemblyQualifiedName));
         }
     }
 }

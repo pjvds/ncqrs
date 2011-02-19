@@ -3,7 +3,6 @@ using Ncqrs.Commanding;
 using Ncqrs.Commanding.CommandExecution.Mapping;
 using Ncqrs.Commanding.CommandExecution.Mapping.Attributes;
 using Ncqrs.Domain;
-using NUnit.Framework;
 
 namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Attributes
 {
@@ -34,7 +33,7 @@ namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Attributes
             new AttributeBasedCommandMapper().Map(Command, this);
         }
 
-        public void ExecuteActionOnExistingInstance(Func<ICommand, Guid> idCallback, Func<ICommand, Type> typeCallback, Action<AggregateRoot, ICommand> action)
+        public void ExecuteActionOnExistingInstance(Func<ICommand, Guid> idCallback, Func<ICommand, Type> typeCallback,  Action<AggregateRoot, ICommand> action)
         {
             if (VerificationAction != null)
             {

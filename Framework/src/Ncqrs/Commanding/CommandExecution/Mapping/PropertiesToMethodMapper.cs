@@ -206,5 +206,10 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping
                 }
             }
         }
+
+        private static ParameterAttribute GetParameterAttribute(PropertyInfo prop)
+        {
+            return (ParameterAttribute)prop.GetCustomAttributes(typeof(ParameterAttribute), false).SingleOrDefault();
+        }
     }
 }

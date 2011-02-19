@@ -118,6 +118,8 @@ namespace Ncqrs.Domain.Storage
 
             var snapshotableInterfaceType = snapshotables.Single();
             Log.DebugFormat("Found snapshot interface {0} on aggregate root {1}.", snapshotableInterfaceType.FullName, aggType.FullName);
+
+            return snapshotableInterfaceType;
         }
     }
 }
