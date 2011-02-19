@@ -206,7 +206,7 @@ namespace Ncqrs.Tests.Domain
         {
             var theAggregate = new MyAggregateRoot();
 
-            var history = new CommittedEventStream();
+            var history = new CommittedEventStream(Guid.Empty);
 
             theAggregate.InitializeFromHistory(history);
         }

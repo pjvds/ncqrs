@@ -90,7 +90,7 @@ namespace Ncqrs.Messaging.Tests
         private void ExpectNotToFindExistingAggregate()
         {
             _eventStore.Expect(x => x.ReadFrom(Guid.Empty, long.MinValue, long.MaxValue))
-               .Return(new CommittedEventStream())
+               .Return(new CommittedEventStream(Guid.Empty))
                .IgnoreArguments()
                .Repeat.Any();
         }

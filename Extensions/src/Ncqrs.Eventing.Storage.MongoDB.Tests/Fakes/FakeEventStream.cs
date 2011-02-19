@@ -56,9 +56,9 @@ namespace Ncqrs.Eventing.Storage.MongoDB.Tests.Fakes
         }
 
         [Serializable]
-        public class AccountNameChangedEvent : SourcedEntityEvent
+        public class AccountNameChangedEvent : EntitySourcedEventBase
         {
-            public Guid CustomerId { get { return EventSourceId; } }
+            public Guid CustomerId { get; set; }
             public Guid AccountId { get { return EntityId; } }
             public string NewAccountName { get; set; }
 
@@ -67,8 +67,7 @@ namespace Ncqrs.Eventing.Storage.MongoDB.Tests.Fakes
 
             }
 
-            public AccountNameChangedEvent(Guid eventIdentifier, Guid aggregateRootId, Guid entityId, long eventSequence, DateTime eventTimeStamp, string newAccountName)
-                : base(eventIdentifier, aggregateRootId, entityId, eventSequence, eventTimeStamp)
+            public AccountNameChangedEvent(string newAccountName)
             {
                 NewAccountName = newAccountName;
             }

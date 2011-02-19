@@ -47,14 +47,21 @@ namespace Ncqrs.Eventing
             return GetEnumerator();
         }
 
-        public CommittedEventStream()
+        public CommittedEventStream(Guid sourceId)
+        {
+            _sourceId = sourceId;
+        }
+
+        public CommittedEventStream(Guid sourceId, params CommittedEvent[] events)
+            : this(sourceId, (IEnumerable<CommittedEvent>)events)
         {
         }
 
-        public CommittedEventStream(IEnumerable<CommittedEvent> events)
+        public CommittedEventStream(Guid sourceId, IEnumerable<CommittedEvent> events)
         {
             // TODO: ValidateEventInformation(events);
-
+            _sourceId = sourceId;
+            _events = events.ToList();
             if (_events.Count > 0)
             {
                 var first = _events.First();
@@ -64,7 +71,6 @@ namespace Ncqrs.Eventing
                 _toVersion = last.EventSequence;
 
                 _toVersion = _events.OrderByDescending(evnt => evnt.EventSequence).First().EventSequence;
-                _sourceId = last.EventSourceId;
             }
         }
 
@@ -90,17 +96,5 @@ namespace Ncqrs.Eventing
         //            throw new ArgumentOutOfRangeException("events", msg);
         //        }
         //}
-
-        public static CommittedEventStream Combine(IEnumerable<CommittedEventStream> streams)
-        {
-            var events = new List<CommittedEvent>();
-
-            foreach (var stream in streams.OrderBy(strm=>strm._fromVersion))
-            {
-                events.AddRange(stream);
-            }
-
-            return new CommittedEventStream(events);
-        }
     }
 }

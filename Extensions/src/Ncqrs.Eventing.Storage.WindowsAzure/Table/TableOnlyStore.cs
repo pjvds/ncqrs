@@ -39,19 +39,16 @@ namespace Ncqrs.Eventing.Storage.WindowsAzure
 
         #region IEventStore Members
 
-        public CommittedEventStream ReadUntil(Guid id, long? maxVersion)
+        public CommittedEventStream ReadFrom(Guid id, long minVersion, long maxVersion)
         {
             NcqrsEventStoreContext eventContext = new NcqrsEventStoreContext(id, account, prefix);
 
             IQueryable<NcqrsEvent> events = eventContext.Events;
-            if (maxVersion.HasValue)
-            {
-                events = eventContext.Events.Where(e => e.Sequence <= maxVersion.Value);
-            }
+            events = eventContext.Events.Where(e => e.Sequence >= minVersion && e.Sequence <= maxVersion);
 
             IList<NcqrsEvent> theEvents = events.ToList();
 
-            return new CommittedEventStream(
+            return new CommittedEventStream(id,
                 theEvents.
                     Select(e => new CommittedEvent(
                         e.CommitId,
@@ -66,27 +63,7 @@ namespace Ncqrs.Eventing.Storage.WindowsAzure
                 );
         }
 
-        public CommittedEventStream ReadFrom(Guid id, long minVersion)
-        {
-            NcqrsEventStoreContext eventContext = new NcqrsEventStoreContext(id, account, prefix);
-
-            IQueryable<NcqrsEvent> events = eventContext.Events.Where(e => e.Sequence >= minVersion);
-            
-            return new CommittedEventStream(
-                events.
-                    Select(e => new CommittedEvent(
-                        e.CommitId,
-                        Guid.Parse(e.RowKey),
-                        Guid.Parse(e.PartitionKey),
-                        e.Sequence,
-                        e.Timestamp,
-                        new BinaryFormatter()
-                            .Deserialize(
-                        new MemoryStream(e.Data)),
-                        Version.Parse(e.Version)))
-                );
-        }
-
+        
         public void Store(UncommittedEventStream eventStream)
         {
             // TODO: lrn to use GroupBy
