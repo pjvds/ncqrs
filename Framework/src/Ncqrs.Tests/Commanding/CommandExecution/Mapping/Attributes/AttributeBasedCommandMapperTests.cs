@@ -22,6 +22,11 @@ namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Attributes
             {
                 get { throw new NotImplementedException(); }
             }
+
+            public long? KnownVersion
+            {
+                get { throw new NotImplementedException(); }
+            }
         }
 
         [MapsToAggregateRootConstructor("foo")]
@@ -31,6 +36,22 @@ namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Attributes
             {
                 get { throw new NotImplementedException(); }
             }
+
+            public long? KnownVersion
+            {
+                get { throw new NotImplementedException(); }
+            }
+        }
+
+        [MapsToAggregateRootConstructor("foo")]
+        public class CommandTypeAndWithAttributeAndKnownVersion : ICommand
+        {
+            public Guid CommandIdentifier
+            {
+                get { throw new NotImplementedException(); }
+            }
+
+            public long? KnownVersion { get{ throw new NotImplementedException(); } }
         }
 
         public class TargetAggRoot : AggregateRootMappedByConvention

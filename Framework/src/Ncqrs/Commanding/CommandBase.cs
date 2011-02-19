@@ -28,6 +28,20 @@ namespace Ncqrs.Commanding
         }
 
         /// <summary>
+        /// Gets the known version of the aggregate root.
+        /// This can be used for optimistic concurrency.
+        /// When set, the command should only be executed
+        /// when the current version of the aggregate root
+        /// is the same as the known version.
+        /// </summary>
+        [ExcludeInMapping]
+        public long? KnownVersion
+        { 
+            get; 
+            private set; 
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="CommandBase"/> class.
         /// This initializes the <see cref="CommandIdentifier"/> with the given
         /// id from <paramref name="commandIdentifier"/>.

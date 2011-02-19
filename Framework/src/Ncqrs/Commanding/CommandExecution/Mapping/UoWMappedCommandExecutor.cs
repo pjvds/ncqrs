@@ -32,7 +32,7 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping
             {
                 var id = idCallback(_command);
                 var type = typeCallback(_command);
-                var aggRoot = _uow.GetById(type, id, null);
+                var aggRoot = _uow.GetById(type, id, _command.KnownVersion);
 
                 action(aggRoot, _command);
                 _uow.Accept();

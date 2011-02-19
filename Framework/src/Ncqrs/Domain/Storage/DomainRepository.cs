@@ -106,15 +106,20 @@ namespace Ncqrs.Domain.Storage
             // Aggregate does not implement any ISnapshotable interface.
             if (snapshotables.Count() == 0)
             {
+                Log.DebugFormat("No snapshot interface found on aggregate root {0}.", aggType.FullName);
                 return null;
             }
             // Aggregate does implement multiple ISnapshotable interfaces.
             if (snapshotables.Count() > 1)
             {
+                Log.WarnFormat("Aggregate root {0} contains multiple snapshot interfaces while only one is allowed.", aggType.FullName);
                 return null;
             }
 
-            return snapshotables.Single();
+            var snapshotableInterfaceType = snapshotables.Single();
+            Log.DebugFormat("Found snapshot interface {0} on aggregate root {1}.", snapshotableInterfaceType.FullName, aggType.FullName);
+
+            return snapshotableInterfaceType;
         }
     }
 }

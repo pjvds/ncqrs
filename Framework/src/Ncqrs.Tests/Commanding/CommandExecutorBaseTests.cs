@@ -15,6 +15,8 @@ namespace Ncqrs.Tests.Commanding
         {
             public Guid CommandIdentifier { get; set; }
 
+            public long? KnownVersion { get; set; }
+
             public FooCommand()
             {
                 CommandIdentifier = Guid.NewGuid();
