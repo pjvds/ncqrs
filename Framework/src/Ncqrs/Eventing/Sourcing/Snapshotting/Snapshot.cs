@@ -3,30 +3,45 @@
 namespace Ncqrs.Eventing.Sourcing.Snapshotting
 {
     /// <summary>
-    /// Holds the full state of an <see cref="IEventSource"/> at a certain version.
+    /// Holds the full state of an aggregate root at a certain version.
     /// </summary>
     [Serializable]
-    public abstract class Snapshot : ISnapshot
+    public class Snapshot
     {
         /// <summary>
-        /// Gets the id of the event source from which this snapshot was created.
+        /// Initializes a new instance of the Snapshot class.
         /// </summary>
-        /// <remarks>
-        /// The id of the event source from which this snapshot was created.
-        /// </remarks>
-        public Guid EventSourceId
+        /// <param name="eventSourceId">The value which uniquely identifies the stream to which the snapshot applies.</param>
+        /// <param name="version">The position at which the snapshot applies.</param>
+        /// <param name="payload">The snapshot or materialized view of the stream at the revision indicated.</param>
+        public Snapshot(Guid eventSourceId, long version, object payload)
+            : this()
         {
-            get; set;
+            EventSourceId = eventSourceId;
+            Version = version;
+            Payload = payload;
         }
-
 
         /// <summary>
-        /// Gets the version of the event source when this snapshot was created.
+        /// Initializes a new instance of the Snapshot class.
         /// </summary>
-        /// <value>The version of the event source when this snapshot was created.</value>
-        public long EventSourceVersion
+        protected Snapshot()
         {
-            get; set;
         }
+
+        /// <summary>
+        /// Gets the value which uniquely identifies the aggregate root to which the snapshot applies.
+        /// </summary>
+        public Guid EventSourceId { get; private set; }
+
+        /// <summary>
+        /// Gets the position at which the snapshot applies.
+        /// </summary>
+        public long Version { get; private set; }
+
+        /// <summary>
+        /// Gets the snapshot or materialized view of the stream at the revision indicated.
+        /// </summary>
+        public object Payload { get; private set; }
     }
 }

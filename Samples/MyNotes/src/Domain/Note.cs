@@ -26,6 +26,7 @@ namespace Domain
             // this event (the OnNewNoteAdded method).
             ApplyEvent(new NewNoteAdded
             {
+                NoteId = noteId,
                 Text = text,
                 CreationDate = clock.UtcNow()
             });
@@ -62,8 +63,6 @@ namespace Domain
         {
             return new NoteSnapshot
                        {
-                           EventSourceId = EventSourceId,
-                           EventSourceVersion = Version,
                            Text = _text,
                            CreationDate = _creationDate
                        };
@@ -71,14 +70,12 @@ namespace Domain
 
         public void RestoreFromSnapshot(NoteSnapshot snapshot)
         {
-            EventSourceId = snapshot.EventSourceId;
-            InitialVersion = snapshot.EventSourceVersion;   
             _text = snapshot.Text;
             _creationDate = snapshot.CreationDate;
         }
     }
     [Serializable]
-    public class NoteSnapshot : Snapshot
+    public class NoteSnapshot
     {
         public string Text { get; set; }
 

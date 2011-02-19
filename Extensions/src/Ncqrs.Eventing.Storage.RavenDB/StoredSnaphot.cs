@@ -9,5 +9,6 @@ namespace Ncqrs.Eventing.Storage.RavenDB
         public Guid EventSourceId { get; set; }
         [JsonProperty(TypeNameHandling = TypeNameHandling.All)]
         public object Data { get; set; }
+        public long Version { get; set; }
     }
 }

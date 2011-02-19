@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Reflection;
 using Ncqrs.Commanding;
+using Ncqrs.Commanding.CommandExecution;
 using Ncqrs.Config;
 using Ncqrs.Domain;
 using Ncqrs.Eventing.ServiceModel.Bus;
+using Ncqrs.Eventing.Sourcing.Snapshotting;
 using Ncqrs.Eventing.Storage;
 
 namespace Ncqrs
@@ -33,8 +35,11 @@ namespace Ncqrs
             SetDefault<IUniqueIdentifierGenerator>(new BasicGuidGenerator());
             SetDefault<IEventBus>(new InProcessEventBus());
             SetDefault<IEventStore>(new InMemoryEventStore());
+            SetDefault<ISnapshotStore>(new NullSnapshotStore());
             SetDefault<IUnitOfWorkFactory>(new UnitOfWorkFactory());
             SetDefault<IKnownCommandsEnumerator>(new AllCommandsInAppDomainEnumerator());
+            SetDefault<ITransactionService>(new DefaultTransactionService());
+            SetDefault<ISnapshottingPolicy>(new NoSnapshottingPolicy());
         }
 
         /// <summary>

@@ -23,12 +23,12 @@ namespace Ncqrs.EventBus
             return _wrappedStore.Fetch(pipelineName, maxCount);
         }
 
-        public void MarkLastProcessedEvent(string pipelineName, IProcessingElement processingElement)
+        public void MarkLastProcessedElement(string pipelineName, IProcessingElement processingElement)
         {
             _cursorCalculator.Append(processingElement);
             if (_cursorCalculator.SequenceLength >= _threshold)
             {
-                _wrappedStore.MarkLastProcessedEvent(pipelineName, processingElement);
+                _wrappedStore.MarkLastProcessedElement(pipelineName, processingElement);
                 _cursorCalculator.ClearSequence();
             }
         }

@@ -10,7 +10,6 @@ namespace Ncqrs.NServiceBus
     /// <typeparam name="T">Type of transported event.</typeparam>
     [Serializable]
     public class EventMessage<T> : IMessage
-       where T : IEvent
     {
         /// <summary>
         /// Gets or sets transported event.

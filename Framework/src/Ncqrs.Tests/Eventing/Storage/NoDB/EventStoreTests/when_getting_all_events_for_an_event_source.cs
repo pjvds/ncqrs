@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using Ncqrs.Eventing.Sourcing;
 using NUnit.Framework;
 
 namespace Ncqrs.Eventing.Storage.NoDB.Tests.EventStoreTests
@@ -8,14 +7,14 @@ namespace Ncqrs.Eventing.Storage.NoDB.Tests.EventStoreTests
     [TestFixture]
     public class when_getting_all_events_for_an_event_source : NoDBEventStoreTestFixture
     {
-        private ISourcedEvent[] _returnedEvents;
+        private object [] _returnedEvents;
 
         [TestFixtureSetUp]
         public void SetUp()
         {
             BaseSetup();
 
-            _returnedEvents = EventStore.GetAllEvents(Source.EventSourceId).ToArray();
+            _returnedEvents = EventStore.ReadFrom(EventSourceId, long.MinValue, long.MaxValue).Select(x => x.Payload).ToArray();
         }
 
         [Test]
@@ -27,7 +26,7 @@ namespace Ncqrs.Eventing.Storage.NoDB.Tests.EventStoreTests
         [Test]
         public void it_should_return_an_empty_result_for_a_non_existant_event_source()
         {
-            Assert.That(EventStore.GetAllEvents(Guid.NewGuid()), Is.Empty);
+            Assert.That(EventStore.ReadFrom(Guid.NewGuid(), long.MinValue, long.MaxValue), Is.Empty);
         }
     }
 }

@@ -8,7 +8,7 @@ using NUnit.Framework;
 namespace Ncqrs.Eventing.Storage.NoDB.Tests.EventStoreTests
 {
     [TestFixture]
-    [Ignore("Tests failing when executed in CMD (e.q. running BUILD.bat), they succeed when executed in Visual Studio.")]
+    //[Ignore("Tests failing when executed in CMD (e.q. running BUILD.bat), they succeed when executed in Visual Studio.")]
     public class when_saving_a_new_event_source : NoDBEventStoreTestFixture
     {
         private string _filename;
@@ -19,8 +19,8 @@ namespace Ncqrs.Eventing.Storage.NoDB.Tests.EventStoreTests
         {
             BaseSetup();
 
-            _foldername = Source.EventSourceId.ToString().Substring(0, 2);
-            _filename = Source.EventSourceId.ToString().Substring(2);
+            _foldername = GetPath();
+            _filename = EventSourceId.ToString().Substring(2);
         }
 
         [Test]
@@ -39,10 +39,9 @@ namespace Ncqrs.Eventing.Storage.NoDB.Tests.EventStoreTests
                 foreach (string line in GetEventStrings(reader))
                 {
                     Console.WriteLine(line);
-                    StoredEvent<JObject> storedevent = line.ReadStoredEvent(Source.EventSourceId, i);
+                    StoredEvent<JObject> storedevent = line.ReadStoredEvent(EventSourceId, i);
                     i++;
                     Assert.That(storedevent, Is.Not.Null);
-                    Assert.That(Events.Count(e => e.EventIdentifier == storedevent.EventIdentifier) == 1);
                 }
             }
         }

@@ -55,7 +55,7 @@ namespace Website.Controllers
         public ActionResult Edit(ChangeNoteText command)
         {
             ChannelHelper.Use(_channelFactory.CreateChannel(), (client) =>
-                                client.Execute(new ExecuteRequest(command)));
+                              client.Execute(new ExecuteRequest(command)));
 
             // Return user back to the index that
             // displays all the notes.));

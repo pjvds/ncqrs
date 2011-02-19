@@ -43,7 +43,7 @@ namespace Ncqrs.Commanding.CommandExecution
         /// <param name="message">The message.</param>
         /// <param name="inner">The inner exception.</param>
         /// <exception cref="ArgumentNullException">Occurs when <i>commandType</i> is a <c>null</c> dereference.</exception>
-        public ExecutorForCommandNotFoundException(Type commandType, string message, Exception inner) : base((String.IsNullOrEmpty(message) ? String.Format("No handler was found for command {0}.", commandType.GetType().FullName) : message), inner)
+        public ExecutorForCommandNotFoundException(Type commandType, string message, Exception inner) : base((String.IsNullOrEmpty(message) ? String.Format("No handler was found for command {0}.", commandType.FullName) : message), inner)
         {
             Contract.Requires<ArgumentNullException>(commandType != null);
 

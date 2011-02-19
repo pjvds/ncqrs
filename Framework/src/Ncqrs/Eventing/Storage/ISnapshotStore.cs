@@ -10,27 +10,27 @@ namespace Ncqrs.Eventing.Storage
         /// <summary>
         /// Saves a snapshot of the specified event source.
         /// </summary>
-        void SaveShapshot(ISnapshot source);
+        void SaveShapshot(Snapshot source);
 
         /// <summary>
         /// Gets a snapshot of a particular event source, if one exists. Otherwise, returns <c>null</c>.
         /// </summary>
-        ISnapshot GetSnapshot(Guid eventSourceId);
+        Snapshot GetSnapshot(Guid eventSourceId, long maxVersion);
     }
 
     [ContractClassFor(typeof(ISnapshotStore))]
     internal abstract class ISnapshotStoreContracts : ISnapshotStore
     {
-        public void SaveShapshot(ISnapshot source)
+        public void SaveShapshot(Snapshot source)
         {
             Contract.Requires<ArgumentNullException>(source != null, "The source cannot be null.");
         }
 
-        public ISnapshot GetSnapshot(Guid eventSourceId)
+        public Snapshot GetSnapshot(Guid eventSourceId, long maxVersion)
         {
-            Contract.Ensures(Contract.Result<ISnapshot>() != null ? Contract.Result<ISnapshot>().EventSourceId == eventSourceId : true);
+            Contract.Ensures(Contract.Result<Snapshot>() != null ? Contract.Result<Snapshot>().EventSourceId == eventSourceId : true);
 
-            return default(ISnapshot);
+            return default(Snapshot);
         }
     }
 }

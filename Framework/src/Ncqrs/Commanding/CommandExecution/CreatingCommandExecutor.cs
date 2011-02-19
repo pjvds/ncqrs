@@ -35,7 +35,7 @@ namespace Ncqrs.Commanding.CommandExecution
 
         public void Execute(TCommand command)
         {
-            using (var work = _uowFactory.CreateUnitOfWork())
+            using (var work = _uowFactory.CreateUnitOfWork(command.CommandIdentifier))
             {
                 _create(command);
                 work.Accept();

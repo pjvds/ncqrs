@@ -11,30 +11,41 @@ namespace Ncqrs.Config.Windsor
 {
     public class WindsorInProcessEventBus : IEventBus
     {
-        readonly IWindsorContainer _container;
-        public WindsorInProcessEventBus(IWindsorContainer container) { _container = container; }
-
         static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        readonly IWindsorContainer _container;
 
-        public virtual void Publish(IEvent eventMessage)
+        public WindsorInProcessEventBus(IWindsorContainer container)
+        {
+            _container = container;
+        }
+
+
+        public void Publish(IPublishableEvent eventMessage)
         {
             var eventMessageType = eventMessage.GetType();
 
             Log.InfoFormat("Started publishing event {0}.", eventMessageType.FullName);
 
-            var handlers = GetHandlersForEvent(eventMessage);
+            var handlers = GetHandlersForEvent(eventMessage).ToList();
+
+            var publishedEventClosedType = typeof(PublishedEvent<>).MakeGenericType(eventMessage.Payload.GetType());
+            var publishedEvent = (PublishedEvent)Activator.CreateInstance(publishedEventClosedType, eventMessage);
 
             if (handlers.Count() == 0)
+            {
                 Log.WarnFormat("Did not found any handlers for event {0}.", eventMessageType.FullName);
+            }
             else
-                PublishToHandlers(eventMessage, eventMessageType, handlers);
+            {
+                PublishToHandlers(publishedEvent, eventMessageType, handlers);
+            }
         }
 
-        public virtual void Publish(IEnumerable<IEvent> eventMessages)
+        public void Publish(IEnumerable<IPublishableEvent> eventMessages)
         {
             eventMessages.ForEach(Publish);
         }
-
+        
         static void PublishToHandlers(dynamic eventMessage, Type eventMessageType, IEnumerable<dynamic> handlers)
         {
             Log.DebugFormat("Found {0} handlers for event {1}.", handlers.Count(), eventMessageType.FullName);
@@ -50,25 +61,12 @@ namespace Ncqrs.Config.Windsor
             }
         }
 
-        protected virtual IEnumerable<dynamic> GetHandlersForEvent(IEvent eventMessage)
+        protected virtual IEnumerable<dynamic> GetHandlersForEvent(IPublishableEvent eventMessage)
         {
-            var eventTypes = new List<Type>();
-            var type = eventMessage.GetType();
-            while (type != null)
-            {
-                var interfaces = type.GetInterfaces().Where(i => typeof (IEvent).IsAssignableFrom(i));
-                eventTypes.Add(type);
-                eventTypes.AddRange(interfaces);
-                type = typeof (IEvent).IsAssignableFrom(type.BaseType) ? type.BaseType : null;
-            }
-            eventTypes = eventTypes.Distinct().ToList();
-            foreach (var eventType in eventTypes)
-            {
-                var handlerType = typeof (IEventHandler<>).MakeGenericType(eventType);
-                var handlers = _container.ResolveAll(handlerType);
-                foreach (var handler in handlers)
-                    yield return handler;
-            }
+            var type = eventMessage.Payload.GetType();
+            var handlerType = typeof (IEventHandler<>).MakeGenericType(type);
+            var handlers = _container.ResolveAll(handlerType);
+            return handlers.Cast<dynamic>();
         }
     }
 }

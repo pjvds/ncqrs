@@ -10,6 +10,7 @@ using Ncqrs.Domain.Storage;
 using Ncqrs.Eventing.ServiceModel.Bus;
 using Ncqrs.Eventing.Storage;
 using Ncqrs.Eventing.Storage.NoDB;
+using Ncqrs.Eventing.Storage.SQL;
 
 namespace Tests
 {
@@ -41,8 +42,8 @@ namespace Tests
 
         private static IEventStore InitializeEventStore()
         {
-//            return new MsSqlServerEventStore(@"Data Source=.\sqlexpress;Initial Catalog=MsSqlServerEventStoreTestEventStore;Integrated Security=SSPI;");
-            return new NoDBEventStore("TestStore");
+            return new MsSqlServerEventStore(@"Data Source=.\sqlexpress;Initial Catalog=MsSqlServerEventStoreTestEventStore;Integrated Security=SSPI;");
+            //return new NoDBEventStore("TestStore");
         }
 
         private static ISnapshotStore InitializeSnapshotStore()
@@ -73,8 +74,14 @@ namespace Tests
             var snapshotstore = NcqrsEnvironment.Get<ISnapshotStore>();
 
             var repository = new DomainRepository(store, bus, snapshotstore);
-            return new UnitOfWork(repository);
+
+            // TODO: Set command id via param.
+            return new UnitOfWork(Guid.Empty, repository);
         }
 
+        public IUnitOfWorkContext CreateUnitOfWork(Guid commandId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

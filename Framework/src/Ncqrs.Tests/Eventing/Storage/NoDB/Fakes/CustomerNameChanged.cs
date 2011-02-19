@@ -4,35 +4,26 @@ using Ncqrs.Eventing.Sourcing;
 namespace Ncqrs.Eventing.Storage.NoDB.Tests.Fakes
 {
     [Serializable]
-    public class CustomerNameChanged : SourcedEvent
+    public class CustomerNameChanged
     {
         public CustomerNameChanged()
         {
         }
 
-        public CustomerNameChanged(Guid eventIdentifier, Guid eventSourceId, long eventSequence, DateTime eventTimeStamp,
-                                   string newName)
-            : base(eventIdentifier, eventSourceId, eventSequence, eventTimeStamp)
+        public CustomerNameChanged(Guid customerId, string newName)
         {
             NewName = newName;
+            CustomerId = customerId;
         }
 
-        public Guid CustomerId
-        {
-            get { return EventSourceId; }
-        }
-
+        public Guid CustomerId { get; set; }
         public string NewName { get; set; }
 
         public override bool Equals(object obj)
         {
             var other = obj as CustomerNameChanged;
             if (other == null) return false;
-            bool result = EventIdentifier.Equals(other.EventIdentifier) &&
-                          EventSourceId.Equals(other.EventSourceId) &&
-                          EventSequence.Equals(other.EventSequence) &&
-                          EventTimeStamp.Equals(other.EventTimeStamp) &&
-                          CustomerId.Equals(other.CustomerId) &&
+            bool result = CustomerId.Equals(other.CustomerId) &&
                           NewName.Equals(other.NewName);
             return result;
         }

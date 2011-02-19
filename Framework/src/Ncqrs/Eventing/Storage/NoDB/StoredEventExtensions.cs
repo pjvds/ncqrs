@@ -17,31 +17,7 @@ namespace Ncqrs.Eventing.Storage.NoDB
                             storedEvent.EventIdentifier, storedEvent.EventTimeStamp.Ticks, storedEvent.EventName,
                             storedEvent.EventVersion, storedEvent.Data.ToString().Replace("\n", "").Replace("\r", ""));
             return sb.ToString();
-        }
-
-        public static byte[] GetBytes(this StoredEvent<JObject> storedEvent)
-        {
-            var output = new MemoryStream();
-            var writer = new BinaryWriter(output);
-            writer.Write(storedEvent.EventIdentifier.ToByteArray());
-            writer.Write(storedEvent.EventTimeStamp.Ticks);
-            writer.Write(storedEvent.EventName);
-            writer.Write(storedEvent.EventVersion.ToString());
-            var bsonWriter = new BsonWriter(output);
-            storedEvent.Data.WriteTo(bsonWriter);
-            return output.ToArray();
-        }
-
-        public static StoredEvent<JObject> ReadStoredEvent(this byte[] eventBytes, Guid id, long version)
-        {
-            var input = new MemoryStream(eventBytes);
-            var reader = new BinaryReader(input);
-            var bsonReader = new BsonReader(input);
-            return new StoredEvent<JObject>(new Guid(reader.ReadBytes(16)), new DateTime(reader.ReadInt64()),
-                                            reader.ReadString(), new Version(reader.ReadString()), id, version,
-                                            JObject.Load(bsonReader));
-        }
-
+        }        
 
         public static StoredEvent<JObject> ReadStoredEvent(this string eventString, Guid id, long version)
         {

@@ -2,7 +2,7 @@
 
 namespace Ncqrs.Eventing.Storage.NoDB.Tests.Fakes
 {
-    public class TestSnapshot : Snapshot
+    public class TestSnapshot
     {
         public string Name   { get; set; }
 
@@ -10,9 +10,7 @@ namespace Ncqrs.Eventing.Storage.NoDB.Tests.Fakes
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return Equals(other.Name, Name) 
-                   && Equals(other.EventSourceId, EventSourceId) 
-                   && Equals(other.EventSourceVersion, EventSourceVersion);
+            return Equals(other.Name, Name);
         }
 
         public override bool Equals(object obj)

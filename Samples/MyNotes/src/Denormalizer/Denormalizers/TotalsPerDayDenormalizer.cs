@@ -7,11 +7,11 @@ namespace ReadModel.Denormalizers
     public class TotalsPerDayDenormalizer : IEventHandler<NewNoteAdded>,
                                             IEventHandler<NoteTextChanged>
     {
-        public void Handle(NewNoteAdded evnt)
+        public void Handle(PublishedEvent<NewNoteAdded> evnt)
         {
             using (var context = new ReadModelContainer())
             {
-                var date = evnt.CreationDate.Date;
+                var date = evnt.Payload.CreationDate.Date;
                 var totalsForDate = context.TotalsPerDayItemSet.SingleOrDefault(i => i.Date == date);
 
                 if (totalsForDate == null)
@@ -25,7 +25,7 @@ namespace ReadModel.Denormalizers
             }
         }
 
-        public void Handle(NoteTextChanged evnt)
+        public void Handle(PublishedEvent<NoteTextChanged> evnt)
         {
             using (var context = new ReadModelContainer())
             {

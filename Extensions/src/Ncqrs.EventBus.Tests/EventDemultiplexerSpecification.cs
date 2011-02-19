@@ -1,4 +1,5 @@
 using System;
+using Ncqrs.Eventing;
 using NUnit.Framework;
 using FluentAssertions;
 
@@ -15,7 +16,7 @@ namespace Ncqrs.EventBus.Tests
 
             var sut = new Demultiplexer();
             sut.EventDemultiplexed += (s, e) => { enqueuedToProcessingCount++; };
-            sut.Demultiplex(CreateEvent(eventSourceId));
+            sut.Demultiplex(CreateElement(eventSourceId));
 
             enqueuedToProcessingCount.Should().Be(1);
 
@@ -31,8 +32,8 @@ namespace Ncqrs.EventBus.Tests
 
             var sut = new Demultiplexer();
             sut.EventDemultiplexed += (s, e) => { enqueuedToProcessingCount++; };
-            sut.Demultiplex(CreateEvent(firstEventSourceId));
-            sut.Demultiplex(CreateEvent(secondEventSourceId));
+            sut.Demultiplex(CreateElement(firstEventSourceId));
+            sut.Demultiplex(CreateElement(secondEventSourceId));
 
             enqueuedToProcessingCount.Should().Be(2);
         }
@@ -46,15 +47,19 @@ namespace Ncqrs.EventBus.Tests
 
             var sut = new Demultiplexer();
             sut.EventDemultiplexed += (s, e) => { enqueuedToProcessingCount++; };
-            sut.Demultiplex(CreateEvent(eventSourceId));
-            sut.Demultiplex(CreateEvent(eventSourceId));
+            sut.Demultiplex(CreateElement(eventSourceId));
+            sut.Demultiplex(CreateElement(eventSourceId));
 
             enqueuedToProcessingCount.Should().Be(1);
         }
 
-        private static SourcedEventProcessingElement CreateEvent(Guid sourceId)
+        private static IProcessingElement CreateElement(Guid sourceId)
         {
-            return new SourcedEventProcessingElement(0, new TestEvent(Guid.NewGuid(), sourceId, 0, DateTime.Now));
+            return new FakeProcessingElement
+                       {
+                           GroupingKey = sourceId,
+                           UniqueId = Guid.NewGuid().ToString()
+                       };
         }
     }
 }

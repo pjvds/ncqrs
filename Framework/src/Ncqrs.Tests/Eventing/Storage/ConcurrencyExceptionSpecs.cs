@@ -1,6 +1,4 @@
 ﻿using System;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 using FluentAssertions;
 using Ncqrs.Eventing.Storage;
 using NUnit.Framework;
@@ -8,7 +6,7 @@ using NUnit.Framework;
 namespace Ncqrs.Tests.Eventing.Storage
 {
     [TestFixture]
-    public class ConcurrencyExceptionSpecs
+    public class ConcurrencyExceptionSpecs : BaseExceptionTests<ConcurrencyException>
     {
         [Test]
         public void Constructing_it_should_initialize_the_right_members()
@@ -22,22 +20,15 @@ namespace Ncqrs.Tests.Eventing.Storage
             ex.EventSourceVersion.Should().Be(eventSourceVersion);
         }
 
-        [Test]
-        public void It_should_be_serializable()
+        protected override ConcurrencyException Create()
         {
-            var theException = new ConcurrencyException(Guid.NewGuid(), 15);
-            ConcurrencyException deserializedException = null;
+            return new ConcurrencyException(Guid.NewGuid(), 15);
+        }
 
-            using (var buffer = new MemoryStream())
-            {
-                var formatter = new BinaryFormatter();
-                formatter.Serialize(buffer, theException);
-
-                buffer.Seek(0, SeekOrigin.Begin);
-                deserializedException = (ConcurrencyException)formatter.Deserialize(buffer);
-            }
-
-            deserializedException.Should().NotBeNull();
+        protected override void VerifyDeserialized(ConcurrencyException created, ConcurrencyException deserialized)
+        {
+            deserialized.EventSourceId.Should().Be(created.EventSourceId);
+            deserialized.EventSourceVersion.Should().Be(created.EventSourceVersion);
         }
     }
 }

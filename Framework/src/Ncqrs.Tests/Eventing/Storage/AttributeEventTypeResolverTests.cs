@@ -83,14 +83,6 @@ namespace Ncqrs.Tests.Eventing.Storage
             ex.Message.Should().Be("Could not add event 'bar' for type 'Ncqrs.Tests.Eventing.Storage.AttributeEventTypeResolverTests+AliasedFooEvent' as the type 'Ncqrs.Tests.Eventing.Storage.AttributeEventTypeResolverTests+BarEvent' is already using this name.\r\nParameter name: type");
         }
 
-
-        [Test]
-        public void Throws_if_event_type_does_not_inherit_IEvent()
-        {
-            var ex = Assert.Throws<ArgumentException>(() => resolver.AddEvent(typeof(NotAnEvent)));
-            ex.Message.Should().Contain("type must inherit IEvent");
-        }
-
         [Test]
         public void Throws_if_event_does_not_have_a_name()
         {

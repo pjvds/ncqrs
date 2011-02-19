@@ -2,6 +2,7 @@
 using System.IO;
 using Ncqrs.Eventing.Sourcing;
 using Ncqrs.Eventing.Storage.NoDB.Tests.Fakes;
+using Ncqrs.Spec;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -11,38 +12,30 @@ namespace Ncqrs.Eventing.Storage.NoDB.Tests.EventStoreTests
     public abstract class NoDBEventStoreTestFixture
     {
         protected NoDBEventStore EventStore;
-        protected SourcedEvent[] Events;
-        protected IEventSource Source;
+        protected object[] Events;
+        protected Guid EventSourceId;
 
         [TestFixtureSetUp]
         public void BaseSetup()
         {
-            EventStore = new NoDBEventStore("./");
-            Source = MockRepository.GenerateMock<IEventSource>();
-            Guid aggregateId = Guid.NewGuid();
+            EventStore = new NoDBEventStore("./NoDBTests/"+GetType().Name);
+            EventSourceId = Guid.NewGuid();
             Guid entityId = Guid.NewGuid();
-            int sequenceCounter = 1;
-            Events = new SourcedEvent[]
-                         {
-                             //new CustomerCreatedEvent(Guid.NewGuid(), aggregateId, sequenceCounter++, DateTime.UtcNow, "Foo",
-                             //                         35),
-                             //new CustomerNameChanged(Guid.NewGuid(), aggregateId, sequenceCounter++, DateTime.UtcNow,
-                             //                        "Name" + sequenceCounter),
-                             //new CustomerNameChanged(Guid.NewGuid(), aggregateId, sequenceCounter++, DateTime.UtcNow,
-                             //                        "Name" + sequenceCounter),
-                             new AccountTitleChangedEvent(Guid.NewGuid(), aggregateId, entityId, sequenceCounter++, DateTime.UtcNow, "Title" + sequenceCounter )
-                         };
-            Source.Stub(e => e.EventSourceId).Return(aggregateId);
-            Source.Stub(e => e.InitialVersion).Return(0);
-            Source.Stub(e => e.Version).Return(Events.Length);
-            Source.Stub(e => e.GetUncommittedEvents()).Return(Events);
-            EventStore.Save(Source);
+            Events = new object[] {new AccountTitleChangedEvent("Title")};
+            var eventStream = Prepare.Events(Events)
+                .ForSourceUncomitted(EventSourceId, Guid.NewGuid());
+            EventStore.Store(eventStream);
         }
-    
+
         [TestFixtureTearDown]
         public void TearDown()
         {
-            Directory.Delete(Source.EventSourceId.ToString().Substring(0, 2), true);
+            Directory.Delete(GetPath(), true);
+        }
+
+        protected string GetPath()
+        {
+            return "./NoDBTests/" + GetType().Name+"/"+EventSourceId.ToString().Substring(0, 2);
         }
     }
 }

@@ -58,11 +58,6 @@ namespace Ncqrs.Eventing.Sourcing.Mapping
                         var message = String.Format("The method {0}.{1} could not be mapped as an event handler, since it has {2} parameters where 1 is required.", method.DeclaringType.Name, method.Name, NumberOfParameters(method));
                         throw new InvalidEventHandlerMappingException(message);
                     }
-                    if (!typeof(IEvent).IsAssignableFrom(FirstParameterType(method))) // The parameter should be an IEvent.
-                    {
-                        var message = String.Format("The method {0}.{1} could not be mapped as an event handler, since it the first parameter is not an event type.", method.DeclaringType.Name, method.Name);
-                        throw new InvalidEventHandlerMappingException(message);
-                    }
 
                     var handler = CreateHandlerForMethod(target, method, attribute);
                     handlers.Add(handler);
@@ -76,9 +71,9 @@ namespace Ncqrs.Eventing.Sourcing.Mapping
         {
             Type firstParameterType = method.GetParameters().First().ParameterType;
 
-            Action<IEvent> handler = e => method.Invoke(eventSource, new object[] { e });
+            Action<object> handler = e => method.Invoke(eventSource, new[] { e });
 
-            return new TypeThresholdedActionBasedDomainEventHandler(handler, firstParameterType, attribute.Exact);
+            return new TypeThresholdedActionBasedDomainEventHandler(handler, firstParameterType, method.Name, attribute.Exact);
         }
 
         private static Boolean IsMarkedAsEventHandler(MethodInfo target, out EventHandlerAttribute attribute)

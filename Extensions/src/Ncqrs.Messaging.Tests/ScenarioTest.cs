@@ -78,9 +78,9 @@ namespace Ncqrs.Messaging.Tests
             object message = sendingStrategy.DequeueMessage();
             messageService.Process(message);
 
-            using (var uow = NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork())
+            using (var uow = NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork(Guid.NewGuid()))
             {
-                var cargo = uow.GetById<Cargo>(cargoId);
+                var cargo = (Cargo)uow.GetById(typeof(Cargo),cargoId, null);
                 Assert.AreEqual(1, cargo.HandlingEventCount);
             }
         }
@@ -171,16 +171,16 @@ namespace Ncqrs.Messaging.Tests
             }
         }
 
-        public class HandlingEventRegistered : SourcedEvent
+        public class HandlingEventRegistered
         {
             public Guid CargoId { get; set; }
         }
 
-        public class CargoBooked : SourcedEvent
+        public class CargoBooked
         {            
         }
 
-        public class CargoHandled : SourcedEvent
+        public class CargoHandled
         {
         }
     }

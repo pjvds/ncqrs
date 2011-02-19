@@ -45,13 +45,12 @@ namespace Ncqrs.Eventing.Sourcing
         /// Initializes from history.
         /// </summary>
         /// <param name="history">The history.</param>
-        void InitializeFromHistory(IEnumerable<ISourcedEvent> history);
+        void InitializeFromHistory(CommittedEventStream history);
 
         /// <summary>
-        /// Gets the uncommitted events.
+        /// Event fired when this source publishes an event.
         /// </summary>
-        /// <returns></returns>
-        IEnumerable<ISourcedEvent> GetUncommittedEvents();
+        event EventHandler<EventAppliedEventArgs> EventApplied;
 
         /// <summary>
         /// Commits the events.

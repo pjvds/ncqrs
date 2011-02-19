@@ -8,11 +8,11 @@ namespace Denormalizer.Denormalizers
     public class NoteItemDenormalizer : IEventHandler<NewNoteAdded>,
                                         IEventHandler<NoteTextChanged>
     {
-        public void Handle(NewNoteAdded evnt)
+        public void Handle(PublishedEvent<NewNoteAdded> evnt)
         {
             using (var context = new ReadModelContainer())
             {
-                var existing = context.NoteItemSet.SingleOrDefault(x => x.Id == evnt.NoteId);
+                var existing = context.NoteItemSet.SingleOrDefault(x => x.Id == evnt.Payload.NoteId);
                 if (existing != null)
                 {
                     return;                    
@@ -20,9 +20,9 @@ namespace Denormalizer.Denormalizers
 
                 var newItem = new NoteItem
                 {
-                    Id = evnt.NoteId,
-                    Text = evnt.Text,
-                    CreationDate = evnt.CreationDate
+                    Id = evnt.Payload.NoteId,
+                    Text = evnt.Payload.Text,
+                    CreationDate = evnt.Payload.CreationDate
                 };
 
                 context.NoteItemSet.AddObject(newItem);
@@ -30,12 +30,12 @@ namespace Denormalizer.Denormalizers
             }
         }
 
-        public void Handle(NoteTextChanged evnt)
+        public void Handle(PublishedEvent<NoteTextChanged> evnt)
         {
             using (var context = new ReadModelContainer())
             {
-                var itemToUpdate = context.NoteItemSet.Single(item => item.Id == evnt.NoteId);
-                itemToUpdate.Text = evnt.NewText;
+                var itemToUpdate = context.NoteItemSet.Single(item => item.Id == evnt.Payload.NoteId);
+                itemToUpdate.Text = evnt.Payload.NewText;
 
                 context.SaveChanges();
             }

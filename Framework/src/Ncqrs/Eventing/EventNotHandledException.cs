@@ -7,24 +7,24 @@ namespace Ncqrs.Domain
     [Serializable]
     public class EventNotHandledException : Exception
     {
-        public IEvent Event
+        public object Event
         {
             get;
             private set;
         }
 
-        public EventNotHandledException(IEvent evnt)
+        public EventNotHandledException(object evnt)
             : this(evnt, evnt != null ? String.Format("No handler handled the {0} event.", evnt.GetType().FullName) : null)
         {
 
         }
 
-        public EventNotHandledException(IEvent evnt, String message)
+        public EventNotHandledException(object evnt, String message)
             : this(evnt, message, null)
         {
         }
 
-        public EventNotHandledException(IEvent evnt, String message, Exception inner)
+        public EventNotHandledException(object evnt, String message, Exception inner)
             : base(message, inner)
         {
             Event = evnt;

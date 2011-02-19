@@ -6,14 +6,13 @@ namespace AwesomeAppRefactored.Events
 {
     [Serializable]
     [EventName("MyCompany:AwesomeApp:Events:PersonCreated")]
-    public class PersonCreatedEvent : SourcedEvent
+    public class PersonCreatedEvent
     {
         public string Forename { get; set; }
         public string Surname { get; set; }
 
         public PersonCreatedEvent()
         {
-            EventVersion = new Version(1, 1);
         }
 
         public PersonCreatedEvent(string forename, string surname) : this()

@@ -6,7 +6,7 @@ namespace AwesomeApp.Events
 {
     [Serializable]
     [EventName("MyCompany:AwesomeApp:Events:PersonCreated")]
-    public class PersonCreatedEvent : SourcedEvent
+    public class PersonCreatedEvent
     {
         public string Forename { get; private set; }
         public string Surname { get; private set; }

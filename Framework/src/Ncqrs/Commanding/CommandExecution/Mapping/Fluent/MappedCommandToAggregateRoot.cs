@@ -66,7 +66,7 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Fluent
         /// <param name="getidfromcommandfunc">The method responsible for retrieving the id of the aggregateroot from the command.</param>
         /// <param name="getaggregaterootfunc">The method responsible for retrieving the aggregateroot of type <typeparamref name="TAggRoot"/> from a <see cref="Guid"/>.</param>
         /// <returns>A <see cref="MappedCommandToAggregateRootMethod&lt;TCommand, TAggRoot&gt;"/>.</returns>
-        public MappedCommandToAggregateRootMethod<TCommand, TAggRoot> WithId(Func<TCommand, Guid> getidfromcommandfunc, Func<Guid, TAggRoot> getaggregaterootfunc)
+        public MappedCommandToAggregateRootMethod<TCommand, TAggRoot> WithId(Func<TCommand, Guid> getidfromcommandfunc, Func<Guid, long?, TAggRoot> getaggregaterootfunc)
         {
             Contract.Requires<ArgumentNullException>(getidfromcommandfunc != null, "getidfromcommandfunc can not be null.");
             Contract.Requires<ArgumentNullException>(getaggregaterootfunc != null, "getaggregaterootfunc can not be null.");

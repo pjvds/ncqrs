@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Ncqrs.Eventing;
 using Ncqrs.Eventing.Sourcing;
 
 namespace Ncqrs.EventBus.IntegrationTest
@@ -24,12 +25,14 @@ namespace Ncqrs.EventBus.IntegrationTest
                 for (int i = 0; i < count; i++)
                 {
                     _fetched++;
-                    yield return new SourcedEventProcessingElement(new RandomEvent(_fetched));
+                    var evnt = new UncommittedEvent(Guid.NewGuid(), Guid.NewGuid(), _fetched, _fetched, DateTime.Now, new object(),
+                                                    new Version(1, 0));
+                    yield return new SourcedEventProcessingElement(evnt);
                 }
             }
         }
 
-        public void MarkLastProcessedEvent(string pipelineName, IProcessingElement evnt)
+        public void MarkLastProcessedElement(string pipelineName, IProcessingElement evnt)
         {            
         }
     }

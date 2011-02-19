@@ -17,5 +17,17 @@ namespace Ncqrs.Commanding
         { 
             get;
         }
+
+        /// <summary>
+        /// Gets the known version of the aggregate root.
+        /// This can be used for optimistic concurrency.
+        /// When set, the command should only be executed
+        /// when the current version of the aggregate root
+        /// is the same as the known version.
+        /// </summary>
+        long? KnownVersion
+        {
+            get;
+        }
     }
 }
