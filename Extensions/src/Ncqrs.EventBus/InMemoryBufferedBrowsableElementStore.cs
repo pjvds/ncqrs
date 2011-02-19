@@ -65,9 +65,9 @@ namespace Ncqrs.EventBus
             return _firstElementPushed != null;
         }
 
-        public void MarkLastProcessedEvent(string pipelineName, IProcessingElement processingElement)
+        public void MarkLastProcessedElement(string pipelineName, IProcessingElement processingElement)
         {
-            _persistentStore.MarkLastProcessedEvent(pipelineName, processingElement);
+            _persistentStore.MarkLastProcessedElement(pipelineName, processingElement);
         }
 
         public void PushElement(IProcessingElement processingElement)

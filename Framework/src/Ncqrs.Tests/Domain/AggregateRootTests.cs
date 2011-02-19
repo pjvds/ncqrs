@@ -315,7 +315,7 @@ namespace Ncqrs.Tests.Domain
         [Test]
         public void Should_be_able_to_register_RegisterThreadStaticEventAppliedCallbacks_from_parallel_threads()
         {
-            Action<AggregateRoot, ISourcedEvent> callback = (x, y) => { };
+            Action<AggregateRoot, UncommittedEvent> callback = (x, y) => { };
 
             Action registerOneCallbackOnAggregateRoot = () => AggregateRoot.RegisterThreadStaticEventAppliedCallback(callback);
             Action registerTwoCallbacksOnAggregateRoot = () => 
