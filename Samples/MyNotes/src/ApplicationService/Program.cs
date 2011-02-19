@@ -23,20 +23,17 @@ namespace ApplicationService
     static class Program
     {
         public static Func<IBrowsableElementStore> GetBrowsableEventStore;
-        public static Func<IEventStore> GetEventStore;
 
         static void Main(string[] args)
         {
             GetBrowsableEventStore = GetBuiltInBrowsableElementStore;
-            GetEventStore = GetBuiltInEventStore;
 
-            
             var bus = new InProcessEventBus(true);
             bus.RegisterAllHandlersInAssembly(typeof(Program).Assembly);
             var buffer = new InMemoryBufferedBrowsableElementStore(GetBrowsableEventStore(), 20 /*magic number found in ThresholedFetchPolicy*/);
             var pipeline = Pipeline.Create("Default", new EventBusProcessor(bus), buffer);
 
-            BootStrapper.BootUp(buffer, GetEventStore());
+            BootStrapper.BootUp(buffer);
             var commandServiceHost = new ServiceHost(typeof(CommandWebService));
 
             commandServiceHost.Open();
@@ -46,30 +43,15 @@ namespace ApplicationService
 
             pipeline.Stop();
             commandServiceHost.Close();
-        }
+        }        
 
-        //private static IEventStore GetJoesEventStore()
-        //{
-        //    var factory = new AbsoluteOrderingSqlPersistenceFactory("EventStore", new BinarySerializer(), false);
-        //    var streamPersister = factory.Build();
-        //    streamPersister.Initialize();
-        //    var store = new JoesSnapshotStoreAdapter(streamPersister);
-        //    return store;
-        //}
-
-        private static IEventStore GetBuiltInEventStore()
+        private static IBrowsableElementStore GetJoesBrowsableElementStore()
         {
-            var connectionString = ConfigurationManager.ConnectionStrings["EventStore"].ConnectionString;
-            return new MsSqlServerEventStore(connectionString);
+            var factory = new AbsoluteOrderingSqlPersistenceFactory("EventStore", new BinarySerializer(), false);
+            var store = factory.Build();
+            store.Initialize();
+            return new JoesBrowsableEventStore(store);
         }
-
-        //private static IBrowsableElementStore GetJoesBrowsableElementStore()
-        //{
-        //    var factory = new AbsoluteOrderingSqlPersistenceFactory("EventStore", new BinarySerializer(), false);
-        //    var store = factory.Build();
-        //    store.Initialize();
-        //    return new JoesBrowsableEventStore(store);
-        //}
 
         private static IBrowsableElementStore GetBuiltInBrowsableElementStore()
         {
