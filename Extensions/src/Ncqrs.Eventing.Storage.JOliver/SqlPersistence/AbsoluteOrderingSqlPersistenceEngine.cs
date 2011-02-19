@@ -35,16 +35,21 @@ namespace Ncqrs.Eventing.Storage.JOliver.SqlPersistence
 
         public override void Commit(Commit attempt)
         {
-            ExecuteCommand(attempt.StreamId,
-                           command =>
-                           {
-                               command.AddParameter(_dialect.CommitId, attempt.CommitId);
-                               command.Execute(_dialect.RegisterSequentialId);
-                           });
+            AppendToSequence(attempt);
             base.Commit(attempt);
         }
 
-        public IEnumerable<Commit> Fetch(long mostRecentSequentialId)
+        private void AppendToSequence(Commit attempt)
+        {
+            ExecuteCommand(attempt.StreamId,
+                           command =>
+                               {
+                                   command.AddParameter(_dialect.CommitId, attempt.CommitId);
+                                   command.Execute(_dialect.RegisterSequentialId);
+                               });
+        }
+
+        public IEnumerable<Commit> Fetch(long mostRecentSequentialId, int maxCount)
         {
             return ExecuteQuery(Guid.Empty,
                                 query =>
@@ -52,7 +57,7 @@ namespace Ncqrs.Eventing.Storage.JOliver.SqlPersistence
                                         var statement = _dialect.GetCommitsAfter;
                                         query.AddParameter(_dialect.SequentialId, mostRecentSequentialId);
                                         return query.ExecuteWithQuery(statement, GetCommit);
-                                    });
+                                    }).Take(maxCount);
         }
 
         private Commit GetCommit(IDataRecord x)

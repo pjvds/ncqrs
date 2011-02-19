@@ -57,7 +57,7 @@
     <Compile Include="JoesUnitOfWorkFactory.cs" />
     <Compile Include="NullDispatcher.cs" />
     <Compile Include="SqlPersistence\AbsoluteOrderingSqlPersistenceFactory.cs" />
-    <Compile Include="SqlPersistence\SqlAbsoluteOrderingPersistenceEngine.cs" />
+    <Compile Include="SqlPersistence\AbsoluteOrderingSqlPersistenceEngine.cs" />
     <Compile Include="CommitProcessingElement.cs" />
     <Compile Include="SqlPersistence\CommonSqlStatements.Designer.cs">
       <AutoGen>True</AutoGen>

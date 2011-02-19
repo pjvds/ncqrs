@@ -7,27 +7,30 @@ namespace Ncqrs.Eventing.Storage.JOliver.SqlPersistence
 {
     public class AbsoluteOrderingSqlPersistenceFactory : SqlPersistenceFactory
     {
-        private readonly ISerialize _serializer;
         private readonly bool _transactional;
         private readonly IPipelineStoreSqlDialect _dialect;
 
-        public AbsoluteOrderingSqlPersistenceFactory(string connectionName, ISerialize serializer, bool transactional) : base(connectionName, serializer)
+        public AbsoluteOrderingSqlPersistenceFactory(string connectionName, ISerialize serializer, bool transactional)
+            : this(connectionName, serializer, transactional, null)
+		{
+		}
+		public AbsoluteOrderingSqlPersistenceFactory(string connectionName, ISerialize serializer, bool transactional, ISqlDialect dialect)
+            : this(new ConfigurationConnectionFactory(connectionName), serializer, transactional, dialect)
+		{
+		}
+		public AbsoluteOrderingSqlPersistenceFactory(IConnectionFactory factory, ISerialize serializer, bool transactional)
+            : this(factory, serializer, transactional, null)
+		{
+		}
+        public AbsoluteOrderingSqlPersistenceFactory(IConnectionFactory factory, ISerialize serializer, bool transactional, ISqlDialect dialect)
+            :base(factory, serializer, dialect)
         {
-            _serializer = serializer;
             _transactional = transactional;
-        }
-
-        public AbsoluteOrderingSqlPersistenceFactory(string connectionName, ISerialize serializer, bool transactional, ISqlDialect dialect, IPipelineStoreSqlDialect pipelineStoreSqlDialect) : base(connectionName, serializer, dialect)
-        {
-            _serializer = serializer;
-            _transactional = transactional;
-            _dialect = pipelineStoreSqlDialect;
         }
 
         public override IPersistStreams Build()
         {
-            return new AbsoluteOrderingSqlPersistenceEngine(
-                new DelegateConnectionFactory(OpenConnection), GetDialect(), GetPipelineStoreDialect(), _serializer, _transactional);
+            return new AbsoluteOrderingSqlPersistenceEngine(ConnectionFactory, GetDialect(), GetPipelineStoreDialect(), Serializer, _transactional);
         }
 
         protected virtual IPipelineStoreSqlDialect GetPipelineStoreDialect()
@@ -37,7 +40,7 @@ namespace Ncqrs.Eventing.Storage.JOliver.SqlPersistence
                 return _dialect;
             }
 
-            var settings = this.GetConnectionSettings(Guid.Empty);
+            var settings = ConnectionFactory.Settings;
             var providerName = (settings.ProviderName ?? string.Empty).ToUpperInvariant();
 
             if (providerName.Contains("SQLSERVERCE"))

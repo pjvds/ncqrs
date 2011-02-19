@@ -30,7 +30,7 @@ namespace Ncqrs.Eventing.Storage.JOliver
             {
                 _lastCommitSequentialId = _streamStore.GetLastProcessedSequentialNumber(pipelineName);
             }
-            var commits = _streamStore.Fetch(_lastCommitSequentialId).Take(maxCount);
+            var commits = _streamStore.Fetch(_lastCommitSequentialId, maxCount);
             foreach (var commit in commits)
             {
                 var thisCommitSequentialId = (long)commit.Headers["SequentialId"];
