@@ -457,7 +457,7 @@ namespace Ncqrs.Eventing.Storage.SQL
             UpdateEventSourceVersion(eventSourceId, eventSourceVersion, transaction);
         }
 
-        private void StoreMultipleSources(UncommittedEventStream eventStreamContainingMultipleSources, SqlTransaction transaction)
+        private void StoreMultipleSources(IEnumerable<UncommittedEvent> eventStreamContainingMultipleSources, SqlTransaction transaction)
         {
             var sources = from evnt in eventStreamContainingMultipleSources
                           group evnt by evnt.EventSourceId into eventSourceGroup

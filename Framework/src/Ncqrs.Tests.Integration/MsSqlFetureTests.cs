@@ -1,5 +1,6 @@
 ﻿using System.Configuration;
 using System.Data.SqlClient;
+using Ncqrs.Domain;
 using Ncqrs.Eventing.Storage;
 using Ncqrs.Eventing.Storage.SQL;
 using NUnit.Framework;
@@ -7,7 +8,7 @@ using NUnit.Framework;
 namespace Ncqrs.Tests.Integration
 {
     [TestFixture]
-    public class MsSqlSnapshotting : Snapshotting
+    public class MsSqlFetureTests : FetureTests
     {
         [SetUp]
         public void CleaDatabase()
@@ -37,6 +38,7 @@ namespace Ncqrs.Tests.Integration
             var store = new MsSqlServerEventStore(GetConnectionString());
             NcqrsEnvironment.SetDefault<ISnapshotStore>(store);
             NcqrsEnvironment.SetDefault<IEventStore>(store);
+            NcqrsEnvironment.SetDefault<IUnitOfWorkFactory>(new UnitOfWorkFactory());
         }
     }
 }

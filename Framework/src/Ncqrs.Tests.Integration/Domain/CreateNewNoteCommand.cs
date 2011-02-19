@@ -7,6 +7,15 @@ namespace Ncqrs.Tests.Integration.Domain
     [MapsToAggregateRootConstructor("Ncqrs.Tests.Integration.Domain.Note, Ncqrs.Tests.Integration")]
     public class CreateNewNoteCommand : CommandBase
     {
+        public CreateNewNoteCommand()
+        {            
+        }
+
+        public CreateNewNoteCommand(Guid commandId)
+            : base(commandId)
+        {
+        }
+
         public Guid NoteId
         {
             get; set;
@@ -15,16 +24,6 @@ namespace Ncqrs.Tests.Integration.Domain
         public String Text
         {
             get; set;
-        }
-
-        public CreateNewNoteCommand()
-        {
-        }
-
-        public CreateNewNoteCommand(Guid noteId, string text)
-        {
-            NoteId = noteId;
-            Text = text;
         }
     }
 }

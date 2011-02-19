@@ -10,7 +10,7 @@ using NUnit.Framework;
 namespace Ncqrs.Tests.Integration
 {
     [TestFixture]
-    public class JoesSnapshotting : Snapshotting
+    public class JoesFetureTests : FetureTests
     {
         [SetUp]
         public void CopyDatabase()
