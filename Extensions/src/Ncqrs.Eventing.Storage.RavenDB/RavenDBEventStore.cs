@@ -17,7 +17,7 @@ namespace Ncqrs.Eventing.Storage.RavenDB
             {
                 Url = ravenUrl,                
                 Conventions = CreateConventions()
-            }.Initialise(); 
+            }.Initialize(); 
         }
 
         public RavenDBEventStore(DocumentStore externalDocumentStore)
@@ -31,8 +31,8 @@ namespace Ncqrs.Eventing.Storage.RavenDB
             return new DocumentConvention
             {
                 JsonContractResolver = new PropertiesOnlyContractResolver(),
-                FindTypeTagName = x => "Events",
-                NewDocumentETagGenerator = GenerateETag
+                FindTypeTagName = x => "Events"
+                //NewDocumentETagGenerator = GenerateETag
             };
         }
 
@@ -51,7 +51,7 @@ namespace Ncqrs.Eventing.Storage.RavenDB
             using (var session = _documentStore.OpenSession())
             {
                 var storedEvents = session.Query<StoredEvent>()
-                    .WaitForNonStaleResults()
+                    .Customize(x => x.WaitForNonStaleResults())
                     .Where(x => x.EventSourceId == id)
                     .Where(x => x.EventSequence >= minVersion)
                     .Where(x => x.EventSequence <= maxVersion)
@@ -71,7 +71,7 @@ namespace Ncqrs.Eventing.Storage.RavenDB
             {
                 using (var session = _documentStore.OpenSession())
                 {
-                    session.UseOptimisticConcurrency = true;
+                    session.Advanced.UseOptimisticConcurrency = true;
                     foreach (var uncommittedEvent in eventStream)
                     {
                         session.Store(ToStoredEvent(eventStream.CommitId, uncommittedEvent));
@@ -79,7 +79,7 @@ namespace Ncqrs.Eventing.Storage.RavenDB
                     session.SaveChanges();
                 }
             }
-            catch (Raven.Database.Exceptions.ConcurrencyException)
+            catch (Raven.Http.Exceptions.ConcurrencyException)
             {
                 Guid sourceId = Guid.Empty;
                 long version = 0;

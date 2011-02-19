@@ -15,7 +15,7 @@ namespace Ncqrs.Eventing.Storage.RavenDB
             {
                 Url = ravenUrl,                
                 Conventions = CreateConventions()
-            }.Initialise(); 
+            }.Initialize(); 
         }
 
         public RavenDBSnapshotStore(DocumentStore externalDocumentStore)

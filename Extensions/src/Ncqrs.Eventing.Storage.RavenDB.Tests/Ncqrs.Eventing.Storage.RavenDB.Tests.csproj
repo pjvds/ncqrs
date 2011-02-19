@@ -46,9 +46,9 @@
       <HintPath>..\..\..\lib\ThirdParty\log4net\log4net.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Lucene.Net">
+    <Reference Include="Lucene.Net, Version=2.9.1.2, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\lib\ThirdParty\RavenDB\Lucene.Net.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="Ncqrs, Version=0.8.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -62,17 +62,25 @@
       <HintPath>..\..\..\lib\ThirdParty\Nunit\nunit.framework.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Raven.Client">
-      <HintPath>..\..\..\lib\ThirdParty\RavenDB\Raven.Client.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Raven.Client.Embedded">
+      <HintPath>..\..\..\lib\ThirdParty\RavenDB\Raven.Client.Embedded.dll</HintPath>
+    </Reference>
+    <Reference Include="Raven.Client.Lightweight">
+      <HintPath>..\..\..\lib\ThirdParty\RavenDB\Raven.Client.Lightweight.dll</HintPath>
     </Reference>
     <Reference Include="Raven.Database">
       <HintPath>..\..\..\lib\ThirdParty\RavenDB\Raven.Database.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Raven.Storage.Esent">
+      <HintPath>..\..\..\lib\ThirdParty\RavenDB\Raven.Storage.Esent.dll</HintPath>
+    </Reference>
     <Reference Include="Rhino.Mocks">
       <HintPath>..\..\..\lib\ThirdParty\RhinoMocks\Rhino.Mocks.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="Spatial.Net">
+      <HintPath>..\..\..\lib\ThirdParty\RavenDB\Spatial.Net.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
