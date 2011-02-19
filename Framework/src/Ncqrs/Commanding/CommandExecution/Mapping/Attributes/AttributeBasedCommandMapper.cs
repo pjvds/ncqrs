@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Diagnostics.Contracts;
+using System.Reflection;
 
 namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
 {
     public class AttributeBasedCommandMapper : ICommandMapper
     {
+        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private readonly Dictionary<Type, object> _handlers = new Dictionary<Type, object>();
 
         public AttributeBasedCommandMapper()
@@ -27,7 +28,7 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type"/> is <c>null</c>.
         /// </exception>
         /// <returns>
-        /// 	<c>true</c> if [is command mapped] [the specified target]; otherwise, <c>false</c>.
+        /// 	<c>true</c> if command is mapped; otherwise, <c>false</c>.
         /// </returns>
         public bool CanMapCommand(Type type)
         {

@@ -42,10 +42,11 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
 
         private static void ValidateCommandType(Type mappedCommandType)
         {
-            bool containsThisAttribute = mappedCommandType.IsDefined(typeof(MapsToAggregateRootConstructorAttribute), false);
+            var expectedAttribute = typeof (MapsToAggregateRootConstructorAttribute);
+            bool containsThisAttribute = mappedCommandType.IsDefined(expectedAttribute, false);
 
             if (!containsThisAttribute) throw new ArgumentException("The given command type does not contain " +
-                                                                    "MapsToAggregateRootConstructorAttribute.",
+                                                                    expectedAttribute.FullName + ".",
                                                                     "mappedCommandType");
         }
     }
