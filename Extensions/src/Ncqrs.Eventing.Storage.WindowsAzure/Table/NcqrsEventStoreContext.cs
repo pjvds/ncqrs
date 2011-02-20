@@ -11,13 +11,30 @@ namespace Ncqrs.Eventing.Storage.WindowsAzure
     {
         private Guid _eventSourceID;
         private const string _TABLENAME = "NcqrsEventStore";
-        private string TABLENAME
+        private bool _usingDevelopment = false;
+
+        private string EVENTSOURCETABLENAME
+        {
+            get
+            {
+                // 628426 20 Feb 2011
+                // Azure Storage Emulator doesn't support having our Event Store and Event Source in the same
+                // table - this logic ensures they are created in seperate tables only in development
+                if (_usingDevelopment)
+                {
+                    return _tablePrefix + _TABLENAME + "Source";
+                }
+                return _tablePrefix + _TABLENAME;
+            }
+        }
+        private string EVENTTABLENAME
         {
             get
             {
                 return _tablePrefix + _TABLENAME;
             }
         }
+
         private string _tablePrefix = null;
 
         public NcqrsEventStoreContext(Guid eventSourceId,
@@ -36,7 +53,14 @@ namespace Ncqrs.Eventing.Storage.WindowsAzure
             this.IgnoreResourceNotFoundException = true;
             _eventSourceID = eventSourceId;
             _tablePrefix = tablePrefix;
-            account.CreateCloudTableClient().CreateTableIfNotExist(TABLENAME);
+
+            if (account == CloudStorageAccount.DevelopmentStorageAccount)
+            {
+                _usingDevelopment = true;
+            }
+
+            account.CreateCloudTableClient().CreateTableIfNotExist(EVENTTABLENAME);
+            account.CreateCloudTableClient().CreateTableIfNotExist(EVENTSOURCETABLENAME);
         }
 
         public IQueryable<NcqrsEvent> Events
@@ -44,7 +68,7 @@ namespace Ncqrs.Eventing.Storage.WindowsAzure
             get
             {
                 string partitionKey = _eventSourceID.ToString();
-                return CreateQuery<NcqrsEvent>(TABLENAME).Where(e => e.PartitionKey == partitionKey);
+                return CreateQuery<NcqrsEvent>(EVENTTABLENAME).Where(e => e.PartitionKey == partitionKey);
             }
         }
 
@@ -54,7 +78,7 @@ namespace Ncqrs.Eventing.Storage.WindowsAzure
             {
                 string partitionKey = "Source_" + _eventSourceID.ToString();
                 string rowKey = partitionKey;
-                return CreateQuery<NcqrsEventSource>(TABLENAME).Where(eventSource => eventSource.PartitionKey == partitionKey && eventSource.RowKey == rowKey).ToList().FirstOrDefault();
+                return CreateQuery<NcqrsEventSource>(EVENTSOURCETABLENAME).Where(eventSource => eventSource.PartitionKey == partitionKey && eventSource.RowKey == rowKey).ToList().FirstOrDefault();
             }
         }
 
@@ -77,8 +101,8 @@ namespace Ncqrs.Eventing.Storage.WindowsAzure
                 throw new InvalidOperationException("Cannot Add events without beginning a commit.  Call the BeginCommit method");
             }
             @event.CommitId = _commitId;
-            
-            AddObject(TABLENAME, @event);
+
+            AddObject(EVENTTABLENAME, @event);
         }
 
         private void AddSource(NcqrsEventSource source)
@@ -87,7 +111,7 @@ namespace Ncqrs.Eventing.Storage.WindowsAzure
             {
                 throw new InvalidOperationException("Cannot Add event sources without beginning a commit.  Call the BeginCommit method");
             }
-            AddObject(TABLENAME, source);
+            AddObject(EVENTSOURCETABLENAME, source);
         }
 
         public void SaveSource(NcqrsEventSource source)

@@ -20,6 +20,11 @@ namespace Ncqrs.Eventing.Storage.WindowsAzure
         private CloudStorageAccount account = null;
         private string prefix = null;
 
+        /// <summary>
+        /// Creates a new TableOnlyStore, and names the table including the supplied Prefix
+        /// </summary>
+        /// <param name="prefix">The prefix for the table name</param>
+        /// <remarks>Useful for testing and partitioning, e.g., new TableStorage("TestRun1")</remarks>
         public TableOnlyStore(string prefix)
             : this(DevelopmentStorageAccount, prefix)
         {
@@ -37,42 +42,6 @@ namespace Ncqrs.Eventing.Storage.WindowsAzure
         }
 
 
-        #region IEventStore Members
-
-        public CommittedEventStream ReadFrom(Guid id, long minVersion, long maxVersion)
-        {
-            NcqrsEventStoreContext eventContext = new NcqrsEventStoreContext(id, account, prefix);
-
-            IQueryable<NcqrsEvent> events = eventContext.Events;
-            events = eventContext.Events.Where(e => e.Sequence >= minVersion && e.Sequence <= maxVersion);
-
-            IList<NcqrsEvent> theEvents = events.ToList();
-
-            return new CommittedEventStream(id,
-                theEvents.
-                    Select(e => new CommittedEvent(
-                        e.CommitId,
-                        Guid.Parse(e.RowKey),
-                        Guid.Parse(e.PartitionKey),
-                        e.Sequence,
-                        e.Timestamp,
-                        new BinaryFormatter()
-                            .Deserialize(
-                        new MemoryStream(e.Data)),
-                        Version.Parse(e.Version)))
-                );
-        }
-
-        
-        public void Store(UncommittedEventStream eventStream)
-        {
-            // TODO: lrn to use GroupBy
-            Parallel.ForEach<Guid>(
-                eventStream.Select(es => es.EventSourceId).Distinct(), 
-                (eventSourceId) => SaveEvents(eventSourceId, eventStream.Where(es => es.EventSourceId == eventSourceId))
-            );
-
-        }
 
         private void SaveEvents(Guid eventSourceId,
             IEnumerable<UncommittedEvent> events)
@@ -106,6 +75,52 @@ namespace Ncqrs.Eventing.Storage.WindowsAzure
             storeContext.SaveSource(lastSource);
 
             storeContext.EndCommit();
+        }
+
+        public CommittedEventStream ReadFrom(Guid id, long minVersion, long maxVersion)
+        {
+            NcqrsEventStoreContext eventContext = new NcqrsEventStoreContext(id, account, prefix);
+
+            IQueryable<NcqrsEvent> storeEvents = eventContext.Events;
+
+            // 628426 20 Feb 2011
+            // Azure Table Storage Client struggles with lambdas where the rvalue is long.Min and .Max
+            // so the following code added when interface changed to no longer use Nullable<long>
+            if (minVersion != long.MinValue)
+            {
+                storeEvents = storeEvents.Where(e => e.Sequence >= minVersion);
+            }
+            if (maxVersion != long.MaxValue)
+            {
+                storeEvents = storeEvents.Where(e => e.Sequence <= maxVersion);
+            }
+
+            storeEvents = storeEvents.ToList().OrderBy(e => e.Sequence).AsQueryable();
+
+            IEnumerable<CommittedEvent> committedEvents = storeEvents.Select(
+                e => new CommittedEvent(
+                        e.CommitId,
+                        Guid.Parse(e.RowKey),
+                        Guid.Parse(e.PartitionKey),
+                        e.Sequence,
+                        e.Timestamp,
+                        Utility.DeJsonize(e.Data, e.Name),
+                        Version.Parse(e.Version)
+                        )
+                );
+
+            return new CommittedEventStream(id, committedEvents);
+        }
+
+        #region IEventStore Members
+
+        public void Store(UncommittedEventStream eventStream)
+        {
+            Parallel.ForEach<Guid>(
+                eventStream.Select(es => es.EventSourceId).Distinct(),
+                (eventSourceId) => SaveEvents(eventSourceId, eventStream.Where(es => es.EventSourceId == eventSourceId))
+            );
+
         }
 
         #endregion
