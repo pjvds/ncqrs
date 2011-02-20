@@ -239,22 +239,6 @@ namespace Ncqrs.Tests.Domain
         }
 
         [Test]
-        public void Initiazling_from_wrong_history_with_wrong_sequence_should_throw_exception2()
-        {
-            var theAggregate = new MyAggregateRoot();
-            const long wrongSequence = 8;
-
-            var stream = new CommittedEventStream(theAggregate.EventSourceId,
-                new CommittedEvent(Guid.NewGuid(), Guid.NewGuid(), theAggregate.EventSourceId, 0, DateTime.UtcNow, new HandledEvent(), new Version(1, 0)),
-                new CommittedEvent(Guid.NewGuid(), Guid.NewGuid(), theAggregate.EventSourceId, 1, DateTime.UtcNow, new HandledEvent(), new Version(1, 0)),
-                new CommittedEvent(Guid.NewGuid(), Guid.NewGuid(), theAggregate.EventSourceId, wrongSequence, DateTime.UtcNow, new HandledEvent(), new Version(1, 0)));
-
-            Action act = () => theAggregate.InitializeFromHistory(stream);
-            act.ShouldThrow<InvalidOperationException>().And.Message.Should().Contain("sequence");
-        }
-        
-
-        [Test]
         public void It_could_not_be_loaded_from_history_when_it_already_contains_uncommitted_events()
         {
             var theAggregate = new MyAggregateRoot();
