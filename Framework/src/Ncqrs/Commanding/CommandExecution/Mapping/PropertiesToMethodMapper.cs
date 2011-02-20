@@ -18,6 +18,21 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping
             return GetMethodBase(sources, potentialTargets);
         }
 
+        public static Tuple<MethodInfo, PropertyInfo[]> GetMethod(PropertyToParameterMappingInfo[] sources, Type targetType, BindingFlags bindingFlags, string methodName = null)
+        {
+            IEnumerable<MethodInfo> potentialTargets = targetType.GetMethods(bindingFlags);
+
+            if (methodName != null)
+            {
+                potentialTargets = potentialTargets.Where
+                (
+                    method => method.Name.Equals(methodName, StringComparison.InvariantCultureIgnoreCase)
+                );
+            }
+
+            return GetMethodBase(sources, potentialTargets);
+        }
+
         public static Tuple<MethodInfo, PropertyInfo[]> GetMethod(PropertyToParameterMappingInfo[] sources, Type targetType, string methodName = null)
         {
             IEnumerable<MethodInfo> potentialTargets = targetType.GetMethods(All);
