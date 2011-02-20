@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Ncqrs.Commanding.CommandExecution.Mapping.Fluent;
 using Raven.Client.Indexes;
 
 namespace Ncqrs.Eventing.Storage.JOliver.RavenPersistence

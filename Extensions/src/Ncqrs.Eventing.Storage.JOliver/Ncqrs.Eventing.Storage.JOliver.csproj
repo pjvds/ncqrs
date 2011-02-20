@@ -34,6 +34,12 @@
     <Reference Include="EventStore">
       <HintPath>..\..\..\lib\ThirdParty\EventStore\EventStore.dll</HintPath>
     </Reference>
+    <Reference Include="EventStore.Core">
+      <HintPath>..\..\..\lib\ThirdParty\EventStore\EventStore.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="EventStore.Persistence.SqlPersistence">
+      <HintPath>..\..\..\lib\ThirdParty\EventStore\EventStore.Persistence.SqlPersistence.dll</HintPath>
+    </Reference>
     <Reference Include="Ncqrs">
       <HintPath>..\..\..\lib\Debug\Ncqrs\Ncqrs.dll</HintPath>
     </Reference>

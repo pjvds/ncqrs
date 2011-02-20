@@ -34,6 +34,12 @@
     <Reference Include="EventStore">
       <HintPath>..\..\..\lib\ThirdParty\EventStore\EventStore.dll</HintPath>
     </Reference>
+    <Reference Include="EventStore.Persistence.SqlPersistence">
+      <HintPath>..\..\..\lib\ThirdParty\EventStore\EventStore.Persistence.SqlPersistence.dll</HintPath>
+    </Reference>
+    <Reference Include="EventStore.Serialization">
+      <HintPath>..\..\..\lib\ThirdParty\EventStore\EventStore.Serialization.dll</HintPath>
+    </Reference>
     <Reference Include="FluentAssertions">
       <HintPath>..\..\..\lib\ThirdParty\FluentAssertions\FluentAssertions.dll</HintPath>
     </Reference>
