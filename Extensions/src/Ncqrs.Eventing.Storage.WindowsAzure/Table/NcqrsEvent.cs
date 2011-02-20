@@ -14,7 +14,7 @@ namespace Ncqrs.Eventing.Storage.WindowsAzure
         public string Name { get; set; }
         public string Version { get; set; }
         public long Sequence { get; set; }
-        public byte[] Data { get; set; }
+        public string Data { get; set; }
         
         public NcqrsEvent()
         {
@@ -24,17 +24,13 @@ namespace Ncqrs.Eventing.Storage.WindowsAzure
             base(@event.EventSourceId.ToString(), @event.EventIdentifier.ToString())
         {
             base.Timestamp = @event.EventTimeStamp;
-            Name = @event.Payload.GetType().FullName;
+            Name = @event.Payload.GetType().AssemblyQualifiedName;
             Sequence = @event.EventSequence;
             Version = @event.EventVersion.ToString();
 
             if (@event.Payload != null)
             {
-                using (MemoryStream ms = new MemoryStream())
-                {
-                    new BinaryFormatter().Serialize(ms, @event.Payload);
-                    Data = ms.ToArray();
-                }
+                Data = Utility.Jsonize(@event.Payload, Name);
             }
         }
     }
