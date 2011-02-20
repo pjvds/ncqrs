@@ -148,16 +148,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Eventing.Storage.WindowsAzure.Tests", "Extensions\src\Ncqrs.Eventing.Storage.WindowsAzure.Tests\Ncqrs.Eventing.Storage.WindowsAzure.Tests.csproj", "{693DEFC5-355C-4F62-B424-3119046B5F6D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9961F987-2519-493C-83E6-5E8AFCD32291}"
-	ProjectSection(SolutionItems) = preProject
-		Local.testsettings = Local.testsettings
-		Ncqrs.Master.vsmdi = Ncqrs.Master.vsmdi
-		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
-	EndProjectSection
 EndProject
 Global
-	GlobalSection(TestCaseManagementSettings) = postSolution
-		CategoryFile = Ncqrs.Master.vsmdi
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|Mixed Platforms = Debug|Mixed Platforms

@@ -78,6 +78,12 @@
     <CodeContractsRuntimeCheckingLevel>Full</CodeContractsRuntimeCheckingLevel>
     <CodeContractsReferenceAssembly>%28none%29</CodeContractsReferenceAssembly>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>Ncqrs.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="log4net">
       <HintPath>..\..\..\lib\ThirdParty\log4net\log4net.dll</HintPath>
@@ -85,8 +91,7 @@
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\..\lib\ThirdParty\json.net\Newtonsoft.Json.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\..\..\..\..\..\root\gr1d.org\team\Shared\lib\json.net\Release\Net\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
@@ -240,7 +245,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TraceLogger.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Ncqrs.snk" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>

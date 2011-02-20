@@ -44,7 +44,7 @@ namespace Ncqrs.Eventing.Storage.WindowsAzure.Tests
         {
             IList<Guid> ids = new List<Guid>();
 
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 10; i++)
             {
                 Guid id = Guid.NewGuid();
                 ids.Add(id);

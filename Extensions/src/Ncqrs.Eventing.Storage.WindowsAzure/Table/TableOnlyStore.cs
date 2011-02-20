@@ -20,6 +20,11 @@ namespace Ncqrs.Eventing.Storage.WindowsAzure
         private CloudStorageAccount account = null;
         private string prefix = null;
 
+        /// <summary>
+        /// Creates a new TableOnlyStore, and names the table including the supplied Prefix
+        /// </summary>
+        /// <param name="prefix">The prefix for the table name</param>
+        /// <remarks>Useful for testing and partitioning, e.g., new TableStorage("TestRun1")</remarks>
         public TableOnlyStore(string prefix)
             : this(DevelopmentStorageAccount, prefix)
         {
@@ -49,7 +54,7 @@ namespace Ncqrs.Eventing.Storage.WindowsAzure
                 events = eventContext.Events.Where(e => e.Sequence <= maxVersion.Value);
             }
 
-            IList<NcqrsEvent> theEvents = events.ToList();
+            IList<NcqrsEvent> theEvents = events.ToList().OrderBy(ev => ev.Sequence).ToList();
 
             return new CommittedEventStream(
                 theEvents.
@@ -59,9 +64,7 @@ namespace Ncqrs.Eventing.Storage.WindowsAzure
                         Guid.Parse(e.PartitionKey),
                         e.Sequence,
                         e.Timestamp,
-                        new BinaryFormatter()
-                            .Deserialize(
-                        new MemoryStream(e.Data)),
+                        Utility.JsonizeFrom(e.Data, e.Name),
                         Version.Parse(e.Version)))
                 );
         }
@@ -70,7 +73,7 @@ namespace Ncqrs.Eventing.Storage.WindowsAzure
         {
             NcqrsEventStoreContext eventContext = new NcqrsEventStoreContext(id, account, prefix);
 
-            IQueryable<NcqrsEvent> events = eventContext.Events.Where(e => e.Sequence >= minVersion);
+            IQueryable<NcqrsEvent> events = eventContext.Events.Where(e => e.Sequence >= minVersion).ToList().OrderBy(ev => ev.Sequence).AsQueryable();
             
             return new CommittedEventStream(
                 events.
@@ -80,9 +83,7 @@ namespace Ncqrs.Eventing.Storage.WindowsAzure
                         Guid.Parse(e.PartitionKey),
                         e.Sequence,
                         e.Timestamp,
-                        new BinaryFormatter()
-                            .Deserialize(
-                        new MemoryStream(e.Data)),
+                        Utility.JsonizeFrom(e.Data, e.Name),
                         Version.Parse(e.Version)))
                 );
         }
