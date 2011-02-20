@@ -104,6 +104,7 @@
     <Compile Include="Domain\EventNotHandledExceptionTests.cs" />
     <Compile Include="Domain\Storage\SimpleAggregateRootCreationStrategyTests.cs" />
     <Compile Include="Domain\UnitOfWorkTests.cs" />
+    <Compile Include="Eventing\CommittedEventStreamTests.cs" />
     <Compile Include="Eventing\Sourcing\Mapping\AttributeBasedDomainEventHandlerMappingStrategyTests.cs" />
     <Compile Include="Eventing\Sourcing\Mapping\ConventionBasedDomainEventHandlerMappingStrategyTests.cs" />
     <Compile Include="Eventing\Sourcing\Mapping\ExpressionBasedDomainEventHandlerMappingStrategyTests.cs" />
