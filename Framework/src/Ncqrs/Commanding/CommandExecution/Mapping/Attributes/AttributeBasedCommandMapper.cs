@@ -14,6 +14,7 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
         {
             RegisterAttributeHandler(new MapsToAggregateRootConstructorAttributeHandler());
             RegisterAttributeHandler(new MapsToAggregateRootMethodAttributeHandler());
+            RegisterAttributeHandler(new MapsToAggregateRootStaticCreateAttributeHandler());
         }
 
         public void RegisterAttributeHandler<T>(IMappingAttributeHandler<T> handler)
