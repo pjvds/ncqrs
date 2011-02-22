@@ -1,6 +1,6 @@
 ﻿CREATE TABLE Events
 (
-  SequentialId int NOT NULL,
+  SequentialId serial NOT NULL,
   Id uuid NOT NULL,
   TimeStamp timestamp NOT NULL,
   Name text NOT NULL,
@@ -38,7 +38,7 @@ WITH (
 
 CREATE TABLE PipelineState
 (
-  BatchId int NOT NULL,
+  BatchId serial NOT NULL,
   PipelineName character varying(255) NOT NULL,
   LastProcessedEventId uuid NOT NULL,
   CONSTRAINT PipelineState_pkey PRIMARY KEY (BatchId)

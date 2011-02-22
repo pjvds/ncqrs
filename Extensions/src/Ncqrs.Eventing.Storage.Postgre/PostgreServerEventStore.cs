@@ -221,8 +221,11 @@ namespace Ncqrs.Eventing.Storage.Postgre
         /// <param name="transaction">The transaction.</param>
         private void SaveEvents(IEnumerable<UncommittedEvent> evnts, NpgsqlTransaction transaction)
         {
-            Contract.Requires<ArgumentNullException>(evnts != null, "The argument evnts could not be null.");
-            Contract.Requires<ArgumentNullException>(transaction != null, "The argument transaction could not be null.");
+            Contract.Requires(evnts != null );
+            Contract.Ensures(Contract.ForAll(Contract.Result<IEnumerable<UncommittedEvent>>(), @event => @event != null));
+
+            if (transaction == null)
+                throw new ArgumentNullException("transaction");
 
             foreach (var sourcedEvent in evnts)
             {
@@ -237,9 +240,6 @@ namespace Ncqrs.Eventing.Storage.Postgre
         /// <param name="transaction">The transaction.</param>
         private void SaveEvent(UncommittedEvent evnt, NpgsqlTransaction transaction)
         {
-            Contract.Requires<ArgumentNullException>(evnt != null, "The argument evnt could not be null.");
-            Contract.Requires<ArgumentNullException>(transaction != null, "The argument transaction could not be null.");
-
             string eventName;
             var document = _formatter.Serialize(evnt.Payload, out eventName);
             var storedEvent = new StoredEvent<JObject>(evnt.EventIdentifier, evnt.EventTimeStamp,
