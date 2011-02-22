@@ -14,14 +14,14 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
 
             var match = GetMatchingMethod(attribute, commandType, attribute.MethodName);
 
-            Action<AggregateRoot, ICommand> action =
-                (agg, cmd) =>
-                    {
-                        var parameter = match.Item2.Select(p => p.GetValue(cmd, null));
-                        match.Item1.Invoke(agg, parameter.ToArray());
-                    };
+            Func<ICommand, AggregateRoot> create = (c) =>
+            {
+                var parameter = match.Item2.Select(p => p.GetValue(c, null));
+                return
+                    (AggregateRoot)match.Item1.Invoke(null, parameter.ToArray());
+            };
 
-            Action executorAction = () => executor.ExecuteActionOnExistingInstance(GetAggregateRootId, GetAggregateRootType, action);
+            Action executorAction = () => executor.ExecuteActionCreatingNewInstance(create);
 
             if (commandType.IsDefined(typeof(TransactionalAttribute), false))
             {
@@ -41,25 +41,6 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
             var bindingFlags = BindingFlags.Public | BindingFlags.Static;
 
             return PropertiesToMethodMapper.GetMethod(sources, attribute.Type, bindingFlags, methodName);
-        }
-
-        private static Guid GetAggregateRootId(ICommand cmd)
-        {
-            const BindingFlags allInstance = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
-
-            var commandType = cmd.GetType();
-            var idProp = commandType.GetProperties(allInstance).Single(p => p.IsDefined(typeof(AggregateRootIdAttribute), false));
-            return (Guid)idProp.GetValue(cmd, null);
-        }
-
-        private static Type GetAggregateRootType(ICommand cmd)
-        {
-            
-            var commandType = cmd.GetType();
-            var attribute =
-                commandType.GetCustomAttributes(typeof(MapsToAggregateRootStaticCreateAttribute), false).Cast<MapsToAggregateRootStaticCreateAttribute>
-                    ().Single();
-            return attribute.Type;
         }
 
         private static void ValidateCommandType(Type mappedCommandType)

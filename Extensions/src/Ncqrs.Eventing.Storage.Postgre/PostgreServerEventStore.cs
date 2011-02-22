@@ -11,13 +11,15 @@ using Ncqrs.Eventing.Sourcing;
 using Ncqrs.Eventing.Sourcing.Snapshotting;
 using Ncqrs.Eventing.Storage.Serialization;
 using Newtonsoft.Json.Linq;
+using Npgsql;
+using System.Data;
 
-namespace Ncqrs.Eventing.Storage.SQL
+namespace Ncqrs.Eventing.Storage.Postgre
 {
     /// <summary>
     /// Stores events for a SQL database.
     /// </summary>
-    public class MsSqlServerEventStore : IEventStore, ISnapshotStore
+    public class PostgreServerEventStore : IEventStore, ISnapshotStore
     {
         private readonly static int FirstVersion = 0;
         private readonly String _connectionString;
@@ -26,11 +28,11 @@ namespace Ncqrs.Eventing.Storage.SQL
         private readonly IEventTranslator<string> _translator;
         private readonly IEventConverter _converter;
 
-        public MsSqlServerEventStore(String connectionString)
+        public PostgreServerEventStore(String connectionString)
             : this(connectionString, null, null)
         { }
 
-        public MsSqlServerEventStore(String connectionString, IEventTypeResolver typeResolver, IEventConverter converter)
+        public PostgreServerEventStore(String connectionString, IEventTypeResolver typeResolver, IEventConverter converter)
         {
             if (String.IsNullOrEmpty(connectionString)) throw new ArgumentNullException("connectionString");
 
@@ -40,7 +42,7 @@ namespace Ncqrs.Eventing.Storage.SQL
             _translator = new StringEventTranslator();
         }
 
-        private CommittedEvent ReadEventFromDbReader(SqlDataReader reader)
+        private CommittedEvent ReadEventFromDbReader(NpgsqlDataReader reader)
         {
             StoredEvent<string> rawEvent = ReadEvent(reader);
 
@@ -54,23 +56,23 @@ namespace Ncqrs.Eventing.Storage.SQL
             var evnt = new CommittedEvent(dummyCommitId, document.EventIdentifier, document.EventSourceId, document.EventSequence, document.EventTimeStamp, payload, document.EventVersion);
 
             // TODO: Legacy stuff... should move.
-            if(evnt is ISourcedEvent) { ((ISourcedEvent)evnt).InitializeFrom(rawEvent);}
-            
+            if (evnt is ISourcedEvent) { ((ISourcedEvent)evnt).InitializeFrom(rawEvent); }
+
             return evnt;
         }
-        
+
 
         /// <summary>
         /// Saves a snapshot of the specified event source.
         /// </summary>
         public void SaveShapshot(Snapshot snapshot)
         {
-            using (var connection = new SqlConnection(_connectionString))
+            using (var connection = new NpgsqlConnection(_connectionString))
             {
                 // Open connection and begin a transaction so we can
                 // commit or rollback all the changes that has been made.
                 connection.Open();
-                using (SqlTransaction transaction = connection.BeginTransaction())
+                using (NpgsqlTransaction transaction = connection.BeginTransaction())
                 {
                     try
                     {
@@ -80,7 +82,7 @@ namespace Ncqrs.Eventing.Storage.SQL
                             formatter.Serialize(dataStream, snapshot.Payload);
                             byte[] data = dataStream.ToArray();
 
-                            using (var command = new SqlCommand(Queries.InsertSnapshot, transaction.Connection))
+                            using (var command = new NpgsqlCommand(Queries.InsertSnapshot, transaction.Connection))
                             {
                                 command.Transaction = transaction;
                                 command.Parameters.AddWithValue("EventSourceId", snapshot.EventSourceId);
@@ -91,7 +93,7 @@ namespace Ncqrs.Eventing.Storage.SQL
                             }
                         }
 
-                        // Everything is handled, commint transaction.
+                        // Everything is handled, commit transaction.
                         transaction.Commit();
                     }
                     catch
@@ -109,19 +111,19 @@ namespace Ncqrs.Eventing.Storage.SQL
         /// </summary>
         public Snapshot GetSnapshot(Guid eventSourceId, long maxVersion)
         {
-            using (var connection = new SqlConnection(_connectionString))
+            using (var connection = new NpgsqlConnection(_connectionString))
             {
                 // Open connection and begin a transaction so we can
                 // commit or rollback all the changes that has been made.
                 connection.Open();
 
-                using (var command = new SqlCommand(Queries.SelectLatestSnapshot, connection))
+                using (var command = new NpgsqlCommand(Queries.SelectLatestSnapshot, connection))
                 {
                     command.Parameters.AddWithValue("@EventSourceId", eventSourceId);
 
                     using (var reader = command.ExecuteReader())
                     {
-                        if (reader.Read())
+                        if (reader.FieldCount > 0)
                         {
                             var snapshotData = (byte[])reader["Data"];
                             using (var buffer = new MemoryStream(snapshotData))
@@ -144,17 +146,17 @@ namespace Ncqrs.Eventing.Storage.SQL
         {
             var ids = new List<Guid>();
 
-            using (var connection = new SqlConnection(_connectionString))
-            using (var command = new SqlCommand(Queries.SelectAllIdsForTypeQuery, connection))
+            using (var connection = new NpgsqlConnection(_connectionString))
+            using (var command = new NpgsqlCommand(Queries.SelectAllIdsForTypeQuery, connection))
             {
                 command.Parameters.AddWithValue("Type", eventProviderType.FullName);
                 connection.Open();
 
-                using (SqlDataReader reader = command.ExecuteReader())
+                using (NpgsqlDataReader reader = command.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        ids.Add((Guid)reader[0]);
+                        ids.Add(reader.GetGuid(0));
                     }
                 }
             }
@@ -164,8 +166,8 @@ namespace Ncqrs.Eventing.Storage.SQL
 
         public void RemoveUnusedProviders()
         {
-            using (var connection = new SqlConnection(_connectionString))
-            using (var command = new SqlCommand(Queries.DeleteUnusedProviders, connection))
+            using (var connection = new NpgsqlConnection(_connectionString))
+            using (var command = new NpgsqlCommand(Queries.DeleteUnusedProviders, connection))
             {
                 connection.Open();
 
@@ -180,9 +182,9 @@ namespace Ncqrs.Eventing.Storage.SQL
             }
         }
 
-        private void UpdateEventSourceVersion(Guid eventSourceId, long newVersion, SqlTransaction transaction)
+        private void UpdateEventSourceVersion(Guid eventSourceId, long newVersion, NpgsqlTransaction transaction)
         {
-            using (var command = new SqlCommand(Queries.UpdateEventSourceVersionQuery, transaction.Connection))
+            using (var command = new NpgsqlCommand(Queries.UpdateEventSourceVersionQuery, transaction.Connection))
             {
                 command.Transaction = transaction;
                 command.Parameters.AddWithValue("Id", eventSourceId);
@@ -191,7 +193,7 @@ namespace Ncqrs.Eventing.Storage.SQL
             }
         }
 
-        private StoredEvent<string> ReadEvent(SqlDataReader reader)
+        private StoredEvent<string> ReadEvent(NpgsqlDataReader reader)
         {
             var eventIdentifier = (Guid)reader["Id"];
             var eventTimeStamp = (DateTime)reader["TimeStamp"];
@@ -217,7 +219,7 @@ namespace Ncqrs.Eventing.Storage.SQL
         /// <param name="evnts">The events to save.</param>
         /// <param name="eventSourceId">The event source id that owns the events.</param>
         /// <param name="transaction">The transaction.</param>
-        private void SaveEvents(IEnumerable<UncommittedEvent> evnts, SqlTransaction transaction)
+        private void SaveEvents(IEnumerable<UncommittedEvent> evnts, NpgsqlTransaction transaction)
         {
             Contract.Requires<ArgumentNullException>(evnts != null, "The argument evnts could not be null.");
             Contract.Requires<ArgumentNullException>(transaction != null, "The argument transaction could not be null.");
@@ -233,7 +235,7 @@ namespace Ncqrs.Eventing.Storage.SQL
         /// </summary>
         /// <param name="evnt">The event to save.</param>
         /// <param name="transaction">The transaction.</param>
-        private void SaveEvent(UncommittedEvent evnt, SqlTransaction transaction)
+        private void SaveEvent(UncommittedEvent evnt, NpgsqlTransaction transaction)
         {
             Contract.Requires<ArgumentNullException>(evnt != null, "The argument evnt could not be null.");
             Contract.Requires<ArgumentNullException>(transaction != null, "The argument transaction could not be null.");
@@ -245,7 +247,7 @@ namespace Ncqrs.Eventing.Storage.SQL
                                                       evnt.EventSequence, document);
             var raw = _translator.TranslateToRaw(storedEvent);
 
-            using (var command = new SqlCommand(Queries.InsertNewEventQuery, transaction.Connection))
+            using (var command = new NpgsqlCommand(Queries.InsertNewEventQuery, transaction.Connection))
             {
                 command.Transaction = transaction;
                 command.Parameters.AddWithValue("EventId", raw.EventIdentifier);
@@ -259,9 +261,9 @@ namespace Ncqrs.Eventing.Storage.SQL
             }
         }
 
-        private static void AddEventSource(Guid eventSourceId, Type eventSourceType, long initialVersion, SqlTransaction transaction)
+        private static void AddEventSource(Guid eventSourceId, Type eventSourceType, long initialVersion, NpgsqlTransaction transaction)
         {
-            using (var command = new SqlCommand(Queries.InsertNewProviderQuery, transaction.Connection))
+            using (var command = new NpgsqlCommand(Queries.InsertNewProviderQuery, transaction.Connection))
             {
                 command.Transaction = transaction;
                 command.Parameters.AddWithValue("Id", eventSourceId);
@@ -278,9 +280,9 @@ namespace Ncqrs.Eventing.Storage.SQL
         /// <param name="transaction">The transaction.</param>
         /// <returns>A <see cref="int?"/> that is <c>null</c> when no version was known ; otherwise,
         /// it contains the version number.</returns>
-        private static int? GetVersion(Guid providerId, SqlTransaction transaction)
+        private static int? GetVersion(Guid providerId, NpgsqlTransaction transaction)
         {
-            using (var command = new SqlCommand(Queries.SelectVersionQuery, transaction.Connection))
+            using (var command = new NpgsqlCommand(Queries.SelectVersionQuery, transaction.Connection))
             {
                 command.Transaction = transaction;
                 command.Parameters.AddWithValue("id", providerId);
@@ -298,7 +300,7 @@ namespace Ncqrs.Eventing.Storage.SQL
         {
             var currentAsm = Assembly.GetExecutingAssembly();
 
-            const string resourcename = "Ncqrs.Eventing.Storage.SQL.TableCreationScript.sql";
+            const string resourcename = "Ncqrs.Eventing.Storage.Postgre.TableCreationScript.sql";
             var resource = currentAsm.GetManifestResourceStream(resourcename);
 
             if (resource == null) throw new ApplicationException("Could not find the resource " + resourcename + " in assembly " + currentAsm.FullName);
@@ -315,7 +317,7 @@ namespace Ncqrs.Eventing.Storage.SQL
             }
 
             return result;
-        }        
+        }
 
         /// <summary>
         /// Get some events after specified event.
@@ -328,13 +330,13 @@ namespace Ncqrs.Eventing.Storage.SQL
             var result = new List<CommittedEvent>();
 
             // Create connection and command.
-            using (var connection = new SqlConnection(_connectionString))
+            using (var connection = new NpgsqlConnection(_connectionString))
             {
                 var query = eventId.HasValue
                     ? Queries.SelectEventsAfterQuery
                     : Queries.SelectEventsFromBeginningOfTime;
 
-                using (var command = new SqlCommand(string.Format(query, maxCount), connection))
+                using (var command = new NpgsqlCommand(string.Format(query, maxCount), connection))
                 {
                     if (eventId.HasValue)
                     {
@@ -343,7 +345,7 @@ namespace Ncqrs.Eventing.Storage.SQL
                     connection.Open();
 
                     // Execute query and create reader.
-                    using (SqlDataReader reader = command.ExecuteReader())
+                    using (NpgsqlDataReader reader = command.ExecuteReader())
                     {
                         while (reader.Read())
                         {
@@ -361,19 +363,19 @@ namespace Ncqrs.Eventing.Storage.SQL
         /// Reads from the stream from the <paramref name="minVersion"/> up until <paramref name="maxVersion"/>.
         /// </summary>
         /// <remarks>
-        /// Returned event stream does not contain snapthots. This method is used when snapshots are stored in a separate store.
+        /// Returned event stream does not contain snapshots. This method is used when snapshots are stored in a separate store.
         /// </remarks>
         /// <param name="id">The id of the event source that owns the events.</param>
         /// <param name="minVersion">The minimum version number to be read.</param>
-        /// <param name="maxVersion">The maximum version numebr to be read</param>
+        /// <param name="maxVersion">The maximum version number to be read</param>
         /// <returns>All the events from the event source between specified version numbers.</returns>
         public CommittedEventStream ReadFrom(Guid id, long minVersion, long maxVersion)
         {
             var events = new List<CommittedEvent>();
 
             // Create connection and command.
-            using (var connection = new SqlConnection(_connectionString))
-            using (var command = new SqlCommand(Queries.SelectAllEventsQuery, connection))
+            using (var connection = new NpgsqlConnection(_connectionString))
+            using (var command = new NpgsqlCommand(Queries.SelectAllEventsQuery, connection))
             {
                 // Add EventSourceId parameter and open connection.
                 command.Parameters.AddWithValue("EventSourceId", id);
@@ -382,7 +384,7 @@ namespace Ncqrs.Eventing.Storage.SQL
                 connection.Open();
 
                 // Execute query and create reader.
-                using (SqlDataReader reader = command.ExecuteReader())
+                using (NpgsqlDataReader reader = command.ExecuteReader())
                 {
                     while (reader.Read())
                     {
@@ -397,7 +399,7 @@ namespace Ncqrs.Eventing.Storage.SQL
 
         public void Store(UncommittedEventStream eventStream)
         {
-            using (var connection = new SqlConnection(_connectionString))
+            using (var connection = new NpgsqlConnection(_connectionString))
             {
                 connection.Open();
 
@@ -434,7 +436,7 @@ namespace Ncqrs.Eventing.Storage.SQL
             }
         }
 
-        private void StoreEventsFromSource(Guid eventSourceId, long eventSourceVersion, IEnumerable<UncommittedEvent> events, SqlTransaction transaction)
+        private void StoreEventsFromSource(Guid eventSourceId, long eventSourceVersion, IEnumerable<UncommittedEvent> events, NpgsqlTransaction transaction)
         {
             // Get the current version of the event provider.
             long? currentVersion = GetVersion(eventSourceId, transaction);
@@ -457,7 +459,7 @@ namespace Ncqrs.Eventing.Storage.SQL
             UpdateEventSourceVersion(eventSourceId, eventSourceVersion, transaction);
         }
 
-        private void StoreMultipleSources(IEnumerable<UncommittedEvent> eventStreamContainingMultipleSources, SqlTransaction transaction)
+        private void StoreMultipleSources(IEnumerable<UncommittedEvent> eventStreamContainingMultipleSources, NpgsqlTransaction transaction)
         {
             var sources = from evnt in eventStreamContainingMultipleSources
                           group evnt by evnt.EventSourceId into eventSourceGroup

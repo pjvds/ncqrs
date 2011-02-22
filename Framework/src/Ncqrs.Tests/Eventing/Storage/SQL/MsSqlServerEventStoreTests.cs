@@ -79,6 +79,11 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
             {
                 get { return AccountId; }
             }
+
+            public Guid AggregateId
+            {
+                get { return CustomerId; }
+            }
         }
 
         [Serializable]

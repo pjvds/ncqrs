@@ -10,5 +10,6 @@ namespace Ncqrs.Eventing.Sourcing
         /// Gets or sets the id of the entity that causes this event.
         /// </summary>
         public Guid EntityId { get; set; }
+        public Guid AggregateId { get; set; }
     }
 }

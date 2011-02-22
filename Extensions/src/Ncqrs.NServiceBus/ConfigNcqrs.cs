@@ -5,6 +5,7 @@ using Ncqrs.Commanding.ServiceModel;
 using Ncqrs.Eventing;
 using Ncqrs.Eventing.ServiceModel.Bus;
 using NServiceBus;
+using Ncqrs.Commanding.CommandExecution.Mapping.Attributes;
 
 namespace Ncqrs.NServiceBus
 {
@@ -42,6 +43,16 @@ namespace Ncqrs.NServiceBus
             return this;
         }
 
+        /// <summary>
+        /// Registers the executors for mapped commands in assembly.
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
+        /// <returns></returns>
+        public ConfigNcqrs RegisterExecutorsForMappedCommandsInAssembly(System.Reflection.Assembly assembly)
+        {
+            _commandService.RegisterExecutorsInAssembly(assembly);
+            return this;
+        }
 
         /// <summary>
         /// Register a handler that will receive all messages that are published.

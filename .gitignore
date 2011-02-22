@@ -25,3 +25,5 @@ bin
 /lib/Release/*
 release
 *.pidb
+
+*.vs10x

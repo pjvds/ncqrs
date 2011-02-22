@@ -5,19 +5,19 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{9CBAEAFE-9265-47BA-82C5-5E0774CBF2C5}</ProjectGuid>
+    <ProjectGuid>{73EFEBCC-4B62-470B-A27B-D846359FF600}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Ncqrs.CommandService</RootNamespace>
-    <AssemblyName>Ncqrs.CommandService</AssemblyName>
+    <RootNamespace>Ncqrs.Eventing.Storage.Postgre</RootNamespace>
+    <AssemblyName>Ncqrs.Eventing.Storage.Postgre</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <OutputPath>..\..\..\lib\$(Configuration)\$(AssemblyName)\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
+    <OutputPath>..\..\..\lib\Debug\Ncqrs.Eventing.Storage.Postgre\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -25,30 +25,33 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
+    <OutputPath>..\..\..\lib\Release\Ncqrs.Eventing.Storage.Postgre\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Ncqrs">
-      <HintPath>..\..\..\lib\$(Configuration)\Ncqrs\Ncqrs.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\..\lib\Release\Ncqrs\Ncqrs.dll</HintPath>
     </Reference>
-    <Reference Include="Ncqrs.CommandService.Contracts">
-      <HintPath>..\..\..\lib\Debug\Ncqrs.CommandService\Ncqrs.CommandService.Contracts.dll</HintPath>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\..\lib\ThirdParty\json.net\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Npgsql">
+      <HintPath>..\..\..\lib\ThirdParty\Npgsql\Npgsql.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Data" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ChannelHelper.cs" />
-    <Compile Include="Infrastructure\CommandServiceBehavior.cs" />
-    <Compile Include="Infrastructure\CommandServiceInstanceProvider.cs" />
-    <Compile Include="CommandWebService.cs" />
-    <Compile Include="Infrastructure\ThrowOnExceptionInterceptor.cs" />
+    <Compile Include="PostgreServerEventStore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Queries.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TableCreationScript.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

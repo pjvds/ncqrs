@@ -57,6 +57,7 @@ namespace Ncqrs.Domain
             ValidateEventOwnership(evnt);
 
             evnt.EntityId = EntityId;
+            evnt.AggregateId = _parent.EventSourceId;
 
             _parent.ApplyEvent(evnt);
         }
