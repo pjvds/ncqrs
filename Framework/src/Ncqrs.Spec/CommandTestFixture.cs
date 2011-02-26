@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Ncqrs.Commanding;
 using Ncqrs.Commanding.CommandExecution;
 using Ncqrs.Eventing;
-using Ncqrs.Eventing.Sourcing;
 using NUnit.Framework;
 
 namespace Ncqrs.Spec
