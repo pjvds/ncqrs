@@ -96,7 +96,14 @@
     <Compile Include="AutoMappedCommandTestFixture.cs" />
     <Compile Include="BaseTestFixture.cs" />
     <Compile Include="CommandTestFixture.cs" />
+    <Compile Include="BigBangTestFixture.cs" />
+    <Compile Include="ExceptionTestFixture.cs" />
+    <Compile Include="OneEventTestFixture.cs" />
     <Compile Include="EventContext.cs" />
+    <Compile Include="Fakes\EnvironmentConfigurationWrapper.cs" />
+    <Compile Include="Fakes\EventStoreWrapper.cs" />
+    <Compile Include="Fakes\FrozenClock.cs" />
+    <Compile Include="Fakes\RecordingEventBus.cs" />
     <Compile Include="GivenAttribute.cs" />
     <Compile Include="Prepare.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -109,6 +116,7 @@
       <Name>Ncqrs</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
