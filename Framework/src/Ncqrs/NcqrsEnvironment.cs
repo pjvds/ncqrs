@@ -159,5 +159,14 @@ namespace Ncqrs
                 return _instance != null;
             }
         }
+
+        /// <summary>
+        /// Returns the current environment configuration
+        /// </summary>
+        /// <remarks>
+        /// Returns the current environment configuration, or null if not configured
+        /// </remarks>
+        public static IEnvironmentConfiguration CurrentConfiguration { get { return _instance; } }
+
     }
 }

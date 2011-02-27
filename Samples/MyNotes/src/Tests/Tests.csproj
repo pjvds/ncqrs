@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{EE6E54C8-D108-49E7-9E2A-6BAEF6D5339F}</ProjectGuid>
+    <ProjectGuid>{1F4B376F-D08C-4C8B-AB6E-16F70173FBB5}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Ncqrs.EventBus.Tests</RootNamespace>
-    <AssemblyName>Ncqrs.EventBus.Tests</AssemblyName>
+    <RootNamespace>Tests</RootNamespace>
+    <AssemblyName>Tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\lib\$(Configuration)\$(AssemblyName)\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -25,27 +25,14 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\lib\$(Configuration)\$(AssemblyName)\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FluentAssertions">
-      <HintPath>..\..\..\lib\ThirdParty\FluentAssertions\FluentAssertions.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Ncqrs">
-      <HintPath>..\..\..\lib\$(Configuration)\Ncqrs\Ncqrs.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="nunit.framework">
-      <HintPath>..\..\..\lib\ThirdParty\NUnit\nunit.framework.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Rhino.Mocks">
-      <HintPath>..\..\..\lib\ThirdParty\RhinoMocks\Rhino.Mocks.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\..\..\lib\ThirdParty\Nunit\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -56,24 +43,36 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CursorPositionCalculatorSpecification.cs" />
-    <Compile Include="EventDemultiplexerSpecification.cs" />
-<<<<<<< HEAD
-    <Compile Include="FakeProcessingElement.cs" />
-    <Compile Include="When_processing_fails.cs" />
-    <Compile Include="When_processing_succeeds.cs" />
-    <Compile Include="PipelineProcessorSpecificationBase.cs" />
-=======
-    <Compile Include="TestEvent.cs" />
-    <Compile Include="PipelineProcessorSpecification.cs" />
->>>>>>> development
+    <Compile Include="Configuration.cs" />
+    <Compile Include="when_changing_note_text.cs" />
+    <Compile Include="when_creating_a_new_note.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="BigBang_when_creating_a_new_note.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Ncqrs.EventBus\Ncqrs.EventBus.csproj">
-      <Project>{CAF2E548-87C8-422B-A62C-8C3ED83FF3C3}</Project>
-      <Name>Ncqrs.EventBus</Name>
-      <Private>False</Private>
+    <ProjectReference Include="..\..\..\..\Extensions\src\Ncqrs.CommandService\Ncqrs.CommandService.csproj">
+      <Project>{9CBAEAFE-9265-47BA-82C5-5E0774CBF2C5}</Project>
+      <Name>Ncqrs.CommandService</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Framework\src\Ncqrs.Spec\Ncqrs.Spec.csproj">
+      <Project>{AA90754B-CA47-429E-BDC8-2A83E94179B7}</Project>
+      <Name>Ncqrs.Spec</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Framework\src\Ncqrs\Ncqrs.csproj">
+      <Project>{01F84441-80D3-49B4-AB18-96894ACB2F90}</Project>
+      <Name>Ncqrs</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Commands\Commands.csproj">
+      <Project>{CF0635EB-DFA4-4E82-B245-A0F125183E08}</Project>
+      <Name>Commands %28Samples\MyNotes\Commands%29</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Domain\Domain.csproj">
+      <Project>{BD0344CC-E61E-4BC6-8782-0AC0390F48FD}</Project>
+      <Name>Domain %28Samples\MyNotes\Domain%29</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Events\Events.csproj">
+      <Project>{705805EF-47BE-48A8-A359-CA999169E445}</Project>
+      <Name>Events %28Samples\MyNotes\Events%29</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
