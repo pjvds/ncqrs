@@ -119,6 +119,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.EventBus", "Extension
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.CommandService", "Extensions\src\Ncqrs.CommandService\Ncqrs.CommandService.csproj", "{9CBAEAFE-9265-47BA-82C5-5E0774CBF2C5}"
 	ProjectSection(ProjectDependencies) = postProject
+		{76062319-4F5D-4055-9D1A-5680DD2DA882} = {76062319-4F5D-4055-9D1A-5680DD2DA882}
 		{01F84441-80D3-49B4-AB18-96894ACB2F90} = {01F84441-80D3-49B4-AB18-96894ACB2F90}
 	EndProjectSection
 EndProject
