@@ -41,6 +41,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Config.Ninject.Tests"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Eventing.Storage.Postgre", "src\Ncqrs.Eventing.Storage.Postgre\Ncqrs.Eventing.Storage.Postgre.csproj", "{73EFEBCC-4B62-470B-A27B-D846359FF600}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.CommandService.Contracts", "src\Ncqrs.CommandService.Contracts\Ncqrs.CommandService.Contracts.csproj", "{76062319-4F5D-4055-9D1A-5680DD2DA882}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -241,6 +243,16 @@ Global
 		{73EFEBCC-4B62-470B-A27B-D846359FF600}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{73EFEBCC-4B62-470B-A27B-D846359FF600}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{73EFEBCC-4B62-470B-A27B-D846359FF600}.Release|x86.ActiveCfg = Release|Any CPU
+		{76062319-4F5D-4055-9D1A-5680DD2DA882}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76062319-4F5D-4055-9D1A-5680DD2DA882}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76062319-4F5D-4055-9D1A-5680DD2DA882}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{76062319-4F5D-4055-9D1A-5680DD2DA882}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{76062319-4F5D-4055-9D1A-5680DD2DA882}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{76062319-4F5D-4055-9D1A-5680DD2DA882}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76062319-4F5D-4055-9D1A-5680DD2DA882}.Release|Any CPU.Build.0 = Release|Any CPU
+		{76062319-4F5D-4055-9D1A-5680DD2DA882}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{76062319-4F5D-4055-9D1A-5680DD2DA882}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{76062319-4F5D-4055-9D1A-5680DD2DA882}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
