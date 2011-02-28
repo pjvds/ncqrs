@@ -87,6 +87,7 @@ namespace Ncqrs.Eventing.ServiceModel.Bus
             }
         }
 
+        [ContractVerification(false)]
         protected IEnumerable<Action<PublishedEvent>> GetHandlersForEvent(IPublishableEvent eventMessage)
         {
             if (eventMessage == null)
