@@ -397,6 +397,9 @@ namespace Ncqrs.Eventing.Storage.SQL
 
         public void Store(UncommittedEventStream eventStream)
         {
+            if (!eventStream.Any())
+                return;
+
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
