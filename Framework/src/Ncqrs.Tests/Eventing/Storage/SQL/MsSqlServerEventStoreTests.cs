@@ -267,5 +267,23 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
             savedSnapshot.EventSourceId.Should().Be(anId);
             savedSnapshot.Version.Should().Be(aVersion);
         }
+
+        [Test]
+        public void Storing_empty_event_stream_should_not_throw()
+        {
+            var targetStore = new MsSqlServerEventStore(connectionString);
+            var theEventSourceId = Guid.NewGuid();
+            var theCommitId = Guid.NewGuid();
+
+            var eventStream = Prepare.Events(new object[0])
+                .ForSourceUncomitted(theEventSourceId, theCommitId);
+
+            targetStore.Store(eventStream);
+
+            Assert.Pass();
+        }
+
+
+
     }
 }
