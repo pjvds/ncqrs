@@ -52,6 +52,15 @@ namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Fluent
             { get; set; }
         }
 
+        public class AggregateRootTargetStaticCreateCommand : CommandBase
+        {
+            public string Title
+            { get; set; }
+
+            public Guid Id
+            { get; set; }
+        }
+
         public class AggregateRootTargetTitleUpdatedEvent
         {
             public string Title
@@ -98,6 +107,11 @@ namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Fluent
                 Map<AggregateRootTargetTitleUpdatedEvent>().ToHandler(eventargs => TitleUpdated(eventargs));
                 Map<AggregateRootTargetCreatedNewEvent>().ToHandler(eventargs => NewTestAggregateRootCreated(eventargs));
             }
+
+            public static AggregateRootTarget CreateNew(string title)
+            {
+                return new AggregateRootTarget(title);
+            }
         }
 
         [SetUp]
@@ -105,6 +119,7 @@ namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Fluent
         {
             var service = new CommandService();
 
+            Map.Command<AggregateRootTargetStaticCreateCommand>().ToAggregateRoot<AggregateRootTarget>().CreateNew((cmd) => AggregateRootTarget.CreateNew(cmd.Title)).StoreIn((cmd, aggroot) => AggRoot = aggroot).RegisterWith(service);
             Map.Command<AggregateRootTargetUpdateTitleCommand>().ToAggregateRoot<AggregateRootTarget>().WithId(cmd => cmd.Id, (guid, knownVersion) => GetAggregateRoot()).ToCallOn((cmd, aggroot) => aggroot.UpdateTitle(cmd.Title)).RegisterWith(service);
             Map.Command<AggregateRootTargetCreateNewCommand>().ToAggregateRoot<AggregateRootTarget>().CreateNew((cmd) => new AggregateRootTarget(cmd.Title)).StoreIn((cmd, aggroot) => AggRoot = aggroot).RegisterWith(service);
 
@@ -136,6 +151,15 @@ namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Fluent
             TheService.Execute(command);
 
             AggRoot.Title.Should().Be("AggregateRootTargetCreateNewCommand");
+        }
+
+        [Test]
+        public void Command_should_create_new_aggregate_root_with_static_method()
+        {
+            var command = new AggregateRootTargetStaticCreateCommand { Title = "AggregateRootTargetStaticCreateCommand" };
+            TheService.Execute(command);
+
+            AggRoot.Title.Should().Be("AggregateRootTargetStaticCreateCommand");
         }
     }
 }
