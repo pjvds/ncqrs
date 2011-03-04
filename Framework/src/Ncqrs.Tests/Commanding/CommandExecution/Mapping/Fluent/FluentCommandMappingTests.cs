@@ -1,13 +1,11 @@
 ﻿using System;
+using FluentAssertions;
+using NUnit.Framework;
 using Ncqrs.Commanding;
 using Ncqrs.Commanding.CommandExecution;
-using Ncqrs.Commanding.CommandExecution.Mapping;
 using Ncqrs.Commanding.CommandExecution.Mapping.Fluent;
 using Ncqrs.Commanding.ServiceModel;
 using Ncqrs.Domain;
-using Ncqrs.Eventing.Sourcing;
-using NUnit.Framework;
-using FluentAssertions;
 
 namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Fluent
 {
