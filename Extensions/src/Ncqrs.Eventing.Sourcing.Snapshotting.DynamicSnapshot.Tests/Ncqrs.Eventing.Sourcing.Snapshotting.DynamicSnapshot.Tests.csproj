@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{618E1C0F-E6B7-4C51-961D-C4ACE60CFC85}</ProjectGuid>
+    <ProjectGuid>{85073A89-CC13-44E2-B8C2-FB0B638B60F7}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot</RootNamespace>
-    <AssemblyName>Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot</AssemblyName>
+    <RootNamespace>Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot.Tests</RootNamespace>
+    <AssemblyName>Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\lib\Debug\Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -25,7 +25,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\lib\Release\Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -37,26 +37,23 @@
     <Reference Include="Ncqrs">
       <HintPath>..\..\..\lib\Debug\Ncqrs\Ncqrs.dll</HintPath>
     </Reference>
+    <Reference Include="nunit.framework">
+      <HintPath>..\..\..\lib\ThirdParty\Nunit\nunit.framework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DynamicSnapshot.cs" />
-    <Compile Include="DynamicSnapshotAttribute.cs" />
-    <Compile Include="DynamicSnapshotBase.cs" />
-    <Compile Include="DynamicSnapshotsException.cs" />
-    <Compile Include="DynamicSnapshotsNotSupportedException.cs" />
-    <Compile Include="ExcludeFromSnapshotAttribute.cs" />
-    <Compile Include="IHaveProxyReference.cs" />
-    <Compile Include="SnapshotableField.cs" />
-    <Compile Include="DynamicSnapshotAssemblyBuilder.cs" />
+    <Compile Include="DynamicSnapshotTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="DynamicSnapshotExtensions.cs" />
-    <Compile Include="DynamicSnapshotTypeBuilder.cs" />
-    <Compile Include="SnapshotableImplementer.cs" />
-    <Compile Include="SnapshotableProxy.cs" />
-    <Compile Include="TypeExtensions.cs" />
+    <Compile Include="SnapshotableProxyTests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot\Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot.csproj">
+      <Project>{618E1C0F-E6B7-4C51-961D-C4ACE60CFC85}</Project>
+      <Name>Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

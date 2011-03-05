@@ -2,20 +2,24 @@
 using System.Reflection.Emit;
 using System.Reflection;
 using System.Collections.Generic;
+using System.IO;
 
 namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot
 {
-    internal sealed class SnapshotAssemblyBuilder
+    internal sealed class DynamicSnapshotAssemblyBuilder
     {
+
         #region Constants
 
-        private const string DefaultModuleName = "SnapshotModule";
+        public const string DefaultModuleName = "DynamicSnapshot.dll";
 
         #endregion
 
         #region Fields
 
         private readonly AssemblyBuilder _assemblyBuilder;
+
+        private readonly string _assemblyFileName;
 
         private readonly ModuleBuilder _moduleBuilder;
 
@@ -27,14 +31,19 @@ namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot
 
         #region Constructors
 
-        public SnapshotAssemblyBuilder(AssemblyName assemblyName, string moduleName)
+        public DynamicSnapshotAssemblyBuilder(AssemblyName assemblyName)
+            : this(assemblyName, DefaultModuleName)
+        { }
+
+        public DynamicSnapshotAssemblyBuilder(AssemblyName assemblyName, string moduleName)
         {
+            _assemblyFileName = moduleName;
             _assemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.RunAndSave);
-            _moduleBuilder = _assemblyBuilder.DefineDynamicModule(moduleName, true); // TODO: true?
+            _moduleBuilder = _assemblyBuilder.DefineDynamicModule(moduleName, _assemblyFileName);
         }
 
-        public SnapshotAssemblyBuilder(AssemblyName assemblyName)
-            : this(assemblyName, DefaultModuleName)
+        public DynamicSnapshotAssemblyBuilder()
+            : this(new AssemblyName(DefaultModuleName), DefaultModuleName)
         { }
 
         #endregion
@@ -57,7 +66,7 @@ namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot
             if (snapshotType != null)
                 return snapshotType;
 
-            snapshotType = SnapshotTypeBuilder.CreateType(sourceType, _moduleBuilder);
+            snapshotType = DynamicSnapshotTypeBuilder.CreateType(sourceType, _moduleBuilder);
 
             if (snapshotType != null)
             {
@@ -70,9 +79,19 @@ namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot
             return snapshotType;
         }
 
-        public void SaveAssembly(string path)
+        public Assembly SaveAssembly()
         {
-            _assemblyBuilder.Save(path);
+            var file = _assemblyFileName;
+
+            if (!file.EndsWith(".dll")) 
+                file = string.Format("{0}.dll", file);
+
+            if (File.Exists(file)) 
+                File.Delete(file);
+
+            _assemblyBuilder.Save(file);
+
+            return _assemblyBuilder;
         }
 
         #endregion

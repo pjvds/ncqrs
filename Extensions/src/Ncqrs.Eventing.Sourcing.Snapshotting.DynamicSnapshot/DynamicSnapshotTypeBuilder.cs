@@ -1,11 +1,13 @@
 using System;
-using System.Reflection.Emit;
-using System.Reflection;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Reflection.Emit;
+using Ncqrs.Domain;
 
 namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot
 {
-    public static class SnapshotTypeBuilder
+    internal static class DynamicSnapshotTypeBuilder
     {
         #region Readonly
 
@@ -88,7 +90,7 @@ namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot
             bool isSnapshotable = sourceType.Inherits<AggregateRoot>() && sourceType.HasAttribute<DynamicSnapshotAttribute>();
 
             if (!isSnapshotable)
-                throw new DynamicSnapshotsNotSupportedException() { Source = sourceType };
+                throw new DynamicSnapshotNotSupportedException() { AggregateType = sourceType };
         }
 
         #endregion
