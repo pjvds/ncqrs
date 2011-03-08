@@ -55,7 +55,7 @@ namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot
                 il.Emit(OpCodes.Ldarg, paramIndex++);
             }
 
-            il.Emit(OpCodes.Call, snapshotBaseCtor); // call Snapshot constructor
+            il.Emit(OpCodes.Call, snapshotBaseCtor); // call DynamicSnapshotBase constructor
 
             il.Emit(OpCodes.Ldarg_0); // push this
             il.Emit(OpCodes.Ldarg, paramIndex); // push source

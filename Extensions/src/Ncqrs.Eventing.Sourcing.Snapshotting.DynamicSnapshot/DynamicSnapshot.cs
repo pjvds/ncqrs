@@ -109,6 +109,12 @@ namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot
 
         public static Type FindSnapshotType<T>(T aggregate) where T : AggregateRoot
         {
+            return FindSnapshotType<T>();
+        }
+
+        public static Type FindSnapshotType<T>() where T : AggregateRoot 
+        {
+            LoadSnapshotAssembly();
             var aggregateTypeName = typeof(T).Name;
             var snapshotType = _snapshotAssembly.GetTypes().SingleOrDefault(type => type.Name.StartsWith(aggregateTypeName));
 

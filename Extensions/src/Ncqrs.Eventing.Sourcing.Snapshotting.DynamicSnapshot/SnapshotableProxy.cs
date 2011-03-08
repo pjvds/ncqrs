@@ -14,6 +14,21 @@ namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot
 
         private static T Create<T>(T aggreagte, Type snapshotType) where T : AggregateRoot
         {
+            var snapshotable = CreateSnapshotable<T>();
+            var generator = new ProxyGenerator();
+
+            var options = new ProxyGenerationOptions();
+            options.AddMixinInstance(snapshotable);
+
+            var proxy = generator.CreateClassProxyWithTarget(typeof(T), aggreagte, options);
+            ((IHaveProxyReference)proxy).Proxy = proxy;
+
+            return (T)proxy;
+        }
+
+        public static object CreateSnapshotable<T>() where T : AggregateRoot
+        {
+            var snapshotType = DynamicSnapshot.FindSnapshotType<T>();
             var aggregateTypeName = typeof(T).Name;
             var snapshotTypeName = snapshotType.Name;
 
@@ -22,16 +37,7 @@ namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot
                 throw new DynamicSnapshotException(string.Format("Invalid snapshot [{0}]' for type [{1}].", snapshotTypeName, aggregateTypeName));
 
             var snapshotableType = typeof(SnapshotableImplementer<>).MakeGenericType(snapshotType);
-            var snapshotable = Activator.CreateInstance(snapshotableType);
-            var generator = new ProxyGenerator();
-
-            var options = new ProxyGenerationOptions();
-            options.AddMixinInstance(snapshotable);
-
-            var proxy = generator.CreateClassProxyWithTarget(typeof(T), aggreagte, options);
-            ((IHaveProxyReference)proxy).Proxy = (AggregateRoot)proxy;
-
-            return (T)proxy;
+            return Activator.CreateInstance(snapshotableType);
         }
 
         public static T Create<T>(T aggregate) where T : AggregateRoot
