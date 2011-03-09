@@ -42,11 +42,6 @@ namespace Ncqrs.Tests.Domain
                 Map<EventForPrivateMethod>().ToHandler(x => OnEventForPrivateMethod(x));
             }
 
-            public new void ApplyEvent(ISourcedEvent e)
-            {
-                base.ApplyEvent(e);
-            }
-
             public virtual void OnEventForPublicMethod(EventForPublicMethod e)
             {
                 OnEventForPublicMethodInvokedCount++;
