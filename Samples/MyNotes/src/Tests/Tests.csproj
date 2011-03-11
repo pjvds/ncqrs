@@ -43,11 +43,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="when_serializing_NoteTextChanged.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="when_changing_note_text.cs" />
     <Compile Include="when_creating_a_new_note.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="BigBang_when_creating_a_new_note.cs" />
+    <Compile Include="when_serializing_NewNoteAdded.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\Extensions\src\Ncqrs.CommandService\Ncqrs.CommandService.csproj">
