@@ -1,26 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Reflection.Emit;
 using System.Text;
+using System.Threading;
+using Castle.Core;
+using Castle.Core.Configuration;
+using Castle.DynamicProxy;
+using Castle.MicroKernel;
+using Castle.MicroKernel.Facilities;
+using Castle.MicroKernel.Proxy;
+using Castle.MicroKernel.Registration;
 using Ncqrs.Domain;
 using NUnit.Framework;
-using System.Reflection;
-using Castle.DynamicProxy;
-using System.Reflection.Emit;
-using System.Threading;
-using Castle.MicroKernel.Proxy;
-using Castle.Core;
-using Castle.MicroKernel.Registration;
-using Castle.MicroKernel.Facilities;
-using Castle.MicroKernel;
 
 namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot.Tests
 {
-
     [TestFixture]
-    public class AutoSnapshotTests
+    public class DynamicSnapshotTests
     {
-        private const string OriginalTitle = "OroginalTitle";
+        private const string OriginalTitle = "OriginalTitle";
         private const string ChangedTitle = "ChangedTitle";
 
         [Test]
@@ -31,7 +31,10 @@ namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot.Tests
             var target = Assembly.LoadFrom("Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot.Tests.dll");
             var snapshotsAsm = DynamicSnapshot.CreateAssemblyFrom(target);
 
-            dynamic proxy = SnapshotableProxy.Create(new Foo());
+            Castle.Windsor.IWindsorContainer container = new Castle.Windsor.WindsorContainer();
+            container.Register(Component.For<Foo>().AsSnapshotable());
+
+            dynamic proxy = container.Resolve<Foo>();
             proxy.ChangeTitle(OriginalTitle);
             Assert.AreEqual(OriginalTitle, proxy.Tittle);
 
@@ -52,40 +55,7 @@ namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot.Tests
             var snapshotsAsm = DynamicSnapshot.CreateAssemblyFrom(target);
             var snapshotTypesCount = snapshotsAsm.GetTypes().Length;
             Assert.AreEqual(3, snapshotTypesCount);
-        }
-
-        [Test]
-        public void Test()
-        {
-            Castle.Windsor.IWindsorContainer container = new Castle.Windsor.WindsorContainer();
-            container.Register(SnapshotComponent<Foo>());
-            container.Register(Component.For<Foo>());
-
-            var foor = container.Resolve<Foo>();
-        }
-        public ComponentRegistration<T> SnapshotComponent<T>() where T : AggregateRoot
-        {
-            return 
-                Component.For<T>()
-                .LifeStyle.Transient
-                .Proxy.MixIns(SnapshotableProxy.CreateSnapshotable<T>());
-        }
-
-        
-    }
-
-    public class WarehouseCachingInterceptorSelector : IModelInterceptorsSelector
-    {
-
-        public bool HasInterceptors(ComponentModel model)
-        {
-            throw new NotImplementedException();
-        }
-
-        public InterceptorReference[] SelectInterceptors(ComponentModel model, InterceptorReference[] interceptors)
-        {
-            throw new NotImplementedException();
-        }
+        }        
     }
 
     [DynamicSnapshot]
@@ -99,5 +69,41 @@ namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot.Tests
         public static Foo CreateNew(string title) { return new Foo(title); }
 
         public void ChangeTitle(string newTitle) { _title = newTitle; }
+    }
+
+    [DynamicSnapshot]
+    public class ParentSnapshotableObject : AggregateRoot
+    {
+        protected string _name = "ParentSnapshotableObject";
+        private readonly bool _isActive = true;
+
+        [ExcludeFromSnapshot]
+        private int _excludedInt = -123;
+
+        [ExcludeFromSnapshot]
+        private DateTime _excludedDate = DateTime.Now;
+
+    }
+
+    [DynamicSnapshot]
+    public class SnapshotableObject : ParentSnapshotableObject
+    {
+        protected string _name = "SnapshotableObject";
+        private int _penchoInt = 1245;
+
+        [ExcludeFromSnapshot]
+        private bool _excludedBool;
+    }
+
+    public class ParentNonSnapshotableObect : AggregateRoot
+    {
+        private string _name = "ParentNonSnapshotableObect";
+        DateTime _date = DateTime.Now;
+    }
+
+    public class NonSnapshotableObject : ParentNonSnapshotableObect
+    {
+        private string _name = "NonSnapshotableObject";
+        DateTime _date = DateTime.Now;
     }
 }

@@ -2,28 +2,54 @@ using System;
 using System.Linq;
 using System.Reflection;
 using Ncqrs.Domain;
+using Castle.DynamicProxy;
 
 namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot
 {
     public static class DynamicSnapshot
     {
-
-        #region Fields
-
-        [ThreadStatic]
         private static Assembly _snapshotAssembly;
 
-        #endregion
+        public static object Create(Type aggregateType)
+        {
+            var snapshotable = CreateSnapshotable(aggregateType);
+            var generator = new ProxyGenerator();
 
-        #region Public Methods
+            var options = new ProxyGenerationOptions();
+            options.AddMixinInstance(snapshotable);
 
+            var proxy = generator.CreateClassProxy(aggregateType, options);
+            ((IHaveProxyReference)proxy).Proxy = proxy;
+
+            return proxy;
+        }
+
+        public static T Create<T>() where T : AggregateRoot
+        {
+            var snapshotable = CreateSnapshotable<T>();
+            var generator = new ProxyGenerator();
+
+            var options = new ProxyGenerationOptions();
+            options.AddMixinInstance(snapshotable);
+
+            var proxy = generator.CreateClassProxy(typeof(T), options);
+            ((IHaveProxyReference)proxy).Proxy = proxy;
+
+            return (T)proxy;
+        }
+
+        /// <summary>
+        /// Creates an assembly with snapshot types.
+        /// </summary>
+        /// <param name="target">The assembly containing aggregate roots with [DynamicSnapshot] attribute.</param>
+        /// <returns></returns>
         public static Assembly CreateAssemblyFrom(Assembly target)
         {
-            var snapshotableTypes = target.GetTypes().Where(type => type.HasAttribute(typeof(DynamicSnapshotAttribute)));
+            var snapshotableTypes = target.GetTypes().Where(type => type.HasAttribute<DynamicSnapshotAttribute>());
 
             if (snapshotableTypes.Count() == 0)
                 throw new DynamicSnapshotException(string.Format(
-                    "The assembly '{}' does not contain any snapshotable types. Are you missing [{1}] attribute?",
+                    "The assembly '{0}' does not contain any snapshotable types. Are you missing [{1}] attribute?",
                     target.FullName,
                     typeof(DynamicSnapshotAttribute).Name));
 
@@ -37,57 +63,46 @@ namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot
             return _snapshotAssembly;
         }
 
-        public static void InitializeFrom(DynamicSnapshotBase snapshot, AggregateRoot source)
+        internal static T CreateSnapshotable<T>() where T : AggregateRoot
         {
-            if (snapshot == null) throw new ArgumentNullException("snapshot");
-            if (source == null) throw new ArgumentNullException("source");
-
-            var sourceFieldMap = SnapshotableField.GetMap(source.GetType());
-            var snapshotFields = snapshot.GetType().GetFields(BindingFlags.Instance | BindingFlags.Public);
-
-            foreach (var snapshotField in snapshotFields)
-            {
-                FieldInfo sourceField;
-                if (sourceFieldMap.TryGetValue(snapshotField.Name, out sourceField))
-                {
-                    var fieldValue = sourceField.GetValue(source);
-                    snapshotField.SetValue(snapshot, fieldValue);
-                }
-                else
-                {
-                    // TODO: No field found; throw?
-                }
-            }
+            return (T)CreateSnapshotable(typeof(T));
         }
 
-        public static void RestoreAggregateRoot(DynamicSnapshotBase snapshot, AggregateRoot source)
+        internal static object CreateSnapshotable(Type aggregateType)
         {
-            if (snapshot == null) throw new ArgumentNullException("snapshot");
-            if (source == null) throw new ArgumentNullException("source");
+            var snapshotType = FindSnapshotType(aggregateType);
+            var aggregateTypeName = aggregateType.Name;
+            var snapshotTypeName = snapshotType.Name;
 
-            var arFieldMap = SnapshotableField.GetMap(source.GetType());
-            var snapshotFields = snapshot.GetType().GetFields(BindingFlags.Instance | BindingFlags.Public);
+            //  May be we should log a warning. The exception is a bit rude.
+            if (!snapshotTypeName.StartsWith(aggregateTypeName))
+                throw new DynamicSnapshotException(string.Format("Invalid snapshot [{0}]' for type [{1}].", snapshotTypeName, aggregateTypeName));
 
-            foreach (var snapshotField in snapshotFields)
-            {
-                FieldInfo arField;
-                if (arFieldMap.TryGetValue(snapshotField.Name, out arField))
-                {
-                    var fieldValue = snapshotField.GetValue(snapshot);
-                    arField.SetValue(source, fieldValue);
-                }
-                else
-                {
-                    // TODO: No field found; throw?
-                }
-            }
+            var snapshotableType = typeof(SnapshotableImplementer<>).MakeGenericType(snapshotType);
+            return Activator.CreateInstance(snapshotableType);
         }
 
-        #endregion
+        private static Type FindSnapshotType<T>() where T : AggregateRoot
+        {
+            return FindSnapshotType(typeof(T));
+        }
 
-        #region Internal Methods
+        private static Type FindSnapshotType(Type aggregateType)
+        {
+            LoadSnapshotAssembly();
+            var aggregateTypeName = aggregateType.Name;
+            var snapshotType = _snapshotAssembly.GetTypes().SingleOrDefault(type => type.Name.StartsWith(aggregateTypeName));
 
-        internal static Assembly LoadSnapshotAssembly()
+            if (snapshotType == null)
+                throw new DynamicSnapshotException(string.Format(
+                    "Cannot find snapshot in '{0}' for type [{1}]. Consider rebuilding the dynamic snapshot assembly.",
+                    _snapshotAssembly.FullName,
+                    aggregateTypeName));
+
+            return snapshotType;
+        }
+
+        private static Assembly LoadSnapshotAssembly()
         {
             if (_snapshotAssembly == null)
             {
@@ -102,32 +117,6 @@ namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot
             }
             return _snapshotAssembly;
         }
-
-        #endregion
-
-        #region Private Methods
-
-        public static Type FindSnapshotType<T>(T aggregate) where T : AggregateRoot
-        {
-            return FindSnapshotType<T>();
-        }
-
-        public static Type FindSnapshotType<T>() where T : AggregateRoot 
-        {
-            LoadSnapshotAssembly();
-            var aggregateTypeName = typeof(T).Name;
-            var snapshotType = _snapshotAssembly.GetTypes().SingleOrDefault(type => type.Name.StartsWith(aggregateTypeName));
-
-            if (snapshotType == null)
-                throw new DynamicSnapshotException(string.Format(
-                    "Cannot find snapshot in '{0}' for type [{1}]. Consider rebuilding the dynamic snapshot assembly.",
-                    _snapshotAssembly.FullName,
-                    aggregateTypeName));
-
-            return snapshotType;
-        }
-
-        #endregion
 
     }
 }

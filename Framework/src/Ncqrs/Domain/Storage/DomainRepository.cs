@@ -10,11 +10,11 @@ namespace Ncqrs.Domain.Storage
     {
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly IAggregateRootCreationStrategy _aggregateRootCreator = new SimpleAggregateRootCreationStrategy();
+        private readonly IAggregateRootCreationStrategy _aggregateRootCreator;
 
-        public DomainRepository(IAggregateRootCreationStrategy aggregateRootCreationStrategy = null)
+        public DomainRepository(IAggregateRootCreationStrategy aggregateRootCreationStrategy)
         {
-            _aggregateRootCreator = aggregateRootCreationStrategy ?? new SimpleAggregateRootCreationStrategy();
+            _aggregateRootCreator = aggregateRootCreationStrategy;
         }
 
         public AggregateRoot Load(Type aggreateRootType, Snapshot snapshot, CommittedEventStream eventStream)

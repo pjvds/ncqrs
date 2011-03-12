@@ -50,6 +50,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Eventing.Sourcing.Sna
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot.Tests", "src\Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot.Tests\Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot.Tests.csproj", "{85073A89-CC13-44E2-B8C2-FB0B638B60F7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.RhinoServiceBus", "src\Ncqrs.RhinoServiceBus\Ncqrs.RhinoServiceBus.csproj", "{D3C73A73-3770-495C-A6B2-621DD67EB48A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -280,6 +282,16 @@ Global
 		{85073A89-CC13-44E2-B8C2-FB0B638B60F7}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{85073A89-CC13-44E2-B8C2-FB0B638B60F7}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{85073A89-CC13-44E2-B8C2-FB0B638B60F7}.Release|x86.ActiveCfg = Release|Any CPU
+		{D3C73A73-3770-495C-A6B2-621DD67EB48A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3C73A73-3770-495C-A6B2-621DD67EB48A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3C73A73-3770-495C-A6B2-621DD67EB48A}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{D3C73A73-3770-495C-A6B2-621DD67EB48A}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{D3C73A73-3770-495C-A6B2-621DD67EB48A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D3C73A73-3770-495C-A6B2-621DD67EB48A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3C73A73-3770-495C-A6B2-621DD67EB48A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3C73A73-3770-495C-A6B2-621DD67EB48A}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{D3C73A73-3770-495C-A6B2-621DD67EB48A}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{D3C73A73-3770-495C-A6B2-621DD67EB48A}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

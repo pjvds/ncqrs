@@ -11,7 +11,7 @@ namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot
     {
         #region Readonly
 
-        private static readonly Type _snapshotBaseType = typeof(DynamicSnapshotBase);
+        private static readonly Type SnapshotBaseType = typeof(DynamicSnapshotBase);
 
         #endregion
 
@@ -37,29 +37,21 @@ namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot
 
         private static void CreateConstructor(Type sourceType, TypeBuilder typeBuilder)
         {
-            var snapshotBaseCtor = _snapshotBaseType.GetConstructors(BindingFlags.Public | BindingFlags.Instance).First();
-            var snapshotBaseCtorSignature = snapshotBaseCtor.GetParameters().Select(p => p.ParameterType);
-            var snapshotCtorSignature = new List<Type>(snapshotBaseCtorSignature);
-            snapshotCtorSignature.Add(sourceType);
+            var ctor = SnapshotBaseType.GetConstructors(BindingFlags.Public | BindingFlags.Instance).First();
+            var ctorSignature = ctor.GetParameters().Select(p => p.ParameterType);
 
-            var ctorBuilder = typeBuilder.DefineConstructor(MethodAttributes.Public, CallingConventions.Standard, snapshotCtorSignature.ToArray());
+            var ctorBuilder = typeBuilder.DefineConstructor(MethodAttributes.Public, CallingConventions.Standard, ctorSignature.ToArray());
             var il = ctorBuilder.GetILGenerator();
-
-            var initializer = typeof(DynamicSnapshot).GetMethod("InitializeFrom");
 
             il.Emit(OpCodes.Ldarg_0); // push this
 
             int paramIndex = 1;
-            foreach (var param in snapshotBaseCtorSignature)
+            foreach (var param in ctorSignature) // push all constructor parameters onto the stack
             {
                 il.Emit(OpCodes.Ldarg, paramIndex++);
             }
 
-            il.Emit(OpCodes.Call, snapshotBaseCtor); // call DynamicSnapshotBase constructor
-
-            il.Emit(OpCodes.Ldarg_0); // push this
-            il.Emit(OpCodes.Ldarg, paramIndex); // push source
-            il.Emit(OpCodes.Call, initializer); // call InitializeFrom(this, source)
+            il.Emit(OpCodes.Call, ctor); // call DynamicSnapshotBase constructor
             il.Emit(OpCodes.Ret); // return
         }
 
@@ -82,12 +74,12 @@ namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot
             return moduleBuilder.DefineType(
                     GenerateSnapshotClassName(sourceType),
                     TypeAttributes.Class | TypeAttributes.Public | TypeAttributes.Serializable | TypeAttributes.Sealed,
-                    _snapshotBaseType);
+                    SnapshotBaseType);
         }
 
         private static void Guard(Type sourceType)
         {
-            bool isSnapshotable = sourceType.Inherits<AggregateRoot>() && sourceType.HasAttribute<DynamicSnapshotAttribute>();
+            bool isSnapshotable = typeof(AggregateRoot).IsAssignableFrom(sourceType) && sourceType.HasAttribute<DynamicSnapshotAttribute>();
 
             if (!isSnapshotable)
                 throw new DynamicSnapshotNotSupportedException() { AggregateType = sourceType };

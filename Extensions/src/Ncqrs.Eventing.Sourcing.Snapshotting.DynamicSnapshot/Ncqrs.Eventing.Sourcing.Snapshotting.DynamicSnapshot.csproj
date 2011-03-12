@@ -31,8 +31,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Castle.Core">
+    <Reference Include="Castle.Core, Version=2.5.1.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <HintPath>..\..\..\lib\ThirdParty\CastleWindsor\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Windsor">
+      <HintPath>..\..\..\lib\ThirdParty\CastleWindsor\Castle.Windsor.dll</HintPath>
     </Reference>
     <Reference Include="Ncqrs">
       <HintPath>..\..\..\lib\Debug\Ncqrs\Ncqrs.dll</HintPath>
@@ -43,8 +46,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DynamicSnapshot.cs" />
+    <Compile Include="DynamicSnapshotAggregateRootCrationStrategy.cs" />
     <Compile Include="DynamicSnapshotAttribute.cs" />
     <Compile Include="DynamicSnapshotBase.cs" />
+    <Compile Include="DynamicSnapshotCastleExtension.cs" />
+    <Compile Include="DynamicSnapshotFacility.cs" />
     <Compile Include="DynamicSnapshotsException.cs" />
     <Compile Include="DynamicSnapshotsNotSupportedException.cs" />
     <Compile Include="ExcludeFromSnapshotAttribute.cs" />
@@ -52,10 +58,8 @@
     <Compile Include="SnapshotableField.cs" />
     <Compile Include="DynamicSnapshotAssemblyBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="DynamicSnapshotExtensions.cs" />
     <Compile Include="DynamicSnapshotTypeBuilder.cs" />
     <Compile Include="SnapshotableImplementer.cs" />
-    <Compile Include="SnapshotableProxy.cs" />
     <Compile Include="TypeExtensions.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

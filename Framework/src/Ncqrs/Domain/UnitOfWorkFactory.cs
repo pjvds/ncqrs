@@ -20,8 +20,9 @@ namespace Ncqrs.Domain
             var bus = NcqrsEnvironment.Get<IEventBus>();
             var snapshotStore = NcqrsEnvironment.Get<ISnapshotStore>();
             var snapshottingPolicy = NcqrsEnvironment.Get<ISnapshottingPolicy>();
+            var aggregateCreationStrategy = NcqrsEnvironment.Get<IAggregateRootCreationStrategy>();
 
-            var repository = new DomainRepository();
+            var repository = new DomainRepository(aggregateCreationStrategy);
             var unitOfWork = new UnitOfWork(commandId, repository, store, snapshotStore, bus, snapshottingPolicy);
             UnitOfWorkContext.Bind(unitOfWork);
             return unitOfWork;

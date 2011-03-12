@@ -83,9 +83,6 @@ namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot
         {
             var file = _assemblyFileName;
 
-            //if (!file.EndsWith(".dll")) 
-                //file = string.Format("{0}.dll", file);
-
             if (string.Compare(Path.GetExtension(_assemblyFileName), ".dll", true) != 0)
                 file = Path.ChangeExtension(_assemblyFileName, ".dll");
 

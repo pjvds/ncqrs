@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace System.Linq
+namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot
 {
     public static class TypeExtensions
     {
@@ -13,16 +13,6 @@ namespace System.Linq
         public static bool HasAttribute<TAttribute>(this Type type, bool inherit = false) where TAttribute : Attribute
         {
             return type.HasAttribute(typeof(TAttribute), inherit);
-        }
-
-        public static bool Inherits(this Type type, Type baseType)
-        {
-            return baseType.IsAssignableFrom(type);
-        }
-
-        public static bool Inherits<T>(this Type type) where T : class
-        {
-            return type.Inherits(typeof(T));
         }
     }
 }

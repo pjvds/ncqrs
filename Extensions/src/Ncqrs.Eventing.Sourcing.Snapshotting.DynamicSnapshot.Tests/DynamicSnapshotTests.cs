@@ -1,41 +1,76 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
+using System.Text;
 using Ncqrs.Domain;
 using NUnit.Framework;
+using System.Reflection;
+using Castle.DynamicProxy;
+using System.Reflection.Emit;
+using System.Threading;
+using Castle.MicroKernel.Proxy;
+using Castle.Core;
+using Castle.MicroKernel.Registration;
+using Castle.MicroKernel.Facilities;
+using Castle.MicroKernel;
+using Castle.Core.Configuration;
 
 namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot.Tests
 {
+    
+
     [TestFixture]
-    public class DynamicSnapshotTests
+    public class SnapshotableProxyTests
     {
-        [SetUp]
-        public void TestFixtureSetUp()
+        private const string OriginalTitle = "OriginalTitle";
+        private const string ChangedTitle = "ChangedTitle";
+
+        [Test]
+        public void CanRestoreFormDynamicSnapshot()
+        {
+            //  We assert in each step!!!
+
+            var target = Assembly.LoadFrom("Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot.Tests.dll");
+            var snapshotsAsm = DynamicSnapshot.CreateAssemblyFrom(target);
+
+            Castle.Windsor.IWindsorContainer container = new Castle.Windsor.WindsorContainer();
+            container.Register(Component.For<Foo>().AsSnapshotable());
+
+            dynamic proxy = container.Resolve<Foo>();
+            proxy.ChangeTitle(OriginalTitle);
+            Assert.AreEqual(OriginalTitle, proxy.Tittle);
+
+            var snapshot = proxy.CreateSnapshot();
+            Assert.AreEqual(OriginalTitle, proxy.Tittle);
+
+            proxy.ChangeTitle(ChangedTitle);
+            Assert.AreEqual(ChangedTitle, proxy.Tittle);
+
+            proxy.RestoreFromSnapshot(snapshot);
+            Assert.AreEqual(OriginalTitle, proxy.Tittle);
+        }
+
+        [Test]
+        public void BuildDynamicSnapshotAssembly()
         {
             var target = Assembly.LoadFrom("Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot.Tests.dll");
-            DynamicSnapshot.CreateAssemblyFrom(target);
-        }
+            var snapshotsAsm = DynamicSnapshot.CreateAssemblyFrom(target);
+            var snapshotTypesCount = snapshotsAsm.GetTypes().Length;
+            Assert.AreEqual(3, snapshotTypesCount);
+        }        
+    }
 
-        [Test]
-        public void CanCreateDynamicSnapshotForInheritanceTree()
-        {
-            Type snapshotType = DynamicSnapshot.FindSnapshotType(new SnapshotableObject());
+    [DynamicSnapshot]
+    public class Foo : AggregateRoot
+    {
+        private string _title;
+        public string Tittle { get { return _title; } }
 
-            Assert.IsNotNull(snapshotType);
-            Assert.AreEqual(snapshotType.Name, "SnapshotableObject_Snapshot");
-            var f = snapshotType.GetFields();
-            Assert.AreEqual(4, snapshotType.GetFields().Count());
-        }
+        public Foo() { }
+        private Foo(string title) { _title = title; }
+        public static Foo CreateNew(string title) { return new Foo(title); }
 
-        [Test]
-        public void CanCreateDynamicSnapshtotType()
-        {
-            Type snapshotType = DynamicSnapshot.FindSnapshotType(new ParentSnapshotableObject());
-
-            Assert.IsNotNull(snapshotType);
-            Assert.AreEqual(snapshotType.Name, "ParentSnapshotableObject_Snapshot");
-            Assert.AreEqual(2, snapshotType.GetFields().Count());
-        }
+        public void ChangeTitle(string newTitle) { _title = newTitle; }
     }
 
     [DynamicSnapshot]
