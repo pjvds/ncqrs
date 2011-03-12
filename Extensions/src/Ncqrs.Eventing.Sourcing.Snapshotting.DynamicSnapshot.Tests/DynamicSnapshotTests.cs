@@ -17,8 +17,6 @@ using Castle.Core.Configuration;
 
 namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot.Tests
 {
-    
-
     [TestFixture]
     public class SnapshotableProxyTests
     {
@@ -34,6 +32,7 @@ namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot.Tests
             var snapshotsAsm = DynamicSnapshot.CreateAssemblyFrom(target);
 
             Castle.Windsor.IWindsorContainer container = new Castle.Windsor.WindsorContainer();
+            container.AddFacility("ds", new DynamicSnapshotFacility());
             container.Register(Component.For<Foo>().AsSnapshotable());
 
             dynamic proxy = container.Resolve<Foo>();
