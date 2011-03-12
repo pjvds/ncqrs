@@ -93,7 +93,6 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
 
         private const string DEFAULT_CONNECTIONSTRING_KEY = "EventStore";
         private readonly string connectionString;
-        private bool _ignored = false;
 
         public MsSqlServerEventStoreTests()
         {
@@ -120,7 +119,6 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
             }
             catch (SqlException caught)
             {
-                _ignored = true;
                 Assert.Ignore("No connection could be made with SQL server: " + caught.Message);
             }
             finally

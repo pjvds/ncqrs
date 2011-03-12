@@ -48,11 +48,6 @@ namespace Ncqrs.Tests.Domain
                 ApplyEvent(e);
             }
 
-            public new void ApplyEvent(ISourcedEvent e)
-            {
-                base.ApplyEvent(e);
-            }
-
             private void OnFoo(object e)
             {
                 FooEventHandlerInvokeCount++;
