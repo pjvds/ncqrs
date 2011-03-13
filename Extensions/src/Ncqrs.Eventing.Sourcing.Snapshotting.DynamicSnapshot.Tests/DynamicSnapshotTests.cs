@@ -14,28 +14,46 @@ using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.Facilities;
 using Castle.MicroKernel;
 using Castle.Core.Configuration;
+using Castle.Windsor;
 
 namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot.Tests
 {
     [TestFixture]
     public class SnapshotableProxyTests
     {
-        private const string OriginalTitle = "OriginalTitle";
         private const string ChangedTitle = "ChangedTitle";
+        private const string OriginalTitle = "OriginalTitle";
+        private IWindsorContainer _container;
 
         [Test]
-        public void CanRestoreFormDynamicSnapshot()
+        public void CanBuildDynamicSnapshotAssembly()
+        {
+            var assembly = _container.Resolve<IDynamicSnapshotAssembly>();
+            var snapshotTypesCount = assembly.ActualAssembly.GetTypes().Length;
+            Assert.AreEqual(3, snapshotTypesCount);
+        }
+
+        [Test]
+        public void CanCreateSnapshotableAggregate()
+        {
+            var proxy = _container.Resolve<Foo>();
+            Assert.IsNotNull(proxy);
+        }
+
+        [Test]
+        public void CanCreateSnapshot()
+        {
+            dynamic proxy = _container.Resolve<Foo>();
+            var snapshot = proxy.CreateSnapshot();
+            Assert.IsNotNull(snapshot);
+        }
+
+        [Test]
+        public void CanProperlyRestoreFormDynamicSnapshot()
         {
             //  We assert in each step!!!
 
-            var target = Assembly.LoadFrom("Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot.Tests.dll");
-            var snapshotsAsm = DynamicSnapshot.CreateAssemblyFrom(target);
-
-            Castle.Windsor.IWindsorContainer container = new Castle.Windsor.WindsorContainer();
-            container.AddFacility("ds", new DynamicSnapshotFacility());
-            container.Register(Component.For<Foo>().AsSnapshotable());
-
-            dynamic proxy = container.Resolve<Foo>();
+            dynamic proxy = _container.Resolve<Foo>();
             proxy.ChangeTitle(OriginalTitle);
             Assert.AreEqual(OriginalTitle, proxy.Tittle);
 
@@ -49,14 +67,15 @@ namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot.Tests
             Assert.AreEqual(OriginalTitle, proxy.Tittle);
         }
 
-        [Test]
-        public void BuildDynamicSnapshotAssembly()
+        [SetUp]
+        public void SetUp()
         {
             var target = Assembly.LoadFrom("Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot.Tests.dll");
-            var snapshotsAsm = DynamicSnapshot.CreateAssemblyFrom(target);
-            var snapshotTypesCount = snapshotsAsm.GetTypes().Length;
-            Assert.AreEqual(3, snapshotTypesCount);
-        }        
+            _container = new WindsorContainer();
+            _container.AddFacility("Ncqrs.DynamicSnapshot", new DynamicSnapshotFacility(target));
+            _container.Register(Component.For<Foo>().AsSnapshotable());
+        }
+
     }
 
     [DynamicSnapshot]

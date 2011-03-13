@@ -7,15 +7,16 @@ namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot
 {
     public static class DynamicSnapshotCastleExtension
     {
+        /// <summary>
+        /// Registers the type as ISnapshotable in the container.
+        /// </summary>
         public static ComponentRegistration<T> AsSnapshotable<T>(this ComponentRegistration<T> self) where T : AggregateRoot
         {
             return self
-                .Proxy.MixIns(DynamicSnapshot.CreateSnapshotable<T>())
-                .OnCreate((kernel, instance) =>
+                .UsingFactoryMethod<T>((kernel, context) =>
                 {
-                    var proxy = instance as IHaveProxyReference;
-                    if (proxy != null)
-                        proxy.Proxy = instance;
+                    var factory = kernel.Resolve<SnapshotableAggregateRootFactory>();
+                    return (T)factory.Create(typeof(T));
                 });
         }
     }

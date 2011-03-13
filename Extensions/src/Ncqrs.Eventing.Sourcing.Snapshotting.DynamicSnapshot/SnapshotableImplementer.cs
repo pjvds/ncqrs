@@ -1,14 +1,25 @@
 using System;
-using System.Linq;
 using System.Reflection;
 using Ncqrs.Domain;
 
 namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot
 {
-    internal class SnapshotableImplementer<TSnapshot> : ISnapshotable<TSnapshot>, IHaveProxyReference
+    /// <summary>
+    /// Implements <see cref="ISnapshotable&lt;TSnapshot&gt;"/> interface.
+    /// </summary>
+    /// <typeparam name="TSnapshot">The type of the snapshot.</typeparam>
+    internal class SnapshotableImplementer<TSnapshot> : ISnapshotableImplementer<TSnapshot>
             where TSnapshot : DynamicSnapshotBase
     {
         public object Proxy { private get; set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SnapshotableImplementer&lt;TSnapshot&gt;"/> class.
+        /// </summary>
+        public SnapshotableImplementer()
+        {
+
+        }
 
         public TSnapshot CreateSnapshot()
         {
@@ -28,7 +39,7 @@ namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot
             ToAggregateRoot
         }
 
-        private static void TransferState(DynamicSnapshotBase snapshot, AggregateRoot aggregate, TransferDirection direction)
+        private void TransferState(DynamicSnapshotBase snapshot, AggregateRoot aggregate, TransferDirection direction)
         {
             if (snapshot == null) throw new ArgumentNullException("snapshot");
             if (aggregate == null) throw new ArgumentNullException("source");

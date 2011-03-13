@@ -45,7 +45,7 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DynamicSnapshot.cs" />
+    <Compile Include="DynamicSnapshotAssembly.cs" />
     <Compile Include="DynamicSnapshotAggregateRootCrationStrategy.cs" />
     <Compile Include="DynamicSnapshotAttribute.cs" />
     <Compile Include="DynamicSnapshotBase.cs" />
@@ -54,12 +54,16 @@
     <Compile Include="DynamicSnapshotsException.cs" />
     <Compile Include="DynamicSnapshotsNotSupportedException.cs" />
     <Compile Include="ExcludeFromSnapshotAttribute.cs" />
+    <Compile Include="IDynamicSnapshotAssembly.cs" />
     <Compile Include="IHaveProxyReference.cs" />
+    <Compile Include="ISnapshotableImplementer.cs" />
+    <Compile Include="SnapshotableAggregateRootFactory.cs" />
     <Compile Include="SnapshotableField.cs" />
     <Compile Include="DynamicSnapshotAssemblyBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DynamicSnapshotTypeBuilder.cs" />
     <Compile Include="SnapshotableImplementer.cs" />
+    <Compile Include="SnapshotableImplementerFactory.cs" />
     <Compile Include="TypeExtensions.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

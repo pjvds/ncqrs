@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -7,35 +6,31 @@ using Ncqrs.Domain;
 
 namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot
 {
-    internal static class DynamicSnapshotTypeBuilder
+    internal class DynamicSnapshotTypeBuilder
     {
-        #region Readonly
+        private readonly Type SnapshotBaseType = typeof(DynamicSnapshotBase);
 
-        private static readonly Type SnapshotBaseType = typeof(DynamicSnapshotBase);
-
-        #endregion
-
-        #region Public Methods
-
-        public static Type CreateType(Type sourceType, ModuleBuilder moduleBuilder)
+        /// <summary>
+        /// Creates a snapshot type from aggregate.
+        /// </summary>
+        /// <param name="aggregateType">Type of the aggregate.</param>
+        /// <param name="moduleBuilder">The module builder.</param>
+        /// <returns></returns>
+        public Type CreateType(Type aggregateType, ModuleBuilder moduleBuilder)
         {
-            if (sourceType == null) throw new ArgumentNullException("sourceType");
+            if (aggregateType == null) throw new ArgumentNullException("sourceType");
             if (moduleBuilder == null) throw new ArgumentNullException("moduleBuilder");
 
-            Guard(sourceType);
+            Guard(aggregateType);
 
-            var typeBuilder = GetTypeBuilder(sourceType, moduleBuilder);
-            CreateConstructor(sourceType, typeBuilder);
-            CreateFields(sourceType, typeBuilder);
+            var typeBuilder = GetTypeBuilder(aggregateType, moduleBuilder);
+            CreateConstructor(typeBuilder);
+            CreateFields(aggregateType, typeBuilder);
 
             return typeBuilder.CreateType();
         }
 
-        #endregion
-
-        #region Private Methods
-
-        private static void CreateConstructor(Type sourceType, TypeBuilder typeBuilder)
+        private void CreateConstructor(TypeBuilder typeBuilder)
         {
             var ctor = SnapshotBaseType.GetConstructors(BindingFlags.Public | BindingFlags.Instance).First();
             var ctorSignature = ctor.GetParameters().Select(p => p.ParameterType);
@@ -55,7 +50,7 @@ namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot
             il.Emit(OpCodes.Ret); // return
         }
 
-        private static void CreateFields(Type sourceType, TypeBuilder typeBuilder)
+        private void CreateFields(Type sourceType, TypeBuilder typeBuilder)
         {
             var fieldMap = SnapshotableField.GetMap(sourceType);
             foreach (var pair in fieldMap)
@@ -64,12 +59,12 @@ namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot
             }
         }
 
-        private static string GenerateSnapshotClassName(Type sourceType)
+        private string GenerateSnapshotClassName(Type sourceType)
         {
             return string.Format("{0}_Snapshot", sourceType.Name);
         }
 
-        private static TypeBuilder GetTypeBuilder(Type sourceType, ModuleBuilder moduleBuilder)
+        private TypeBuilder GetTypeBuilder(Type sourceType, ModuleBuilder moduleBuilder)
         {
             return moduleBuilder.DefineType(
                     GenerateSnapshotClassName(sourceType),
@@ -77,15 +72,13 @@ namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot
                     SnapshotBaseType);
         }
 
-        private static void Guard(Type sourceType)
+        private void Guard(Type sourceType)
         {
             bool isSnapshotable = typeof(AggregateRoot).IsAssignableFrom(sourceType) && sourceType.HasAttribute<DynamicSnapshotAttribute>();
 
             if (!isSnapshotable)
                 throw new DynamicSnapshotNotSupportedException() { AggregateType = sourceType };
         }
-
-        #endregion
 
     }
 }

@@ -7,8 +7,6 @@ namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot
 {
     internal static class SnapshotableField
     {
-        #region Public Methods
-
         public static IEnumerable<FieldInfo> GetAll(Type type)
         {
             while (type != null)
@@ -35,10 +33,6 @@ namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot
             return map;
         }
 
-        #endregion
-
-        #region Private Methods
-
         private static string GenerateFieldKey(FieldInfo field)
         {
             string key = string.Format("{0}{1}", field.DeclaringType.FullName, field.Name);
@@ -55,8 +49,5 @@ namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot
         {
             return field.GetCustomAttributes(typeof(ExcludeFromSnapshotAttribute), false).Count() == 0;
         }
-
-        #endregion
-
     }
 }
