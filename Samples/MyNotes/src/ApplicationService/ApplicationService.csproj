@@ -66,7 +66,7 @@
       <HintPath>..\..\..\..\lib\Debug\Ncqrs.EventBus\Ncqrs.EventBus.dll</HintPath>
     </Reference>
     <Reference Include="Ncqrs.Eventing.Storage.JOliver">
-      <HintPath>..\..\..\..\Extensions\src\Ncqrs.Eventing.Storage.JOliver\obj\Debug\Ncqrs.Eventing.Storage.JOliver.dll</HintPath>
+      <HintPath>..\..\..\..\lib\Debug\Ncqrs.Eventing.Storage.JOliver\Ncqrs.Eventing.Storage.JOliver.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\..\..\lib\ThirdParty\json.net\Newtonsoft.Json.dll</HintPath>
