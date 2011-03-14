@@ -79,7 +79,6 @@ namespace Ncqrs.Eventing.Storage
         public void AddEvent(Type type)
         {
             Contract.Requires<ArgumentNullException>(type != null, "type cannot be null");
-            Contract.Requires<ArgumentException>(typeof(IEvent).IsAssignableFrom(type), "type must inherit IEvent");
 
             if (_eventNames.ContainsKey(type))
                 return;

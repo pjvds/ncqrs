@@ -55,7 +55,6 @@
     <Compile Include="Query.cs" />
     <Compile Include="SQLiteCommandExtensions.cs" />
     <Compile Include="SQLiteEventStore.cs" />
-    <Compile Include="SQLiteSnapshotStore.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

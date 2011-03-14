@@ -14,9 +14,9 @@ namespace Ncqrs.Messaging
          _strategies.Add(conditionalSendingStrategy);
       }
 
-      public void Handle(MessageSentEvent @event)
+      public void Handle(IPublishedEvent<MessageSentEvent> @event)
       {
-         if (_strategies.Any(messageSender => messageSender.Send(@event.Message)))
+         if (_strategies.Any(messageSender => messageSender.Send(@event.Payload.Message)))
          {
             return;
          }

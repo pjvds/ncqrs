@@ -1,7 +1,10 @@
-﻿namespace Ncqrs.Domain
+﻿using System;
+using Ncqrs.Commanding;
+
+namespace Ncqrs.Domain
 {
     public interface IUnitOfWorkFactory
     {
-        IUnitOfWorkContext CreateUnitOfWork();
+        IUnitOfWorkContext CreateUnitOfWork(Guid commandId);
     }
 }

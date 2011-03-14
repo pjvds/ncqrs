@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Ncqrs.Commanding;
 using Ncqrs.Commanding.CommandExecution;
-using Ncqrs.Eventing.Sourcing;
+using Ncqrs.Eventing;
 using NUnit.Framework;
 
 namespace Ncqrs.Spec
@@ -14,7 +14,7 @@ namespace Ncqrs.Spec
     {
         protected Exception CaughtException{ get; private set; }
 
-        protected IEnumerable<ISourcedEvent> PublishedEvents{ get; private set;}
+        protected IEnumerable<UncommittedEvent> PublishedEvents{ get; private set;}
 
         protected TCommand ExecutedCommand { get; private set; }
         
@@ -28,7 +28,7 @@ namespace Ncqrs.Spec
         public void Setup()
         {
             var commandExecutor = BuildCommandExecutor();
-            PublishedEvents = new SourcedEvent[0];
+            PublishedEvents = new UncommittedEvent[0];
 
             SetupDependencies();
             try
@@ -54,6 +54,6 @@ namespace Ncqrs.Spec
             }
         }
 
-        protected abstract ICommandExecutor<TCommand> BuildCommandExecutor();
+        protected abstract ICommandExecutor<ICommand> BuildCommandExecutor();
     }
 }

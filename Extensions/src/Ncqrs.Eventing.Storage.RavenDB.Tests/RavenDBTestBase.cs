@@ -2,6 +2,7 @@
 using System.Reflection;
 using log4net.Config;
 using NUnit.Framework;
+using Raven.Client.Client;
 using Raven.Client.Document;
 
 namespace Ncqrs.Eventing.Storage.RavenDB.Tests
@@ -22,10 +23,9 @@ namespace Ncqrs.Eventing.Storage.RavenDB.Tests
         [TearDown]
         public void TearDownDocumentStore()
         {
-            _documentStore.Dispose();
-            if (path != null)
+            if (_documentStore != null)
             {
-                Directory.Delete(path, true);
+                _documentStore.Dispose();
             }
         }
 
@@ -35,7 +35,7 @@ namespace Ncqrs.Eventing.Storage.RavenDB.Tests
                                     {
                                         Url = "http://localhost:8080"
                                     };
-            documentStore.Initialise();
+            documentStore.Initialize();
             return documentStore;
         }
 
@@ -43,15 +43,16 @@ namespace Ncqrs.Eventing.Storage.RavenDB.Tests
         {
             path = Path.GetDirectoryName(Assembly.GetAssembly(typeof(RavenDBEventStoreTests)).CodeBase);
             path = Path.Combine(path, "TestDb").Substring(6);
-            var documentStore = new DocumentStore
+            if (Directory.Exists(path))
+            {
+                File.SetAttributes(path, FileAttributes.Directory);
+                Directory.Delete(path, true);
+            }
+            var documentStore = new EmbeddableDocumentStore
                                     {
-                                        Configuration =
-                                            {
-                                                DataDirectory = path,
-                                                RunInUnreliableYetFastModeThatIsNotSuitableForProduction = true
-                                            }
+                                        DataDirectory = path
                                     };
-            documentStore.Initialise();
+            documentStore.Initialize();
             return documentStore;
         }
     }

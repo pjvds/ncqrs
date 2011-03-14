@@ -12,13 +12,13 @@
     <AssemblyName>Ncqrs.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <CodeContractsAssemblyMode>0</CodeContractsAssemblyMode>
+    <CodeContractsAssemblyMode>1</CodeContractsAssemblyMode>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\..\..\lib\Debug\Ncqrs.Tests\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -26,13 +26,13 @@
     <CodeContractsRuntimeOnlyPublicSurface>False</CodeContractsRuntimeOnlyPublicSurface>
     <CodeContractsRuntimeThrowOnFailure>True</CodeContractsRuntimeThrowOnFailure>
     <CodeContractsRuntimeCallSiteRequires>False</CodeContractsRuntimeCallSiteRequires>
-    <CodeContractsRunCodeAnalysis>False</CodeContractsRunCodeAnalysis>
+    <CodeContractsRunCodeAnalysis>True</CodeContractsRunCodeAnalysis>
     <CodeContractsNonNullObligations>False</CodeContractsNonNullObligations>
     <CodeContractsBoundsObligations>False</CodeContractsBoundsObligations>
     <CodeContractsArithmeticObligations>False</CodeContractsArithmeticObligations>
     <CodeContractsRedundantAssumptions>False</CodeContractsRedundantAssumptions>
     <CodeContractsRunInBackground>True</CodeContractsRunInBackground>
-    <CodeContractsShowSquigglies>True</CodeContractsShowSquigglies>
+    <CodeContractsShowSquigglies>False</CodeContractsShowSquigglies>
     <CodeContractsUseBaseLine>False</CodeContractsUseBaseLine>
     <CodeContractsEmitXMLDocs>False</CodeContractsEmitXMLDocs>
     <CodeContractsCustomRewriterAssembly />
@@ -50,12 +50,44 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\..\..\lib\Release\Ncqrs.Tests\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeContractsEnableRuntimeChecking>True</CodeContractsEnableRuntimeChecking>
+    <CodeContractsRuntimeOnlyPublicSurface>False</CodeContractsRuntimeOnlyPublicSurface>
+    <CodeContractsRuntimeThrowOnFailure>True</CodeContractsRuntimeThrowOnFailure>
+    <CodeContractsRuntimeCallSiteRequires>False</CodeContractsRuntimeCallSiteRequires>
+    <CodeContractsRunCodeAnalysis>True</CodeContractsRunCodeAnalysis>
+    <CodeContractsNonNullObligations>False</CodeContractsNonNullObligations>
+    <CodeContractsBoundsObligations>False</CodeContractsBoundsObligations>
+    <CodeContractsArithmeticObligations>False</CodeContractsArithmeticObligations>
+    <CodeContractsRedundantAssumptions>False</CodeContractsRedundantAssumptions>
+    <CodeContractsRunInBackground>True</CodeContractsRunInBackground>
+    <CodeContractsShowSquigglies>False</CodeContractsShowSquigglies>
+    <CodeContractsUseBaseLine>False</CodeContractsUseBaseLine>
+    <CodeContractsEmitXMLDocs>True</CodeContractsEmitXMLDocs>
+    <CodeContractsCustomRewriterAssembly />
+    <CodeContractsCustomRewriterClass />
+    <CodeContractsLibPaths />
+    <CodeContractsExtraRewriteOptions />
+    <CodeContractsExtraAnalysisOptions />
+    <CodeContractsBaseLineFile />
+    <CodeContractsCacheAnalysisResults>False</CodeContractsCacheAnalysisResults>
+    <CodeContractsRuntimeCheckingLevel>Full</CodeContractsRuntimeCheckingLevel>
+    <CodeContractsReferenceAssembly>%28none%29</CodeContractsReferenceAssembly>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FluentAssertions">
+      <HintPath>..\..\..\lib\ThirdParty\FluentAssertions\FluentAssertions.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\..\lib\ThirdParty\json.net\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework, Version=2.5.9.10348, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\lib\ThirdParty\Nunit\nunit.framework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Transactions" />
@@ -64,18 +96,6 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="FluentAssertions, Version=1.2.3.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\..\..\lib\ThirdParty\FluentAssertions\FluentAssertions.dll</HintPath>
-    </Reference>
-    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821">
-      <HintPath>..\..\..\lib\ThirdParty\log4net\log4net.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=3.5.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\..\..\lib\ThirdParty\json.net\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="nunit.framework, Version=2.5.8.10295, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77">
-      <HintPath>..\..\..\lib\ThirdParty\Nunit\nunit.framework.dll</HintPath>
-    </Reference>
     <Reference Include="Rhino.Mocks, Version=3.6.0.0, Culture=neutral, PublicKeyToken=0b3305902db7183f">
       <HintPath>..\..\..\lib\ThirdParty\RhinoMocks\Rhino.Mocks.dll</HintPath>
     </Reference>
@@ -87,9 +107,10 @@
     <Compile Include="Commanding\CommandExecution\CommandExecutorWrapperTests.cs" />
     <Compile Include="Commanding\CommandExecution\CreatingCommandExecutorTests.cs" />
     <Compile Include="Commanding\CommandExecution\DirectActionCommandExecutorTests.cs" />
-    <Compile Include="Commanding\CommandExecution\Mapping\Attributes\AttributeBasedMappingFactoryTests.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\Attributes\AttributeBasedCommandMapperTests.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Attributes\AttributeCommandMappingTests.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Attributes\AggregateRootIdAttributeTests.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\Attributes\TestMappedCommandExecutor.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Fluent\FluentCommandMappingTests.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\MappingForCommandNotFoundExceptionTests.cs" />
     <Compile Include="Commanding\CommandExecution\TransactionalCommandExecutorWrapperTests.cs" />
@@ -103,10 +124,10 @@
     <Compile Include="Domain\AggregateRootTests.cs" />
     <Compile Include="Domain\AggregateRootMappedByExpressionTests.cs" />
     <Compile Include="Domain\EntityTests.cs" />
-    <Compile Include="Domain\SourcedEventHanderTests.cs" />
     <Compile Include="Domain\EventNotHandledExceptionTests.cs" />
-    <Compile Include="Domain\SourcedEventHandlerPredicate.cs" />
     <Compile Include="Domain\Storage\SimpleAggregateRootCreationStrategyTests.cs" />
+    <Compile Include="Domain\UnitOfWorkTests.cs" />
+    <Compile Include="Eventing\CommittedEventStreamTests.cs" />
     <Compile Include="Eventing\Sourcing\Mapping\AttributeBasedDomainEventHandlerMappingStrategyTests.cs" />
     <Compile Include="Eventing\Sourcing\Mapping\ConventionBasedDomainEventHandlerMappingStrategyTests.cs" />
     <Compile Include="Eventing\Sourcing\Mapping\ExpressionBasedDomainEventHandlerMappingStrategyTests.cs" />
@@ -114,9 +135,10 @@
     <Compile Include="Domain\NoUnitOfWorkAvailableInThisContextExceptionTests.cs" />
     <Compile Include="Domain\Storage\AggregateRootCreationExceptionTests.cs" />
     <Compile Include="Domain\Storage\DomainRepositoryTests.cs" />
-    <Compile Include="Eventing\Sourcing\SourcedEventStreamTests.cs" />
     <Compile Include="Eventing\Storage\AttributeEventTypeResolverTests.cs" />
+    <Compile Include="Eventing\Storage\BaseExceptionTests.cs" />
     <Compile Include="Eventing\Storage\ConcurrencyExceptionSpecs.cs" />
+    <Compile Include="Eventing\Storage\DuplicateCommitExceptionTests.cs" />
     <Compile Include="Eventing\Storage\NoDB\EventStoreTests\NoDBEventStoreTests.cs" />
     <Compile Include="Eventing\Storage\NoDB\EventStoreTests\when_getting_all_events_for_an_event_source.cs" />
     <Compile Include="Eventing\Storage\NoDB\EventStoreTests\when_getting_the_events_since_a_specific_version.cs" />
@@ -136,6 +158,7 @@
     <Compile Include="Eventing\Storage\Serialization\StringEventTranslatorTests.cs" />
     <Compile Include="Eventing\Storage\SimpleEventTypeResolverTests.cs" />
     <Compile Include="Eventing\Storage\SQL\MsSqlServerEventStoreTests.cs" />
+    <Compile Include="Eventing\UncommittedEventStreamTests.cs" />
     <Compile Include="GuidCombGenerator.cs" />
     <Compile Include="InternalExtensionsTests.cs" />
     <Compile Include="NcqrsEnvironmentConfigurationExceptionSpecs.cs" />

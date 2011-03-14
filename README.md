@@ -17,21 +17,28 @@ Run `BUILD.bat` to build the Ncqrs Framework. This will build the framework, run
 all the tests and updates all the lib folders of other solutions (extensions and
 sample) with the result.
 
+
 Discussion and feedback
 -----------------------
 The best source for discussion is the [Ncqrs-dev group][1]. You could
-also use [twitter][2] or use the [issue tracker][3].
+also drop quick messages to us using [twitter][2].
+
+To submit a bug or make a feature request use our [Redmine environment][3].
 
 [1]: http://groups.google.com/group/ncqrs-dev "Ncqrs-dev group"
 [2]: http://twitter.com/ncqrs/ "@Ncqrs at twitter"
-[3]: http://github.com/ncqrs/ncqrs/issues "Ncqrs issue tracker"
+[3]: http://redmine.ncqrs.org/ "Ncqrs redmine environment"
 
-Code contribution
------------------
-The code base of Ncqrs will never be complete. We encourage users to 
+Contribution
+------------
+Since the code base of Ncqrs will never be complete. We encourage users to 
 [fork][4] Ncqrs code, make changes, commit them to your forked repository, and 
 submit [pull requests][5].
 
+You can use our [Redmine environment] to find support our project management. Use it to
+submit a bug, request a feature and to see our roadmap.
+
+[3]: http://redmine.ncqrs.org/ "Ncqrs redmine environment"
 [4]: http://help.github.com/forking/ "Fork guide"
 [5]: http://github.com/guides/pull-requests "Pull request guide"
 

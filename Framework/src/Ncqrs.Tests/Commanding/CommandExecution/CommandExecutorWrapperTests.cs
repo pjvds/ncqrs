@@ -18,6 +18,11 @@ namespace Ncqrs.Tests.Commanding.CommandExecution
             {
                 get; set;
             }
+
+            public long? KnownVersion
+            {
+                get; set;
+            }
         }
 
         [Test]

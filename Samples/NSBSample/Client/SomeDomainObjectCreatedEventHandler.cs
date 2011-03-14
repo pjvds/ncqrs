@@ -9,8 +9,8 @@ namespace Client
     {
         public void Handle(EventMessage<SomeDomainObjectCreatedEvent> message)
         {
-            ClientEndpoint.AggregateId = message.Payload.EventSourceId;
-            Console.WriteLine("Aggregate with ID={0} created", message.Payload.EventSourceId);
+            ClientEndpoint.AggregateId = message.Payload.ObjectId;
+            Console.WriteLine("Aggregate with ID={0} created", message.Payload.ObjectId);
         }
     }
 }

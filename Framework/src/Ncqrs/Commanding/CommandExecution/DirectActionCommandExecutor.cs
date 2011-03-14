@@ -31,10 +31,10 @@ namespace Ncqrs.Commanding.CommandExecution
 
         public void Execute(TCommand command)
         {
-            using (var work = _uowFactory.CreateUnitOfWork())
+            using (var work = _uowFactory.CreateUnitOfWork(command.CommandIdentifier))
             {
                 var id = _getId(command);
-                var aggRoot = work.GetById<TAggregateRoot>(id);
+                var aggRoot = (TAggregateRoot)work.GetById(typeof(TAggregateRoot),id, command.KnownVersion);
 
                 _action(aggRoot, command);
                 work.Accept();

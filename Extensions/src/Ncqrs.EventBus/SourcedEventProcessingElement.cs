@@ -1,17 +1,19 @@
+using Ncqrs.Eventing;
+using Ncqrs.Eventing.ServiceModel.Bus;
 using Ncqrs.Eventing.Sourcing;
 
 namespace Ncqrs.EventBus
 {
     public class SourcedEventProcessingElement : IProcessingElement
     {
-        private readonly SourcedEvent _event;
+        private readonly IPublishableEvent _event;
 
-        public SourcedEventProcessingElement(SourcedEvent @event)
+        public SourcedEventProcessingElement(IPublishableEvent evnt)
         {
-            _event = @event;
+            _event = evnt;
         }
-
-        public SourcedEventProcessingElement(int sequenceNumber, SourcedEvent @event)
+        
+        public SourcedEventProcessingElement(int sequenceNumber, IPublishableEvent @event)
         {
             SequenceNumber = sequenceNumber;
             _event = @event;
@@ -31,7 +33,7 @@ namespace Ncqrs.EventBus
             get { return Event.EventSourceId; }
         }
 
-        public SourcedEvent Event
+        public IPublishableEvent Event
         {
             get { return _event; }
         }

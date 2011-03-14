@@ -55,7 +55,8 @@ namespace Ncqrs.Eventing.Sourcing.Mapping
                     throw new InvalidEventHandlerMappingException(message);
                 }
 
-                var handler = CreateHandlerForMethod(target, mappinghandler.ActionMethodInfo, mappinghandler.Exact);
+                var threshold = mappinghandler.GetType().GetGenericArguments()[0];
+                var handler = CreateHandlerForMethod(target, threshold, mappinghandler.ActionMethodInfo, mappinghandler.Exact);
                 handlers.Add(handler);
             }
 
@@ -69,12 +70,10 @@ namespace Ncqrs.Eventing.Sourcing.Mapping
         /// <param name="method">The method to invoke</param>
         /// <param name="exact"><b>True</b> if we need to have an exact match, otherwise <b>False</b>.</param>
         /// <returns>An <see cref="ISourcedEventHandler"/> that handles the execution of the given method.</returns>
-        private static ISourcedEventHandler CreateHandlerForMethod(object eventSource, MethodInfo method, bool exact)
+        private static ISourcedEventHandler CreateHandlerForMethod(object eventSource, Type threshold, MethodInfo method, bool exact)
         {
-            Type firstParameterType = method.GetParameters().First().ParameterType;
-
-            Action<IEvent> handler = e => method.Invoke(eventSource, new object[] { e });
-            return new TypeThresholdedActionBasedDomainEventHandler(handler, firstParameterType, exact);
+            Action<object> handler = e => method.Invoke(eventSource, new[] { e });
+            return new TypeThresholdedActionBasedDomainEventHandler(handler, threshold, method.Name, exact);
         }
     }
 }

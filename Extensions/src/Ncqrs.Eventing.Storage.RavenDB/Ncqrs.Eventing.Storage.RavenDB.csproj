@@ -38,9 +38,11 @@
       <HintPath>..\..\..\lib\ThirdParty\RavenDB\Newtonsoft.Json.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Raven.Client">
-      <HintPath>..\..\..\lib\ThirdParty\RavenDB\Raven.Client.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="Raven.Abstractions">
+      <HintPath>..\..\..\lib\ThirdParty\RavenDB\Raven.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Raven.Client.Lightweight">
+      <HintPath>..\..\..\lib\ThirdParty\RavenDB\Raven.Client.Lightweight.dll</HintPath>
     </Reference>
     <Reference Include="Raven.Database">
       <SpecificVersion>False</SpecificVersion>

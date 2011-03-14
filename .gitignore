@@ -3,6 +3,7 @@ obj
 bin
 *.csproj.user
 *.suo
+TestResult.xml
 
 # Resharper
 *ReSharper*
@@ -21,7 +22,12 @@ bin
 # Ncqrs in non framework solution
 /Extensions/lib/Ncqrs/*
 /Samples/MyNotes/lib/*
-/lib/Debug
-/lib/Release
+/lib/Debug/*
+/lib/Release/*
 release
 *.pidb
+
+*.vs10x
+
+# Merge stuff
+*.orig

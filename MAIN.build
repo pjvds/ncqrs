@@ -81,10 +81,23 @@
 
   <target name="RunTestsForFramework" depends="BuildFramework">
     <echo message="START RUNNING TESTS FOR FRAMEWORK" />
-    <nunit2>
+    <!--<property name="dir.reports.nunit" value="${dir.reports}\NUnit\" />
+
+    <mkdir dir="${dir.reports.nunit}" unless="${directory::exists(dir.reports.nunit)}" />-->
+
+    <property name="nunit.input" value="lib\${project.config}\Ncqrs.Tests\Ncqrs.Tests.dll" />
+    <!--<property name="nunit.output" value="${dir.reports.nunit}\nunit-results.xml" />-->
+
+    <exec program="tools\nunit\nunit-console.exe" failonerror="true" workingdir="." verbose="true">
+      <arg value="${nunit.input}" />
+      <!--<arg value="/xml:${nunit.output}" />-->
+      <arg value="/framework:net-4.0" />
+    </exec>
+    
+    <!--<nunit2>
       <formatter type="Plain" />
-      <test assemblyname="Framework\src\Ncqrs.Tests\bin\Debug\Ncqrs.Tests.dll" />
-    </nunit2>
+      <test assemblyname="lib\Debug\Ncqrs.Tests\Ncqrs.Tests.dll" />
+    </nunit2>-->
   </target>
   
   <target name="MakeRelease" depends="BuildFramework">

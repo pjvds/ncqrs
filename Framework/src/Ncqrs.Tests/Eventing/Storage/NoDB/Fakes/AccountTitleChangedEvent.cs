@@ -7,15 +7,13 @@ using Ncqrs.Eventing.Sourcing;
 namespace Ncqrs.Eventing.Storage.NoDB.Tests.Fakes
 {
     [Serializable]
-    public class AccountTitleChangedEvent : SourcedEntityEvent
+    public class AccountTitleChangedEvent : EntitySourcedEventBase
     {
         public AccountTitleChangedEvent()
         {
         }
 
-        public AccountTitleChangedEvent(Guid eventIdentifier, Guid eventSourceId, Guid entityId, long eventSequence,
-                                    DateTime eventTimeStamp, string newTitle)
-            : base(eventIdentifier, eventSourceId, entityId, eventSequence, eventTimeStamp)
+        public AccountTitleChangedEvent(string newTitle)
         {
             NewTitle = newTitle;
         }
@@ -27,11 +25,7 @@ namespace Ncqrs.Eventing.Storage.NoDB.Tests.Fakes
         {
             var other = obj as AccountTitleChangedEvent;
             if (other == null) return false;
-            bool result = EventIdentifier.Equals(other.EventIdentifier) &&
-                          EventSourceId.Equals(other.EventSourceId) &&
-                          EntityId.Equals(other.EntityId) &&
-                          EventSequence.Equals(other.EventSequence) &&
-                          EventTimeStamp.Equals(other.EventTimeStamp) &&
+            bool result = EntityId.Equals(other.EntityId) &&
                           NewTitle.Equals(other.NewTitle);
             return result;
         }
