@@ -1,22 +1,30 @@
 ﻿using System;
 using System.Transactions;
+using FluentAssertions;
 using Ncqrs.Commanding;
-using Ncqrs.Commanding.CommandExecution;
 using Ncqrs.Commanding.CommandExecution.Mapping;
 using Ncqrs.Commanding.CommandExecution.Mapping.Attributes;
-using Ncqrs.Commanding.ServiceModel;
 using Ncqrs.Domain;
-using Ncqrs.Eventing.Sourcing;
 using NUnit.Framework;
-using FluentAssertions;
 
 namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Attributes
 {
     [TestFixture]
     public class AttributeCommandMappingTests
-    {        
+    {
         [MapsToAggregateRootMethod("Ncqrs.Tests.Commanding.CommandExecution.Mapping.Attributes.AttributeCommandMappingTests+AggregateRootTarget, Ncqrs.Tests", "UpdateTitle")]
         public class AggregateRootTargetUpdateTitleCommand : CommandBase
+        {
+            public string Title
+            { get; set; }
+
+            [AggregateRootId]
+            public Guid Id
+            { get; set; }
+        }
+
+        [MapsToAggregateRootMethodOrConstructor("Ncqrs.Tests.Commanding.CommandExecution.Mapping.Attributes.AttributeCommandMappingTests+AggregateRootTarget, Ncqrs.Tests", "UpdateTitle")]
+        public class AggregateRootTargetCreateOrUpdateTitleCommand : CommandBase
         {
             public string Title
             { get; set; }
@@ -29,6 +37,18 @@ namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Attributes
         [Transactional]
         [MapsToAggregateRootMethod("Ncqrs.Tests.Commanding.CommandExecution.Mapping.Attributes.AttributeCommandMappingTests+AggregateRootTarget, Ncqrs.Tests", "UpdateTitle")]
         public class TransactionalAggregateRootTargetUpdateTitleCommand : CommandBase
+        {
+            public string Title
+            { get; set; }
+
+            [AggregateRootId]
+            public Guid Id
+            { get; set; }
+        }
+
+        [Transactional]
+        [MapsToAggregateRootMethodOrConstructor("Ncqrs.Tests.Commanding.CommandExecution.Mapping.Attributes.AttributeCommandMappingTests+AggregateRootTarget, Ncqrs.Tests", "UpdateTitle")]
+        public class TransactionalAggregateRootTargetCreateOrUpdateTitleCommand : CommandBase
         {
             public string Title
             { get; set; }
@@ -204,7 +224,7 @@ namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Attributes
             {
                 Map<ComplexAggregateRootTargetCreatedNewEvent>().ToHandler(NewTestComplexAggregateRootCreated);
             }
-        }                
+        }
 
         [Test]
         public void Command_should_update_the_title_of_the_aggregate_root()
@@ -216,6 +236,58 @@ namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Attributes
             executor.Execute();
 
             executor.Instance.Title.Should().Be("AggregateRootTargetUpdateTitleCommand");
+        }
+
+        [Test]
+        public void Command_should_create_and_update_the_title_of_the_aggregate_root()
+        {
+            AggregateRootTarget instance = null;
+            var command = new AggregateRootTargetCreateOrUpdateTitleCommand { Title = "AggregateRootTargetUpdateTitleCommand" };
+            var executor = new TestAttributeMappedCommandExecutor<AggregateRootTarget>(command, instance);
+
+            executor.Execute();
+
+            executor.Instance.Title.Should().Be("AggregateRootTargetUpdateTitleCommand");
+        }
+
+        [Test]
+        public void Command_should_update_the_title_of_the_existing_aggregate_root()
+        {
+            var instance = new AggregateRootTarget("TitleSetInConstructor");
+            var command = new AggregateRootTargetCreateOrUpdateTitleCommand { Title = "AggregateRootTargetUpdateTitleCommand" };
+            var executor = new TestAttributeMappedCommandExecutor<AggregateRootTarget>(command, instance);
+
+            executor.Execute();
+
+            executor.Instance.Title.Should().Be("AggregateRootTargetUpdateTitleCommand");
+        }
+
+        [Test]
+        public void Command_decorated_with_Transactional_attribute_mapped_to_methodOrCreator_should_be_create_and_be_executed_in_context_of_transaction()
+        {
+            bool executedInTransaction = false;
+            AggregateRootTarget instance = null;
+            var command = new TransactionalAggregateRootTargetCreateOrUpdateTitleCommand { Title = "TransactionalAggregateRootTargetUpdateTitleCommand" };
+            var executor = new TestAttributeMappedCommandExecutor<AggregateRootTarget>(command, instance);
+            executor.VerificationAction = () => executedInTransaction = Transaction.Current != null;
+
+            executor.Execute();
+
+            Assert.IsTrue(executedInTransaction);
+        }
+
+        [Test]
+        public void Command_decorated_with_Transactional_attribute_mapped_to_methodOrCreator_should_be_executed_in_context_of_transaction()
+        {
+            bool executedInTransaction = false;
+            var instance = new AggregateRootTarget("TitleSetInConstructor");
+            var command = new TransactionalAggregateRootTargetCreateOrUpdateTitleCommand { Title = "TransactionalAggregateRootTargetUpdateTitleCommand" };
+            var executor = new TestAttributeMappedCommandExecutor<AggregateRootTarget>(command, instance);
+            executor.VerificationAction = () => executedInTransaction = Transaction.Current != null;
+
+            executor.Execute();
+
+            Assert.IsTrue(executedInTransaction);
         }
 
         [Test]
@@ -269,7 +341,7 @@ namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Attributes
         [Test]
         public void Command_should_create_new_complex_aggregate_root_using_ordinal_parameter_mappings()
         {
-            var command = new ComplexAggregateRootTargetCreateNewCommand1 {Title = "ComplexAggregateRootTargetCreateNewCommand1", Quantity = 10};
+            var command = new ComplexAggregateRootTargetCreateNewCommand1 { Title = "ComplexAggregateRootTargetCreateNewCommand1", Quantity = 10 };
             var executor = new TestAttributeMappedCommandExecutor<ComplexAggregateRootTarget>(command);
 
             executor.Execute();
