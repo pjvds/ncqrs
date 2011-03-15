@@ -77,7 +77,7 @@ namespace Ncqrs.Eventing.Sourcing
         /// Initializes a new instance of the <see cref="EventSource"/> class.
         /// </summary>
         protected EventSource()
-        {            
+        {
             _idGenerator = NcqrsEnvironment.Get<IUniqueIdentifierGenerator>();
             EventSourceId = _idGenerator.GenerateNewId();
         }
