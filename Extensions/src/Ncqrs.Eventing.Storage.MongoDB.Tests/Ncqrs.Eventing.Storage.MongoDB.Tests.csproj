@@ -53,6 +53,12 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Ncqrs.Eventing.Storage.MongoDB\Ncqrs.Eventing.Storage.MongoDB.csproj">
+      <Project>{E421E735-2833-4948-9BA0-94924BDC502E}</Project>
+      <Name>Ncqrs.Eventing.Storage.MongoDB</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

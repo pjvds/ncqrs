@@ -1,10 +1,5 @@
-﻿using System.Reflection;
-using Castle.MicroKernel.Context;
-using Castle.MicroKernel.Registration;
+﻿using Castle.MicroKernel.Registration;
 using Castle.Windsor;
-using Ncqrs.Commanding;
-using Ncqrs.Commanding.CommandExecution;
-using Ncqrs.Commanding.ServiceModel;
 
 namespace Ncqrs.Config.Windsor
 {

@@ -48,7 +48,6 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DynamicSnapshotTests.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -56,6 +55,9 @@
       <Project>{618E1C0F-E6B7-4C51-961D-C4ACE60CFC85}</Project>
       <Name>Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

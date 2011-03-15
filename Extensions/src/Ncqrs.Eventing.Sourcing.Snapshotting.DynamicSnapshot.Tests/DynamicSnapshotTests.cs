@@ -1,20 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Reflection;
+using Castle.MicroKernel.Registration;
+using Castle.Windsor;
 using Ncqrs.Domain;
 using NUnit.Framework;
-using System.Reflection;
-using Castle.DynamicProxy;
-using System.Reflection.Emit;
-using System.Threading;
-using Castle.MicroKernel.Proxy;
-using Castle.Core;
-using Castle.MicroKernel.Registration;
-using Castle.MicroKernel.Facilities;
-using Castle.MicroKernel;
-using Castle.Core.Configuration;
-using Castle.Windsor;
 
 namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot.Tests
 {
