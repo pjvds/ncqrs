@@ -4,7 +4,7 @@ using Events;
 using Ncqrs.Domain;
 using Ncqrs.Eventing.Sourcing.Snapshotting;
 
-namespace Domain
+namespace MyProject.Domain
 {
     public class Note : AggregateRootMappedByConvention, ISnapshotable<NoteSnapshot>
     {
