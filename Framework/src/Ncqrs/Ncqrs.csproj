@@ -138,8 +138,6 @@
     <Compile Include="GuidCombGenerator.cs" />
     <Compile Include="Commanding\CommandBase.cs" />
     <Compile Include="Commanding\CommandExecution\CommandExecutorWrapper.cs" />
-    <Compile Include="Commanding\CommandExecution\CreatingCommandExecutor.cs" />
-    <Compile Include="Commanding\CommandExecution\DirectActionCommandExecutor.cs" />
     <Compile Include="Commanding\CommandExecution\ICommandExecutorExtensions.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Attributes\AttributeBasedCommandMapper.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Attributes\AttributePropertyMappingStrategy.cs" />
