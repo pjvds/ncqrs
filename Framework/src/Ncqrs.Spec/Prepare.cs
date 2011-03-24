@@ -33,9 +33,9 @@ namespace Ncqrs.Spec
             }
 
             public UncommittedEventStream ForSourceUncomitted(Guid id, Guid commitId, int sequenceOffset = 0)
-            {
-                int sequence = sequenceOffset + 1;
+            {                
                 int initialVersion = sequenceOffset == 0 ? 1 : sequenceOffset;
+                int sequence = initialVersion;
 
                 var comittedEvents = new List<CommittedEvent>();
                 var result = new UncommittedEventStream(commitId);
