@@ -27,8 +27,11 @@ namespace Ncqrs.Eventing.Storage.JOliver
             var bus = NcqrsEnvironment.Get<IEventBus>();
             var snapshotStore = NcqrsEnvironment.Get<ISnapshotStore>();
             var snapshottingPolicy = NcqrsEnvironment.Get<ISnapshottingPolicy>();
+            var aggregateCreationStrategy = NcqrsEnvironment.Get<IAggregateRootCreationStrategy>();
+            var aggregateSupportsSnapshotValidator = NcqrsEnvironment.Get<IAggregateSupportsSnapshotValidator>();
+            var aggregateSnappshotter = NcqrsEnvironment.Get<IAggregateSnapshotter>();
 
-            var repository = new DomainRepository();
+            var repository = new DomainRepository(aggregateCreationStrategy, aggregateSnappshotter);
             var unitOfWork = new JoesUnitOfWork(commandId, repository, _eventStore, snapshotStore, bus, snapshottingPolicy);
             UnitOfWorkContext.Bind(unitOfWork);
             return unitOfWork;

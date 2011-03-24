@@ -42,6 +42,8 @@ namespace Ncqrs
             SetDefault<ITransactionService>(new DefaultTransactionService());
             SetDefault<ISnapshottingPolicy>(new NoSnapshottingPolicy());
             SetDefault<IAggregateRootCreationStrategy>(new SimpleAggregateRootCreationStrategy());
+            SetDefault<IAggregateSupportsSnapshotValidator>(new AggregateSupportsSnapshotValidator());
+            SetDefault<IAggregateSnapshotter>(new DefaultAggregateSnapshotter(Get<IAggregateRootCreationStrategy>(), Get<IAggregateSupportsSnapshotValidator>()));
         }
 
         /// <summary>

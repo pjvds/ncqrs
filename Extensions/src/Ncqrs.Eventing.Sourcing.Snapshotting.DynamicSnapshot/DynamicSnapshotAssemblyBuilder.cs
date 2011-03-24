@@ -3,6 +3,7 @@ using System.Reflection.Emit;
 using System.Reflection;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
 
 namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot
 {
@@ -11,8 +12,6 @@ namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot
     /// </summary>
     internal sealed class DynamicSnapshotAssemblyBuilder
     {
-        private const string AssemblyFileExtension = ".dll";
-
         public const string DefaultModuleName = "DynamicSnapshot.dll";
 
         private readonly AssemblyBuilder _assemblyBuilder;
@@ -26,6 +25,8 @@ namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot
         private readonly DynamicSnapshotTypeBuilder _typeBuilder;
 
         private readonly Dictionary<Type, Type> _typeRegistry = new Dictionary<Type, Type>();
+
+        private readonly Guid AssemblyModuleVersionGuid = Guid.Parse("938bab08-4f95-430f-b1b7-2200ae4085d5");
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DynamicSnapshotAssemblyBuilder"/> class.
@@ -73,17 +74,16 @@ namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot
         /// <returns></returns>
         public Assembly SaveAssembly()
         {
-            var file = _assemblyFileName;
-
-            if (string.Compare(Path.GetExtension(_assemblyFileName), AssemblyFileExtension, true) != 0)
-                file = Path.ChangeExtension(_assemblyFileName, AssemblyFileExtension);
+            var file = DefaultModuleName;
 
             if (File.Exists(file))
                 File.Delete(file);
 
             _assemblyBuilder.Save(file);
 
-            return _assemblyBuilder;
+            AssemblyModuleVersionId.Change(file, DefaultModuleName, AssemblyModuleVersionGuid);
+
+            return Assembly.LoadFrom(DefaultModuleName);
         }
 
         private Type GetSnapshotType(Type sourceType)

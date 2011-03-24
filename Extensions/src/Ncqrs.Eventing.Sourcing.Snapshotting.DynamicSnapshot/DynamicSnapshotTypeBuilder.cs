@@ -59,15 +59,10 @@ namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot
             }
         }
 
-        private string GenerateSnapshotClassName(Type sourceType)
-        {
-            return string.Format("{0}_Snapshot", sourceType.Name);
-        }
-
         private TypeBuilder GetTypeBuilder(Type sourceType, ModuleBuilder moduleBuilder)
         {
             return moduleBuilder.DefineType(
-                    GenerateSnapshotClassName(sourceType),
+                    SnapshotNameGenerator.Generate(sourceType),
                     TypeAttributes.Class | TypeAttributes.Public | TypeAttributes.Serializable | TypeAttributes.Sealed,
                     SnapshotBaseType);
         }
@@ -79,6 +74,5 @@ namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot
             if (!isSnapshotable)
                 throw new DynamicSnapshotNotSupportedException() { AggregateType = sourceType };
         }
-
     }
 }

@@ -4,6 +4,9 @@ using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Ncqrs.Domain;
 using NUnit.Framework;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
+using Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot;
 
 namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot.Tests
 {
@@ -11,8 +14,14 @@ namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot.Tests
     public class SnapshotableProxyTests
     {
         private const string ChangedTitle = "ChangedTitle";
+
         private const string OriginalTitle = "OriginalTitle";
+
+        private const string SerializedSnapshotFileName = "snapshot.bin";
+
         private IWindsorContainer _container;
+
+        private readonly Guid AssemblyVersionGuid = Guid.Parse("938bab08-4f95-430f-b1b7-2200ae4085d5");
 
         [Test]
         public void CanBuildDynamicSnapshotAssembly()
@@ -20,6 +29,14 @@ namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot.Tests
             var assembly = _container.Resolve<IDynamicSnapshotAssembly>();
             var snapshotTypesCount = assembly.ActualAssembly.GetTypes().Length;
             Assert.AreEqual(3, snapshotTypesCount);
+        }
+
+        [Test]
+        public void CanChangeAssemblyVersionGuidTest()
+        {
+            var asm = _container.Resolve<IDynamicSnapshotAssembly>();
+            var MVID = asm.ActualAssembly.GetModule("DynamicSnapshot.dll").ModuleVersionId;
+            Assert.AreEqual(AssemblyVersionGuid, MVID);
         }
 
         [Test]
@@ -56,13 +73,73 @@ namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot.Tests
             Assert.AreEqual(OriginalTitle, proxy.Tittle);
         }
 
-        [SetUp]
+        [Test]
+        public void CanRestoreFromSerializedSnapshot()
+        {
+            if (!File.Exists(SerializedSnapshotFileName))
+                return;
+
+            var proxy = _container.Resolve<Foo>();
+            object snapshot = DeserializeSnapshot();
+            proxy.RestoreFromSnapshot(snapshot);
+
+            Assert.AreEqual(OriginalTitle, proxy.Tittle);
+        }
+
+        [TestFixtureSetUp]
         public void SetUp()
         {
+            System.Diagnostics.Debug.Write("Initializing Windsor container...");
             var target = Assembly.LoadFrom("Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot.Tests.dll");
             _container = new WindsorContainer();
             _container.AddFacility("Ncqrs.DynamicSnapshot", new DynamicSnapshotFacility(target));
             _container.Register(Component.For<Foo>().AsSnapshotable());
+            System.Diagnostics.Debug.WriteLine("Done!");
+        }
+
+        [TestFixtureTearDown]
+        public void TestFixtureTearDown()
+        {
+            if (File.Exists(SerializedSnapshotFileName))
+                File.Delete(SerializedSnapshotFileName);
+
+            dynamic proxy = _container.Resolve<Foo>();
+            proxy.ChangeTitle(OriginalTitle);
+            Assert.AreEqual(OriginalTitle, proxy.Tittle);
+
+            object snapshot = proxy.CreateSnapshot();
+            SerializeSnapshot(snapshot);
+
+            System.Diagnostics.Debug.WriteLine("Disposing Windsor container...");
+            _container.Dispose();
+        }
+
+        private object DeserializeSnapshot()
+        {
+            AppDomain.CurrentDomain.AssemblyResolve += (sender, eventArgs) =>
+            {
+                if (eventArgs.Name.Contains("DynamicSnapshot"))
+                    return Assembly.LoadFrom("DynamicSnapshot.dll");
+                return null;
+            };
+
+            using (FileStream stream = new FileStream(SerializedSnapshotFileName, FileMode.Open))
+            {
+                var bf = new BinaryFormatter();
+                return bf.Deserialize(stream);
+            }
+        }
+
+        private void SerializeSnapshot(object snapshot)
+        {
+            if (File.Exists(SerializedSnapshotFileName))
+                File.Delete(SerializedSnapshotFileName);
+
+            using (Stream stream = File.OpenWrite(SerializedSnapshotFileName))
+            {
+                BinaryFormatter bf = new BinaryFormatter();
+                bf.Serialize(stream, snapshot);
+            }
         }
 
     }

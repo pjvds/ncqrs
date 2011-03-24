@@ -35,6 +35,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Castle.Core">
+      <HintPath>..\..\..\..\lib\ThirdParty\CastleWindsor\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Windsor">
+      <HintPath>..\..\..\..\lib\ThirdParty\CastleWindsor\Castle.Windsor.dll</HintPath>
+    </Reference>
     <Reference Include="EventStore">
       <HintPath>..\..\..\..\lib\ThirdParty\EventStore\EventStore.dll</HintPath>
     </Reference>
@@ -59,20 +65,20 @@
     <Reference Include="Ncqrs.CommandService.Contracts">
       <HintPath>..\..\..\..\lib\Debug\Ncqrs.CommandService.Contracts\Ncqrs.CommandService.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="Ncqrs.Config.StructureMap">
-      <HintPath>..\..\..\..\lib\Debug\Ncqrs.Config.StructureMap\Ncqrs.Config.StructureMap.dll</HintPath>
+    <Reference Include="Ncqrs.Config.Windsor">
+      <HintPath>..\..\..\..\lib\Debug\Ncqrs.Config.Windsor\Ncqrs.Config.Windsor.dll</HintPath>
     </Reference>
     <Reference Include="Ncqrs.EventBus">
       <HintPath>..\..\..\..\lib\Debug\Ncqrs.EventBus\Ncqrs.EventBus.dll</HintPath>
+    </Reference>
+    <Reference Include="Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot">
+      <HintPath>..\..\..\..\lib\Debug\Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot\Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot.dll</HintPath>
     </Reference>
     <Reference Include="Ncqrs.Eventing.Storage.JOliver">
       <HintPath>..\..\..\..\lib\Debug\Ncqrs.Eventing.Storage.JOliver\Ncqrs.Eventing.Storage.JOliver.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\..\..\lib\ThirdParty\json.net\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="StructureMap">
-      <HintPath>..\..\..\..\lib\ThirdParty\StructureMap\StructureMap.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />

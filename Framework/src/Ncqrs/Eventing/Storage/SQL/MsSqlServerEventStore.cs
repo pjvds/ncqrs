@@ -28,7 +28,14 @@ namespace Ncqrs.Eventing.Storage.SQL
 
         public MsSqlServerEventStore(String connectionString)
             : this(connectionString, null, null)
-        { }
+        {
+            AppDomain.CurrentDomain.AssemblyResolve += (sender, eventArgs) =>
+            {
+                if (eventArgs.Name.Contains("DynamicSnapshot"))
+                    return Assembly.LoadFrom("DynamicSnapshot.dll");
+                return null;
+            };
+        }
 
         public MsSqlServerEventStore(String connectionString, IEventTypeResolver typeResolver, IEventConverter converter)
         {
