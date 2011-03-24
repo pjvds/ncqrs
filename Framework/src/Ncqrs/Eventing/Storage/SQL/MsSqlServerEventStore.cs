@@ -438,6 +438,9 @@ namespace Ncqrs.Eventing.Storage.SQL
         private void StoreEventsFromSource(IEnumerable<UncommittedEvent> events, SqlTransaction transaction)
         {
 
+            // Save all events to the store.
+            SaveEvents(events, transaction);
+
             var firstEvent = events.First();
             Guid eventSourceId = firstEvent.EventSourceId;
             var eventSourceVersion = firstEvent.InitialVersionOfEventSource + events.Count();
@@ -463,9 +466,6 @@ namespace Ncqrs.Eventing.Storage.SQL
             {
                 throw new ConcurrencyException(eventSourceId, eventSourceVersion);
             }
-
-            // Save all events to the store.
-            SaveEvents(events, transaction);
         }
 
         private void StoreMultipleSources(IEnumerable<UncommittedEvent> eventStreamContainingMultipleSources, SqlTransaction transaction)
