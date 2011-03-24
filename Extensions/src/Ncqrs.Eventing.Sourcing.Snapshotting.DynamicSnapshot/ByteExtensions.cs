@@ -28,13 +28,16 @@ namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot
             return -1;
         }
 
-        public static bool Replace(this byte[] self, byte[] originalChunk, byte[] newChunk)
+        public static bool Replace(this byte[] self, byte[] patternToReplace, byte[] newPattern)
         {
-            int pos = Find(self, originalChunk);
+            if (patternToReplace.Length != newPattern.Length)
+                return false;
+
+            int pos = Find(self, patternToReplace);
 
             if (pos != -1)
             {
-                newChunk.CopyTo(self, pos);
+                newPattern.CopyTo(self, pos);
             }
 
             return (pos != -1);

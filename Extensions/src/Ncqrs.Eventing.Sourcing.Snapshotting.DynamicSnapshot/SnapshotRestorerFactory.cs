@@ -5,7 +5,7 @@ namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot
 {
     internal static class SnapshotRestorerFactory
     {
-        public static ISnapshotRestorer From(AggregateRoot aggregateRoot, object snapshot)
+        public static ISnapshotRestorer Create(AggregateRoot aggregateRoot, object snapshot)
         {
             var snapshotType = snapshot.GetType();
             if (!typeof(DynamicSnapshotBase).IsAssignableFrom(snapshotType)) throw new ArgumentException("snapshot must inherit DynamicSnapshotBase");

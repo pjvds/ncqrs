@@ -7,7 +7,7 @@ namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot
     {
         public static bool RestoreFromSnapshot(this AggregateRoot aggregateRoot, object snapshot)
         {
-            return SnapshotRestorerFactory.From(aggregateRoot, snapshot).Restore();
+            return SnapshotRestorerFactory.Create(aggregateRoot, snapshot).Restore();
         }
     }
 }

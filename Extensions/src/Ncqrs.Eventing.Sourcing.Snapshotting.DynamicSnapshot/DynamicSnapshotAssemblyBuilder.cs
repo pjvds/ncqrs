@@ -20,8 +20,6 @@ namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot
 
         private readonly ModuleBuilder _moduleBuilder;
 
-        private readonly object _padlock = new object();
-
         private readonly DynamicSnapshotTypeBuilder _typeBuilder;
 
         private readonly Dictionary<Type, Type> _typeRegistry = new Dictionary<Type, Type>();
@@ -59,10 +57,7 @@ namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot
 
             if (snapshotType != null)
             {
-                lock (_padlock)
-                {
-                    _typeRegistry.Add(aggregateType, snapshotType);
-                }
+                _typeRegistry.Add(aggregateType, snapshotType);
             }
 
             return snapshotType;
