@@ -17,6 +17,7 @@ namespace Ncqrs.Spec
 
         protected override void SetupDependencies()
         {
+            base.SetupDependencies();
             CommandExecutor = BuildCommandExecutor();
         }
 
