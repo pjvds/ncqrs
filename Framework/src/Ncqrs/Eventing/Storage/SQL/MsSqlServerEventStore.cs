@@ -49,31 +49,205 @@ namespace Ncqrs.Eventing.Storage.SQL
         }
 
         /// <summary>
-        /// Reads the current row in the <paramref name="reader"/> and translates it to a <see cref="CommittedEvent"/>.
+        /// Gets the table creation queries that can be used to create the tables that are needed
+        /// for a database that is used as an event store.
         /// </summary>
-        /// <param name="reader">The data record to read the current record from.</param>
-        /// <returns>
-        /// A fully populated <see cref="CommittedEvent"/> that contains the data from within the <paramref name="reader"/>.
-        /// </returns>
-        private CommittedEvent ReadEventFromDbReader(IDataRecord reader)
+        /// <remarks>This returns the content of the TableCreationScript.sql that is embedded as resource.</remarks>
+        /// <returns>Queries that contain the <i>create table</i> statements.</returns>
+        public static IEnumerable<String> GetTableCreationQueries()
         {
-            StoredEvent<string> rawEvent = ReadEvent(reader);
+            var currentAsm = Assembly.GetExecutingAssembly();
 
-            var document = _translator.TranslateToCommon(rawEvent);
-            _converter.Upgrade(document);
+            const string resourcename = "Ncqrs.Eventing.Storage.SQL.TableCreationScript.sql";
+            var resource = currentAsm.GetManifestResourceStream(resourcename);
 
-            var payload = _formatter.Deserialize(document.Data, document.EventName);
+            if (resource == null) throw new ApplicationException("Could not find the resource " + resourcename + " in assembly " + currentAsm.FullName);
 
-            // TODO: Legacy stuff... we do not have a dummy id with the current schema.
-            var dummyCommitId = Guid.Empty;
-            var evnt = new CommittedEvent(dummyCommitId, document.EventIdentifier, document.EventSourceId, document.EventSequence, document.EventTimeStamp, payload, document.EventVersion);
+            var result = new List<string>();
 
-            // TODO: Legacy stuff... should move.
-            if(evnt is ISourcedEvent) { ((ISourcedEvent)evnt).InitializeFrom(rawEvent);}
-            
-            return evnt;
+            using (var reader = new StreamReader(resource))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    result.Add(line);
+                }
+            }
+
+            return result;
         }
-        
+
+        /// <summary>
+        /// Returns back a list of all of the event source Id's that are in the store for the specified <paramref name="eventProviderType"/>.
+        /// </summary>
+        /// <param name="eventProviderType">Indicates the <see cref="Type"/> of the <see cref="EventSource"/> that publishes the events.</param>
+        /// <returns>An enumeration of <see cref="Guid"/>.</returns>
+        public IEnumerable<Guid> GetAllIdsForType(Type eventProviderType)
+        {
+            var ids = new List<Guid>();
+
+            using (var connection = new SqlConnection(_connectionString))
+            using (var command = new SqlCommand(Queries.SelectAllIdsForTypeQuery, connection))
+            {
+                command.Parameters.AddWithValue("Type", eventProviderType.FullName);
+                connection.Open();
+
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        ids.Add((Guid)reader[0]);
+                    }
+                }
+            }
+
+            return ids;
+        }
+
+        /// <summary>
+        /// Get some events after specified event.
+        /// </summary>
+        /// <param name="eventId">The id of last event not to be included in result set.</param>
+        /// <param name="maxCount">Maximum number of returned events</param>
+        /// <returns>A collection events starting right after <paramref name="eventId"/>.</returns>
+        public IEnumerable<CommittedEvent> GetEventsAfter(Guid? eventId, int maxCount)
+        {
+            var result = new List<CommittedEvent>();
+
+            // Create connection and command.
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                var query = eventId.HasValue
+                                ? Queries.SelectEventsAfterQuery
+                                : Queries.SelectEventsFromBeginningOfTime;
+
+                using (var command = new SqlCommand(string.Format(query, maxCount), connection))
+                {
+                    if (eventId.HasValue)
+                    {
+                        command.Parameters.AddWithValue("EventId", eventId);
+                    }
+                    connection.Open();
+
+                    // Execute query and create reader.
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            var evnt = ReadEventFromDbReader(reader);
+                            result.Add(evnt);
+                        }
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Gets a snapshot of a particular event source, if one exists. Otherwise, returns <c>null</c>.
+        /// </summary>
+        /// <param name="eventSourceId">Indicates the event source to retrieve the snapshot for.</param>
+        /// <param name="maxVersion">Indicates the maximum allowed version to be returned.</param>
+        /// <returns>
+        /// Returns the most recent <see cref="Snapshot"/> that exists in the store. If the store has a 
+        /// snapshot that is more recent than the <paramref name="maxVersion"/>, then <c>null</c> will be returned.
+        /// </returns>
+        public Snapshot GetSnapshot(Guid eventSourceId, long maxVersion)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                // Open connection and begin a transaction so we can
+                // commit or rollback all the changes that has been made.
+                // QUESTION: Was this supposed to be done inside of a transaction?
+                connection.Open();
+
+                using (var command = new SqlCommand(Queries.SelectLatestSnapshot, connection))
+                {
+                    command.Parameters.AddWithValue("@EventSourceId", eventSourceId);
+
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            var snapshotData = (byte[])reader["Data"];
+                            using (var buffer = new MemoryStream(snapshotData))
+                            {
+                                var formatter = new BinaryFormatter();
+                                object payload = formatter.Deserialize(buffer);
+                                var theSnapshot = new Snapshot(eventSourceId, (long)reader["Version"], payload);
+
+                                // QUESTION: Does it make sense to have this check performed in the SQL Query that way
+                                // an older snapshot could be returned if it does exist?
+                                return theSnapshot.Version > maxVersion
+                                           ? null
+                                           : theSnapshot;
+                            }
+                        }
+                        return null;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Reads from the stream from the <paramref name="minVersion"/> up until <paramref name="maxVersion"/>.
+        /// </summary>
+        /// <remarks>
+        /// Returned event stream does not contain snapshots. This method is used when snapshots are stored in a separate store.
+        /// </remarks>
+        /// <param name="id">The id of the event source that owns the events.</param>
+        /// <param name="minVersion">The minimum version number to be read.</param>
+        /// <param name="maxVersion">The maximum version number to be read</param>
+        /// <returns>All the events from the event source between specified version numbers.</returns>
+        public CommittedEventStream ReadFrom(Guid id, long minVersion, long maxVersion)
+        {
+            var events = new List<CommittedEvent>();
+
+            // Create connection and command.
+            using (var connection = new SqlConnection(_connectionString))
+            using (var command = new SqlCommand(Queries.SelectAllEventsQuery, connection))
+            {
+                // Add EventSourceId parameter and open connection.
+                command.Parameters.AddWithValue("EventSourceId", id);
+                command.Parameters.AddWithValue("EventSourceMinVersion", minVersion);
+                command.Parameters.AddWithValue("EventSourceMaxVersion", maxVersion);
+                connection.Open();
+
+                // Execute query and create reader.
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var evnt = ReadEventFromDbReader(reader);
+                        events.Add(evnt);
+                    }
+                }
+            }
+
+            return new CommittedEventStream(id, events);
+        }
+
+        /// <summary>
+        /// Removes any <see cref="EventSource"/> from the store that has not published any events.
+        /// </summary>
+        public void RemoveUnusedProviders()
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            using (var command = new SqlCommand(Queries.DeleteUnusedProviders, connection))
+            {
+                connection.Open();
+
+                try
+                {
+                    command.ExecuteNonQuery();
+                }
+                finally
+                {
+                    connection.Close();
+                }
+            }
+        }
 
         /// <summary>
         /// Persists a <see cref="Snapshot"/> of an <see cref="EventSource"/>.
@@ -121,91 +295,44 @@ namespace Ncqrs.Eventing.Storage.SQL
         }
 
         /// <summary>
-        /// Gets a snapshot of a particular event source, if one exists. Otherwise, returns <c>null</c>.
+        /// Persists the <paramref name="eventStream"/> in the store as a single and atomic commit.
         /// </summary>
-        /// <param name="eventSourceId">Indicates the event source to retrieve the snapshot for.</param>
-        /// <param name="maxVersion">Indicates the maximum allowed version to be returned.</param>
-        /// <returns>
-        /// Returns the most recent <see cref="Snapshot"/> that exists in the store. If the store has a 
-        /// snapshot that is more recent than the <paramref name="maxVersion"/>, then <c>null</c> will be returned.
-        /// </returns>
-        public Snapshot GetSnapshot(Guid eventSourceId, long maxVersion)
+        /// <exception cref="ConcurrencyException">Occurs when there is already a newer version of the event provider stored in the event store.</exception>
+        /// <param name="eventStream">The <see cref="UncommittedEventStream"/> to commit.</param>
+        public void Store(UncommittedEventStream eventStream)
         {
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                // Open connection and begin a transaction so we can
-                // commit or rollback all the changes that has been made.
-                // QUESTION: Was this supposed to be done inside of a transaction?
-                connection.Open();
-
-                using (var command = new SqlCommand(Queries.SelectLatestSnapshot, connection))
-                {
-                    command.Parameters.AddWithValue("@EventSourceId", eventSourceId);
-
-                    using (var reader = command.ExecuteReader())
-                    {
-                        if (reader.Read())
-                        {
-                            var snapshotData = (byte[])reader["Data"];
-                            using (var buffer = new MemoryStream(snapshotData))
-                            {
-                                var formatter = new BinaryFormatter();
-                                object payload = formatter.Deserialize(buffer);
-                                var theSnapshot = new Snapshot(eventSourceId, (long)reader["Version"], payload);
-                                
-                                // QUESTION: Does it make sense to have this check performed in the SQL Query that way
-                                // an older snapshot could be returned if it does exist?
-                                return theSnapshot.Version > maxVersion
-                                           ? null
-                                           : theSnapshot;
-                            }
-                        }
-                        return null;
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Returns back a list of all of the event source Id's that are in the store for the specified <paramref name="eventProviderType"/>.
-        /// </summary>
-        /// <param name="eventProviderType">Indicates the <see cref="Type"/> of the <see cref="EventSource"/> that publishes the events.</param>
-        /// <returns>An enumeration of <see cref="Guid"/>.</returns>
-        public IEnumerable<Guid> GetAllIdsForType(Type eventProviderType)
-        {
-            var ids = new List<Guid>();
+            if (!eventStream.Any())
+                return;
 
             using (var connection = new SqlConnection(_connectionString))
-            using (var command = new SqlCommand(Queries.SelectAllIdsForTypeQuery, connection))
-            {
-                command.Parameters.AddWithValue("Type", eventProviderType.FullName);
-                connection.Open();
-
-                using (SqlDataReader reader = command.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        ids.Add((Guid)reader[0]);
-                    }
-                }
-            }
-
-            return ids;
-        }
-
-        /// <summary>
-        /// Removes any <see cref="EventSource"/> from the store that has not published any events.
-        /// </summary>
-        public void RemoveUnusedProviders()
-        {
-            using (var connection = new SqlConnection(_connectionString))
-            using (var command = new SqlCommand(Queries.DeleteUnusedProviders, connection))
             {
                 connection.Open();
 
                 try
                 {
-                    command.ExecuteNonQuery();
+                    using (var transaction = connection.BeginTransaction())
+                    {
+                        try
+                        {
+                            if (eventStream.HasSingleSource)
+                            {
+                                var firstEvent = eventStream.First();
+                                var newVersion = firstEvent.InitialVersionOfEventSource + eventStream.Count();
+                                StoreEventsFromSource(eventStream.SourceId, newVersion, eventStream, transaction);
+                            }
+                            else
+                            {
+                                StoreMultipleSources(eventStream, transaction);
+                            }
+
+                            transaction.Commit();
+                        }
+                        catch
+                        {
+                            transaction.Rollback();
+                            throw;
+                        }
+                    }
                 }
                 finally
                 {
@@ -215,19 +342,38 @@ namespace Ncqrs.Eventing.Storage.SQL
         }
 
         /// <summary>
-        /// Updates the version of the <see cref="EventSource"/> in the store with the new version.
+        /// Adds a new <see cref="EventSource"/> to the store.
         /// </summary>
-        /// <param name="eventSourceId">The <see cref="EventSource.EventSourceId"/> that is being updated.</param>
-        /// <param name="newVersion">Indicates the new version to use.</param>
-        /// <param name="transaction">The transaction to enlist in while performing the action.</param>
-        private static void UpdateEventSourceVersion(Guid eventSourceId, long newVersion, SqlTransaction transaction)
+        /// <param name="eventSourceId">Indicates the <see cref="EventSource.EventSourceId"/>.</param>
+        /// <param name="eventSourceType">Indicates the concrete type that inherits from <see cref="EventSource"/>.</param>
+        /// <param name="initialVersion">Indicates the initial version of the <see cref="EventSource"/>.</param>
+        /// <param name="transaction">The <see cref="SqlTransaction"/> to enlist in while adding the <see cref="EventSource"/>.</param>
+        private static void AddEventSource(Guid eventSourceId, Type eventSourceType, long initialVersion, SqlTransaction transaction)
         {
-            using (var command = new SqlCommand(Queries.UpdateEventSourceVersionQuery, transaction.Connection))
+            using (var command = new SqlCommand(Queries.InsertNewProviderQuery, transaction.Connection))
             {
                 command.Transaction = transaction;
                 command.Parameters.AddWithValue("Id", eventSourceId);
-                command.Parameters.AddWithValue("NewVersion", newVersion);
+                command.Parameters.AddWithValue("Type", eventSourceType.ToString());
+                command.Parameters.AddWithValue("Version", initialVersion);
                 command.ExecuteNonQuery();
+            }
+        }
+
+        /// <summary>
+        /// Gets the version of the <see cref="EventSource"/> from the event store.
+        /// </summary>
+        /// <param name="eventSourceId">The <see cref="EventSource.EventSourceId"/> to check for.</param>
+        /// <param name="transaction">The <see cref="SqlTransaction"/> to enlist in.</param>
+        /// <returns>A <see cref="Nullable{T}"/> of <see cref="int"/> that is <c>null</c> when no version was known ; otherwise,
+        /// it contains the version number.</returns>
+        private static int? GetVersion(Guid eventSourceId, SqlTransaction transaction)
+        {
+            using (var command = new SqlCommand(Queries.SelectVersionQuery, transaction.Connection))
+            {
+                command.Transaction = transaction;
+                command.Parameters.AddWithValue("id", eventSourceId);
+                return (int?)command.ExecuteScalar();
             }
         }
 
@@ -254,6 +400,49 @@ namespace Ncqrs.Eventing.Storage.SQL
                 eventSourceId,
                 eventSequence,
                 data);
+        }
+
+        /// <summary>
+        /// Updates the version of the <see cref="EventSource"/> in the store with the new version.
+        /// </summary>
+        /// <param name="eventSourceId">The <see cref="EventSource.EventSourceId"/> that is being updated.</param>
+        /// <param name="newVersion">Indicates the new version to use.</param>
+        /// <param name="transaction">The transaction to enlist in while performing the action.</param>
+        private static void UpdateEventSourceVersion(Guid eventSourceId, long newVersion, SqlTransaction transaction)
+        {
+            using (var command = new SqlCommand(Queries.UpdateEventSourceVersionQuery, transaction.Connection))
+            {
+                command.Transaction = transaction;
+                command.Parameters.AddWithValue("Id", eventSourceId);
+                command.Parameters.AddWithValue("NewVersion", newVersion);
+                command.ExecuteNonQuery();
+            }
+        }
+
+        /// <summary>
+        /// Reads the current row in the <paramref name="reader"/> and translates it to a <see cref="CommittedEvent"/>.
+        /// </summary>
+        /// <param name="reader">The data record to read the current record from.</param>
+        /// <returns>
+        /// A fully populated <see cref="CommittedEvent"/> that contains the data from within the <paramref name="reader"/>.
+        /// </returns>
+        private CommittedEvent ReadEventFromDbReader(IDataRecord reader)
+        {
+            StoredEvent<string> rawEvent = ReadEvent(reader);
+
+            var document = _translator.TranslateToCommon(rawEvent);
+            _converter.Upgrade(document);
+
+            var payload = _formatter.Deserialize(document.Data, document.EventName);
+
+            // TODO: Legacy stuff... we do not have a dummy id with the current schema.
+            var dummyCommitId = Guid.Empty;
+            var evnt = new CommittedEvent(dummyCommitId, document.EventIdentifier, document.EventSourceId, document.EventSequence, document.EventTimeStamp, payload, document.EventVersion);
+
+            // TODO: Legacy stuff... should move.
+            if (evnt is ISourcedEvent) { ((ISourcedEvent)evnt).InitializeFrom(rawEvent); }
+
+            return evnt;
         }
 
         /// <summary>
@@ -300,196 +489,6 @@ namespace Ncqrs.Eventing.Storage.SQL
                 command.Parameters.AddWithValue("Sequence", raw.EventSequence);
                 command.Parameters.AddWithValue("Data", raw.Data);
                 command.ExecuteNonQuery();
-            }
-        }
-
-        /// <summary>
-        /// Adds a new <see cref="EventSource"/> to the store.
-        /// </summary>
-        /// <param name="eventSourceId">Indicates the <see cref="EventSource.EventSourceId"/>.</param>
-        /// <param name="eventSourceType">Indicates the concrete type that inherits from <see cref="EventSource"/>.</param>
-        /// <param name="initialVersion">Indicates the initial version of the <see cref="EventSource"/>.</param>
-        /// <param name="transaction">The <see cref="SqlTransaction"/> to enlist in while adding the <see cref="EventSource"/>.</param>
-        private static void AddEventSource(Guid eventSourceId, Type eventSourceType, long initialVersion, SqlTransaction transaction)
-        {
-            using (var command = new SqlCommand(Queries.InsertNewProviderQuery, transaction.Connection))
-            {
-                command.Transaction = transaction;
-                command.Parameters.AddWithValue("Id", eventSourceId);
-                command.Parameters.AddWithValue("Type", eventSourceType.ToString());
-                command.Parameters.AddWithValue("Version", initialVersion);
-                command.ExecuteNonQuery();
-            }
-        }
-
-        /// <summary>
-        /// Gets the version of the <see cref="EventSource"/> from the event store.
-        /// </summary>
-        /// <param name="eventSourceId">The <see cref="EventSource.EventSourceId"/> to check for.</param>
-        /// <param name="transaction">The <see cref="SqlTransaction"/> to enlist in.</param>
-        /// <returns>A <see cref="Nullable{T}"/> of <see cref="int"/> that is <c>null</c> when no version was known ; otherwise,
-        /// it contains the version number.</returns>
-        private static int? GetVersion(Guid eventSourceId, SqlTransaction transaction)
-        {
-            using (var command = new SqlCommand(Queries.SelectVersionQuery, transaction.Connection))
-            {
-                command.Transaction = transaction;
-                command.Parameters.AddWithValue("id", eventSourceId);
-                return (int?)command.ExecuteScalar();
-            }
-        }
-
-        /// <summary>
-        /// Gets the table creation queries that can be used to create the tables that are needed
-        /// for a database that is used as an event store.
-        /// </summary>
-        /// <remarks>This returns the content of the TableCreationScript.sql that is embedded as resource.</remarks>
-        /// <returns>Queries that contain the <i>create table</i> statements.</returns>
-        public static IEnumerable<String> GetTableCreationQueries()
-        {
-            var currentAsm = Assembly.GetExecutingAssembly();
-
-            const string resourcename = "Ncqrs.Eventing.Storage.SQL.TableCreationScript.sql";
-            var resource = currentAsm.GetManifestResourceStream(resourcename);
-
-            if (resource == null) throw new ApplicationException("Could not find the resource " + resourcename + " in assembly " + currentAsm.FullName);
-
-            var result = new List<string>();
-
-            using (var reader = new StreamReader(resource))
-            {
-                string line = null;
-                while ((line = reader.ReadLine()) != null)
-                {
-                    result.Add(line);
-                }
-            }
-
-            return result;
-        }        
-
-        /// <summary>
-        /// Get some events after specified event.
-        /// </summary>
-        /// <param name="eventId">The id of last event not to be included in result set.</param>
-        /// <param name="maxCount">Maximum number of returned events</param>
-        /// <returns>A collection events starting right after <paramref name="eventId"/>.</returns>
-        public IEnumerable<CommittedEvent> GetEventsAfter(Guid? eventId, int maxCount)
-        {
-            var result = new List<CommittedEvent>();
-
-            // Create connection and command.
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                var query = eventId.HasValue
-                    ? Queries.SelectEventsAfterQuery
-                    : Queries.SelectEventsFromBeginningOfTime;
-
-                using (var command = new SqlCommand(string.Format(query, maxCount), connection))
-                {
-                    if (eventId.HasValue)
-                    {
-                        command.Parameters.AddWithValue("EventId", eventId);
-                    }
-                    connection.Open();
-
-                    // Execute query and create reader.
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            var evnt = ReadEventFromDbReader(reader);
-                            result.Add(evnt);
-                        }
-                    }
-                }
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        /// Reads from the stream from the <paramref name="minVersion"/> up until <paramref name="maxVersion"/>.
-        /// </summary>
-        /// <remarks>
-        /// Returned event stream does not contain snapshots. This method is used when snapshots are stored in a separate store.
-        /// </remarks>
-        /// <param name="id">The id of the event source that owns the events.</param>
-        /// <param name="minVersion">The minimum version number to be read.</param>
-        /// <param name="maxVersion">The maximum version number to be read</param>
-        /// <returns>All the events from the event source between specified version numbers.</returns>
-        public CommittedEventStream ReadFrom(Guid id, long minVersion, long maxVersion)
-        {
-            var events = new List<CommittedEvent>();
-
-            // Create connection and command.
-            using (var connection = new SqlConnection(_connectionString))
-            using (var command = new SqlCommand(Queries.SelectAllEventsQuery, connection))
-            {
-                // Add EventSourceId parameter and open connection.
-                command.Parameters.AddWithValue("EventSourceId", id);
-                command.Parameters.AddWithValue("EventSourceMinVersion", minVersion);
-                command.Parameters.AddWithValue("EventSourceMaxVersion", maxVersion);
-                connection.Open();
-
-                // Execute query and create reader.
-                using (SqlDataReader reader = command.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        var evnt = ReadEventFromDbReader(reader);
-                        events.Add(evnt);
-                    }
-                }
-            }
-
-            return new CommittedEventStream(id, events);
-        }
-
-        /// <summary>
-        /// Persists the <paramref name="eventStream"/> in the store as a single and atomic commit.
-        /// </summary>
-        /// <exception cref="ConcurrencyException">Occurs when there is already a newer version of the event provider stored in the event store.</exception>
-        /// <param name="eventStream">The <see cref="UncommittedEventStream"/> to commit.</param>
-        public void Store(UncommittedEventStream eventStream)
-        {
-            if (!eventStream.Any())
-                return;
-
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-
-                try
-                {
-                    using (var transaction = connection.BeginTransaction())
-                    {
-                        try
-                        {
-                            if (eventStream.HasSingleSource)
-                            {
-                                var firstEvent = eventStream.First();
-                                var newVersion = firstEvent.InitialVersionOfEventSource + eventStream.Count();
-                                StoreEventsFromSource(eventStream.SourceId, newVersion, eventStream, transaction);
-                            }
-                            else
-                            {
-                                StoreMultipleSources(eventStream, transaction);
-                            }
-
-                            transaction.Commit();
-                        }
-                        catch
-                        {
-                            transaction.Rollback();
-                            throw;
-                        }
-                    }
-                }
-                finally
-                {
-                    connection.Close();
-                }
             }
         }
 
