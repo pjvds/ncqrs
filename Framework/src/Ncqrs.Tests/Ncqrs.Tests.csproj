@@ -106,8 +106,6 @@
     <Compile Include="BasicGuidGeneratorSpecs.cs" />
     <Compile Include="Commanding\CommandBasedTests.cs" />
     <Compile Include="Commanding\CommandExecution\CommandExecutorWrapperTests.cs" />
-    <Compile Include="Commanding\CommandExecution\CreatingCommandExecutorTests.cs" />
-    <Compile Include="Commanding\CommandExecution\DirectActionCommandExecutorTests.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Attributes\AttributeBasedCommandMapperTests.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Attributes\AttributeCommandMappingTests.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Attributes\AggregateRootIdAttributeTests.cs" />
