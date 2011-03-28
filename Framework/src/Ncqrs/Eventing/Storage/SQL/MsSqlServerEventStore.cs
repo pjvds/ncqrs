@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Reflection;
-using System.Text;
+using System.Runtime.Serialization.Formatters.Binary;
 using Ncqrs.Eventing.Sourcing;
 using Ncqrs.Eventing.Sourcing.Snapshotting;
 using Ncqrs.Eventing.Storage.Serialization;
@@ -19,7 +19,6 @@ namespace Ncqrs.Eventing.Storage.SQL
     /// </summary>
     public class MsSqlServerEventStore : IEventStore, ISnapshotStore
     {
-        private readonly static int FirstVersion = 0;
         private readonly String _connectionString;
 
         private readonly IEventFormatter<JObject> _formatter;
@@ -54,11 +53,11 @@ namespace Ncqrs.Eventing.Storage.SQL
             var evnt = new CommittedEvent(dummyCommitId, document.EventIdentifier, document.EventSourceId, document.EventSequence, document.EventTimeStamp, payload, document.EventVersion);
 
             // TODO: Legacy stuff... should move.
-            if(evnt is ISourcedEvent) { ((ISourcedEvent)evnt).InitializeFrom(rawEvent);}
-            
+            if (evnt is ISourcedEvent) { ((ISourcedEvent)evnt).InitializeFrom(rawEvent); }
+
             return evnt;
         }
-        
+
 
         /// <summary>
         /// Saves a snapshot of the specified event source.
@@ -70,7 +69,7 @@ namespace Ncqrs.Eventing.Storage.SQL
                 // Open connection and begin a transaction so we can
                 // commit or rollback all the changes that has been made.
                 connection.Open();
-                using (SqlTransaction transaction = connection.BeginTransaction())
+                using (SqlTransaction transaction = connection.BeginTransaction(IsolationLevel.ReadCommitted))
                 {
                     try
                     {
@@ -180,14 +179,15 @@ namespace Ncqrs.Eventing.Storage.SQL
             }
         }
 
-        private void UpdateEventSourceVersion(Guid eventSourceId, long newVersion, SqlTransaction transaction)
+        private int UpdateEventSourceVersion(Guid eventSourceId, long initialVersion, long newVersion, SqlTransaction transaction)
         {
             using (var command = new SqlCommand(Queries.UpdateEventSourceVersionQuery, transaction.Connection))
             {
                 command.Transaction = transaction;
                 command.Parameters.AddWithValue("Id", eventSourceId);
                 command.Parameters.AddWithValue("NewVersion", newVersion);
-                command.ExecuteNonQuery();
+                command.Parameters.AddWithValue("InitialVersion", initialVersion);
+                return command.ExecuteNonQuery();
             }
         }
 
@@ -315,7 +315,7 @@ namespace Ncqrs.Eventing.Storage.SQL
             }
 
             return result;
-        }        
+        }
 
         /// <summary>
         /// Get some events after specified event.
@@ -406,15 +406,13 @@ namespace Ncqrs.Eventing.Storage.SQL
 
                 try
                 {
-                    using (var transaction = connection.BeginTransaction())
+                    using (var transaction = connection.BeginTransaction(IsolationLevel.ReadCommitted))
                     {
                         try
                         {
                             if (eventStream.HasSingleSource)
                             {
-                                var firstEvent = eventStream.First();
-                                var newVersion = firstEvent.InitialVersionOfEventSource + eventStream.Count();
-                                StoreEventsFromSource(eventStream.SourceId, newVersion, eventStream, transaction);
+                                StoreEventsFromSource(eventStream, transaction);
                             }
                             else
                             {
@@ -437,8 +435,16 @@ namespace Ncqrs.Eventing.Storage.SQL
             }
         }
 
-        private void StoreEventsFromSource(Guid eventSourceId, long eventSourceVersion, IEnumerable<UncommittedEvent> events, SqlTransaction transaction)
+        private void StoreEventsFromSource(IEnumerable<UncommittedEvent> events, SqlTransaction transaction)
         {
+
+            // Save all events to the store.
+            SaveEvents(events, transaction);
+
+            var firstEvent = events.First();
+            Guid eventSourceId = firstEvent.EventSourceId;
+            var eventSourceVersion = firstEvent.InitialVersionOfEventSource + events.Count();
+
             // Get the current version of the event provider.
             long? currentVersion = GetVersion(eventSourceId, transaction);
             long initialVersion = events.First().InitialVersionOfEventSource;
@@ -448,16 +454,18 @@ namespace Ncqrs.Eventing.Storage.SQL
             {
                 AddEventSource(eventSourceId, typeof(object), eventSourceVersion, transaction);
             }
-            else if (currentVersion.Value != initialVersion)
+            else if (currentVersion.Value == initialVersion)
+            {
+                // Update the version of the provider.
+                if (UpdateEventSourceVersion(eventSourceId, initialVersion, eventSourceVersion, transaction) == 0)
+                {
+                    throw new ConcurrencyException(eventSourceId, eventSourceVersion);
+                }
+            }
+            else
             {
                 throw new ConcurrencyException(eventSourceId, eventSourceVersion);
             }
-
-            // Save all events to the store.
-            SaveEvents(events, transaction);
-
-            // Update the version of the provider.
-            UpdateEventSourceVersion(eventSourceId, eventSourceVersion, transaction);
         }
 
         private void StoreMultipleSources(IEnumerable<UncommittedEvent> eventStreamContainingMultipleSources, SqlTransaction transaction)
@@ -468,9 +476,7 @@ namespace Ncqrs.Eventing.Storage.SQL
 
             foreach (var sourceStream in sources)
             {
-                var firstEvent = sourceStream.First();
-                var newVersion = firstEvent.InitialVersionOfEventSource + sourceStream.Count();
-                StoreEventsFromSource(firstEvent.EventSourceId, newVersion, sourceStream, transaction);
+                StoreEventsFromSource(sourceStream, transaction);
             }
         }
     }
