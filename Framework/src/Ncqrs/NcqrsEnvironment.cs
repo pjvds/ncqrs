@@ -9,6 +9,7 @@ using Ncqrs.Domain;
 using Ncqrs.Eventing.ServiceModel.Bus;
 using Ncqrs.Eventing.Sourcing.Snapshotting;
 using Ncqrs.Eventing.Storage;
+using Ncqrs.Domain.Storage;
 
 namespace Ncqrs
 {
@@ -40,6 +41,9 @@ namespace Ncqrs
             SetDefault<IKnownCommandsEnumerator>(new AllCommandsInAppDomainEnumerator());
             SetDefault<ITransactionService>(new DefaultTransactionService());
             SetDefault<ISnapshottingPolicy>(new NoSnapshottingPolicy());
+            SetDefault<IAggregateRootCreationStrategy>(new SimpleAggregateRootCreationStrategy());
+            SetDefault<IAggregateSupportsSnapshotValidator>(new AggregateSupportsSnapshotValidator());
+            SetDefault<IAggregateSnapshotter>(new DefaultAggregateSnapshotter(Get<IAggregateRootCreationStrategy>(), Get<IAggregateSupportsSnapshotValidator>()));
         }
 
         /// <summary>

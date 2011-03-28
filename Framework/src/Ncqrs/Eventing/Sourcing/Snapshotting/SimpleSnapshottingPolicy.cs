@@ -7,7 +7,7 @@ namespace Ncqrs.Eventing.Sourcing.Snapshotting
     /// </summary>
     public class SimpleSnapshottingPolicy : ISnapshottingPolicy
     {
-        private const int DefaultSnapshotIntervalInEvents = 15;
+        private const int DefaultSnapshotIntervalInEvents = 3;
         private readonly int _snapshotIntervalInEvents = DefaultSnapshotIntervalInEvents;
 
         public SimpleSnapshottingPolicy()

@@ -3,17 +3,20 @@ using Ncqrs;
 using Events;
 using Ncqrs.Domain;
 using Ncqrs.Eventing.Sourcing.Snapshotting;
+using Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot;
 
 namespace MyProject.Domain
 {
-    public class Note : AggregateRootMappedByConvention, ISnapshotable<NoteSnapshot>
+    [DynamicSnapshot]
+    public class Note : AggregateRootMappedByConvention
     {
         private String _text;
         private DateTime _creationDate;
 
-        private Note()
+        public Note()
         {
             // Need a default ctor for Ncqrs.
+            // Need a default public ctor for DynamicSnapshot.
         }
 
         public Note(Guid noteId, String text) : base(noteId)
@@ -58,27 +61,7 @@ namespace MyProject.Domain
         {
             _text = e.NewText;
         }
-        
-        public NoteSnapshot CreateSnapshot()
-        {
-            return new NoteSnapshot
-                       {
-                           Text = _text,
-                           CreationDate = _creationDate
-                       };
-        }
 
-        public void RestoreFromSnapshot(NoteSnapshot snapshot)
-        {
-            _text = snapshot.Text;
-            _creationDate = snapshot.CreationDate;
-        }
     }
-    [Serializable]
-    public class NoteSnapshot
-    {
-        public string Text { get; set; }
 
-        public DateTime CreationDate { get; set; }
-    }
 }

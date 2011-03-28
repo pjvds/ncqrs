@@ -9,21 +9,40 @@ using Ncqrs.EventBus;
 using Ncqrs.Eventing.ServiceModel.Bus;
 using Ncqrs.Eventing.Storage;
 using Ncqrs.Eventing.Storage.SQL;
-using StructureMap;
+using Castle.Windsor;
+using Castle.MicroKernel.Registration;
+using Ncqrs.Eventing.Sourcing.Snapshotting;
+using Ncqrs.Config.Windsor;
+using Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot;
+using System.Reflection;
+using Domain;
 
 namespace ApplicationService
 {
     public static class BootStrapper
     {
+        
+
         public static void BootUp(InMemoryBufferedBrowsableElementStore buffer)
         {
-            var config = new Ncqrs.Config.StructureMap.StructureMapConfiguration(cfg =>
-            {
-                cfg.For<ICommandService>().Use(InitializeCommandService);
-                cfg.For<IEventBus>().Use(x => InitializeEventBus(buffer));
-                InitializeBuiltInSqlEventStrore(cfg);
-                cfg.For<IKnownCommandsEnumerator>().Use(new AllCommandsInAppDomainEnumerator());
-            });
+            var connectionString = ConfigurationManager.ConnectionStrings["EventStore"].ConnectionString;
+            var asd = new MsSqlServerEventStore(connectionString);
+            var dsa = new MsSqlServerEventStore(connectionString);
+
+            Assembly asm = Assembly.LoadFrom("Domain.dll");
+            IWindsorContainer container = new WindsorContainer();
+            container.AddFacility("ncqrs.ds", new DynamicSnapshotFacility(asm));
+            container.Register(
+                Component.For<ISnapshottingPolicy>().ImplementedBy<SimpleSnapshottingPolicy>(),
+                Component.For<ICommandService>().Instance(InitializeCommandService()),
+                Component.For<IEventBus>().Instance(InitializeEventBus(buffer)),
+                Component.For<IEventStore>().Forward<ISnapshotStore>().Instance(dsa),
+                Component.For<IKnownCommandsEnumerator>().Instance(new AllCommandsInAppDomainEnumerator()),
+                Component.For<Note>().AsSnapshotable()
+                );
+
+
+            WindsorConfiguration config = new WindsorConfiguration(container);
 
             NcqrsEnvironment.Configure(config);
         }
@@ -46,12 +65,6 @@ namespace ApplicationService
             bus.RegisterHandler(new InMemoryBufferedEventHandler(buffer));
 
             return bus;
-        }
-
-        private static void InitializeBuiltInSqlEventStrore(IInitializationExpression cfg)
-        {
-            var connectionString = ConfigurationManager.ConnectionStrings["EventStore"].ConnectionString;
-            cfg.For<IEventStore>().Use(new MsSqlServerEventStore(connectionString));
         }
     }
 }

@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{618E1C0F-E6B7-4C51-961D-C4ACE60CFC85}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot</RootNamespace>
+    <AssemblyName>Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\..\lib\Debug\Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\..\lib\Release\Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Castle.Core, Version=2.5.1.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\..\..\lib\ThirdParty\CastleWindsor\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Windsor">
+      <HintPath>..\..\..\lib\ThirdParty\CastleWindsor\Castle.Windsor.dll</HintPath>
+    </Reference>
+    <Reference Include="Ncqrs">
+      <HintPath>..\..\..\lib\Debug\Ncqrs\Ncqrs.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AggregateDynamicSnapshotter.cs" />
+    <Compile Include="AggregateExtensions.cs" />
+    <Compile Include="AggregateSupportsDynamicSnapshotValidator.cs" />
+    <Compile Include="AssemblyModuleVersionId.cs" />
+    <Compile Include="ByteExtensions.cs" />
+    <Compile Include="SnapshotRestorer.cs" />
+    <Compile Include="DynamicSnapshotAssembly.cs" />
+    <Compile Include="DynamicSnapshotAggregateRootCrationStrategy.cs" />
+    <Compile Include="DynamicSnapshotAttribute.cs" />
+    <Compile Include="DynamicSnapshotBase.cs" />
+    <Compile Include="DynamicSnapshotCastleExtension.cs" />
+    <Compile Include="DynamicSnapshotFacility.cs" />
+    <Compile Include="DynamicSnapshotsException.cs" />
+    <Compile Include="DynamicSnapshotsNotSupportedException.cs" />
+    <Compile Include="ExcludeFromSnapshotAttribute.cs" />
+    <Compile Include="IDynamicSnapshotAssembly.cs" />
+    <Compile Include="IHaveProxyReference.cs" />
+    <Compile Include="ISnapshotableImplementer.cs" />
+    <Compile Include="ISnapshotRestorer.cs" />
+    <Compile Include="SnapshotableAggregateRootFactory.cs" />
+    <Compile Include="SnapshotableField.cs" />
+    <Compile Include="DynamicSnapshotAssemblyBuilder.cs" />
+    <Compile Include="DynamicSnapshotTypeBuilder.cs" />
+    <Compile Include="SnapshotableImplementer.cs" />
+    <Compile Include="SnapshotableImplementerFactory.cs" />
+    <Compile Include="SnapshotClassGenerator.cs" />
+    <Compile Include="SnapshotRestorerFactory.cs" />
+    <Compile Include="TypeExtensions.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
