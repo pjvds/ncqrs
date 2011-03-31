@@ -3,51 +3,36 @@ using System.Collections.Generic;
 using Ncqrs.Commanding;
 using Ncqrs.Commanding.ServiceModel;
 using Ncqrs.Eventing;
-using Ncqrs.Eventing.ServiceModel.Bus;
 using Ncqrs.Eventing.Storage;
-using Ncqrs.Spec.Fakes;
 
 namespace Ncqrs.Spec
 {
 
-    [Specification]
     public abstract class BigBangTestFixture<TCommand>
-        : BaseTestFixture
+        : DomainTestFixture<TCommand>
         where TCommand : ICommand
     {
 
-        private EnvironmentConfigurationWrapper _configuration;
-        private EventStoreWrapper _eventStore;
-        private RecordingEventBus _eventBus; 
-
         protected Guid EventSourceId { get; private set; }
-        protected TCommand ExecutedCommand { get; private set; }
-        protected IEnumerable<IPublishableEvent> PublishedEvents { get; private set; }
-        
-        protected abstract IEnumerable<object> GivenEvents();
-        protected abstract TCommand WhenExecuting();
-        
-        protected override void Given()
+
+        protected ICommandService CommandService { get; private set; }
+
+        protected virtual IEnumerable<object> GivenEvents()
         {
-            base.Given();
+            return new object[0];
+        }
+
+        protected override void SetupDependencies()
+        {
+            base.SetupDependencies();
             GenerateEventSourceId();
             RecordGivenEvents();
-            SetupRecordingEventBus();
-            ReconfigureEnvironment();
+            CommandService = NcqrsEnvironment.Get<ICommandService>();
         }
 
-        protected override void When()
+        protected override void Execute(TCommand command)
         {
-            ExecutedCommand = WhenExecuting();
-            var cmdService = NcqrsEnvironment.Get<ICommandService>();
-            cmdService.Execute(ExecutedCommand);
-        }
-
-        protected override void Finally()
-        {
-            PublishedEvents = _eventBus.GetPublishedEvents();
-            RevertConfiguration();
-            base.Finally();
+            CommandService.Execute(command);
         }
 
         private void GenerateEventSourceId()
@@ -58,8 +43,9 @@ namespace Ncqrs.Spec
 
         private void RecordGivenEvents()
         {
-            _eventStore = new EventStoreWrapper();
-            _eventStore.Given(ConvertGivenEvents());
+            var store = NcqrsEnvironment.Get<IEventStore>();
+            var givenEventStream = ConvertGivenEvents();
+            store.Store(givenEventStream);
         }
 
         private UncommittedEventStream ConvertGivenEvents()
@@ -67,29 +53,6 @@ namespace Ncqrs.Spec
             var history = GivenEvents();
             return Prepare.Events(history)
                 .ForSourceUncomitted(EventSourceId, Guid.NewGuid());
-        }
-
-        private void SetupRecordingEventBus()
-        {
-            _eventBus = new RecordingEventBus();
-        }
-
-        private void ReconfigureEnvironment()
-        {
-            _configuration = new EnvironmentConfigurationWrapper();
-            _configuration.Register<IEventStore>(_eventStore);
-            _configuration.Register<IEventBus>(_eventBus);
-            RegisterFakesInConfiguration(_configuration);
-            _configuration.Push();
-        }
-
-        protected virtual void RegisterFakesInConfiguration(EnvironmentConfigurationWrapper configuration)
-        {
-        }
-
-        private void RevertConfiguration()
-        {
-            _configuration.Pop();
         }
 
     }

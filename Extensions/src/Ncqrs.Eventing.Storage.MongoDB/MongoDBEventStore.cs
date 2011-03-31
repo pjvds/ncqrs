@@ -83,7 +83,7 @@ namespace Ncqrs.Eventing.Storage.MongoDB
             return null;
         }
 
-        public CommittedEventStream ReadFrom(Guid id, long minVersion)
+        public CommittedEventStream ReadFrom(Guid id, long minVersion, long maxVersion = 0)
         {
             //// TODO: We can select events above maxversion since a commit can have the correct FromVersion, but contain events higher then max version.
             //var query = Query.And(Query.EQ("SourceId", id), Query.GTE("FromVersion", minVersion));
@@ -129,17 +129,19 @@ namespace Ncqrs.Eventing.Storage.MongoDB
 
         private void InsertEvents(IEnumerable<UncommittedEvent> events)
         {
-            var docs = events.Select(evnt =>
-            {
-                var document = _formatter.Serialize(evnt.EventIdentifier, evnt.EventTimeStamp, evnt.EventVersion,
-                                                    evnt.EventSourceId, evnt.EventSequence, evnt.Payload);
-                var raw = _translator.TranslateToRaw(document);
-                var bsonDocument = raw.ToBsonDocument();
+            //var docs = events.Select(evnt =>
+            //{
+            //    ////var document = _formatter.Serialize(evnt.EventIdentifier, evnt.EventTimeStamp, evnt.EventVersion,
+            //    ////                                    evnt.EventSourceId, evnt.EventSequence, evnt.Payload);
+                
+            //    //var raw = _translator.TranslateToRaw(document);
+            //    //var bsonDocument = raw.ToBsonDocument();
 
-                return bsonDocument;
-            });
+            //    //return bsonDocument;
+            //});
 
-            _commits.Insert(docs, SafeMode.True);
+            throw new Exception("Not implemented!");
+            //_commits.Insert(docs, SafeMode.True);
         }
 
         private void RemoveUnprocessedCommit(Guid commitId)
@@ -186,5 +188,8 @@ namespace Ncqrs.Eventing.Storage.MongoDB
             var doc = rawEvent.ToBsonDocument();
             return doc;
         }
+
+       
+ 
     }
 }

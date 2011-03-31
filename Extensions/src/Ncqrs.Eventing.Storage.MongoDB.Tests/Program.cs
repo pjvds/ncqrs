@@ -7,10 +7,12 @@ namespace Ncqrs.Eventing.Storage.MongoDB.Tests
     {
         static void Main(string[] args)
         {
-            var mongoStore = new MongoDBEventStore();
-            var fakeEventStream = FakeEventStream.Create();
+            //var mongoStore = new MongoDBEventStore();
+            //var fakeEventStream = FakeEventStream.Create();
             
-            mongoStore.Store(fakeEventStream);
+            //mongoStore.Store(fakeEventStream);
+
+            throw new Exception("NOT IMPLEMENTED!");
         }
     }
 }

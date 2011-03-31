@@ -30,7 +30,14 @@ namespace Ncqrs.Eventing.Storage.SQL
         /// <param name="connectionString">The database connection string to the database.</param>
         public MsSqlServerEventStore(string connectionString)
             : this(connectionString, null, null)
-        { }
+        {
+            AppDomain.CurrentDomain.AssemblyResolve += (sender, eventArgs) =>
+            {
+                if (eventArgs.Name.Contains("DynamicSnapshot"))
+                    return Assembly.LoadFrom("DynamicSnapshot.dll");
+                return null;
+            };
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MsSqlServerEventStore"/> class.

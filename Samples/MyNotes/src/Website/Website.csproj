@@ -43,9 +43,6 @@
     <Reference Include="Ncqrs.EventBus">
       <HintPath>..\..\..\..\lib\$(Configuration)\Ncqrs.EventBus\Ncqrs.EventBus.dll</HintPath>
     </Reference>
-    <Reference Include="Ncqrs.Config.StructureMap">
-      <HintPath>..\..\..\..\lib\$(Configuration)\Ncqrs.Config.StructureMap\Ncqrs.Config.StructureMap.dll</HintPath>
-    </Reference>
     <Reference Include="Ncqrs.CommandService">
       <HintPath>..\..\..\..\lib\$(Configuration)\Ncqrs.CommandService\Ncqrs.CommandService.dll</HintPath>
     </Reference>
@@ -54,9 +51,6 @@
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\..\..\lib\ThirdParty\json.net\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="StructureMap">
-      <HintPath>..\..\..\..\lib\ThirdParty\StructureMap\StructureMap.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />

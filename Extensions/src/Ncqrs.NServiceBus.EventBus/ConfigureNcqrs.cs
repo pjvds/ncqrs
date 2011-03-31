@@ -23,4 +23,6 @@ namespace NServiceBus
             return configNcqrs;
         }
     }
+
+    
 }
