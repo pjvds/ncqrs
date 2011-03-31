@@ -35,7 +35,7 @@
       <HintPath>..\..\..\lib\ThirdParty\CastleWindsor\Castle.Core.dll</HintPath>
     </Reference>
     <Reference Include="Castle.Windsor">
-      <HintPath>..\..\..\..\BusinessWare\lib\ThirdParty\CastleWindsor\Castle.Windsor.dll</HintPath>
+      <HintPath>..\..\..\lib\ThirdParty\CastleWindsor\Castle.Windsor.dll</HintPath>
     </Reference>
     <Reference Include="Ncqrs">
       <HintPath>..\..\..\lib\Debug\Ncqrs\Ncqrs.dll</HintPath>
