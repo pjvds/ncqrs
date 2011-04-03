@@ -111,6 +111,16 @@ namespace Ncqrs.Domain
         
 
         public abstract AggregateRoot GetById(Type aggregateRootType, Guid eventSourceId, long? lastKnownRevision);
+        public TAggregateRoot GetById<TAggregateRoot>(Guid eventSourceId, long? lastKnownRevision) where TAggregateRoot : AggregateRoot
+        {
+            return (TAggregateRoot) GetById(typeof (TAggregateRoot), eventSourceId, lastKnownRevision);
+        }
+
+        public TAggregateRoot GetById<TAggregateRoot>(Guid eventSourceId) where TAggregateRoot : AggregateRoot
+        {
+            return GetById<TAggregateRoot>(eventSourceId, null);
+        }
+
         public abstract void Accept();
     }
 }
