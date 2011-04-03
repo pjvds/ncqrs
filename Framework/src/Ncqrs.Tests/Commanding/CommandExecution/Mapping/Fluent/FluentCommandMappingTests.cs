@@ -23,7 +23,33 @@ namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Fluent
             return AggRoot ?? (AggRoot = new AggregateRootTarget("from GetAggregateRoot()"));
         }
 
+        private static AggregateRootTarget GetAggregateRoot(Guid ID)
+        {
+            if (AggRoot == null)
+            {
+                return new AggregateRootTarget("new Agg Root");
+            }
+
+            if (AggRoot.ArId == ID)
+            {
+                return AggRoot;
+            }
+            else
+            {
+                return new AggregateRootTarget("new and Different Agg Root");
+            }
+        }
+
         public class AggregateRootTargetUpdateTitleCommand : CommandBase
+        {
+            public string Title
+            { get; set; }
+
+            public Guid Id
+            { get; set; }
+        }
+
+        public class AggregateRootTargetCreateOrUpdateTitleCommand : CommandBase
         {
             public string Title
             { get; set; }
@@ -76,8 +102,21 @@ namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Fluent
             public string Title
             { get; private set; }
 
+            public Guid ArId
+            { get; private set; }
+
+            public long created = DateTime.Now.Ticks;
+
             public AggregateRootTarget(string title)
             {
+                ArId = Guid.NewGuid();
+                var eventargs = new AggregateRootTargetCreatedNewEvent { Title = title };
+                ApplyEvent(eventargs);
+            }
+
+            public AggregateRootTarget(Guid id, string title)
+            {
+                ArId = id;
                 var eventargs = new AggregateRootTargetCreatedNewEvent { Title = title };
                 ApplyEvent(eventargs);
             }
@@ -119,7 +158,10 @@ namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Fluent
 
             Map.Command<AggregateRootTargetStaticCreateCommand>().ToAggregateRoot<AggregateRootTarget>().CreateNew((cmd) => AggregateRootTarget.CreateNew(cmd.Title)).StoreIn((cmd, aggroot) => AggRoot = aggroot).RegisterWith(service);
             Map.Command<AggregateRootTargetUpdateTitleCommand>().ToAggregateRoot<AggregateRootTarget>().WithId(cmd => cmd.Id, (guid, knownVersion) => GetAggregateRoot()).ToCallOn((cmd, aggroot) => aggroot.UpdateTitle(cmd.Title)).RegisterWith(service);
+
             Map.Command<AggregateRootTargetCreateNewCommand>().ToAggregateRoot<AggregateRootTarget>().CreateNew((cmd) => new AggregateRootTarget(cmd.Title)).StoreIn((cmd, aggroot) => AggRoot = aggroot).RegisterWith(service);
+
+            Map.Command<AggregateRootTargetCreateOrUpdateTitleCommand>().ToAggregateRoot<AggregateRootTarget>().UseExistingOrCreateNew(cmd => cmd.Id, (guid, knownVersion) => GetAggregateRoot(guid), (cmd) => new AggregateRootTarget(cmd.Id, cmd.Title)).ToCallOn((cmd, aggroot) => aggroot.UpdateTitle(cmd.Title)).RegisterWith(service);
 
             TheService = service;
         }
@@ -158,6 +200,32 @@ namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Fluent
             TheService.Execute(command);
 
             AggRoot.Title.Should().Be("AggregateRootTargetStaticCreateCommand");
+        }
+
+        [Test]
+        public void Command_should_create_and_then_use_existing()
+        {
+            var command = new AggregateRootTargetCreateOrUpdateTitleCommand { Title = "AggregateRootCreateNewCommand", Id = Guid.NewGuid() };
+            TheService.Execute(command);
+
+            AggRoot.Title.Should().Be("AggregateRootCreateNewCommand");
+            var arId = AggRoot.ArId;
+
+            command = new AggregateRootTargetCreateOrUpdateTitleCommand { Title = "AggregateRootCreateNewCommand2", Id = Guid.NewGuid() };
+            TheService.Execute(command);
+
+            AggRoot.Title.Should().Be("AggregateRootCreateNewCommand2");
+            Assert.AreNotEqual(arId, AggRoot.ArId, "Id's should be different.");
+
+            var createTicks = AggRoot.created;
+            arId = AggRoot.ArId;
+
+            command = new AggregateRootTargetCreateOrUpdateTitleCommand { Title = "AggregateRootUpdatedCommand", Id = arId };
+            TheService.Execute(command);
+
+            AggRoot.Title.Should().Be("AggregateRootUpdatedCommand");
+            AggRoot.ArId.Should().Be(arId);
+            AggRoot.created.Should().Be(createTicks);
         }
     }
 }

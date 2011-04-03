@@ -106,8 +106,11 @@
     <Compile Include="Commanding\CommandExecution\Mapping\Attributes\MapsToAggregateRootConstructorAttributeHandler.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Attributes\IMappingAttributeHandler.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Attributes\MapsToAggregateRootMethodAttributeHandler.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\Attributes\MapsToAggregateRootMethodOrConstructorAttribute.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\Attributes\MapsToAggregateRootMethodOrConstructorAttributeHandler.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Attributes\MapsToAggregateRootStaticCreateAttribute.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Attributes\MapsToAggregateRootStaticCreateAttributeHandler.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\Fluent\MappedCommandToAggregateRootMethodOrConstructor.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\ICommandMapper.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\UoWMappedCommandExecutor.cs" />
     <Compile Include="Commanding\IKnownCommandsEnumerator.cs" />
