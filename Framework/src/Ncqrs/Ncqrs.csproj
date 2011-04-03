@@ -114,7 +114,9 @@
     <Compile Include="Domain\AggregateExtensions.cs" />
     <Compile Include="Domain\Entity.cs" />
     <Compile Include="Domain\EntityMappedByConvention.cs" />
+    <Compile Include="Domain\Storage\AggregateRootCreationStrategy.cs" />
     <Compile Include="Domain\Storage\DefaultAggregateSnapshotter.cs" />
+    <Compile Include="Domain\Storage\DelegateAggregateRootCreationStrategy.cs" />
     <Compile Include="Domain\Storage\IAggregateRootCreationStrategy.cs" />
     <Compile Include="Domain\Storage\IAggregateSnapshotter.cs" />
     <Compile Include="Domain\Storage\SimpleAggregateRootCreationStrategy.cs" />
