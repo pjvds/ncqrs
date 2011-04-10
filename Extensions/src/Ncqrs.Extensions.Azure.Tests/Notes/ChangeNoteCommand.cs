@@ -5,7 +5,7 @@ using System.Text;
 using Ncqrs.Commanding.CommandExecution.Mapping.Attributes;
 using Ncqrs.Commanding;
 
-namespace Ncqrs.Eventing.Storage.WindowsAzure.Tests.Env
+namespace Ncqrs.Extensions.Azure.Tests.Notes
 {
     [MapsToAggregateRootMethod(typeof(Note), "ChangeNoteText")]
     public class ChangeNoteCommand : CommandBase

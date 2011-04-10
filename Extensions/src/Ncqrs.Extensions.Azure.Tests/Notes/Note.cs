@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Ncqrs.Domain;
 
-namespace Ncqrs.Eventing.Storage.WindowsAzure.Tests.Env
+namespace Ncqrs.Extensions.Azure.Tests.Notes
 {
     public class Note : AggregateRootMappedByConvention
     {

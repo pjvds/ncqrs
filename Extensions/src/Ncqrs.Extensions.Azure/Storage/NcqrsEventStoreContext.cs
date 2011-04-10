@@ -5,9 +5,9 @@ using System.Text;
 using Microsoft.WindowsAzure.StorageClient;
 using Microsoft.WindowsAzure;
 
-namespace Ncqrs.Eventing.Storage.WindowsAzure
+namespace Ncqrs.Extensions.Azure.Storage
 {
-    internal class NcqrsEventStoreContext : TableServiceContext
+    public class NcqrsEventStoreContext : TableServiceContext
     {
         private Guid _eventSourceID;
         private const string _TABLENAME = "NcqrsEventStore";

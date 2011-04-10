@@ -5,7 +5,7 @@ using System.Text;
 using Newtonsoft.Json;
 using System.IO;
 
-namespace Ncqrs.Eventing.Storage.WindowsAzure
+namespace Ncqrs.Extensions.Azure
 {
     public static class Utility
     {

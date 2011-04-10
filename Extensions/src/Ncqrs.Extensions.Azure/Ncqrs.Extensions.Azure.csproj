@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{6535AFF3-E730-4916-9CF6-1186F3C1DAFE}</ProjectGuid>
+    <ProjectGuid>{654125FE-DA6C-4FC6-893A-C054B18E3C8A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Ncqrs.Eventing.Storage.WindowsAzure</RootNamespace>
-    <AssemblyName>Ncqrs.Eventing.Storage.WindowsAzure</AssemblyName>
+    <RootNamespace>Ncqrs.Extensions.Azure</RootNamespace>
+    <AssemblyName>Ncqrs.Extensions.Azure</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\lib\Debug\Ncqrs.Eventing.Storage.WindowsAzure\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -25,21 +25,26 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\lib\Release\Ncqrs.Eventing.Storage.WindowsAzure\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.ApplicationServer.Caching.Client, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\lib\ThirdParty\WindowsAppFabricCacheClient\Microsoft.ApplicationServer.Caching.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ApplicationServer.Caching.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\lib\ThirdParty\WindowsAppFabricCacheClient\Microsoft.ApplicationServer.Caching.Core.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.WindowsAzure.StorageClient, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\lib\ThirdParty\Azure\Microsoft.WindowsAzure.StorageClient.dll</HintPath>
-    </Reference>
-    <Reference Include="Ncqrs">
-      <HintPath>..\..\..\lib\Debug\Ncqrs\Ncqrs.dll</HintPath>
+      <HintPath>..\..\..\lib\ThirdParty\WindowsAzureStorageClient\Microsoft.WindowsAzure.StorageClient.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\..\lib\ThirdParty\json.net\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\..\lib\ThirdParty\json.net.4.0.1\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -52,12 +57,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Table\NcqrsEvent.cs" />
-    <Compile Include="Table\NcqrsEventStoreContext.cs" />
-    <Compile Include="Table\NcqrsEventSource.cs" />
+    <Compile Include="Domain\CachedUnitOfWork.cs" />
+    <Compile Include="Domain\CachedUnitOfWorkFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Table\TableOnlyStore.cs" />
+    <Compile Include="Storage\NcqrsEvent.cs" />
+    <Compile Include="Storage\NcqrsEventSource.cs" />
+    <Compile Include="Storage\NcqrsEventStoreContext.cs" />
+    <Compile Include="Storage\TableOnlyStore.cs" />
     <Compile Include="Utility.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Configuration\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Framework\src\Ncqrs\Ncqrs.csproj">
+      <Project>{01F84441-80D3-49B4-AB18-96894ACB2F90}</Project>
+      <Name>Ncqrs</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

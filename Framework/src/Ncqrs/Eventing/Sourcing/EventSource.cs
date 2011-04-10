@@ -7,11 +7,13 @@ using Ncqrs.Eventing.Sourcing.Snapshotting;
 
 namespace Ncqrs.Eventing.Sourcing
 {
+    [Serializable]
     public abstract class EventSource : IEventSource
     {
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        [NonSerialized]
+        // 628426 10 Apr 2011 - removed so that AR's can be cached out of process
+        //[NonSerialized]
         private Guid _eventSourceId;
         
         /// <summary>
@@ -43,10 +45,12 @@ namespace Ncqrs.Eventing.Sourcing
                 return _currentVersion;
             }
         }
-        [NonSerialized]
+        // 628426 10 Apr 2011 - removed so that AR's can be cached out of process
+        //[NonSerialized]
         private long _initialVersion;
 
-        [NonSerialized]
+        // 628426 10 Apr 2011 - removed so that AR's can be cached out of process
+        //[NonSerialized]
         private long _currentVersion;
 
         /// <summary>

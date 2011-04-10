@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Ncqrs.Eventing.Sourcing;
 
-namespace Ncqrs.Eventing.Storage.WindowsAzure.Tests.Env
+namespace Ncqrs.Extensions.Azure.Tests.Notes
 {
     [Serializable]
     public class NoteChanged : SourcedEvent

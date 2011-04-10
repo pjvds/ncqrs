@@ -10,6 +10,7 @@ namespace Ncqrs.Domain
     /// <summary>
     /// The abstract concept of an aggregate root.
     /// </summary>
+    [Serializable]
     public abstract class AggregateRoot : EventSource
     {
          private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);

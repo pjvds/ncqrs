@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Ncqrs.Eventing.Sourcing;
 
-namespace Ncqrs.Eventing.Storage.WindowsAzure
+namespace Ncqrs.Extensions.Azure.Storage
 {
     public class NcqrsEventSource : Microsoft.WindowsAzure.StorageClient.TableServiceEntity
     {

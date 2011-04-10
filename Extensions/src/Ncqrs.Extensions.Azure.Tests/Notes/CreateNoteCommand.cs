@@ -5,7 +5,7 @@ using System.Text;
 using Ncqrs.Commanding;
 using Ncqrs.Commanding.CommandExecution.Mapping.Attributes;
 
-namespace Ncqrs.Eventing.Storage.WindowsAzure.Tests.Env
+namespace Ncqrs.Extensions.Azure.Tests.Notes
 {
     [MapsToAggregateRootConstructor(typeof(Note))]
     public class CreateNoteCommand : CommandBase

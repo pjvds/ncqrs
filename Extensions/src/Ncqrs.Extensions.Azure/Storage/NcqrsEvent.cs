@@ -5,20 +5,27 @@ using System.Text;
 using Microsoft.WindowsAzure.StorageClient;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
+using Ncqrs.Eventing;
+using Ncqrs.Extensions.Azure;
 
-namespace Ncqrs.Eventing.Storage.WindowsAzure
+namespace Ncqrs.Extensions.Azure.Storage
 {
-    internal class NcqrsEvent : TableServiceEntity
+    public class NcqrsEvent : TableServiceEntity
     {
+        // TODO: 628426 10 Apr 2011 - Use CommitId as designed
         public Guid CommitId { get; set; }
         public string Name { get; set; }
         public string Version { get; set; }
         public long Sequence { get; set; }
         public string Data { get; set; }
         
+        /// <summary>
+        /// Parameterless constructor for Azure Storage deserializer
+        /// </summary>
         public NcqrsEvent()
         {
         }
+
 
         public NcqrsEvent(UncommittedEvent @event) :
             base(@event.EventSourceId.ToString(), @event.EventIdentifier.ToString())
