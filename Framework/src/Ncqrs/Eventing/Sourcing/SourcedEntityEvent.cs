@@ -1,7 +1,9 @@
 ﻿using System;
+using Ncqrs.Eventing.Storage;
 
 namespace Ncqrs.Eventing.Sourcing
 {
+    [Serializable]
     public class SourcedEntityEvent : SourcedEvent
     {
         public static Guid UndefinedEntityId = Guid.Empty;
@@ -20,5 +22,21 @@ namespace Ncqrs.Eventing.Sourcing
         {
             EntityId = entityId;
         }
+
+	public override void InitializeFrom(StoredEvent stored)
+	{
+		var evnt = stored as StoredEvent<Newtonsoft.Json.Linq.JObject>;
+		if (evnt != null)
+		{
+			EntityId = new Guid(evnt.Data.Value<string>("EntityId"));
+		}
+		base.InitializeFrom(stored);
+	}
+
+	public void ClaimEvent(Guid eventSourceId, Guid entityId, long sequence)
+	{
+		EntityId = entityId;
+		base.ClaimEvent(eventSourceId, sequence);			
+	}
     }
 }

@@ -9,7 +9,10 @@ namespace Ncqrs.Eventing.Sourcing
         private readonly ISourcedEventHandler _internalHandler;
 
         public SourcedEventHandlerPredicate(Predicate<TSourcedEvent> predicate, ISourcedEventHandler internalHandler)
-            : base((e) => internalHandler.HandleEvent(e), false)
+            : base(e => {if (predicate(e))
+            {
+            	internalHandler.HandleEvent(e);
+            }}, false)
         {
             _predicate = predicate;
             _internalHandler = internalHandler;
