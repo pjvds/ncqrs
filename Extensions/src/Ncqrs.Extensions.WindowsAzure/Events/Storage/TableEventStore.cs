@@ -53,8 +53,7 @@ namespace Ncqrs.Extensions.WindowsAzure.Events.Storage {
                     &&
                     entity.RowKey.CompareTo(Utility.GetRowKey(minVersion)) >= 0 &&
                     entity.RowKey.CompareTo(Utility.GetRowKey(maxVersion)) <= 0).AsTableServiceQuery();
-
-            return new Eventing.CommittedEventStream(id, 
+            return new Eventing.CommittedEventStream(id,
                 eventStream.ToList().Select(e => new Ncqrs.Eventing.CommittedEvent(
                     e.CommitId,
                     e.EventIdentifier,
@@ -83,7 +82,7 @@ namespace Ncqrs.Extensions.WindowsAzure.Events.Storage {
 
             EventSourceEntity lastSource = context.CreateQuery<EventSourceEntity>(_tableName)
                 .Where(e => e.PartitionKey == eventSourceId.ToString() &&
-                    e.RowKey == eventSourceId.ToString()).AsTableServiceQuery().FirstOrDefault();
+                    e.RowKey == "EventSource_" + eventSourceId.ToString()).AsTableServiceQuery().FirstOrDefault();
 
             if (lastSource == null) {
                 lastSource = new EventSourceEntity(eventSourceId, initialVersion);

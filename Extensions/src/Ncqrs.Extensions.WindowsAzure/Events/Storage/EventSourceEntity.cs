@@ -9,7 +9,7 @@ namespace Ncqrs.Extensions.WindowsAzure.Events.Storage {
     public class EventSourceEntity : TableServiceEntity {
         public EventSourceEntity(Guid eventSource, long version)
             : base(eventSource.ToString(),
-            eventSource.ToString()) {
+            "EventSource_" + eventSource.ToString()) {
             _version = version;
         }
         public EventSourceEntity() {
