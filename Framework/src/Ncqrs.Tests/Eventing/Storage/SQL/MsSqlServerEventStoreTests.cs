@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 using FluentAssertions;
 using Ncqrs.Eventing;
 using Ncqrs.Eventing.Sourcing;
@@ -183,6 +186,93 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
 
             var payload = (AccountNameChangedEvent) restoredEvent.Payload;
             payload.EntityId.Should().Be(theEntityId);
+        }
+
+        [Test]
+        public void Saving_with_concurrent_event_edits_should_be_subject_to_concurrency_checks()
+        {
+            // test created in response to an issue with concurrent edits happening within the window between
+            // reading the current version number of the aggregate and the event source record being updated with
+            // the new version number. this would leave the event stream for an event source out of sequence and
+            // the aggregate in a state in which it could not be retrieved :o
+
+            var targetStore = new MsSqlServerEventStore(connectionString);
+
+            var theEventSourceId = Guid.NewGuid();
+            var theCommitId = Guid.NewGuid();            
+
+            // make sure that the event source for the aggregate is created
+            var creationEvent = Prepare.Events(new CustomerCreatedEvent("Foo", 35))
+                .ForSourceUncomitted(theEventSourceId, theCommitId);
+            targetStore.Store(creationEvent);
+            
+            var tasks = new Task[130];
+
+            // now simulate concurreny updates coming in on the same aggregate
+            for (int idx = 0; idx < tasks.Length; idx++)
+            {
+                tasks[idx] = Task.Factory.StartNew(() => { 
+
+                    var changeEvent = new CustomerNameChanged(DateTime.Now.Ticks.ToString()) { CustomerId = theEventSourceId };
+                    var eventStream = Prepare.Events(changeEvent)
+                        .ForSourceUncomitted(theEventSourceId, Guid.NewGuid(), 2);
+
+                    targetStore.Store(eventStream);
+
+                    // this should force a validation of the sequencing of the event stream
+                    targetStore.ReadFrom(theEventSourceId, long.MinValue, long.MaxValue);                   
+                });
+            }
+
+            try
+            {
+                Task.WaitAll(tasks);
+                Assert.Fail("We're expecting concurrency exceptions!");
+            }
+            catch (AggregateException e)
+            {
+                var unexpectedExceptions = e.Flatten().InnerExceptions.Where(ex => !(ex is ConcurrencyException));
+                
+                foreach (var ie in unexpectedExceptions)
+                {
+                    Debug.WriteLine(ie);
+                }
+
+                Assert.AreEqual(0, unexpectedExceptions.Count());
+            }
+            
+        }
+
+        [Test]
+        public void Saving_with_concurrent_event_adds_should_not_be_causing_deadlocks()
+        {
+            // test created in response to an issue with high frequency adds causing deadlocks on the EventSource table.
+            // I reworked the sequencing of reads/updates to the EventSource table to reduce the amount
+            // of time to any locks will be held. But this wasn't strictly required as the problem resided
+            // in the fact that there was no index on the event source table result in full table scans occuring.
+            // I therefore also changed the DDL to incude an non clustered index on EventSource.Id which resulted
+            // in a nice performance boost during informal testing.
+
+            var targetStore = new MsSqlServerEventStore(connectionString);
+            
+            var tasks = new Task[30]; // this number require to reproduce the issue might vary depending on hardware
+
+            for (int idx = 0; idx < tasks.Length; idx++)
+            {
+                tasks[idx] = Task.Factory.StartNew(() =>
+                {
+                    var theEventSourceId = Guid.NewGuid();
+                    var theCommitId = Guid.NewGuid();                    
+
+                    var eventStream = Prepare.Events(new CustomerCreatedEvent(Task.CurrentId.ToString(), 35))
+                        .ForSourceUncomitted(theEventSourceId, theCommitId);
+
+                    // should not be receiving a deadlock
+                    targetStore.Store(eventStream);
+                });                
+            }
+
+            Task.WaitAll(tasks);            
         }
 
         //[Test]

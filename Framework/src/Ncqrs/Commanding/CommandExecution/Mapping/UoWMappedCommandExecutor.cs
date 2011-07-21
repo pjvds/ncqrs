@@ -28,7 +28,7 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping
                 _command = command;
             }
 
-            public void ExecuteActionOnExistingInstance(Func<ICommand, Guid> idCallback, Func<ICommand, Type> typeCallback,  Action<AggregateRoot, ICommand> action)
+            public void ExecuteActionOnExistingInstance(Func<ICommand, Guid> idCallback, Func<ICommand, Type> typeCallback, Action<AggregateRoot, ICommand> action)
             {
                 var id = idCallback(_command);
                 var type = typeCallback(_command);
@@ -47,6 +47,24 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping
             {
                 action(_command);
                 _uow.Accept();
+            }
+
+            public void ExecuteActionOnExistingOrCreatingNewInstance(Func<ICommand, Guid> idCallback, Func<ICommand, Type> typeCallback, Action<AggregateRoot, ICommand> existingAction, Func<ICommand, AggregateRoot> creatingAction)
+            {
+                var id = idCallback(_command);
+                var type = typeCallback(_command);
+                var aggRoot = _uow.GetById(type, id, _command.KnownVersion);
+
+                if (aggRoot == null)
+                {
+                    creatingAction(_command);
+                    _uow.Accept();
+                }
+                else
+                {
+                    existingAction(aggRoot, _command);
+                    _uow.Accept();
+                }
             }
         }
     }

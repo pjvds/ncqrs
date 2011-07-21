@@ -1,0 +1,1 @@
+Available from Windows Azure SDK at http://www.microsoft.com/downloads/en/details.aspx?FamilyID=7a1089b6-4050-4307-86c4-9dadaa5ed018

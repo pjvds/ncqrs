@@ -10,11 +10,13 @@ namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Attributes
         where T : AggregateRoot
     {
         public T Instance { get; set; }
+
         public ICommand Command { get; set; }
+
         public Action VerificationAction { get; set; }
 
         public TestAttributeMappedCommandExecutor()
-        {            
+        {
         }
 
         public TestAttributeMappedCommandExecutor(ICommand command)
@@ -33,7 +35,7 @@ namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Attributes
             new AttributeBasedCommandMapper().Map(Command, this);
         }
 
-        public void ExecuteActionOnExistingInstance(Func<ICommand, Guid> idCallback, Func<ICommand, Type> typeCallback,  Action<AggregateRoot, ICommand> action)
+        public void ExecuteActionOnExistingInstance(Func<ICommand, Guid> idCallback, Func<ICommand, Type> typeCallback, Action<AggregateRoot, ICommand> action)
         {
             if (VerificationAction != null)
             {
@@ -53,7 +55,23 @@ namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Attributes
             {
                 VerificationAction();
             }
-            Instance = (T) action(Command);
+            Instance = (T)action(Command);
+        }
+
+        public void ExecuteActionOnExistingOrCreatingNewInstance(Func<ICommand, Guid> idCallback, Func<ICommand, Type> typeCallback, Action<AggregateRoot, ICommand> existingAction, Func<ICommand, AggregateRoot> creatingAction)
+        {
+            if (VerificationAction != null)
+            {
+                VerificationAction();
+            }
+            if (Instance == null)
+            {
+                Instance = (T)creatingAction(Command);
+            }
+            else
+            {
+                existingAction(Instance, Command);
+            }
         }
     }
 }

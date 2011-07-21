@@ -26,7 +26,7 @@
     <CodeContractsRuntimeOnlyPublicSurface>False</CodeContractsRuntimeOnlyPublicSurface>
     <CodeContractsRuntimeThrowOnFailure>True</CodeContractsRuntimeThrowOnFailure>
     <CodeContractsRuntimeCallSiteRequires>False</CodeContractsRuntimeCallSiteRequires>
-    <CodeContractsRunCodeAnalysis>True</CodeContractsRunCodeAnalysis>
+    <CodeContractsRunCodeAnalysis>False</CodeContractsRunCodeAnalysis>
     <CodeContractsNonNullObligations>False</CodeContractsNonNullObligations>
     <CodeContractsBoundsObligations>False</CodeContractsBoundsObligations>
     <CodeContractsArithmeticObligations>False</CodeContractsArithmeticObligations>
@@ -43,7 +43,8 @@
     <CodeContractsBaseLineFile />
     <CodeContractsCacheAnalysisResults>False</CodeContractsCacheAnalysisResults>
     <CodeContractsRuntimeCheckingLevel>Full</CodeContractsRuntimeCheckingLevel>
-    <CodeContractsReferenceAssembly>%28none%29</CodeContractsReferenceAssembly>
+    <CodeContractsReferenceAssembly>DoNotBuild</CodeContractsReferenceAssembly>
+    <CodeContractsContainerAnalysis>False</CodeContractsContainerAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -72,7 +73,8 @@
     <CodeContractsBaseLineFile />
     <CodeContractsCacheAnalysisResults>False</CodeContractsCacheAnalysisResults>
     <CodeContractsRuntimeCheckingLevel>Full</CodeContractsRuntimeCheckingLevel>
-    <CodeContractsReferenceAssembly>%28none%29</CodeContractsReferenceAssembly>
+    <CodeContractsReferenceAssembly>DoNotBuild</CodeContractsReferenceAssembly>
+    <CodeContractsContainerAnalysis>False</CodeContractsContainerAnalysis>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
@@ -98,6 +100,7 @@
     <Compile Include="AndAttribute.cs" />
     <Compile Include="AutoMappedCommandTestFixture.cs" />
     <Compile Include="BaseTestFixture.cs" />
+    <Compile Include="DomainTestFixture.cs" />
     <Compile Include="JsonEventSerializationFixture.cs" />
     <Compile Include="CommandTestFixture.cs" />
     <Compile Include="BigBangTestFixture.cs" />
@@ -106,9 +109,7 @@
     <Compile Include="OneEventTestFixture.cs" />
     <Compile Include="EventContext.cs" />
     <Compile Include="Fakes\EnvironmentConfigurationWrapper.cs" />
-    <Compile Include="Fakes\EventStoreWrapper.cs" />
     <Compile Include="Fakes\FrozenClock.cs" />
-    <Compile Include="Fakes\RecordingEventBus.cs" />
     <Compile Include="GivenAttribute.cs" />
     <Compile Include="Prepare.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

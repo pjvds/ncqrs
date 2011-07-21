@@ -4,7 +4,7 @@ using Ncqrs.Commanding.CommandExecution.Mapping.Attributes;
 
 namespace Commands
 {
-    [MapsToAggregateRootConstructor("Domain.Note, Domain")]
+    [MapsToAggregateRootConstructor("MyProject.Domain.Note, MyProject.Domain")]
     public class CreateNewNote : CommandBase
     {
         public Guid NoteId

@@ -16,10 +16,10 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
 
             Action<AggregateRoot, ICommand> action =
                 (agg, cmd) =>
-                    {
-                        var parameter = match.Item2.Select(p => p.GetValue(cmd, null));
-                        match.Item1.Invoke(agg, parameter.ToArray());
-                    };
+                {
+                    var parameter = match.Item2.Select(p => p.GetValue(cmd, null));
+                    match.Item1.Invoke(agg, parameter.ToArray());
+                };
 
             Action executorAction = () => executor.ExecuteActionOnExistingInstance(GetAggregateRootId, GetAggregateRootType, action);
 
@@ -53,10 +53,9 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
 
         private static Type GetAggregateRootType(ICommand cmd)
         {
-            
             var commandType = cmd.GetType();
             var attribute =
-                commandType.GetCustomAttributes(typeof (MapsToAggregateRootMethodAttribute), false).Cast<MapsToAggregateRootMethodAttribute>
+                commandType.GetCustomAttributes(typeof(MapsToAggregateRootMethodAttribute), false).Cast<MapsToAggregateRootMethodAttribute>
                     ().Single();
             return attribute.Type;
         }
@@ -66,7 +65,7 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
             bool containsThisAttribute = mappedCommandType.IsDefined(typeof(MapsToAggregateRootMethodAttribute), false);
 
             if (!containsThisAttribute) throw new ArgumentException("The given command type does not contain " +
-                                                                    "MapsToAggregateRootConstructorAttribute.",
+                                                                    "MapsToAggregateRootMethodAttribute.",
                                                                     "mappedCommandType");
         }
     }

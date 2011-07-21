@@ -3,16 +3,12 @@ using System.Reflection;
 
 namespace Ncqrs.Domain.Storage
 {
-    public class SimpleAggregateRootCreationStrategy : IAggregateRootCreationStrategy
+    public class SimpleAggregateRootCreationStrategy 
+        : AggregateRootCreationStrategy
     {
-        public AggregateRoot CreateAggregateRoot(Type aggregateRootType)
-        {
-            if (!aggregateRootType.IsSubclassOf(typeof(AggregateRoot)))
-            {
-                var msg = string.Format("Specified type {0} is not a subclass of AggregateRoot class.", aggregateRootType.FullName);
-                throw new ArgumentOutOfRangeException("aggregateRootType", msg);
-            }
 
+        protected override AggregateRoot CreateAggregateRootFromType(Type aggregateRootType)
+        {
             // Flags to search for a public and non public contructor.
             var flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
 
@@ -33,9 +29,5 @@ namespace Ncqrs.Domain.Storage
             return aggregateRoot;
         }
 
-        public T CreateAggregateRoot<T>() where T : AggregateRoot
-        {
-            return (T) CreateAggregateRoot(typeof (T));
-        }
     }
 }

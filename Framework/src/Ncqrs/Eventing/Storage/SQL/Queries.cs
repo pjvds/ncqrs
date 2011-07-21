@@ -20,7 +20,7 @@ namespace Ncqrs.Eventing.Storage.SQL
 
         public const String SelectVersionQuery = "SELECT [Version] FROM [EventSources] WHERE [Id] = @id";
 
-        public const String UpdateEventSourceVersionQuery = "UPDATE [EventSources] SET [Version] = @NewVersion WHERE [Id] = @id";
+        public const String UpdateEventSourceVersionQuery = "UPDATE [EventSources] SET [Version] = @NewVersion WHERE [Id] = @id AND [Version] = @initialVersion";
 
         public const String InsertSnapshot = "DELETE FROM [Snapshots] WHERE [EventSourceId]=@EventSourceId; INSERT INTO [Snapshots]([EventSourceId], [Timestamp], [Version], [Type], [Data]) VALUES (@EventSourceId, GETDATE(), @Version, @Type, @Data)";
 
