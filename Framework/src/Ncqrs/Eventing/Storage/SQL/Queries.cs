@@ -18,7 +18,8 @@ namespace Ncqrs.Eventing.Storage.SQL
 
         public const String SelectAllIdsForTypeQuery = "SELECT [Id] FROM [EventSources] WHERE [Type] = @Type";
 
-        public const String SelectVersionQuery = "SELECT [Version] FROM [EventSources] WHERE [Id] = @id";
+        //public const String SelectVersionQuery = "SELECT [Version] FROM [EventSources] WHERE [Id] = @id";
+        public const String SelectVersionQuery = "SELECT top 1 Convert(int, [Sequence]) FROM [Events] WHERE [EventSourceId] = @id order by [Sequence] desc";
 
         public const String UpdateEventSourceVersionQuery = "UPDATE [EventSources] SET [Version] = @NewVersion WHERE [Id] = @id AND [Version] = @initialVersion";
 
