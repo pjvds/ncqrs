@@ -416,7 +416,8 @@ namespace Ncqrs.Eventing.Storage.SQL
         /// <param name="newVersion">Indicates the new version to use.</param>
         /// /// <param name="initialVersion">The initial version (used to ensure concurrency).</param>
         /// <param name="transaction">The transaction to enlist in while performing the action.</param>
-        private static void UpdateEventSourceVersion(Guid eventSourceId, long newVersion, long initialVersion, SqlTransaction transaction)
+        /// <returns>True if successfully updated</returns>
+        private static bool UpdateEventSourceVersion(Guid eventSourceId, long newVersion, long initialVersion, SqlTransaction transaction)
         {
             using (var command = new SqlCommand(Queries.UpdateEventSourceVersionQuery, transaction.Connection))
             {
@@ -424,7 +425,8 @@ namespace Ncqrs.Eventing.Storage.SQL
                 command.Parameters.AddWithValue("Id", eventSourceId);
                 command.Parameters.AddWithValue("NewVersion", newVersion);
                 command.Parameters.AddWithValue("InitialVersion", initialVersion);
-                command.ExecuteNonQuery();
+                var rowsUpdated = command.ExecuteNonQuery();
+                return rowsUpdated != 0;
             }
         }
 
@@ -524,12 +526,24 @@ namespace Ncqrs.Eventing.Storage.SQL
             {
                 throw new ConcurrencyException(eventSourceId, eventSourceVersion);
             }
-
+            else
+            {
+                UpdateTheVersionOfTheEventSource(eventSourceId, eventSourceVersion, transaction, initialVersion);
+            }
+            
             // Save all events to the store.
             SaveEvents(events, transaction);
+        }
 
-            // Update the version of the provider.
-            UpdateEventSourceVersion(eventSourceId, eventSourceVersion, initialVersion,  transaction);
+        static void UpdateTheVersionOfTheEventSource(Guid eventSourceId, long eventSourceVersion, SqlTransaction transaction,
+                                                  long initialVersion)
+        {
+            var updated = UpdateEventSourceVersion(eventSourceId, eventSourceVersion, initialVersion, transaction);
+
+            if (!updated)
+            {
+                throw new ConcurrencyException(eventSourceId, eventSourceVersion);
+            }
         }
 
         /// <summary>
