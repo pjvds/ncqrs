@@ -414,14 +414,16 @@ namespace Ncqrs.Eventing.Storage.SQL
         /// </summary>
         /// <param name="eventSourceId">The <see cref="EventSource.EventSourceId"/> that is being updated.</param>
         /// <param name="newVersion">Indicates the new version to use.</param>
+        /// /// <param name="initialVersion">The initial version (used to ensure concurrency).</param>
         /// <param name="transaction">The transaction to enlist in while performing the action.</param>
-        private static void UpdateEventSourceVersion(Guid eventSourceId, long newVersion, SqlTransaction transaction)
+        private static void UpdateEventSourceVersion(Guid eventSourceId, long newVersion, long initialVersion, SqlTransaction transaction)
         {
             using (var command = new SqlCommand(Queries.UpdateEventSourceVersionQuery, transaction.Connection))
             {
                 command.Transaction = transaction;
                 command.Parameters.AddWithValue("Id", eventSourceId);
                 command.Parameters.AddWithValue("NewVersion", newVersion);
+                command.Parameters.AddWithValue("InitialVersion", initialVersion);
                 command.ExecuteNonQuery();
             }
         }
@@ -527,7 +529,7 @@ namespace Ncqrs.Eventing.Storage.SQL
             SaveEvents(events, transaction);
 
             // Update the version of the provider.
-            UpdateEventSourceVersion(eventSourceId, eventSourceVersion, transaction);
+            UpdateEventSourceVersion(eventSourceId, eventSourceVersion, initialVersion,  transaction);
         }
 
         /// <summary>
