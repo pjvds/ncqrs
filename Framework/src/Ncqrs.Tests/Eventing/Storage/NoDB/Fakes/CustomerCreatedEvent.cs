@@ -28,5 +28,10 @@ namespace Ncqrs.Eventing.Storage.NoDB.Tests.Fakes
                           Age.Equals(other.Age);
             return result;
         }
+
+        public override int GetHashCode()
+        {
+            return Name.GetHashCode() & Age.GetHashCode();
+        }
     }
 }

@@ -174,7 +174,7 @@ namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot.Tests
     [DynamicSnapshot]
     public class SnapshotableObject : ParentSnapshotableObject
     {
-        protected string _name = "SnapshotableObject";
+        protected new string _name = "SnapshotableObject";
         private int _penchoInt = 1245;
 
         [ExcludeFromSnapshot]

@@ -24,5 +24,10 @@
                 NewName.Equals(other.NewName);
             return result;
         }
+
+        public override int GetHashCode()
+        {
+            return NewName.GetHashCode();
+        }
     }
 }

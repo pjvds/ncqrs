@@ -29,5 +29,10 @@ namespace Ncqrs.Eventing.Storage.NoDB.Tests.Fakes
                           NewTitle.Equals(other.NewTitle);
             return result;
         }
+
+        public override int GetHashCode()
+        {
+            return EntityId.GetHashCode() & NewTitle.GetHashCode();
+        }
     }
 }

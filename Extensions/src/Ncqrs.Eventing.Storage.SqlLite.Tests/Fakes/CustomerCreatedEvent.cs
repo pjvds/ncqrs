@@ -29,5 +29,10 @@
                 Age.Equals(other.Age);
             return result;
         }
+
+        public override int GetHashCode()
+        {
+            return Name.GetHashCode() & Age.GetHashCode();
+        }
     }
 }

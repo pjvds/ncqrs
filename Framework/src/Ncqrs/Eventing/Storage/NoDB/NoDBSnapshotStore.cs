@@ -40,7 +40,7 @@ namespace Ncqrs.Eventing.Storage.NoDB
                            ? null
                            : result;
             }
-            catch(JsonSerializationException ex)
+            catch(JsonSerializationException)
             {
                 return null;
             }
