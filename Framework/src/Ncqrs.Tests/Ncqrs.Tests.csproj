@@ -133,7 +133,6 @@
     <Compile Include="Eventing\Sourcing\Mapping\InvalidEventHandlerMappingExceptionTests.cs" />
     <Compile Include="Domain\NoUnitOfWorkAvailableInThisContextExceptionTests.cs" />
     <Compile Include="Domain\Storage\AggregateRootCreationExceptionTests.cs" />
-    <Compile Include="Domain\Storage\DomainRepositoryTests.cs" />
     <Compile Include="Eventing\Storage\AttributeEventTypeResolverTests.cs" />
     <Compile Include="Eventing\Storage\BaseExceptionTests.cs" />
     <Compile Include="Eventing\Storage\ConcurrencyExceptionSpecs.cs" />
@@ -180,7 +179,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
