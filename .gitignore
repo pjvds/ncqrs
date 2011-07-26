@@ -32,3 +32,9 @@ release
 # Merge stuff
 *.orig
 *.orig
+
+# Mighty Moose
+*.bin
+
+#dotCover
+*.dotCover
