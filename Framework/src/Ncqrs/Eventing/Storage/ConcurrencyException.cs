@@ -9,34 +9,20 @@ namespace Ncqrs.Eventing.Storage
     [Serializable]
     public class ConcurrencyException : Exception
     {
+        private readonly Guid _eventSourceId;
+        private readonly long _eventSourceVersion;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ConcurrencyException"/> class.
         /// </summary>
         /// <param name="eventSourceId">The id of the event source.</param>
-        /// <param name="providerVersion">The event source version.</param>
-        /// <param name="versionInStore">The version in store.</param>
-        public ConcurrencyException(Guid eventSourceId, long eventSourceVersion)
-            : base(String.Format("There is a newer version of the event source with id {0} stored in the event store.", eventSourceId))
+        /// <param name="versionToBeSaved">Version to be saved.</param>
+        public ConcurrencyException(Guid eventSourceId, long versionToBeSaved)
+            : base(String.Format("There is a newer than {0} version of the event source with id {1} you are trying to save stored in the event store.", versionToBeSaved, eventSourceId))
         {
-            EventSourceId = eventSourceId;
-            EventSourceVersion = eventSourceVersion;
+            _eventSourceId = eventSourceId;
+            _eventSourceVersion = versionToBeSaved;
         }
-
-        /// <summary>
-        /// Gets the id of the event source.
-        /// </summary>
-        /// <value>The id event source.</value>
-        public Guid EventSourceId
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// Gets the event source version.
-        /// </summary>
-        /// <value>The event source version.</value>
-        public long EventSourceVersion { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConcurrencyException"/> class.
@@ -48,6 +34,36 @@ namespace Ncqrs.Eventing.Storage
         protected ConcurrencyException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
+            _eventSourceId = (Guid) info.GetValue("EventSourceId", typeof (Guid));
+            _eventSourceVersion = info.GetInt64("EventSourceVersion");
         }
+
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            base.GetObjectData(info, context);
+            info.AddValue("EventSourceId", _eventSourceId);
+            info.AddValue("EventSourceVersion", _eventSourceVersion);
+        }
+
+        /// <summary>
+        /// Gets the id of the event source.
+        /// </summary>
+        /// <value>The id event source.</value>
+        public Guid EventSourceId
+        {
+            get { return _eventSourceId; }
+        }
+
+
+        /// <summary>
+        /// Gets the event source version.
+        /// </summary>
+        /// <value>The event source version.</value>
+        public long EventSourceVersion
+        {
+            get { return _eventSourceVersion; }
+        }
+
+        
     }
 }

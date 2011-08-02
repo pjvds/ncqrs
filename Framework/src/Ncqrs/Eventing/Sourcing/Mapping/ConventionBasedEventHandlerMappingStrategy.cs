@@ -24,7 +24,7 @@ namespace Ncqrs.Eventing.Sourcing.Mapping
     ///     </item>
     ///     <item>
     ///         <value>
-    ///             The parameter must be, or implemented from, the <see cref="ISourcedEvent"/> class.
+    ///             The parameter must be, or implemented from, the type specified by the <see cref="EventBaseType"/> property. Which is <see cref="Object"/> by default.
     ///         </value>
     ///     </item>
     /// </list>
@@ -32,8 +32,16 @@ namespace Ncqrs.Eventing.Sourcing.Mapping
     /// </summary>
     public class ConventionBasedEventHandlerMappingStrategy : IEventHandlerMappingStrategy
     {
-        private String _regexPattern = "^(on|On|ON)+";
         private static readonly ILog Logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
+        public Type EventBaseType { get; set; }
+        public String MethodNameRegexPattern { get; set; }
+
+        public ConventionBasedEventHandlerMappingStrategy()
+        {
+            MethodNameRegexPattern = "^(on|On|ON)+";
+            EventBaseType = typeof (Object);
+        }
 
         public IEnumerable<ISourcedEventHandler> GetEventHandlers(object target)
         {
@@ -53,11 +61,11 @@ namespace Ncqrs.Eventing.Sourcing.Mapping
                                      method.GetCustomAttributes(typeof(NoEventHandlerAttribute), true)
                                  where
                                      // Get only methods where the name matches.
-                                    Regex.IsMatch(method.Name, _regexPattern, RegexOptions.CultureInvariant) &&
+                                    Regex.IsMatch(method.Name, MethodNameRegexPattern, RegexOptions.CultureInvariant) &&
                                      // Get only methods that have 1 parameter.
                                     parameters.Length == 1 &&
                                      // Get only methods where the first parameter is an event.
-                                    typeof(IEvent).IsAssignableFrom(parameters[0].ParameterType) &&
+                                    EventBaseType.IsAssignableFrom(parameters[0].ParameterType) &&
                                      // Get only methods that are not marked with the no event handler attribute.
                                     noEventHandlerAttributes.Length == 0
                                  select
@@ -68,11 +76,11 @@ namespace Ncqrs.Eventing.Sourcing.Mapping
                 var methodCopy = method.MethodInfo;
                 Type firstParameterType = methodCopy.GetParameters().First().ParameterType;
 
-                Action<IEvent> invokeAction = (e) => methodCopy.Invoke(target, new object[] { e });
+                Action<object> invokeAction = (e) => methodCopy.Invoke(target, new[] { e });
 
                 Logger.DebugFormat("Created event handler for method {0} based on convention.", methodCopy.Name);
 
-                var handler = new TypeThresholdedActionBasedDomainEventHandler(invokeAction, firstParameterType, true);
+                var handler = new TypeThresholdedActionBasedDomainEventHandler(invokeAction, firstParameterType, methodCopy.Name, true);
                 handlers.Add(handler);
             }
 

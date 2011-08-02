@@ -7,6 +7,12 @@ application. It is build with ASP.NET MVC2 and the Ncqrs Framework.
 GETTING IT UP AND RUNNING
 -------------------------
 
+What do you need to run this sample app?
+
+0. Visual Studio 2010
+1. Microsoft SQL 2005 Express or higher
+2. Microsoft MVC3
+
 Follow these steps to get the website running.
 
 0. Run BUILD.bat in the root folder (two up).
@@ -18,7 +24,7 @@ Follow these steps to get the website running.
 	- CommandService\Web.config
 	- ReadModel\App.config
 	- Website\Web.config
-5. Set Website as default startup project.
+5. Set Website and Denormalizer as default startup project.
 6. Hit F5 and have fun!
 
 CONTACT

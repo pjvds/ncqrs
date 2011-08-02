@@ -31,25 +31,25 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Ncqrs">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\lib\$(Configuration)\Ncqrs\Ncqrs.dll</HintPath>
+    </Reference>
     <Reference Include="log4net">
-      <HintPath>..\..\..\Extensions\lib\NServiceBus\log4net.dll</HintPath>
+      <HintPath>..\..\..\lib\ThirdParty\log4net\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="Ncqrs, Version=0.8.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Ncqrs.NServiceBus">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Extensions\lib\Ncqrs\Ncqrs.dll</HintPath>
-    </Reference>
-    <Reference Include="Ncqrs.NServiceBus, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Extensions\src\Ncqrs.NServiceBus\bin\Debug\Ncqrs.NServiceBus.dll</HintPath>
+      <HintPath>..\..\..\lib\$(Configuration)\Ncqrs.NServiceBus\Ncqrs.NServiceBus.dll</HintPath>
     </Reference>
     <Reference Include="NServiceBus">
-      <HintPath>..\..\..\Extensions\lib\NServiceBus\NServiceBus.dll</HintPath>
+      <HintPath>..\..\..\lib\ThirdParty\NServiceBus\NServiceBus.dll</HintPath>
     </Reference>
     <Reference Include="NServiceBus.Core">
-      <HintPath>..\..\..\Extensions\lib\NServiceBus\NServiceBus.Core.dll</HintPath>
+      <HintPath>..\..\..\lib\ThirdParty\NServiceBus\NServiceBus.Core.dll</HintPath>
     </Reference>
     <Reference Include="NServiceBus.Host">
-      <HintPath>..\..\..\Extensions\lib\NServiceBus\NServiceBus.Host.exe</HintPath>
+      <HintPath>..\..\..\lib\ThirdParty\NServiceBus\NServiceBus.Host.exe</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -69,15 +69,15 @@
   <ItemGroup>
     <ProjectReference Include="..\Commands\Commands.csproj">
       <Project>{5EF85227-BF8E-4A19-8496-2A3BB500E27C}</Project>
-      <Name>Commands</Name>
+      <Name>Commands %28Samples\NSBSample\Commands%29</Name>
     </ProjectReference>
     <ProjectReference Include="..\Domain\Domain.csproj">
       <Project>{B233A995-93BA-4B6F-8227-EF2A57C750BD}</Project>
-      <Name>Domain</Name>
+      <Name>Domain %28Samples\NSBSample\Domain%29</Name>
     </ProjectReference>
     <ProjectReference Include="..\Events\Events.csproj">
       <Project>{5088657E-AC3F-4081-B0B8-ACFBBD6BFA28}</Project>
-      <Name>Events</Name>
+      <Name>Events %28Samples\NSBSample\Events%29</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

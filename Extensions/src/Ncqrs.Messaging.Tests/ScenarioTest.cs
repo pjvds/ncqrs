@@ -28,6 +28,17 @@ namespace Ncqrs.Messaging.Tests
                                      ReceiverType = typeof (Cargo),
                                      SenderId = "Client"
                                  })));
+
+            //messageService
+            //    .ForIncomingMessage<RegisterHandlingEventTransportMesasge>()
+            //    .AsPayloadUse(x => x)
+            //    .AsMessageIdUse(x => x.MessageId)
+            //    .AsReceiverIdUse(x => x.EventId)
+            //    .AsSenderUse("Client");            
+
+            //messageService
+            //    .Map<RegisterHandlingEventTransportMesasge>().To<RegisterHandlingEventMessage>();                            
+
             messageService.UseReceivingStrategy(
                 new ConditionalReceivingStrategy(
                     x => x.GetType() == typeof (RegisterHandlingEventMesasge),
@@ -41,10 +52,10 @@ namespace Ncqrs.Messaging.Tests
                                      ReceiverType = typeof (HandlingEvent),
                                      SenderId = "Client"
                                  })));
-            messageService.UseReceivingStrategy(new ConditionalReceivingStrategy(x => true, new LocalInMemoryReceivingStrategy()));
+            messageService.UseReceivingStrategy(new ConditionalReceivingStrategy(x => true, new LocalReceivingStrategy()));
 
             var messageSendingEventHandler = new MessageSendingEventHandler();
-            var sendingStrategy = new LocalInMemorySendingStrategy();
+            var sendingStrategy = new FakeSendingStrategy();
             messageSendingEventHandler.UseStrategy(new ConditionalSendingStrategy(x => true, sendingStrategy));
             ((InProcessEventBus)NcqrsEnvironment.Get<IEventBus>()).RegisterHandler(messageSendingEventHandler);
 
@@ -67,9 +78,9 @@ namespace Ncqrs.Messaging.Tests
             object message = sendingStrategy.DequeueMessage();
             messageService.Process(message);
 
-            using (var uow = NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork())
+            using (var uow = NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork(Guid.NewGuid()))
             {
-                var cargo = uow.GetById<Cargo>(cargoId);
+                var cargo = (Cargo)uow.GetById(typeof(Cargo),cargoId, null);
                 Assert.AreEqual(1, cargo.HandlingEventCount);
             }
         }
@@ -95,11 +106,18 @@ namespace Ncqrs.Messaging.Tests
         {
             private Guid _cargoId;
 
+            public HandlingEvent()
+            {                
+            }
+
+            public HandlingEvent(Guid id) : base(id)
+            {                
+            }
+
             public void Handle(RegisterHandlingEventMesasge message)
             {
                 ApplyEvent(new HandlingEventRegistered
                               {
-                                  Id = message.EventId,
                                   CargoId = message.CargoId
                               });
 
@@ -110,7 +128,6 @@ namespace Ncqrs.Messaging.Tests
 
             private void OnHandlingEventRegistered(HandlingEventRegistered @event)
             {
-                EventSourceId = @event.Id;
                 _cargoId = @event.CargoId;
             }
         }
@@ -126,17 +143,21 @@ namespace Ncqrs.Messaging.Tests
                 get { return _handlingEventCount; }
             }
 
+            public Cargo(Guid id) : base(id)
+            {                
+            }
+
+            public Cargo() : base()
+            {                
+            }
+
             public void Handle(BookCargoMessage message)
             {
-                ApplyEvent(new CargoBooked
-                              {
-                                  Id = message.CargoId
-                              });
+                ApplyEvent(new CargoBooked());
             }
 
             private void OnCargoBooked(CargoBooked @event)
-            {
-                EventSourceId = @event.Id;
+            {                
             }
 
             public void Handle(CargoWasHandledMessage message)
@@ -150,18 +171,16 @@ namespace Ncqrs.Messaging.Tests
             }
         }
 
-        public class HandlingEventRegistered : SourcedEvent
+        public class HandlingEventRegistered
         {
-            public Guid Id { get; set; }
             public Guid CargoId { get; set; }
         }
 
-        public class CargoBooked : SourcedEvent
-        {
-            public Guid Id { get; set; }
+        public class CargoBooked
+        {            
         }
 
-        public class CargoHandled : SourcedEvent
+        public class CargoHandled
         {
         }
     }

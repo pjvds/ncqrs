@@ -1,99 +1,54 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.Reflection;
+using System.Threading;
+using Ncqrs.Commanding;
 using Ncqrs.Domain.Storage;
+using Ncqrs.Eventing;
+using Ncqrs.Eventing.ServiceModel.Bus;
+using Ncqrs.Eventing.Sourcing;
+using Ncqrs.Eventing.Sourcing.Snapshotting;
+using Ncqrs.Eventing.Storage;
 
 namespace Ncqrs.Domain
 {
-    public sealed class UnitOfWork : IUnitOfWorkContext
+    public class UnitOfWork : UnitOfWorkBase
     {
-        /// <summary>
-        /// The <see cref="UnitOfWork"/> that is associated with the current thread.
-        /// </summary>
-        [ThreadStatic]
-        private static UnitOfWork _threadInstance;
+        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
         /// A queue that holds a reference to all instances that have themself registered as a dirty instance during the lifespan of this unit of work instance.
         /// </summary>
         private readonly Queue<AggregateRoot> _dirtyInstances;
-
-        /// <summary>
-        /// A reference to the repository that is associated with this instance.
-        /// </summary>
+        private readonly UncommittedEventStream _eventStream;
         private readonly IDomainRepository _repository;
+        private readonly IEventStore _eventStore;
+        private readonly ISnapshotStore _snapshotStore;
+        private readonly IEventBus _eventBus;
+        private readonly ISnapshottingPolicy _snapshottingPolicy;
 
-        /// <summary>
-        /// Gets the <see cref="UnitOfWork"/> associated with the current thread context.
-        /// </summary>
-        /// <value>The current.</value>
-        public static UnitOfWork Current
+        public UnitOfWork(Guid commandId, IDomainRepository domainRepository, IEventStore eventStore, ISnapshotStore snapshotStore, IEventBus eventBus, ISnapshottingPolicy snapshottingPolicy) : base(commandId)
         {
-            get
-            {
-                return _threadInstance;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether this instance is disposed.
-        /// </summary>
-        /// <value>
-        /// <c>true</c> if this instance is disposed; otherwise, <c>false</c>.
-        /// </value>
-        public bool IsDisposed
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// Gets the domain repository.
-        /// </summary>
-        /// <value>The domain repository.</value>
-        public IDomainRepository Repository
-        {
-            get
-            {
-                return _repository;
-            }
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="UnitOfWork"/> class.
-        /// </summary>
-        /// <param name="domainRepository">The domain repository to use in this unit of work.</param>
-        public UnitOfWork(IDomainRepository domainRepository)
-        {
-            Contract.Requires<InvalidOperationException>(Current == null, "An other UnitOfWork instance already exists in this context.");
             Contract.Requires<ArgumentNullException>(domainRepository != null);
-
-            Contract.Ensures(_repository == domainRepository, "The _repository member should be initialized with the one given by the domainRepository parameter.");
-            Contract.Ensures(_threadInstance == this, "The _threadInstance member should be initialized with this instance.");
-            Contract.Ensures(IsDisposed == false);
+            Contract.Requires<ArgumentNullException>(snapshotStore != null);
+            Contract.Requires<ArgumentNullException>(eventStore != null);
+            Contract.Requires<ArgumentNullException>(eventBus != null);
+            Contract.Requires<ArgumentNullException>(snapshottingPolicy != null);
 
             _repository = domainRepository;
+            _snapshottingPolicy = snapshottingPolicy;
+            _eventBus = eventBus;
+            _snapshotStore = snapshotStore;
+            _eventStore = eventStore;
+            _eventStream = new UncommittedEventStream(commandId);
             _dirtyInstances = new Queue<AggregateRoot>();
-            _threadInstance = this;
-            IsDisposed = false;
-
-            InitializeAppliedEventHandler();
         }
 
-        private void InitializeAppliedEventHandler()
+        protected override void AggregateRootEventAppliedHandler(AggregateRoot aggregateRoot, UncommittedEvent evnt)
         {
-            AggregateRoot.EventApplied += AggregateRootEventAppliedHandler;
-        }
-
-        private void DestroyAppliedEventHandler()
-        {
-            AggregateRoot.EventApplied -= AggregateRootEventAppliedHandler;            
-        }
-
-        private void AggregateRootEventAppliedHandler(object sender, Eventing.Sourcing.EventAppliedArgs e)
-        {
-            var aggregateRoot = (AggregateRoot) sender;
-            RegisterDirtyInstance(aggregateRoot);
+            RegisterDirtyInstance(aggregateRoot);            
+            _eventStream.Append(evnt);
         }
 
         [ContractInvariantMethod]
@@ -103,73 +58,60 @@ namespace Ncqrs.Domain
         }
 
         /// <summary>
-        /// Releases unmanaged resources and performs other cleanup operations before the
-        /// <see cref="UnitOfWork"/> is reclaimed by garbage collection.
-        /// </summary>
-        ~UnitOfWork()
-        {
-             Dispose(false);
-        }
-
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        public void Dispose()
-        {
-            Contract.Ensures(IsDisposed == true);
-
-             Dispose(true);
-             GC.SuppressFinalize(this);
-        }
-
-        /// <summary>
-        /// Releases unmanaged and - optionally - managed resources
-        /// </summary>
-        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
-        private void Dispose(bool disposing)
-        {
-            Contract.Ensures(IsDisposed == true);
-
-            if (!IsDisposed)
-            {
-                if (disposing)
-                {
-                    DestroyAppliedEventHandler();
-                    _threadInstance = null;
-                }
-
-                IsDisposed = true;
-            }
-        }
-
-        /// <summary>
-        /// Gets aggregate root by eventSourceId.
-        /// </summary>
-        /// <typeparam name="TAggregateRoot">The type of the aggregate root.</typeparam>
-        /// <param name="eventSourceId">The eventSourceId of the aggregate root.</param>
-        /// <returns>
-        /// A new instance of the aggregate root that contains the latest known state.
-        /// </returns>
-        /// <exception cref="AggregateRootNotFoundException">Occurs when the aggregate root with the
-        /// specified event source id could not be found.</exception>
-        public TAggregateRoot GetById<TAggregateRoot>(Guid eventSourceId) where TAggregateRoot : AggregateRoot
-        {
-            return _repository.GetById<TAggregateRoot>(eventSourceId);
-        }
-
-        /// <summary>
-        /// Gets aggregate root by <see cref="AggregateRoot.EventSourcId">event source id</see>.
+        /// Gets aggregate root by its id.
         /// </summary>
         /// <param name="aggregateRootType">Type of the aggregate root.</param>
         /// <param name="eventSourceId">The eventSourceId of the aggregate root.</param>
+        /// <param name="lastKnownRevision">If specified, the most recent version of event source observed by the client (used for optimistic concurrency).</param>
         /// <returns>
         /// A new instance of the aggregate root that contains the latest known state.
         /// </returns>
-        /// <exception cref="AggregateRootNotFoundException">Occurs when the aggregate root with the
-        /// specified event source id could not be found.</exception>
-        public AggregateRoot GetById(Type aggregateRootType, Guid eventSourceId)
+        public override AggregateRoot GetById(Type aggregateRootType, Guid eventSourceId, long? lastKnownRevision)
         {
-            return _repository.GetById(aggregateRootType, eventSourceId);
+            long maxVersion = lastKnownRevision.HasValue ? lastKnownRevision.Value : long.MaxValue;
+            Snapshot snapshot = null;
+            long minVersion = long.MinValue;
+            snapshot = _snapshotStore.GetSnapshot(eventSourceId, maxVersion);
+            if (snapshot != null)
+            {
+                minVersion = snapshot.Version + 1;
+            }
+            var eventStream = _eventStore.ReadFrom(eventSourceId, minVersion, maxVersion);
+            return _repository.Load(aggregateRootType, snapshot, eventStream);
+        }
+
+        /// <summary>
+        /// Accepts the unit of work and persist the changes.
+        /// </summary>
+        public override void Accept()
+        {
+            Contract.Requires<ObjectDisposedException>(!IsDisposed);
+            Log.DebugFormat("Accepting unit of work {0}", this);
+            Log.DebugFormat("Storing the event stream for command {0} to event store", _eventStream.CommitId);
+            _eventStore.Store(_eventStream);
+            Log.DebugFormat("Publishing events for command {0} to event bus", _eventStream.CommitId);
+            _eventBus.Publish(_eventStream);
+            CreateSnapshots();
+        }
+
+        private void CreateSnapshots()
+        {
+            foreach (AggregateRoot savedInstance in _dirtyInstances)
+            {
+                TryCreateCreateSnapshot(savedInstance);
+            }
+        }
+
+        private void TryCreateCreateSnapshot(AggregateRoot savedInstance)
+        {
+            if (_snapshottingPolicy.ShouldCreateSnapshot(savedInstance))
+            {
+                var snapshot = _repository.TryTakeSnapshot(savedInstance);
+                if (snapshot != null)
+                {
+                    _snapshotStore.SaveShapshot(snapshot);
+                }
+            }
         }
 
         /// <summary>
@@ -182,24 +124,15 @@ namespace Ncqrs.Domain
 
             if (!_dirtyInstances.Contains(dirtyInstance))
             {
+                Log.DebugFormat("Registering aggregate root {0} as dirty in unit of work {1}",
+                           dirtyInstance, this);
                 _dirtyInstances.Enqueue(dirtyInstance);
             }
         }
 
-        /// <summary>
-        /// Accepts the unit of work and persist the changes.
-        /// </summary>
-        public void Accept()
+        public override string ToString()
         {
-            Contract.Requires<ObjectDisposedException>(!IsDisposed);
-
-            while (_dirtyInstances.Count > 0)
-            {
-                var dirtyInstance = _dirtyInstances.Dequeue();
-
-                Contract.Assume(dirtyInstance != null);
-                _repository.Save(dirtyInstance);
-            }
-       }
+            return string.Format("{0}@{1}", CommandId, Thread.CurrentThread.ManagedThreadId);
+        }
     }
 }

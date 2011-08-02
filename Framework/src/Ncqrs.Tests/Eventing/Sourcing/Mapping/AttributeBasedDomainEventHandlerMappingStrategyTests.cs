@@ -15,7 +15,7 @@ namespace Ncqrs.Tests.Eventing.Sourcing.Mapping
             : AggregateRoot
         {
             [EventHandler]
-            public static void MyEventHandlerMethod(SourcedEvent e)
+            public static void MyEventHandlerMethod(object e)
             {}
         }
 
@@ -30,7 +30,7 @@ namespace Ncqrs.Tests.Eventing.Sourcing.Mapping
         public class MoreThenOneParameterMethodTarget : AggregateRoot
         {
             [EventHandler]
-            public void MyEventHandlerMethod(SourcedEvent e1, SourcedEvent e2)
+            public void MyEventHandlerMethod(object e1, object e2)
             {
             }
         }
@@ -45,10 +45,10 @@ namespace Ncqrs.Tests.Eventing.Sourcing.Mapping
 
         public class GoodTarget : AggregateRoot
         {
-            public class PublicEvent : SourcedEvent { }
-            public class ProtectedEvent : SourcedEvent { }
-            public class InternalEvent : SourcedEvent { }
-            public class PrivateEvent : SourcedEvent { }
+            public class PublicEvent { }
+            public class ProtectedEvent { }
+            public class InternalEvent { }
+            public class PrivateEvent { }
 
             public int PublicEventHandlerInvokeCount;
             public int ProtectedEventHandlerInvokeCount;
@@ -81,7 +81,7 @@ namespace Ncqrs.Tests.Eventing.Sourcing.Mapping
             }
 
             [EventHandler]
-            private  void CatchAllEventHandler(SourcedEvent e)
+            private  void CatchAllEventHandler(object e)
             {
                 CatchAllEventHandlerInvokeCount++;
             }
@@ -113,17 +113,6 @@ namespace Ncqrs.Tests.Eventing.Sourcing.Mapping
         public void It_should_throw_an_exception_when_mapped_method_does_have_more_then_one_parameter()
         {
             var aggregate = new MoreThenOneParameterMethodTarget();
-            var mapping = new AttributeBasedEventHandlerMappingStrategy();
-
-            Action act = () => mapping.GetEventHandlers(aggregate);
-
-            act.ShouldThrow<InvalidEventHandlerMappingException>();
-        }
-
-        [Test]
-        public void It_should_throw_an_exception_when_mapped_method_does_not_have_a_DomainEvent_as_parameter()
-        {
-            var aggregate = new NotADomainEventTarget();
             var mapping = new AttributeBasedEventHandlerMappingStrategy();
 
             Action act = () => mapping.GetEventHandlers(aggregate);

@@ -17,14 +17,14 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Fluent
             return new MappedCommand<TCommand>();
         }
 
-        /// <summary>
-        /// Returns a <see cref="ICommandExecutor&lt;TCommand&gt;"/> for attribute based mappings.
-        /// </summary>
-        /// <typeparam name="TCommand">The type of command.</typeparam>
-        /// <returns>An <see cref="ICommandExecutor&lt;TCommand&gt;"/>.</returns>
-        public static ICommandExecutor<TCommand> Command<TCommand>(AttributeMappedCommandExecutor<TCommand> mappedexecutor) where TCommand : ICommand
-        {
-            return mappedexecutor;
-        }
+        ///// <summary>
+        ///// Returns a <see cref="ICommandExecutor&lt;TCommand&gt;"/> for attribute based mappings.
+        ///// </summary>
+        ///// <typeparam name="TCommand">The type of command.</typeparam>
+        ///// <returns>An <see cref="ICommandExecutor&lt;TCommand&gt;"/>.</returns>
+        //public static ICommandExecutor<TCommand> Command<TCommand>(AttributeMappedCommandExecutor<TCommand> mappedexecutor) where TCommand : ICommand
+        //{
+        //    return mappedexecutor;
+        //}
     }
 }

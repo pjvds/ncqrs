@@ -9,7 +9,7 @@ namespace Ncqrs.Tests.Eventing.Storage
     [TestFixture]
     public class PropertyBagConverterTests
     {
-        public class TestEvent : SourcedEvent
+        public class TestEvent
         {
             public string SomeString { get; set; }
         }

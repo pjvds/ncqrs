@@ -2,11 +2,12 @@
 obj
 bin
 *.csproj.user
+*.suo
+TestResult.xml
 
 # Resharper
 *ReSharper*
 *resharper*
-*.suo
 *.cache
 
 # Other useful stuff
@@ -21,4 +22,19 @@ bin
 # Ncqrs in non framework solution
 /Extensions/lib/Ncqrs/*
 /Samples/MyNotes/lib/*
+/lib/Debug/*
+/lib/Release/*
 release
+*.pidb
+
+*.vs10x
+
+# Merge stuff
+*.orig
+*.orig
+
+# Mighty Moose
+*.bin
+
+#dotCover
+*.dotCover

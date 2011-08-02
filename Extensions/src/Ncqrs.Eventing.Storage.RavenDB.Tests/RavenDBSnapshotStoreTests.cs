@@ -9,8 +9,9 @@ namespace Ncqrs.Eventing.Storage.RavenDB.Tests
     public class RavenDBSnapshotStoreTests : RavenDBTestBase
     {
         [Serializable]
-        public class MySnapshot : Snapshot
+        public class MySnapshot
         {
+            public string Value { get; set; }
         }
 
         [Test]
@@ -20,13 +21,14 @@ namespace Ncqrs.Eventing.Storage.RavenDB.Tests
 
             var anId = Guid.NewGuid();
             var aVersion = 12;
-            var snapshot = new MySnapshot { EventSourceId = anId, EventSourceVersion = aVersion };
+            var snapshot = new Snapshot(anId, aVersion, new MySnapshot {Value = "Some value"});
 
             targetStore.SaveShapshot(snapshot);
 
-            var savedSnapshot = targetStore.GetSnapshot(anId);
+            var savedSnapshot = targetStore.GetSnapshot(anId, long.MaxValue);
             savedSnapshot.EventSourceId.Should().Be(anId);
-            savedSnapshot.EventSourceVersion.Should().Be(aVersion);
+            savedSnapshot.Version.Should().Be(aVersion);
+            ((MySnapshot) savedSnapshot.Payload).Value.Should().Be("Some value");
         }
     }
 }

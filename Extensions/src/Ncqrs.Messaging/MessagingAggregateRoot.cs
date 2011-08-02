@@ -7,6 +7,14 @@ namespace Ncqrs.Messaging
     {
         private readonly MessagingContext _messagingContext = new MessagingContext();
 
+        public MessagingAggregateRoot() : base()
+        {            
+        }
+
+        public MessagingAggregateRoot(Guid id) : base(id)
+        {            
+        }
+
         public MessagingContext MessagingContext
         {
             get { return _messagingContext; }
@@ -112,7 +120,7 @@ namespace Ncqrs.Messaging
                 return this;
             }
 
-            public ISetMessageRequirements NamedEndpoint(string receiverId)
+            public ISetMessageRequirements Endpoint(string receiverId)
             {
                 _message.ReceiverId = receiverId;
                 return this;

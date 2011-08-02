@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text.RegularExpressions;
 using Ncqrs.Eventing.Sourcing;
@@ -30,60 +31,74 @@ namespace Ncqrs.Eventing.Storage.SQLite
             _context = context;
             _converter = converter;
         }
+        
 
-        public IEnumerable<ISourcedEvent> GetAllEvents(Guid id)
+        public CommittedEventStream ReadFrom(Guid id, long minVersion, long maxVersion)
         {
-            return GetAllEventsSinceVersion(id, 0);
-        }
-
-        public IEnumerable<ISourcedEvent> GetAllEventsSinceVersion(Guid id, long version)
-        {
-            var res = new List<SourcedEvent>();
-
+            var results = new List<CommittedEvent>();
             _context.WithConnection(connection =>
             {
-                using (var cmd = new SQLiteCommand(Query.SelectAllEventsQuery, connection))
+                using (var cmd = new SQLiteCommand(Query.SelectAllEventsFromQuery, connection))
                 {
-                    cmd.AddParam("EventSourceId", id).AddParam("EventSourceVersion", version);
-
-                    using (var reader = cmd.ExecuteReader())
-                    {
-                        var formatter = new BinaryFormatter();
-                        while (reader.Read())
-                        {
-                            var rawData = (Byte[])reader["Data"];
-
-                            using (var dataStream = new MemoryStream(rawData))
-                            {
-                                var bag = (PropertyBag)formatter.Deserialize(dataStream);
-                                var evnt = (SourcedEvent)_converter.Convert(bag);
-                                res.Add(evnt);
-                            }
-                        }
-                    }
+                    cmd.AddParam("EventSourceId", id)
+                        .AddParam("EventSourceMinVersion", minVersion)
+                        .AddParam("EventSourceMaxVersion", maxVersion);
+                    results.AddRange(ReadEvents(cmd, id));
                 }
             });
-
-            return res;
+            return new CommittedEventStream(id, results);
         }
 
-        public void Save(IEventSource source)
+        private IEnumerable<CommittedEvent> ReadEvents(SQLiteCommand cmd, Guid id)
         {
-            var events = source.GetUncommittedEvents();
+            using (var reader = cmd.ExecuteReader())
+            {
+                var formatter = new BinaryFormatter();
+                while (reader.Read())
+                {
+                    var rawData = (Byte[])reader["Data"];
 
+                    using (var dataStream = new MemoryStream(rawData))
+                    {
+                        var bag = (PropertyBag)formatter.Deserialize(dataStream);
+                        var evnt = _converter.Convert(bag);
+                        var dummyCommitId = Guid.Empty;
+                        var sequence = (long) reader["Sequence"];
+                        var timeStamp = (long)reader["TimeStamp"];
+                        var eventId = (Guid)reader["EventId"];
+                        yield return new CommittedEvent(dummyCommitId, eventId, id, sequence, new DateTime(timeStamp), evnt, /*TODO*/ new Version(1,0));
+                    }
+                }
+            }
+        }
+
+        public void Store(UncommittedEventStream events)
+        {            
             _context.WithConnection(connection => 
             _context.WithTransaction(connection, transaction =>
             {
-                var currentVersion = GetVersion(source.EventSourceId, transaction);
-
-                if (currentVersion == null)
-                    AddEventSource(source, transaction);
-                else if (currentVersion.Value != source.InitialVersion)
-                    throw new ConcurrencyException(source.EventSourceId, source.Version);
-
-                SaveEvents(events, source.EventSourceId, transaction);
-                UpdateEventSourceVersion(source, transaction);
+                SaveEventSources(events, transaction);
+                SaveEvents(events, transaction);
+                UpdateEventSources(events, transaction);
             }));    
+        }
+
+        private static void SaveEventSources(UncommittedEventStream events, SQLiteTransaction transaction)
+        {
+            var eventSources = events.Sources;
+            foreach (var eventSource in eventSources)
+            {
+                var currentVersion = GetVersion(events.SourceId, transaction);
+                if (currentVersion == null)
+                {
+                    AddEventSource(eventSource, transaction);
+                }
+                else if (currentVersion.Value != eventSource.InitialVersion)
+                {
+                    throw new ConcurrencyException(events.SourceId, eventSource.InitialVersion);
+                }
+            }
+            
         }
 
         private static int? GetVersion(Guid providerId, SQLiteTransaction transaction)
@@ -95,30 +110,34 @@ namespace Ncqrs.Eventing.Storage.SQLite
             }
         }
 
-        private void AddEventSource(IEventSource eventSource, SQLiteTransaction transaction)
+        private static void AddEventSource(EventSourceInformation eventSource, SQLiteTransaction transaction)
         {
             using (var cmd = new SQLiteCommand(Query.InsertNewProviderQuery, transaction.Connection))
             {
+                //TODO
+                var eventSourceType = typeof (object);
                 cmd.SetTransaction(transaction)
-                    .AddParam("Id", eventSource.EventSourceId)
-                    .AddParam("Type", eventSource.GetType().ToString())
-                    .AddParam("Version", eventSource.Version);
+                    .AddParam("Id", eventSource.Id)
+                    .AddParam("Type", eventSourceType.ToString())
+                    .AddParam("Version", eventSource.CurrentVersion);
                 cmd.ExecuteNonQuery();
             }
         }
 
-        private void SaveEvents(IEnumerable<ISourcedEvent> evnts, Guid eventSourceId, SQLiteTransaction transaction)
-        {
-            if (transaction == null || evnts == null) throw new ArgumentNullException();
-            foreach (var e in evnts) SaveEvent(e, eventSourceId, transaction);
+        private void SaveEvents(IEnumerable<UncommittedEvent> events, SQLiteTransaction transaction)
+        {            
+            foreach (var e in events)
+            {
+                SaveEvent(e, transaction);
+            }
         }
 
-        private void SaveEvent(ISourcedEvent evnt, Guid eventSourceId, SQLiteTransaction transaction)
+        private void SaveEvent(UncommittedEvent evnt, SQLiteTransaction transaction)
         {
             if (evnt == null || transaction == null) throw new ArgumentNullException();
             using (var dataStream = new MemoryStream())
             {
-                var bag = _converter.Convert(evnt);
+                var bag = _converter.Convert(evnt.Payload);
 
                 var formatter = new BinaryFormatter();
                 formatter.Serialize(dataStream, bag);
@@ -127,9 +146,10 @@ namespace Ncqrs.Eventing.Storage.SQLite
                 using (var cmd = new SQLiteCommand(Query.InsertNewEventQuery, transaction.Connection))
                 {
                     cmd.SetTransaction(transaction)
-                        .AddParam("Id", eventSourceId)
-                        .AddParam("Name", evnt.GetType().FullName)
-                        .AddParam("Sequence", evnt.EventSequence)
+                        .AddParam("SourceId", evnt.EventSourceId)
+                        .AddParam("EventId", evnt.EventIdentifier)
+                        .AddParam("Name", evnt.Payload.GetType().FullName)
+                        .AddParam("Sequence", evnt.EventSequence)                        
                         .AddParam("Timestamp", evnt.EventTimeStamp.Ticks)
                         .AddParam("Data", data);
                     cmd.ExecuteNonQuery();
@@ -137,11 +157,20 @@ namespace Ncqrs.Eventing.Storage.SQLite
             }
         }
 
-        private static void UpdateEventSourceVersion(IEventSource eventSource, SQLiteTransaction transaction)
+        private static void UpdateEventSources(UncommittedEventStream events, SQLiteTransaction transaction)
+        {
+            var eventSources = events.Sources;
+            foreach (var eventSource in eventSources)
+            {
+                UpdateEventSourceVersion(eventSource, transaction);
+            }
+        }
+
+        private static void UpdateEventSourceVersion(EventSourceInformation eventSource, SQLiteTransaction transaction)
         {
             using (var cmd = new SQLiteCommand(Query.UpdateEventSourceVersionQuery, transaction.Connection))
             {
-                cmd.SetTransaction(transaction).AddParam("Id", eventSource.EventSourceId);
+                cmd.SetTransaction(transaction).AddParam("Id", eventSource.Id);
                 cmd.ExecuteNonQuery();
             }
         }

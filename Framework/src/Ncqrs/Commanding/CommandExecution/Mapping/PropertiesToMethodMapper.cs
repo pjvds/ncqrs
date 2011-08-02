@@ -9,11 +9,27 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping
 {
     public class PropertiesToMethodMapper
     {
+        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private static BindingFlags All = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
 
         public static Tuple<ConstructorInfo, PropertyInfo[]> GetConstructor(PropertyToParameterMappingInfo[] sources, Type targetType)
         {
             var potentialTargets = targetType.GetConstructors(All);
+            return GetMethodBase(sources, potentialTargets);
+        }
+
+        public static Tuple<MethodInfo, PropertyInfo[]> GetMethod(PropertyToParameterMappingInfo[] sources, Type targetType, BindingFlags bindingFlags, string methodName = null)
+        {
+            IEnumerable<MethodInfo> potentialTargets = targetType.GetMethods(bindingFlags);
+
+            if (methodName != null)
+            {
+                potentialTargets = potentialTargets.Where
+                (
+                    method => method.Name.Equals(methodName, StringComparison.InvariantCultureIgnoreCase)
+                );
+            }
+
             return GetMethodBase(sources, potentialTargets);
         }
 

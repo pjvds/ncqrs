@@ -4,12 +4,21 @@ using System.Linq;
 using System.Web.Mvc;
 using Commands;
 using ReadModel;
-using Website.CommandService;
+using Ncqrs.CommandService.Contracts;
+using System.ServiceModel;
+using Ncqrs.CommandService;
 
 namespace Website.Controllers
 {
     public class NoteController : Controller
     {
+        private static ChannelFactory<ICommandWebServiceClient> _channelFactory;
+
+        static NoteController()
+        {
+            _channelFactory = new ChannelFactory<ICommandWebServiceClient>("CommandWebServiceClient");
+        }
+
         public ActionResult Index()
         {
             IEnumerable<NoteItem> items;
@@ -45,12 +54,12 @@ namespace Website.Controllers
         [HttpPost]
         public ActionResult Edit(ChangeNoteText command)
         {
-            var service = new MyNotesCommandServiceClient();
-            service.ChangeNoteText(command);
+            ChannelHelper.Use(_channelFactory.CreateChannel(), (client) =>
+                              client.Execute(new ExecuteRequest(command)));
 
             // Return user back to the index that
             // displays all the notes.));
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Note");
         }
 
         public ActionResult Add()
@@ -64,12 +73,12 @@ namespace Website.Controllers
         [HttpPost]
         public ActionResult Add(CreateNewNote command)
         {
-            var service = new MyNotesCommandServiceClient();
-            service.CreateNewNote(command);
+            ChannelHelper.Use(_channelFactory.CreateChannel(), (client) =>
+                                client.Execute(new ExecuteRequest(command)));
 
             // Return user back to the index that
             // displays all the notes.));
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Note");
         }
 
         public ActionResult Report()

@@ -29,37 +29,18 @@ namespace Ncqrs.Eventing.Storage.Serialization
             _serializer = new JsonSerializer();
         }
 
-        public ISourcedEvent Deserialize(StoredEvent<JObject> obj)
+        public object Deserialize(JObject obj, string eventName)
         {
-            var eventType = _typeResolver.ResolveType(obj.EventName);
-            var reader = obj.Data.CreateReader();
-            var theEvent = (ISourcedEvent) _serializer.Deserialize(reader, eventType);
-            theEvent.InitializeFrom(obj);
+            var eventType = _typeResolver.ResolveType(eventName);
+            var reader = obj.CreateReader();
+            var theEvent = _serializer.Deserialize(reader, eventType);
             return theEvent;
         }
 
-        public StoredEvent<JObject> Serialize(ISourcedEvent theEvent)
+        public JObject Serialize(object theEvent, out string eventName)
         {
-            var eventName = _typeResolver.EventNameFor(theEvent.GetType());
-            var data = JObject.FromObject(theEvent, _serializer);
-
-            StoredEvent<JObject> obj = new StoredEvent<JObject>(
-                theEvent.EventIdentifier,
-                theEvent.EventTimeStamp,
-                eventName,
-                theEvent.EventVersion,
-                theEvent.EventSourceId,
-                theEvent.EventSequence,
-                data);
-
-            data.Remove("EventIdentifier");
-            data.Remove("EventTimeStamp");
-            data.Remove("EventName");
-            data.Remove("EventVersion");
-            data.Remove("EventSourceId");
-            data.Remove("EventSequence");
-
-            return obj;
+            eventName = _typeResolver.EventNameFor(theEvent.GetType());
+            return JObject.FromObject(theEvent, _serializer);
         }
     }
 }

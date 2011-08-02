@@ -2,58 +2,30 @@
 using System.Collections.Generic;
 using Ncqrs.Commanding;
 using Ncqrs.Commanding.CommandExecution;
-using Ncqrs.Eventing.Sourcing;
+using Ncqrs.Eventing;
 using NUnit.Framework;
 
 namespace Ncqrs.Spec
 {
-    [Specification]
-    [TestFixture] // TODO: Testdriven.net debug runner doesn't recognize inhiret attributes. Use native for now.
+
     public abstract class CommandTestFixture<TCommand>
+        : DomainTestFixture<TCommand>
         where TCommand : ICommand
     {
-        protected Exception CaughtException{ get; private set; }
 
-        protected IEnumerable<ISourcedEvent> PublishedEvents{ get; private set;}
+        protected ICommandExecutor<ICommand> CommandExecutor { get; private set; }
 
-        protected TCommand ExecutedCommand { get; private set; }
-        
-        protected abstract TCommand WhenExecutingCommand();
-        
-        protected virtual void SetupDependencies() { }
-        protected virtual void Finally() { }
-
-        [Given]
-        [SetUp] // TODO: Testdriven.net debug runner doesn't recognize inhiret attributes. Use native for now.
-        public void Setup()
+        protected override void SetupDependencies()
         {
-            var commandExecutor = BuildCommandExecutor();
-            PublishedEvents = new SourcedEvent[0];
-
-            SetupDependencies();
-            try
-            {
-                var command = WhenExecutingCommand();
-
-                using (var context = new EventContext())
-                {
-                    commandExecutor.Execute(command);
-
-                    ExecutedCommand = command;
-
-                    PublishedEvents = context.Events;
-                }
-            }
-            catch (Exception exception)
-            {
-                CaughtException = exception;
-            }
-            finally
-            {
-                Finally();
-            }
+            base.SetupDependencies();
+            CommandExecutor = BuildCommandExecutor();
         }
 
-        protected abstract ICommandExecutor<TCommand> BuildCommandExecutor();
+        protected override void Execute(TCommand command)
+        {
+            CommandExecutor.Execute(command);
+        }
+
+        protected abstract ICommandExecutor<ICommand> BuildCommandExecutor();
     }
 }

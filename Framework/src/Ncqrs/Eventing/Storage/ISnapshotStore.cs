@@ -1,36 +1,48 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
+using Ncqrs.Eventing.Sourcing;
 using Ncqrs.Eventing.Sourcing.Snapshotting;
 
 namespace Ncqrs.Eventing.Storage
 {
+
+    /// <summary>
+    /// A <see cref="Snapshot"/> store. Can store and retrieve a <see cref="Snapshot"/>.
+    /// </summary>
     [ContractClass(typeof(ISnapshotStoreContracts))]
     public interface ISnapshotStore
     {
         /// <summary>
-        /// Saves a snapshot of the specified event source.
+        /// Persists a <see cref="Snapshot"/> of an <see cref="EventSource"/>.
         /// </summary>
-        void SaveShapshot(ISnapshot source);
+        /// <param name="snapshot">The <see cref="Snapshot"/> that is being saved.</param>
+        void SaveShapshot(Snapshot snapshot);
 
         /// <summary>
         /// Gets a snapshot of a particular event source, if one exists. Otherwise, returns <c>null</c>.
         /// </summary>
-        ISnapshot GetSnapshot(Guid eventSourceId);
+        /// <param name="eventSourceId">Indicates the event source to retrieve the snapshot for.</param>
+        /// <param name="maxVersion">Indicates the maximum allowed version to be returned.</param>
+        /// <returns>
+        /// Returns the most recent <see cref="Snapshot"/> that exists in the store. If the store has a 
+        /// snapshot that is more recent than the <paramref name="maxVersion"/>, then <c>null</c> will be returned.
+        /// </returns>
+        Snapshot GetSnapshot(Guid eventSourceId, long maxVersion);
     }
 
     [ContractClassFor(typeof(ISnapshotStore))]
     internal abstract class ISnapshotStoreContracts : ISnapshotStore
     {
-        public void SaveShapshot(ISnapshot source)
+        public void SaveShapshot(Snapshot source)
         {
             Contract.Requires<ArgumentNullException>(source != null, "The source cannot be null.");
         }
 
-        public ISnapshot GetSnapshot(Guid eventSourceId)
+        public Snapshot GetSnapshot(Guid eventSourceId, long maxVersion)
         {
-            Contract.Ensures(Contract.Result<ISnapshot>() != null ? Contract.Result<ISnapshot>().EventSourceId == eventSourceId : true);
+            Contract.Ensures(Contract.Result<Snapshot>() != null ? Contract.Result<Snapshot>().EventSourceId == eventSourceId : true);
 
-            return default(ISnapshot);
+            return default(Snapshot);
         }
     }
 }

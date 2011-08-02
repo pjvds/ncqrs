@@ -48,7 +48,7 @@ namespace Ncqrs.Commanding.CommandExecution
         /// <exception cref="ArgumentNullException">Occurs when <i>command</i> is null.</exception>
         public void Execute(TCommand command)
         {
-            using (var work = _factory.CreateUnitOfWork())
+            using (var work = _factory.CreateUnitOfWork(command.CommandIdentifier))
             {
                 ExecuteInContext(work, command);
             }

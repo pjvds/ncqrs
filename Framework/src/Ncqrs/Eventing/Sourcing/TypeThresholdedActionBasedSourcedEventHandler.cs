@@ -14,6 +14,8 @@ namespace Ncqrs.Eventing.Sourcing
         /// </summary>
         private readonly Type _eventTypeThreshold;
 
+        private readonly string _handlerName;
+
         /// <summary>
         ///   Specifies whether the event type threshold should be used as an exact or at least threshold.
         /// </summary>
@@ -28,33 +30,33 @@ namespace Ncqrs.Eventing.Sourcing
         /// <summary>
         ///   The handler that should be called when the threshold did not hold the event.
         /// </summary>
-        private readonly Action<ISourcedEvent> _handler;
+        private readonly Action<object > _handler;
 
         /// <summary>
         ///   Initializes a new instance of the <see cref = "TypeThresholdedActionBasedDomainEventHandler" /> class.
         /// </summary>
         /// <param name = "handler">The handler that will be called to handle a event when the threshold did not hold the event.</param>
         /// <param name = "eventTypeThreshold">The event type that should be used as threshold.</param>
+        /// <param name="handlerName">The name of the handler.</param>
         /// <param name = "exact">if set to <c>true</c> the threshold will hold all types that are not the same type; otherwise it hold 
         /// all types that are not inhered from the event type threshold or implement the interface that is specified by the threshold type.</param>
-        public TypeThresholdedActionBasedDomainEventHandler(Action<ISourcedEvent> handler, Type eventTypeThreshold,
+        public TypeThresholdedActionBasedDomainEventHandler(Action<object> handler, Type eventTypeThreshold, string handlerName,
                                                               Boolean exact = false)
         {
             Contract.Requires<ArgumentNullException>(handler != null, "The handler cannot be null.");
             Contract.Requires<ArgumentNullException>(eventTypeThreshold != null,
                                                      "The eventTypeThreshold cannot be null.");
-            Contract.Requires<ArgumentException>(typeof(IEvent).IsAssignableFrom(eventTypeThreshold),
-                                                 "The eventTypeThreshold should be of a type that implements the IEvent interface.");
 
             _handler = handler;
             _eventTypeThreshold = eventTypeThreshold;
+            _handlerName = handlerName;
             _exact = exact;
         }
 
         /// <summary>
         ///   Handles the event.
         /// </summary>
-        /// <param name = "evnttData">The event data to handle.
+        /// <param name = "evnt">The event data to handle.
         ///   <remarks>
         ///     This value should not be <c>null</c>.
         ///   </remarks>
@@ -66,7 +68,7 @@ namespace Ncqrs.Eventing.Sourcing
         ///     handler was not interested in handling this event.
         ///   </remarks>
         /// </returns>
-        public bool HandleEvent(ISourcedEvent evnt)
+        public bool HandleEvent(object evnt)
         {
             Contract.Requires<ArgumentNullException>(evnt != null, "The Event cannot be null.");
 
@@ -94,9 +96,9 @@ namespace Ncqrs.Eventing.Sourcing
         /// <summary>
         ///   Determine whether the event should be handled or not.
         /// </summary>
-        /// <param name = "evnttData">The event data.</param>
+        /// <param name = "evnt">The event data.</param>
         /// <returns><c>true</c> when this event should be handled; otherwise, <c>false</c>.</returns>
-        private bool ShouldHandleThisEventData(IEvent evnt)
+        private bool ShouldHandleThisEventData(object evnt)
         {
             Contract.Assume(evnt != null, "The Event should not be null.");
 
@@ -123,14 +125,10 @@ namespace Ncqrs.Eventing.Sourcing
 
             return shouldHandle;
         }
-    }
 
-    public class TypeThresholdedActionBasedDomainEventHandler<TEvent> : TypeThresholdedActionBasedDomainEventHandler
-        where TEvent : ISourcedEvent
-    {
-        public TypeThresholdedActionBasedDomainEventHandler(Action<TEvent> handler, bool exact)
-            : base((e)=> handler((TEvent)e), typeof(TEvent), exact)
+        public override string ToString()
         {
+            return _handlerName;
         }
     }
 }

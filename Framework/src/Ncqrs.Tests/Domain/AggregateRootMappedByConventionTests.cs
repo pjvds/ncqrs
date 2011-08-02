@@ -12,19 +12,19 @@ namespace Ncqrs.Tests.Domain
     [TestFixture]
     public class AggregateRootMappedByConventionTests
     {
-        public class EventForPublicMethod : SourcedEvent
+        public class EventForPublicMethod
         {}
 
-        public class EventForProtectedMethod : SourcedEvent
+        public class EventForProtectedMethod
         {}
 
-        public class EventForPrivateMethod : SourcedEvent
+        public class EventForPrivateMethod
         {}
 
-        public class EventForNoEventHandlerMethod : SourcedEvent
+        public class EventForNoEventHandlerMethod
         {}
 
-        public class EventForMethodWithWrongMethodName : SourcedEvent
+        public class EventForMethodWithWrongMethodName
         {}
 
         public class TheAggregateRoot : AggregateRootMappedByConvention
@@ -34,11 +34,6 @@ namespace Ncqrs.Tests.Domain
             public int OnEventForPrivateMethodInvokeCount;
             public int OnEventForNoEventHandlerMethodInvokeCount;
             public int FooBarEventForMethodWithWrongMethodNameInvokeCount;
-
-            public new void ApplyEvent(ISourcedEvent e)
-            {
-                base.ApplyEvent(e);
-            }
 
             public virtual void OnEventForPublicMethod(EventForPublicMethod e)
             {
@@ -80,7 +75,7 @@ namespace Ncqrs.Tests.Domain
         [Test]
         public void Public_event_handlers_should_be_mapped()
         {
-            using (var work = NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork())
+            using (var work = NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork(Guid.NewGuid()))
             {
                 var target = new TheAggregateRoot();
 
@@ -93,7 +88,7 @@ namespace Ncqrs.Tests.Domain
         [Test]
         public void Protected_event_handlers_should_be_mapped()
         {
-            using (var work = NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork())
+            using (var work = NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork(Guid.NewGuid()))
             {
                 var target = new TheAggregateRoot();
 
@@ -106,7 +101,7 @@ namespace Ncqrs.Tests.Domain
         [Test]
         public void Private_event_handlers_should_be_mapped()
         {
-            using (var work = NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork())
+            using (var work = NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork(Guid.NewGuid()))
             {
                 var target = new TheAggregateRoot();
 
@@ -119,7 +114,7 @@ namespace Ncqrs.Tests.Domain
         [Test]
         public void Method_with_a_wrong_method_name_should_not_be_mapped()
         {
-            using (var work = NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork())
+            using (var work = NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork(Guid.NewGuid()))
             {
                 var target = new TheAggregateRoot();
 
@@ -132,7 +127,7 @@ namespace Ncqrs.Tests.Domain
         [Test]
         public void Methods_marked_as_no_event_handler_should_not_be_mapped()
         {
-            using (var work = NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork())
+            using (var work = NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork(Guid.NewGuid()))
             {
                 var target = new TheAggregateRoot();
 

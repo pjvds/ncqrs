@@ -6,7 +6,7 @@ namespace AwesomeApp.Events
 {
     [Serializable]
     [EventName("MyCompany:AwesomeApp:NameChangedEventttt")]
-    public class NameChangedEventttt : SourcedEvent
+    public class NameChangedEventttt
     {
         public string Forename { get; private set; }
         public string Surname { get; private set; }

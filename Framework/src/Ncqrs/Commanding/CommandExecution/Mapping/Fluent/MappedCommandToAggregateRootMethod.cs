@@ -11,7 +11,7 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Fluent
     /// <typeparam name="TAggRoot">The aggregateroot of type <typeparamref name="TAggRoot"/> on which we execute the method.</typeparam>
     public class MappedCommandToAggregateRootMethod<TCommand, TAggRoot> : ICommandExecutor<TCommand> where TCommand : ICommand where TAggRoot : AggregateRoot
     {
-        private readonly Func<Guid, TAggRoot> _aggregaterootfetchfunc;
+        private readonly Func<Guid, long?, TAggRoot> _aggregaterootfetchfunc;
         private readonly Func<TCommand, Guid> _getidfromcommandfunc;
         private Action<TCommand, TAggRoot> _mappedmethodforcommandfunc;
 
@@ -23,14 +23,11 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Fluent
         internal MappedCommandToAggregateRootMethod(Func<TCommand, Guid> getidfromcommandfunc)
         {
             _getidfromcommandfunc = getidfromcommandfunc;
-
-            // default get aggregateroot code
-            var factory = NcqrsEnvironment.Get<IUnitOfWorkFactory>();
-            using (var work = factory.CreateUnitOfWork())
-            {
-                _aggregaterootfetchfunc = (guid) => work.GetById<TAggRoot>(guid);
-                work.Accept();
-            }
+            _aggregaterootfetchfunc = delegate(Guid guid, long? lastKnownVersion)
+                                          {
+                                              IUnitOfWorkContext uow = UnitOfWorkContext.Current;
+                                              return (TAggRoot) uow.GetById(typeof (TAggRoot), guid, lastKnownVersion);
+                                          };
         }
 
         /// <summary>
@@ -39,7 +36,7 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Fluent
         /// <param name="getidfromcommandfunc">The method responsible for retrieving the id of the aggregateroot from the command.</param>
         /// <param name="aggregaterootfetchfunc">The method responsible for retrieving the aggregateroot of type <typeparamref name="TAggRoot"/> from a <see cref="Guid"/>.</param>
         /// <remarks>Marked as internal because the construction is only allowed in the framework.</remarks>
-        internal MappedCommandToAggregateRootMethod(Func<Guid, TAggRoot> aggregaterootfetchfunc, Func<TCommand, Guid> getidfromcommandfunc) 
+        internal MappedCommandToAggregateRootMethod(Func<Guid, long?, TAggRoot> aggregaterootfetchfunc, Func<TCommand, Guid> getidfromcommandfunc) 
             : this(getidfromcommandfunc)
         {
             _aggregaterootfetchfunc = aggregaterootfetchfunc;
@@ -67,9 +64,9 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Fluent
         void ICommandExecutor<TCommand>.Execute(TCommand command)
         {
             var factory = NcqrsEnvironment.Get<IUnitOfWorkFactory>();
-            using (var work = factory.CreateUnitOfWork())
+            using (var work = factory.CreateUnitOfWork(command.CommandIdentifier))
             {
-                var aggregateroot = _aggregaterootfetchfunc(_getidfromcommandfunc(command));
+                var aggregateroot = _aggregaterootfetchfunc(_getidfromcommandfunc(command), command.KnownVersion);
                 _mappedmethodforcommandfunc(command, aggregateroot);
 
                 work.Accept();

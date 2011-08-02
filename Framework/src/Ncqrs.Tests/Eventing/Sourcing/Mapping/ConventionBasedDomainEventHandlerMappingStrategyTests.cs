@@ -13,7 +13,7 @@ namespace Ncqrs.Tests.Eventing.Sourcing.Mapping
     {
         public class IlligalStaticMethodTarget : AggregateRootMappedByConvention
         {
-            public static void OnDomainEvent(SourcedEvent e)
+            public static void OnDomainEvent(object e)
             { }
         }
 
@@ -26,12 +26,12 @@ namespace Ncqrs.Tests.Eventing.Sourcing.Mapping
 
         public class MoreThenOneParameterMethodTarget : AggregateRootMappedByConvention
         {
-            public void OnDomainEvent(SourcedEvent e1, SourcedEvent e2)
+            public void OnDomainEvent(object e1, object e2)
             {
             }
         }
 
-        public class NotADomainEventTarget : AggregateRootMappedByConvention
+        public class NotAIEventSourceTarget : AggregateRootMappedByConvention
         {
             public void OnDomainEvent(String e)
             {
@@ -40,10 +40,10 @@ namespace Ncqrs.Tests.Eventing.Sourcing.Mapping
 
         public class GoodTarget : AggregateRootMappedByConvention
         {
-            public class PublicEvent : SourcedEvent { }
-            public class ProtectedEvent : SourcedEvent { }
-            public class InternalEvent : SourcedEvent { }
-            public class PrivateEvent : SourcedEvent { }
+            public class PublicEvent { }
+            public class ProtectedEvent { }
+            public class InternalEvent { }
+            public class PrivateEvent  { }
 
             public int PublicEventHandlerInvokeCount;
             public int ProtectedEventHandlerInvokeCount;
@@ -105,10 +105,10 @@ namespace Ncqrs.Tests.Eventing.Sourcing.Mapping
         }
 
         [Test]
-        public void It_should_skip_when_mapped_method_does_not_have_a_DomainEvent_as_parameter()
+        public void It_should_skip_when_mapped_method_does_not_have_a_EventBaseType_as_parameter()
         {
-            var aggregate = new NotADomainEventTarget();
-            var mapping = new ConventionBasedEventHandlerMappingStrategy();
+            var aggregate = new NotAIEventSourceTarget();
+            var mapping = new ConventionBasedEventHandlerMappingStrategy {EventBaseType = typeof (ISourcedEvent)};
 
             var handlers = mapping.GetEventHandlers(aggregate);
 

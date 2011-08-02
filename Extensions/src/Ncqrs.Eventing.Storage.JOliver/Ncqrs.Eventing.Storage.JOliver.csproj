@@ -1,0 +1,116 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{DCA6E39A-8D6B-4531-ACA7-33D790D27878}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Ncqrs.Eventing.Storage.JOliver</RootNamespace>
+    <AssemblyName>Ncqrs.Eventing.Storage.JOliver</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\..\lib\Debug\Ncqrs.Eventing.Storage.JOliver\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\..\lib\Release\Ncqrs.Eventing.Storage.JOliver\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EventStore">
+      <HintPath>..\..\..\lib\ThirdParty\EventStore\EventStore.dll</HintPath>
+    </Reference>
+    <Reference Include="EventStore.Core">
+      <HintPath>..\..\..\lib\ThirdParty\EventStore\EventStore.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="EventStore.Persistence.SqlPersistence">
+      <HintPath>..\..\..\lib\ThirdParty\EventStore\EventStore.Persistence.SqlPersistence.dll</HintPath>
+    </Reference>
+    <Reference Include="Ncqrs">
+      <HintPath>..\..\..\lib\Debug\Ncqrs\Ncqrs.dll</HintPath>
+    </Reference>
+    <Reference Include="Ncqrs.EventBus">
+      <HintPath>..\..\..\lib\Debug\Ncqrs.EventBus\Ncqrs.EventBus.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="IPersistStreamsWithAbsoluteOrdering.cs" />
+    <Compile Include="JoesUnitOfWork.cs" />
+    <Compile Include="JoesUnitOfWorkFactory.cs" />
+    <Compile Include="NullDispatcher.cs" />
+    <Compile Include="SqlPersistence\AbsoluteOrderingSqlPersistenceFactory.cs" />
+    <Compile Include="SqlPersistence\AbsoluteOrderingSqlPersistenceEngine.cs" />
+    <Compile Include="CommitProcessingElement.cs" />
+    <Compile Include="SqlPersistence\CommonSqlStatements.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CommonSqlStatements.resx</DependentUpon>
+    </Compile>
+    <Compile Include="SqlPersistence\CommonPipelineStoreSqlDialect.cs" />
+    <Compile Include="SqlPersistence\IPipelineStoreSqlDialect.cs" />
+    <Compile Include="JoesBrowsableEventStore.cs" />
+    <Compile Include="JoesSnapshotStoreAdapter.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SqlPersistence\MsSqlStatements.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MsSqlStatements.resx</DependentUpon>
+    </Compile>
+    <Compile Include="SqlPersistence\MsSqlPipelineStoreSqlDialect.cs" />
+    <Compile Include="SqlPersistence\SqlCePipelineStoreSqlDialect.cs" />
+    <Compile Include="SqlPersistence\SqlCeStatements.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SqlCeStatements.resx</DependentUpon>
+    </Compile>
+    <Compile Include="StoredEvent.cs" />
+    <Compile Include="StoredEventExtensions.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SqlPersistence\CommonSqlStatements.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>CommonSqlStatements.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SqlPersistence\MsSqlStatements.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>MsSqlStatements.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SqlPersistence\SqlCeStatements.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SqlCeStatements.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

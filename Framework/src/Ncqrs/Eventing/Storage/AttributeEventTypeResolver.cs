@@ -79,7 +79,6 @@ namespace Ncqrs.Eventing.Storage
         public void AddEvent(Type type)
         {
             Contract.Requires<ArgumentNullException>(type != null, "type cannot be null");
-            Contract.Requires<ArgumentException>(typeof(IEvent).IsAssignableFrom(type), "type must inherit IEvent");
 
             if (_eventNames.ContainsKey(type))
                 return;
@@ -184,7 +183,7 @@ namespace Ncqrs.Eventing.Storage
     /// 
     /// This name is only used when de-serializing an event.
     /// </remarks>
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
     public class EventNameAliasAttribute : Attribute
     {
         public EventNameAliasAttribute(string name)

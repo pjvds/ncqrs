@@ -70,7 +70,7 @@ namespace Ncqrs.Commanding.ServiceModel
         public virtual void RegisterExecutor<TCommand>(Type commandType, ICommandExecutor<TCommand> executor) where TCommand : ICommand
         {
             Contract.Requires<ArgumentOutOfRangeException>(typeof(TCommand).IsAssignableFrom(commandType));
-
+            if (_executors.ContainsKey(commandType)) return;
             Action<ICommand> action = (cmd) => executor.Execute((TCommand) cmd);
             _executors.Add(commandType, action);
         }
@@ -83,6 +83,7 @@ namespace Ncqrs.Commanding.ServiceModel
         /// <exception cref="ArgumentNullException">Occurs when the <i>commandType</i> or <i>executor</i> was a <c>null</c> dereference.</exception>
         public virtual void RegisterExecutor<TCommand>(ICommandExecutor<TCommand> executor) where TCommand : ICommand
         {
+            if (_executors.ContainsKey(typeof(TCommand))) return;
             Action<ICommand> action = (cmd) => executor.Execute((TCommand) cmd);
             _executors.Add(typeof(TCommand), action);
         }

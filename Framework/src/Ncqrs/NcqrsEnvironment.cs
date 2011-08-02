@@ -2,10 +2,14 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Reflection;
+using Ncqrs.Commanding;
+using Ncqrs.Commanding.CommandExecution;
 using Ncqrs.Config;
 using Ncqrs.Domain;
 using Ncqrs.Eventing.ServiceModel.Bus;
+using Ncqrs.Eventing.Sourcing.Snapshotting;
 using Ncqrs.Eventing.Storage;
+using Ncqrs.Domain.Storage;
 
 namespace Ncqrs
 {
@@ -32,7 +36,14 @@ namespace Ncqrs
             SetDefault<IUniqueIdentifierGenerator>(new BasicGuidGenerator());
             SetDefault<IEventBus>(new InProcessEventBus());
             SetDefault<IEventStore>(new InMemoryEventStore());
+            SetDefault<ISnapshotStore>(new NullSnapshotStore());
             SetDefault<IUnitOfWorkFactory>(new UnitOfWorkFactory());
+            SetDefault<IKnownCommandsEnumerator>(new AllCommandsInAppDomainEnumerator());
+            SetDefault<ITransactionService>(new DefaultTransactionService());
+            SetDefault<ISnapshottingPolicy>(new NoSnapshottingPolicy());
+            SetDefault<IAggregateRootCreationStrategy>(new SimpleAggregateRootCreationStrategy());
+            SetDefault<IAggregateSupportsSnapshotValidator>(new AggregateSupportsSnapshotValidator());
+            SetDefault<IAggregateSnapshotter>(new DefaultAggregateSnapshotter(Get<IAggregateRootCreationStrategy>(), Get<IAggregateSupportsSnapshotValidator>()));
         }
 
         /// <summary>
@@ -99,7 +110,7 @@ namespace Ncqrs
         {
             Contract.Requires<ArgumentNullException>(instance != null, "The instance cannot be null.");
 
-            _defaults[typeof (T)] = instance;
+            _defaults[typeof(T)] = instance;
         }
 
         /// <summary>
@@ -152,5 +163,14 @@ namespace Ncqrs
                 return _instance != null;
             }
         }
+
+        /// <summary>
+        /// Returns the current environment configuration
+        /// </summary>
+        /// <remarks>
+        /// Returns the current environment configuration, or null if not configured
+        /// </remarks>
+        public static IEnvironmentConfiguration CurrentConfiguration { get { return _instance; } }
+
     }
 }

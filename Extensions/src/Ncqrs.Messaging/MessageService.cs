@@ -21,9 +21,9 @@ namespace Ncqrs.Messaging
 
         public void Process(object message)
         {
-            using (var work = NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork())
+            var incomingMessage = ReceiveMessage(message);
+            using (var work = NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork(incomingMessage.MessageId))
             {
-                var incomingMessage = ReceiveMessage(message);
                 var targetAggregateRoot = GetReceiver(work, incomingMessage);
                 targetAggregateRoot.ProcessMessage(incomingMessage);
                 work.Accept();
@@ -31,11 +31,11 @@ namespace Ncqrs.Messaging
         }
 
         private static IMessagingAggregateRoot GetReceiver(IUnitOfWorkContext work, IncomingMessage message)
-        {            
-            var existingReceiver = (IMessagingAggregateRoot)work.GetById(message.ReceiverType, message.ReceiverId);
+        {                        
+            var existingReceiver = (IMessagingAggregateRoot)work.GetById(message.ReceiverType, message.ReceiverId, null);
             CheckProcessingRequirements(message, existingReceiver);
 
-            return existingReceiver ?? CreateNewAggregateInstance(message.ReceiverType);
+            return existingReceiver ?? CreateNewAggregateInstance(message.ReceiverType, message.ReceiverId);
         }
 
         private IncomingMessage ReceiveMessage(object message)
@@ -64,9 +64,9 @@ namespace Ncqrs.Messaging
             return existingReceiver != null && message.ProcessingRequirements == MessageProcessingRequirements.RequiresNew;
         }
 
-        private static IMessagingAggregateRoot CreateNewAggregateInstance(Type recieverType)
+        private static IMessagingAggregateRoot CreateNewAggregateInstance(Type recieverType, Guid id)
         {
-            return (IMessagingAggregateRoot)Activator.CreateInstance(recieverType);
+            return (IMessagingAggregateRoot)Activator.CreateInstance(recieverType, new object[] {id});
         }
 
 

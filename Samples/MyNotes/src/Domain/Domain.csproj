@@ -32,7 +32,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Ncqrs">
-      <HintPath>..\..\lib\Ncqrs\Ncqrs.dll</HintPath>
+      <HintPath>..\..\..\..\lib\$(Configuration)\Ncqrs\Ncqrs.dll</HintPath>
+    </Reference>
+    <Reference Include="Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot">
+      <HintPath>..\..\..\..\lib\Debug\Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot\Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -49,7 +52,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Events\Events.csproj">
       <Project>{705805EF-47BE-48A8-A359-CA999169E445}</Project>
-      <Name>Events</Name>
+      <Name>Events %28Samples\MyNotes\Events%29</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

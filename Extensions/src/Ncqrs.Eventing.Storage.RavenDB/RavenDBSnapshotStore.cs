@@ -15,7 +15,7 @@ namespace Ncqrs.Eventing.Storage.RavenDB
             {
                 Url = ravenUrl,                
                 Conventions = CreateConventions()
-            }.Initialise(); 
+            }.Initialize(); 
         }
 
         public RavenDBSnapshotStore(DocumentStore externalDocumentStore)
@@ -33,27 +33,32 @@ namespace Ncqrs.Eventing.Storage.RavenDB
             };
         }
         
-        public void SaveShapshot(ISnapshot source)
+        public void SaveShapshot(Snapshot source)
         {
             using (var session = _documentStore.OpenSession())
             {
                 session.Store(new StoredSnaphot
                                   {
                                       Id = source.EventSourceId.ToString(),
-                                      Data = source,
-                                      EventSourceId = source.EventSourceId
+                                      Data = source.Payload,
+                                      EventSourceId = source.EventSourceId,
+                                      Version = source.Version
                                   });
                 session.SaveChanges();
             }
         }
 
-        public ISnapshot GetSnapshot(Guid eventSourceId)
+        public Snapshot GetSnapshot(Guid eventSourceId, long maxVersion)
         {
             using (var session = _documentStore.OpenSession())
             {
                 var snapshot = session.Load<StoredSnaphot>(eventSourceId.ToString());
-                return snapshot != null
-                           ? (ISnapshot)snapshot.Data
+                if (snapshot == null)
+                {
+                    return null;
+                }
+                return snapshot.Version <= maxVersion
+                           ? new Snapshot(eventSourceId, snapshot.Version, snapshot.Data)
                            : null;
             }
         }

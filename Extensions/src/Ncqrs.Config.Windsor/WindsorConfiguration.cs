@@ -1,4 +1,5 @@
-﻿using Castle.Windsor;
+﻿using Castle.MicroKernel.Registration;
+using Castle.Windsor;
 
 namespace Ncqrs.Config.Windsor
 {
@@ -21,6 +22,7 @@ namespace Ncqrs.Config.Windsor
         public WindsorConfiguration(IWindsorContainer container)
         {
             this.container = container;
+            container.Register(Component.For<IWindsorContainer>().Instance(container));
         }
 
         /// <summary>

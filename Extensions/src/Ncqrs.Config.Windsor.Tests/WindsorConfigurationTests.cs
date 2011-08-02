@@ -21,7 +21,7 @@ namespace Ncqrs.Config.Windsor.Tests
 
             success.Should().BeTrue();
             component.Should().NotBeNull();
-            component.Should().BeOfType<IReplicant>();
+            component.Should().BeOfType<Nexus6>();
         }
 
         [Test]

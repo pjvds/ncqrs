@@ -12,22 +12,14 @@
     <AssemblyName>Ncqrs</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <SccProjectName>
-    </SccProjectName>
-    <SccLocalPath>
-    </SccLocalPath>
-    <SccAuxPath>
-    </SccAuxPath>
-    <SccProvider>
-    </SccProvider>
     <CodeContractsAssemblyMode>1</CodeContractsAssemblyMode>
     <TargetFrameworkProfile />
+    <OutputPath>..\..\..\lib\$(Configuration)\$(AssemblyName)\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -35,15 +27,15 @@
     <CodeContractsRuntimeOnlyPublicSurface>False</CodeContractsRuntimeOnlyPublicSurface>
     <CodeContractsRuntimeThrowOnFailure>True</CodeContractsRuntimeThrowOnFailure>
     <CodeContractsRuntimeCallSiteRequires>False</CodeContractsRuntimeCallSiteRequires>
-    <CodeContractsRunCodeAnalysis>True</CodeContractsRunCodeAnalysis>
+    <CodeContractsRunCodeAnalysis>False</CodeContractsRunCodeAnalysis>
     <CodeContractsNonNullObligations>False</CodeContractsNonNullObligations>
     <CodeContractsBoundsObligations>False</CodeContractsBoundsObligations>
     <CodeContractsArithmeticObligations>False</CodeContractsArithmeticObligations>
     <CodeContractsRedundantAssumptions>False</CodeContractsRedundantAssumptions>
-    <CodeContractsRunInBackground>True</CodeContractsRunInBackground>
-    <CodeContractsShowSquigglies>True</CodeContractsShowSquigglies>
+    <CodeContractsRunInBackground>False</CodeContractsRunInBackground>
+    <CodeContractsShowSquigglies>False</CodeContractsShowSquigglies>
     <CodeContractsUseBaseLine>False</CodeContractsUseBaseLine>
-    <CodeContractsEmitXMLDocs>False</CodeContractsEmitXMLDocs>
+    <CodeContractsEmitXMLDocs>True</CodeContractsEmitXMLDocs>
     <CodeContractsCustomRewriterAssembly />
     <CodeContractsCustomRewriterClass />
     <CodeContractsLibPaths />
@@ -51,15 +43,17 @@
     <CodeContractsExtraAnalysisOptions />
     <CodeContractsBaseLineFile />
     <CodeContractsRuntimeCheckingLevel>Full</CodeContractsRuntimeCheckingLevel>
-    <CodeContractsReferenceAssembly>Build</CodeContractsReferenceAssembly>
-    <DocumentationFile>bin\Debug\Ncqrs.XML</DocumentationFile>
+    <CodeContractsReferenceAssembly>DoNotBuild</CodeContractsReferenceAssembly>
+    <DocumentationFile>
+    </DocumentationFile>
     <CodeContractsExtraRewriteOptions />
     <CodeContractsCacheAnalysisResults>False</CodeContractsCacheAnalysisResults>
+    <CodeContractsContainerAnalysis>False</CodeContractsContainerAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\..\..\lib\$(Configuration)\Ncqrs\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -75,7 +69,7 @@
     <CodeContractsRunInBackground>True</CodeContractsRunInBackground>
     <CodeContractsShowSquigglies>False</CodeContractsShowSquigglies>
     <CodeContractsUseBaseLine>False</CodeContractsUseBaseLine>
-    <CodeContractsEmitXMLDocs>False</CodeContractsEmitXMLDocs>
+    <CodeContractsEmitXMLDocs>True</CodeContractsEmitXMLDocs>
     <CodeContractsCustomRewriterAssembly />
     <CodeContractsCustomRewriterClass />
     <CodeContractsLibPaths />
@@ -83,56 +77,90 @@
     <CodeContractsExtraAnalysisOptions />
     <CodeContractsBaseLineFile />
     <CodeContractsRuntimeCheckingLevel>Full</CodeContractsRuntimeCheckingLevel>
-    <CodeContractsReferenceAssembly>%28none%29</CodeContractsReferenceAssembly>
+    <CodeContractsReferenceAssembly>DoNotBuild</CodeContractsReferenceAssembly>
+    <CodeContractsExtraRewriteOptions />
+    <CodeContractsCacheAnalysisResults>False</CodeContractsCacheAnalysisResults>
+    <CodeContractsContainerAnalysis>False</CodeContractsContainerAnalysis>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\log4net\log4net.dll</HintPath>
+    <Reference Include="log4net">
+      <HintPath>..\..\..\lib\ThirdParty\log4net\log4net.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\lib\json.net\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\..\lib\ThirdParty\json.net\Newtonsoft.Json.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Transactions" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commanding\AllCommandsInAppDomainEnumerator.cs" />
+    <Compile Include="Commanding\CommandExecution\DefaultTransactionService.cs" />
+    <Compile Include="Commanding\CommandExecution\ITransactionService.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\Attributes\MapsToAggregateRootConstructorAttributeHandler.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\Attributes\IMappingAttributeHandler.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\Attributes\MapsToAggregateRootMethodAttributeHandler.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\Attributes\MapsToAggregateRootMethodOrConstructorAttribute.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\Attributes\MapsToAggregateRootMethodOrConstructorAttributeHandler.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\Attributes\MapsToAggregateRootStaticCreateAttribute.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\Attributes\MapsToAggregateRootStaticCreateAttributeHandler.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\Fluent\MappedCommandToAggregateRootMethodOrConstructor.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\ICommandMapper.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\UoWMappedCommandExecutor.cs" />
+    <Compile Include="Commanding\IKnownCommandsEnumerator.cs" />
+    <Compile Include="Domain\AggregateExtensions.cs" />
     <Compile Include="Domain\Entity.cs" />
     <Compile Include="Domain\EntityMappedByConvention.cs" />
+    <Compile Include="Domain\Storage\AggregateRootCreationStrategy.cs" />
+    <Compile Include="Domain\Storage\DefaultAggregateSnapshotter.cs" />
+    <Compile Include="Domain\Storage\DelegateAggregateRootCreationStrategy.cs" />
     <Compile Include="Domain\Storage\IAggregateRootCreationStrategy.cs" />
+    <Compile Include="Domain\Storage\IAggregateSnapshotter.cs" />
     <Compile Include="Domain\Storage\SimpleAggregateRootCreationStrategy.cs" />
-    <Compile Include="Eventing\Sourcing\SourcedEventArgs.cs" />
-    <Compile Include="Eventing\Sourcing\SourcedEntityEvent.cs" />
-    <Compile Include="Eventing\Sourcing\SourcedEventHandlerPredicate.cs" />
+    <Compile Include="Domain\UnitOfWorkBase.cs" />
+    <Compile Include="Domain\UnitOfWorkContext.cs" />
+    <Compile Include="Eventing\CommittedEvent.cs" />
+    <Compile Include="Eventing\CommittedEventStream.cs" />
+    <Compile Include="Eventing\EventSourceInformation.cs" />
+    <Compile Include="Eventing\ServiceModel\Bus\IPublishableEvent.cs" />
+    <Compile Include="Eventing\ServiceModel\Bus\PublishedEvent.cs" />
+    <Compile Include="Eventing\Sourcing\EntityThresholdedDomainEventHandlerWrapper.cs" />
+    <Compile Include="Eventing\Sourcing\EventAppliedEventArgs.cs" />
+    <Compile Include="Eventing\Sourcing\IEntitySourcedEvent.cs" />
+    <Compile Include="Eventing\Sourcing\EntitySourcedEventBase.cs" />
+    <Compile Include="Domain\Storage\AggregateSupportsSnapshotValidator.cs" />
+    <Compile Include="Domain\Storage\IAggregateSupportsSnapshotValidator.cs" />
+    <Compile Include="Eventing\Sourcing\Snapshotting\ISnapshottingPolicy.cs" />
+    <Compile Include="Eventing\Sourcing\Snapshotting\NoSnapshottingPolicy.cs" />
+    <Compile Include="Eventing\Sourcing\Snapshotting\SimpleSnapshottingPolicy.cs" />
+    <Compile Include="Eventing\Storage\DuplicateCommitException.cs" />
     <Compile Include="Eventing\Storage\NoDB\NoDBEventStore.cs" />
     <Compile Include="Eventing\Storage\NoDB\NoDBSnapshotStore.cs" />
     <Compile Include="Eventing\Storage\NoDB\StoredEventExtensions.cs" />
     <Compile Include="Eventing\Sourcing\UndefinedValues.cs" />
+    <Compile Include="Eventing\Storage\NullSnapshotStore.cs" />
+    <Compile Include="Eventing\UncommittedEvent.cs" />
+    <Compile Include="Eventing\UncommittedEventStream.cs" />
     <Compile Include="GuidCombGenerator.cs" />
     <Compile Include="Commanding\CommandBase.cs" />
     <Compile Include="Commanding\CommandExecution\CommandExecutorWrapper.cs" />
-    <Compile Include="Commanding\CommandExecution\CreatingCommandExecutor.cs" />
-    <Compile Include="Commanding\CommandExecution\DirectActionCommandExecutor.cs" />
     <Compile Include="Commanding\CommandExecution\ICommandExecutorExtensions.cs" />
-    <Compile Include="Commanding\CommandExecution\Mapping\Attributes\AttributeBasedMappingFactory.cs" />
+    <Compile Include="Commanding\CommandExecution\Mapping\Attributes\AttributeBasedCommandMapper.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Attributes\AttributePropertyMappingStrategy.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Attributes\CommandServiceExtensions.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Fluent\Map.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\PropertiesToMethodMapper.cs" />
-    <Compile Include="Commanding\CommandExecution\Mapping\Attributes\CommandMappingAttribute.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Attributes\ParameterAttribute.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Fluent\MappedCommand.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Fluent\MappedCommandToAggregateRoot.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Fluent\MappedCommandToAggregateRootConstructor.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\Fluent\MappedCommandToAggregateRootMethod.cs" />
-    <Compile Include="Commanding\CommandExecution\Mapping\Attributes\AttributeMappedCommandExecutor.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\CommandMappingException.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\PropertyToParameterMappingInfo.cs" />
     <Compile Include="Commanding\CommandExecution\Mapping\MappingNotFoundException.cs" />
@@ -176,7 +204,6 @@
     <Compile Include="Eventing\Sourcing\Snapshotting\Snapshot.cs" />
     <Compile Include="Eventing\Sourcing\SourcedEvent.cs" />
     <Compile Include="Eventing\Sourcing\SourcedEventHandler.cs" />
-    <Compile Include="Eventing\Sourcing\SourcedEventStream.cs" />
     <Compile Include="Eventing\Storage\AttributeEventTypeResolver.cs" />
     <Compile Include="Eventing\Storage\IEventTypeResolver.cs" />
     <Compile Include="Eventing\Storage\IPropertyBagConverter.cs" />

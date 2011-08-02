@@ -72,8 +72,8 @@ namespace Ncqrs.Messaging.Tests
 
         private void ExpectToFindExistingAggregate()
         {
-            _eventStore.Expect(x => x.GetAllEvents(Guid.Empty))
-               .Return(new SourcedEvent[] { new TestEvent(Guid.NewGuid(), _aggregateRootId, 1, DateTime.Now) })
+            _eventStore.Expect(x => x.ReadFrom(Guid.Empty, long.MinValue, long.MaxValue))
+               .Return(new CommittedEventStream(_aggregateRootId, new[] { new CommittedEvent(Guid.NewGuid(), Guid.NewGuid(), _aggregateRootId, 1, DateTime.Now, new TestEvent(), new Version(1,0)) }))
                .IgnoreArguments()
                .Repeat.Any();
         }
@@ -81,16 +81,16 @@ namespace Ncqrs.Messaging.Tests
         private void ExpectToFindExistingInvalidAggregate()
         {
             ResolveInvalidReceiver();
-            _eventStore.Expect(x => x.GetAllEvents(Guid.Empty))
-               .Return(new SourcedEvent[] { new TestEvent(Guid.NewGuid(), _aggregateRootId, 1, DateTime.Now) })
+            _eventStore.Expect(x => x.ReadFrom(Guid.Empty, long.MinValue, long.MaxValue))
+               .Return(new CommittedEventStream(_aggregateRootId, new[] { new CommittedEvent(Guid.NewGuid(), Guid.NewGuid(), _aggregateRootId, 1, DateTime.Now, new TestEvent(), new Version(1,0)) }))
                .IgnoreArguments()
                .Repeat.Any();
         }
 
         private void ExpectNotToFindExistingAggregate()
         {
-            _eventStore.Expect(x => x.GetAllEvents(Guid.Empty))
-               .Return(new SourcedEvent[] { })
+            _eventStore.Expect(x => x.ReadFrom(Guid.Empty, long.MinValue, long.MaxValue))
+               .Return(new CommittedEventStream(Guid.Empty))
                .IgnoreArguments()
                .Repeat.Any();
         }
@@ -145,13 +145,8 @@ namespace Ncqrs.Messaging.Tests
         {            
         }
 
-        public class TestEvent : SourcedEvent
-        {
-            public TestEvent(Guid eventIdentifier, Guid aggregateRootId, long eventSequence, DateTime eventTimeStamp)
-                : base(eventIdentifier, aggregateRootId, eventSequence, eventTimeStamp)
-            {
-
-            }
+        public class TestEvent
+        {            
         }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
+using Ncqrs.Eventing;
+using Ncqrs.Eventing.Sourcing.Snapshotting;
 
 namespace Ncqrs.Domain.Storage
 {
@@ -10,46 +12,35 @@ namespace Ncqrs.Domain.Storage
     public interface IDomainRepository
     {
         /// <summary>
-        /// Gets aggregate root by eventSourceId.
+        /// Recreates an aggregate root using (optionally a snapshot) and a stream of events.
         /// </summary>
-        /// <param name="aggregateRootType">Type of the aggregate root.</param>
-        /// <param name="eventSourceId">The eventSourceId of the aggregate root.</param>
-        /// <returns>A new instance of the aggregate root that contains the latest known state.</returns>
-        AggregateRoot GetById(Type aggregateRootType, Guid eventSourceId);
-
+        /// <param name="aggreateRootType">Type of aggregate root.</param>
+        /// <param name="snapshot">Optional snapshot of state of aggregate root.</param>
+        /// <param name="eventStream">A stream of events (is snapshot is provided, stream starts at next event 
+        /// after snapshot. Otherwise it starts from the beginning of aggregate's life).</param>
+        /// <returns>Aggregate root instance.</returns>
+        AggregateRoot Load(Type aggreateRootType, Snapshot snapshot, CommittedEventStream eventStream);
         /// <summary>
-        /// Gets aggregate root by eventSourceId.
+        /// Takes a snapshot of provided aggregate root.
         /// </summary>
-        /// <typeparam name="T">The type of the aggregate root.</typeparam>
-        /// <param name="eventSourceId">The eventSourceId of the aggregate root.</param>
-        /// <returns>A new instance of the aggregate root that contains the latest known state.</returns>
-        T GetById<T>(Guid eventSourceId) where T : AggregateRoot;
-
-        /// <summary>
-        /// Saves the specified aggregate root.
-        /// </summary>
-        /// <param name="aggregateRootToSave">The aggregate root to save.</param>
-        void Save(AggregateRoot aggregateRootToSave);
+        /// <param name="aggregateRoot">Aggregate root instance.</param>
+        /// <returns>Snapshot instance if aggregate root supports snapthotting. Otherwise null.</returns>
+        Snapshot TryTakeSnapshot(AggregateRoot aggregateRoot);
     }
 
     [ContractClassFor(typeof(IDomainRepository))]
     internal abstract class IDomainRepositoryContracts : IDomainRepository
     {
-        public AggregateRoot GetById(Type aggregateRootType, Guid eventSourceId)
+        public AggregateRoot Load(Type aggreateRootType, Snapshot snapshot, CommittedEventStream eventStream)
         {
-            Contract.Requires<ArgumentNullException>(aggregateRootType != null);
-
+            Contract.Requires<ArgumentNullException>(eventStream != null);
             return default(AggregateRoot);
         }
 
-        public T GetById<T>(Guid eventSourceId) where T : AggregateRoot
+        public Snapshot TryTakeSnapshot(AggregateRoot aggregateRoot)
         {
-            return default(T);
-        }
-
-        public void Save(AggregateRoot aggregateRootToSave)
-        {
-            Contract.Requires<ArgumentNullException>(aggregateRootToSave != null);
+            Contract.Requires<ArgumentNullException>(aggregateRoot != null);
+            return default(Snapshot);
         }
     }
 
