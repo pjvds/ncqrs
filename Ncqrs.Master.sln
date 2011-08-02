@@ -158,6 +158,11 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Samples\MyNotes\src\Tests\Tests.csproj", "{1F4B376F-D08C-4C8B-AB6E-16F70173FBB5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Website", "Samples\MyNotes\src\Website\Website.csproj", "{6F1765AB-F3DD-40C0-8D80-C1E1A20173E3}"
+	ProjectSection(ProjectDependencies) = postProject
+		{76062319-4F5D-4055-9D1A-5680DD2DA882} = {76062319-4F5D-4055-9D1A-5680DD2DA882}
+		{01F84441-80D3-49B4-AB18-96894ACB2F90} = {01F84441-80D3-49B4-AB18-96894ACB2F90}
+		{9CBAEAFE-9265-47BA-82C5-5E0774CBF2C5} = {9CBAEAFE-9265-47BA-82C5-5E0774CBF2C5}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot", "Extensions\src\Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot\Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot.csproj", "{618E1C0F-E6B7-4C51-961D-C4ACE60CFC85}"
 EndProject

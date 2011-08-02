@@ -111,13 +111,16 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
             {
                 connection.Open();
                 var cmd = connection.CreateCommand();
-                cmd.CommandText = "TRUNCATE TABLE [Events]";
+                cmd.CommandText = "IF EXISTS(SELECT * FROM sysobjects WHERE name='Events' AND xtype = 'U') TRUNCATE TABLE [Events]";
                 cmd.ExecuteNonQuery();
 
-                cmd.CommandText = "TRUNCATE TABLE [EventSources]";
+                cmd.CommandText = "IF EXISTS(SELECT * FROM sysobjects WHERE name='EventSources' AND xtype = 'U') TRUNCATE TABLE [EventSources]";
                 cmd.ExecuteNonQuery();
 
-                cmd.CommandText = "TRUNCATE TABLE [Snapshots]";
+                cmd.CommandText = "IF EXISTS(SELECT * FROM sysobjects WHERE name='Snapshots' AND xtype = 'U') TRUNCATE TABLE [Snapshots]";
+                cmd.ExecuteNonQuery();
+
+                cmd.CommandText = "IF EXISTS(SELECT * FROM sysobjects WHERE name='PipelineState' AND xtype = 'U') TRUNCATE TABLE [PipelineState]";
                 cmd.ExecuteNonQuery();
             }
             catch (SqlException caught)
