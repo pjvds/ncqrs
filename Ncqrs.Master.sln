@@ -98,6 +98,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppV1", "Samples\VersioningSample\src\Appv1\AppV1.csproj", "{ECE2E2E8-648C-4561-82A0-9A1D6A2D4645}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VersioningSample", "VersioningSample", "{E7C55656-EC73-4802-9ED4-1BC321C86ABA}"
+	ProjectSection(SolutionItems) = preProject
+		Samples\VersioningSample\CreateEventStore.sql = Samples\VersioningSample\CreateEventStore.sql
+		Samples\VersioningSample\readme.txt = Samples\VersioningSample\readme.txt
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppV2", "Samples\VersioningSample\src\AppV2\AppV2.csproj", "{7A3419B2-588C-416B-A9F3-BFAE77C22D77}"
 EndProject
