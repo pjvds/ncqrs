@@ -32,7 +32,6 @@ namespace AwesomeAppRefactored
         private static IEventStore InitializeEventStore()
         {
             var typeResolver = new AttributeEventTypeResolver();
-            //typeResolver.AddAllEventsInAssembly(typeof(Program).Assembly);
             typeResolver.AddEvent(typeof(NameChangedEvent));
             typeResolver.AddEvent(typeof(PersonCreatedEvent)); 
             
