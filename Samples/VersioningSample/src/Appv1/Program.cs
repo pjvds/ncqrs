@@ -7,6 +7,7 @@ using Ncqrs.Commanding.CommandExecution.Mapping.Attributes;
 using Ncqrs.Commanding.ServiceModel;
 using Ncqrs.Eventing.Storage;
 using Ncqrs.Eventing.Storage.SQL;
+using AwesomeApp.Events;
 
 namespace AwesomeApp
 {
@@ -24,13 +25,15 @@ namespace AwesomeApp
             commandService.Execute(new ChangeNameCommand(id, "Jane", "Smith"));
 
             Console.WriteLine("If you see this message and no exception occurred, it had probably worked. Now you can run AppV2.");
+            Console.WriteLine("Press any key to continue");
             Console.ReadKey(true);
         }
 
         private static IEventStore InitializeEventStore()
         {
             var typeResolver = new AttributeEventTypeResolver();
-            typeResolver.AddAllEventsInAssembly(typeof(Program).Assembly);
+            typeResolver.AddEvent(typeof(NameChangedEventttt));
+            typeResolver.AddEvent(typeof(PersonCreatedEvent)); 
             
             var eventStore = new MsSqlServerEventStore(ConfigurationManager.ConnectionStrings["EventStore"].ConnectionString, typeResolver, null);
             return eventStore;
