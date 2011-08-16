@@ -25,6 +25,7 @@ namespace AwesomeAppRefactored
             commandService.Execute(new ChangeNameCommand(id, "Jane Smith Doe"));
 
             Console.WriteLine("If you see this message and no exception occurred, it had probably worked. You are all clear now!");
+            Console.WriteLine("Press any key to continue");
             Console.ReadKey(true);
         }
 

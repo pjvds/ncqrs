@@ -21,7 +21,7 @@ CREATE TABLE [dbo].[Events]
 	[EventSourceId] [uniqueidentifier] NOT NULL,
 	[Sequence] [bigint], 
 
-	[Data] [varbinary](max) NOT NULL
+	[Data] [varchar](max) NOT NULL 
 ) ON [PRIMARY]
 GO
 
