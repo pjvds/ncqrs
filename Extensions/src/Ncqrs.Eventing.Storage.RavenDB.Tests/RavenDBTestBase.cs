@@ -2,8 +2,8 @@
 using System.Reflection;
 using log4net.Config;
 using NUnit.Framework;
-using Raven.Client.Client;
 using Raven.Client.Document;
+using Raven.Client.Embedded;
 
 namespace Ncqrs.Eventing.Storage.RavenDB.Tests
 {
