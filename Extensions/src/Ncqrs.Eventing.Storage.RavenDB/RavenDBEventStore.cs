@@ -79,7 +79,7 @@ namespace Ncqrs.Eventing.Storage.RavenDB
                     session.SaveChanges();
                 }
             }
-            catch (Raven.Http.Exceptions.ConcurrencyException)
+            catch (Raven.Abstractions.Exceptions.ConcurrencyException)
             {
                 Guid sourceId = Guid.Empty;
                 long version = 0;
