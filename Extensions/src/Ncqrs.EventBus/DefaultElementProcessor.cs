@@ -19,7 +19,7 @@ namespace Ncqrs.EventBus
             _internalBus.Publish(typedElement.Event);
         }
 
-        public void RegisterHandler<TEvent>(IEventHandler<TEvent> handler) where TEvent : IEvent
+        public void RegisterHandler<TEvent>(IEventHandler<TEvent> handler)
         {
             _internalBus.RegisterHandler(handler);
         }
