@@ -53,13 +53,22 @@ namespace Ncqrs.EventBus
             lock (_fetchLock)
             {
                 _activeFetchRequest = true;
-                var elements = _elementStore.Fetch(_pipelineName, directive.MaxCount);
-                foreach (var element in elements)
+                try
                 {
-                    element.SequenceNumber = _sequence++;
-                    OnElementFetched(new ElementFetchedEventArgs(element));
+                    var elements = _elementStore.Fetch(_pipelineName, directive.MaxCount);
+                    foreach (var element in elements)
+                    {
+                        element.SequenceNumber = _sequence++;
+                        OnElementFetched(new ElementFetchedEventArgs(element));
+                    }
                 }
-                _activeFetchRequest = false;
+                catch
+                {
+                }
+                finally
+                {
+                    _activeFetchRequest = false;
+                }
             }
         }
     }
