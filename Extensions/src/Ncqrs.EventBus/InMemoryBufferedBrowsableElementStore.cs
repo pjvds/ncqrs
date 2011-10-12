@@ -41,7 +41,11 @@ namespace Ncqrs.EventBus
 
         private IEnumerable<IProcessingElement> FetchFromPersistentStoreAndCorrelateWithBuffer(string pipelineName)
         {
-            var fetchedFromPersistentStore = _persistentStore.Fetch(pipelineName, _fetchSize);
+            // We need to copy the fetched items to prevent fetchedFromPersistentStore.Any()
+            // and/or CorrelateWithBufffer consuming events and not returning them.
+            // Rx extensions MemoizeAll would be a good solution, but I'm not sure we want
+            // an extra dependency, ToList is fine as long as _fetchSize is reasonable.
+            var fetchedFromPersistentStore = _persistentStore.Fetch(pipelineName, _fetchSize).ToList();
             if (!fetchedFromPersistentStore.Any() || CorrelateWithBufffer(fetchedFromPersistentStore))
             {
                 _inMemoryMode = true;
