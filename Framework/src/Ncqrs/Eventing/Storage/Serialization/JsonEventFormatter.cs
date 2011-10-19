@@ -22,11 +22,26 @@ namespace Ncqrs.Eventing.Storage.Serialization
         /// when resolving event types/names.</param>
         /// <exception cref="ArgumentNullException"><paramref name="typeResolver"/> is <value>null</value>.</exception>
         public JsonEventFormatter(IEventTypeResolver typeResolver)
+            : this(typeResolver, NcqrsEnvironment.Get<JsonSerializer>())
         {
             Contract.Requires<ArgumentNullException>(typeResolver != null, "typeResolver");
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="JsonEventFormatter"/> class
+        /// with a given type resolver.
+        /// </summary>
+        /// <param name="typeResolver">The <see cref="IEventTypeResolver"/> to use
+        /// when resolving event types/names.</param>
+        /// <param name="serializer">The serializer.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="typeResolver"/> is <value>null</value>.</exception>
+        public JsonEventFormatter(IEventTypeResolver typeResolver, JsonSerializer serializer)
+        {
+            Contract.Requires<ArgumentNullException>(typeResolver != null, "typeResolver");
+            Contract.Requires<ArgumentNullException>(serializer != null, "serializer");
 
             _typeResolver = typeResolver;
-            _serializer = new JsonSerializer();
+            _serializer = serializer;
         }
 
         public object Deserialize(JObject obj, string eventName)

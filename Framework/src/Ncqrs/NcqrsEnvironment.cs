@@ -10,6 +10,7 @@ using Ncqrs.Eventing.ServiceModel.Bus;
 using Ncqrs.Eventing.Sourcing.Snapshotting;
 using Ncqrs.Eventing.Storage;
 using Ncqrs.Domain.Storage;
+using Newtonsoft.Json;
 
 namespace Ncqrs
 {
@@ -44,6 +45,7 @@ namespace Ncqrs
             SetDefault<IAggregateRootCreationStrategy>(new SimpleAggregateRootCreationStrategy());
             SetDefault<IAggregateSupportsSnapshotValidator>(new AggregateSupportsSnapshotValidator());
             SetDefault<IAggregateSnapshotter>(new DefaultAggregateSnapshotter(Get<IAggregateRootCreationStrategy>(), Get<IAggregateSupportsSnapshotValidator>()));
+            SetDefault<JsonSerializer>(() => new JsonSerializer());
         }
 
         /// <summary>
