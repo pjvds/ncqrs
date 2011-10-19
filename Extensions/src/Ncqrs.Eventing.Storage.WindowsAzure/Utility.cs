@@ -12,7 +12,7 @@ namespace Ncqrs.Eventing.Storage.WindowsAzure
         public static string Jsonize(object data, Type type)
         {
             StringBuilder result = new StringBuilder();
-            new JsonSerializer().Serialize(new StringWriter(result), data);
+            NcqrsEnvironment.Get<JsonSerializer>().Serialize(new StringWriter(result), data);
             return result.ToString();
         }
 
@@ -24,7 +24,7 @@ namespace Ncqrs.Eventing.Storage.WindowsAzure
 
         public static object DeJsonize(string data, Type type)
         {
-            return new JsonSerializer().Deserialize(new StringReader(data), type);
+            return NcqrsEnvironment.Get<JsonSerializer>().Deserialize(new StringReader(data), type);
         }
 
         public static object DeJsonize(string data, string assemblyQualifiedTypeName)

@@ -35,7 +35,7 @@ namespace Ncqrs.Eventing.Storage.NoDB
             var type = Type.GetType(typeline.Trim());
             try
             {
-                var result = (Snapshot) new JsonSerializer().Deserialize(reader, type);
+                var result = (Snapshot)NcqrsEnvironment.Get<JsonSerializer>().Deserialize(reader, type);
                 return result.Version > maxVersion
                            ? null
                            : result;
