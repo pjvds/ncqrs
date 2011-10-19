@@ -52,7 +52,7 @@ namespace Ncqrs
         /// <remarks>
         /// Use the <see cref="SetDefault{T}"/> method to set a default.
         /// </remarks>
-        private static readonly Dictionary<Type, Object> _defaults = new Dictionary<Type, object>(0);
+        private static readonly Dictionary<Type, Func<Object>> _defaults = new Dictionary<Type, Func<object>>(0);
 
         /// <summary>
         /// Hold the environment configuration. This is initialized by the <see cref="Configure"/> method.
@@ -81,12 +81,11 @@ namespace Ncqrs
 
             if (_instance == null || !_instance.TryGet(out result))
             {
-                object defaultResult;
+                Func<object> defaultFactory;
 
-                if (_defaults.TryGetValue(typeof(T), out defaultResult))
+                if (_defaults.TryGetValue(typeof(T), out defaultFactory))
                 {
-                    result = (T)defaultResult;
-                    
+                    result = (T)defaultFactory();
                 }
             }
 
@@ -105,12 +104,29 @@ namespace Ncqrs
         /// </remarks>
         /// <typeparam name="T">The type of the instance to set a default.
         /// </typeparam>
-        /// <param name="instance">The instance to set as default.</param>
+        /// <param name="instance">The instance to return by default.</param>
         public static void SetDefault<T>(T instance) where T : class
         {
             Contract.Requires<ArgumentNullException>(instance != null, "The instance cannot be null.");
 
-            _defaults[typeof(T)] = instance;
+            _defaults[typeof(T)] = () => instance;
+        }
+
+        /// <summary>
+        /// Sets the default for an type. This default instance is returned when
+        /// the configured <see cref="IEnvironmentConfiguration"/> did not
+        /// returned an instance for this type.
+        /// </summary>
+        /// <remarks>When the type already contains a default, it is overridden.
+        /// </remarks>
+        /// <typeparam name="T">The type of the instance to set a default.
+        /// </typeparam>
+        /// <param name="instanceFactory">The factory function to get/create a default instance.</param>
+        public static void SetDefault<T>(Func<T> instanceFactory) where T : class
+        {
+            Contract.Requires<ArgumentNullException>(instanceFactory != null, "The instance factory cannot be null.");
+
+            _defaults[typeof(T)] = instanceFactory;
         }
 
         /// <summary>
