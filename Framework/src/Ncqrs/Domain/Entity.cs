@@ -6,6 +6,7 @@ namespace Ncqrs.Domain
     /// <summary>
     /// The abstract concept of an entity -- an object living inside an aggregate with own thread of identity.
     /// </summary>
+    [Serializable]
     public abstract class Entity : Entity<AggregateRoot>
     {
         protected Entity(AggregateRoot parent, Guid entityId)
@@ -17,6 +18,7 @@ namespace Ncqrs.Domain
     /// <summary>
     /// The abstract concept of an entity -- an object living inside an aggregate with own thread of identity.
     /// </summary>
+    [Serializable]
     public abstract class Entity<TAggregateRoot> where TAggregateRoot : AggregateRoot
     {
         private readonly Guid _entityId;

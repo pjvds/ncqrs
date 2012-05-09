@@ -4,6 +4,7 @@ using Ncqrs.Eventing.Sourcing.Mapping;
 
 namespace Ncqrs.Domain
 {
+    [Serializable]
     public abstract class EntityMappedByConvention : EntityMappedByConvention<AggregateRoot>
     {
         protected EntityMappedByConvention(AggregateRoot parent, Guid entityId) : base(parent, entityId)
@@ -11,6 +12,7 @@ namespace Ncqrs.Domain
         }
     }
 
+    [Serializable]
     public abstract class EntityMappedByConvention<TAggregateRoot> : Entity<TAggregateRoot> where TAggregateRoot : AggregateRoot
     {
         protected EntityMappedByConvention(TAggregateRoot parent, Guid entityId)
