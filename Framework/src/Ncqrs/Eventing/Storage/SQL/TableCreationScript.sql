@@ -21,6 +21,8 @@ CREATE TABLE [dbo].[Events](
 	)
 ) ON [PRIMARY]
 
+CREATE NONCLUSTERED INDEX IX_EventSourceId ON [dbo].[Events] (EventSourceId) 
+
 CREATE TABLE [dbo].[EventSources]
 (
 	[Id] [uniqueidentifier] NOT NULL, [Type] [nvarchar](255) NOT NULL, [Version] [int] NOT NULL
