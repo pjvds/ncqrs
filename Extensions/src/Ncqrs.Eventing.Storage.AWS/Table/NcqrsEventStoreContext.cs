@@ -18,7 +18,7 @@ namespace Ncqrs.Eventing.Storage.AWS
         {
             get
             {
-                return _tablePrefix + _domainName;
+                return _tablePrefix + _domainName + "Source";
             }
         }
         private string EVENTTABLENAME
