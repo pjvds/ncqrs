@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using Ncqrs.Domain;
 using Ncqrs.Eventing;
-using Ncqrs.Eventing.Sourcing;
 
 namespace Ncqrs.Spec
 {
@@ -55,7 +54,7 @@ namespace Ncqrs.Spec
         private void InitializeAppliedEventHandler()
         {
             if(_eventAppliedCallback == null)
-                _eventAppliedCallback = new Action<AggregateRoot, UncommittedEvent>(AggregateRootEventAppliedHandler);
+                _eventAppliedCallback = AggregateRootEventAppliedHandler;
 
             AggregateRoot.RegisterThreadStaticEventAppliedCallback(_eventAppliedCallback);
         }

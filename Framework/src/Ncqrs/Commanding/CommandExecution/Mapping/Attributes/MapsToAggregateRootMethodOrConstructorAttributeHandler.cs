@@ -22,7 +22,7 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
                 };
 
             var creatingMatch = GetMatchingConstructor(attribute, commandType);
-            Func<ICommand, AggregateRoot> create = (c) =>
+            Func<ICommand, AggregateRoot> create = c =>
             {
                 var parameter = match.Item2.Select(p => p.GetValue(c, null));
                 return (AggregateRoot)creatingMatch.Item1.Invoke(parameter.ToArray());

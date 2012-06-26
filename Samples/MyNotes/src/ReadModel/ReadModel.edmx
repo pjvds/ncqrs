@@ -5,28 +5,28 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="ReadModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
-  <EntityContainer Name="ReadModelStoreContainer">
-    <EntitySet Name="NoteItemSet" EntityType="ReadModel.Store.NoteItemSet" store:Type="Tables" Schema="dbo" />
-    <EntitySet Name="TotalsPerDayItemSet" EntityType="ReadModel.Store.TotalsPerDayItemSet" store:Type="Tables" Schema="dbo" />
-  </EntityContainer>
-  <EntityType Name="NoteItemSet">
-    <Key>
-      <PropertyRef Name="Id" />
-    </Key>
-    <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
-    <Property Name="Text" Type="varchar" Nullable="true" MaxLength="250" />
-    <Property Name="CreationDate" Type="datetime" Nullable="true" />
-  </EntityType>
-  <EntityType Name="TotalsPerDayItemSet">
-    <Key>
-      <PropertyRef Name="Id" />
-    </Key>
-    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="Date" Type="datetime" Nullable="false" />
-    <Property Name="NewCount" Type="int" Nullable="false" />
-    <Property Name="EditCount" Type="int" Nullable="false" />
-  </EntityType>
-</Schema></edmx:StorageModels>
+        <EntityContainer Name="ReadModelStoreContainer">
+          <EntitySet Name="NoteItemSet" EntityType="ReadModel.Store.NoteItemSet" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="TotalsPerDayItemSet" EntityType="ReadModel.Store.TotalsPerDayItemSet" store:Type="Tables" Schema="dbo" />
+        </EntityContainer>
+        <EntityType Name="NoteItemSet">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Text" Type="varchar" MaxLength="250" />
+          <Property Name="CreationDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="TotalsPerDayItemSet">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="NewCount" Type="int" Nullable="false" />
+          <Property Name="EditCount" Type="int" Nullable="false" />
+        </EntityType>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema xmlns="http://schemas.microsoft.com/ado/2008/09/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="ReadModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation">

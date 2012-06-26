@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
-using System.Transactions;
 
 namespace Ncqrs.Commanding.CommandExecution
 {

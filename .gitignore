@@ -38,3 +38,6 @@ release
 
 #dotCover
 *.dotCover
+
+#TestResults
+/TestResults/*

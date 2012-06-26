@@ -50,10 +50,9 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
             var commandType = command.GetType();
             IEnumerable<dynamic> attributes = commandType.GetCustomAttributes(false);
 
-            dynamic attributeHandler;
-
             foreach (dynamic attribute in attributes)
             {
+                dynamic attributeHandler;
                 if (_handlers.TryGetValue(attribute.GetType(), out attributeHandler))
                 {
                     attributeHandler.Map(attribute, command, executor);

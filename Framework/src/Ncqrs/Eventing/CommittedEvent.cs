@@ -79,6 +79,16 @@ namespace Ncqrs.Eventing
             get { return _eventSequence; }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="commitId"></param>
+        /// <param name="eventIdentifier"></param>
+        /// <param name="eventSourceId"></param>
+        /// <param name="eventSequence"></param>
+        /// <param name="eventTimeStamp"></param>
+        /// <param name="payload"></param>
+        /// <param name="eventVersion"></param>
         public CommittedEvent(Guid commitId, Guid eventIdentifier, Guid eventSourceId, long eventSequence, DateTime eventTimeStamp, object payload, Version eventVersion)            
         {            
             _payload = payload;

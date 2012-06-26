@@ -1,7 +1,5 @@
 using System;
 using System.Reflection;
-using System.Reflection.Emit;
-using System.Linq;
 using Ncqrs.Eventing;
 using Ncqrs.Eventing.Sourcing.Snapshotting;
 

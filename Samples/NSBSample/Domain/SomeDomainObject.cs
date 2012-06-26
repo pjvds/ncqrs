@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Events;
 using Ncqrs.Domain;
 
@@ -11,21 +8,25 @@ namespace Domain
     {
         private string _value;
 
+        public SomeDomainObject(int dummyValue)
+        {
+            Console.WriteLine("SomeDomainObject with ID={0} created!", EventSourceId);
+            ApplyEvent(new SomeDomainObjectCreatedEvent {ObjectId = EventSourceId});
+        }
+
+        public SomeDomainObject()
+        {
+        }
+
         public string Value
         {
             get { return _value; }
         }
 
-        public SomeDomainObject(int dummyValue)
-        {
-            Console.WriteLine("SomeDomainObject with ID={0} created!", EventSourceId);
-            ApplyEvent(new SomeDomainObjectCreatedEvent() { ObjectId = EventSourceId });
-        }
-
         public void DoSomething(string value)
         {
             Console.WriteLine("Calling DoSomething on SomeDomainObject with ID={0}", EventSourceId);
-            ApplyEvent(new SomePropertyChangedEvent { Value = value });
+            ApplyEvent(new SomePropertyChangedEvent {Value = value});
         }
 
         private void OnSomePropertyChangedEvent(SomePropertyChangedEvent @event)
@@ -34,10 +35,6 @@ namespace Domain
         }
 
         private void OnSomeDomainObjectCreatedEvent(SomeDomainObjectCreatedEvent @event)
-        {            
-        }
-
-        public SomeDomainObject()
         {
         }
     }
