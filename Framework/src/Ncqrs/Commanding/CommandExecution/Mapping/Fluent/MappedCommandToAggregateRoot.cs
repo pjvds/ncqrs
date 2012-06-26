@@ -101,6 +101,7 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Fluent
         /// called on the aggregateroot of type <typeparamref name="TAggRoot"/> to use an existing aggregate root or create a new root if needed
         /// </summary>
         /// <param name="getidfromcommandfunc">The method responsible for retrieving the id of the aggregateroot from the command.</param>
+        /// <param name="getaggregaterootfunc"> </param>
         /// <param name="aggregaterootcreatorfunc">The method responsible for creating the aggregateroot of type <typeparamref name="TAggRoot"/>.</param>
         /// <returns>A <see cref="MappedCommandToAggregateRootMethodOrConstructor&lt;TCommand, TAggRoot&gt;"/>.</returns>
         public MappedCommandToAggregateRootMethodOrConstructor<TCommand, TAggRoot> UseExistingOrCreateNew(Func<TCommand, Guid> getidfromcommandfunc, Func<Guid, long?, TAggRoot> getaggregaterootfunc, Func<TCommand, TAggRoot> aggregaterootcreatorfunc)

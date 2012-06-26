@@ -71,7 +71,7 @@ namespace Ncqrs.Commanding.ServiceModel
         {
             Contract.Requires<ArgumentOutOfRangeException>(typeof(TCommand).IsAssignableFrom(commandType));
             if (_executors.ContainsKey(commandType)) return;
-            Action<ICommand> action = (cmd) => executor.Execute((TCommand) cmd);
+            Action<ICommand> action = cmd => executor.Execute((TCommand) cmd);
             _executors.Add(commandType, action);
         }
 
@@ -84,14 +84,13 @@ namespace Ncqrs.Commanding.ServiceModel
         public virtual void RegisterExecutor<TCommand>(ICommandExecutor<TCommand> executor) where TCommand : ICommand
         {
             if (_executors.ContainsKey(typeof(TCommand))) return;
-            Action<ICommand> action = (cmd) => executor.Execute((TCommand) cmd);
+            Action<ICommand> action = cmd => executor.Execute((TCommand) cmd);
             _executors.Add(typeof(TCommand), action);
         }
 
         /// <summary>
         /// Unregisters the executor of the specified command type. The executor will not be called any more.
         /// </summary>
-        /// <param name="executor">The executor to unregister.</param>
         /// <exception cref="ArgumentNullException">Occurs when the <i>commandType</i> or <i>executor</i> was a <c>null</c> dereference.</exception>
         /// <exception cref="InvalidOperationException">Occurs when the <i>executor</i> is not the same as the registered executor for the specified command type.</exception>
         public virtual void UnregisterExecutor<TCommand>() where TCommand : ICommand

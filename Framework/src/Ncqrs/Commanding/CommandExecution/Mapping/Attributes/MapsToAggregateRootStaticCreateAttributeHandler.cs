@@ -14,7 +14,7 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
 
             var match = GetMatchingMethod(attribute, commandType, attribute.MethodName);
 
-            Func<ICommand, AggregateRoot> create = (c) =>
+            Func<ICommand, AggregateRoot> create = c =>
             {
                 var parameter = match.Item2.Select(p => p.GetValue(c, null));
                 return
@@ -38,7 +38,7 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
         {
             var strategy = new AttributePropertyMappingStrategy();
             var sources = strategy.GetMappedProperties(commandType);
-            var bindingFlags = BindingFlags.Public | BindingFlags.Static;
+            const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Static;
 
             return PropertiesToMethodMapper.GetMethod(sources, attribute.Type, bindingFlags, methodName);
         }
