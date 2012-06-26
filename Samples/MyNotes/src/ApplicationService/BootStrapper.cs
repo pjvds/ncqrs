@@ -1,5 +1,4 @@
-﻿using System.Configuration;
-using Commands;
+﻿using Commands;
 using Ncqrs;
 using Ncqrs.Commanding;
 using Ncqrs.Commanding.CommandExecution.Mapping.Attributes;
@@ -8,7 +7,7 @@ using Ncqrs.CommandService.Infrastructure;
 using Ncqrs.EventBus;
 using Ncqrs.Eventing.ServiceModel.Bus;
 using Ncqrs.Eventing.Storage;
-using Ncqrs.Eventing.Storage.SQL;
+using Ncqrs.Eventing.Storage.AWS;
 using Castle.Windsor;
 using Castle.MicroKernel.Registration;
 using Ncqrs.Eventing.Sourcing.Snapshotting;
@@ -22,13 +21,10 @@ namespace ApplicationService
 
     public static class BootStrapper
     {
-        
-
-        public static void BootUp(InMemoryBufferedBrowsableElementStore buffer)
+        public static void BootUp()
         {
-            var connectionString = ConfigurationManager.ConnectionStrings["EventStore"].ConnectionString;
-            var asd = new MsSqlServerEventStore(connectionString);
-            var dsa = new MsSqlServerEventStore(connectionString);
+            var asd = new SimpleDBStore();
+            var dsa = new SimpleDBStore();
 
             Assembly asm = Assembly.LoadFrom("Domain.dll");
             IWindsorContainer container = new WindsorContainer();
@@ -36,7 +32,7 @@ namespace ApplicationService
             container.Register(
                 Component.For<ISnapshottingPolicy>().ImplementedBy<SimpleSnapshottingPolicy>(),
                 Component.For<ICommandService>().Instance(InitializeCommandService()),
-                Component.For<IEventBus>().Instance(InitializeEventBus(buffer)),
+                Component.For<IEventBus>().Instance(InitializeEventBus()),
                 Component.For<IEventStore>().Forward<ISnapshotStore>().Instance(dsa),
                 Component.For<IKnownCommandsEnumerator>().Instance(new AllCommandsInAppDomainEnumerator()),
                 Component.For<Note>().AsSnapshotable()
@@ -59,12 +55,10 @@ namespace ApplicationService
             return service;
         }       
 
-        private static IEventBus InitializeEventBus(InMemoryBufferedBrowsableElementStore buffer)
+        private static IEventBus InitializeEventBus()
         {
             var bus = new InProcessEventBus();
-
-            bus.RegisterHandler(new InMemoryBufferedEventHandler(buffer));
-
+            
             return bus;
         }
     }

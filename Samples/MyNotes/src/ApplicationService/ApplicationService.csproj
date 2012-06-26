@@ -105,6 +105,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Extensions\src\Ncqrs.Eventing.Storage.AWS\Ncqrs.Eventing.Storage.AWS.csproj">
+      <Project>{D8D8A477-8018-432B-8E85-795E425D4862}</Project>
+      <Name>Ncqrs.Eventing.Storage.AWS</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Commands\Commands.csproj">
       <Project>{CF0635EB-DFA4-4E82-B245-A0F125183E08}</Project>
       <Name>Commands %28Samples\MyNotes\Commands%29</Name>

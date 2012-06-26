@@ -12,7 +12,7 @@ namespace Website.Controllers
 {
     public class NoteController : Controller
     {
-        private static ChannelFactory<ICommandWebServiceClient> _channelFactory;
+        private static readonly ChannelFactory<ICommandWebServiceClient> _channelFactory;
 
         static NoteController()
         {
