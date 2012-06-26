@@ -58,16 +58,10 @@ namespace Ncqrs.Spec
         [Then]
         public void the_value_of_each_public_property_is_the_same()
         {
-            var inconclusiveItems = new List<string>();
-
             var props = GetProperties();
             var indexedProps = props.Where(p => p.GetIndexParameters().Any());
 
-            foreach (var prop in indexedProps)
-                inconclusiveItems.Add(
-                    string.Format(
-                        "{0} is an indexed property and can't be tested automatically",
-                        prop.Name));
+            var inconclusiveItems = indexedProps.Select(prop => string.Format("{0} is an indexed property and can't be tested automatically", prop.Name)).ToList();
 
             var unindexedProps = props.Except(indexedProps);
 

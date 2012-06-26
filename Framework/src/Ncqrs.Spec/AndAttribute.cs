@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Ncqrs.Spec
+﻿namespace Ncqrs.Spec
 {
     public class AndAttribute : ThenAttribute
     {

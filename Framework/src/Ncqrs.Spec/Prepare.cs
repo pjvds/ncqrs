@@ -1,12 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Ncqrs.Eventing;
-using Ncqrs.Eventing.Sourcing;
 
 namespace Ncqrs.Spec
 {
     public static class Prepare
     {
+        public static PrepareTheseEvents Events(IEnumerable<object> events)
+        {
+            return new PrepareTheseEvents(events);
+        }
+
+        public static PrepareTheseEvents Events(params object[] events)
+        {
+            return new PrepareTheseEvents(events);
+        }
+
+        #region Nested type: PrepareTheseEvents
+
         public class PrepareTheseEvents
         {
             private readonly IEnumerable<object> _events;
@@ -20,9 +32,9 @@ namespace Ncqrs.Spec
             {
                 int sequence = sequenceOffset + 1;
 
-                var commitId = Guid.NewGuid();
+                Guid commitId = Guid.NewGuid();
                 var comittedEvents = new List<CommittedEvent>();
-                foreach (var evnt in _events)
+                foreach (object evnt in _events)
                 {
                     var committedEvent = new CommittedEvent(commitId, Guid.NewGuid(), id, sequence, DateTime.UtcNow,
                                                             evnt, new Version(1, 0));
@@ -33,16 +45,18 @@ namespace Ncqrs.Spec
             }
 
             public UncommittedEventStream ForSourceUncomitted(Guid id, Guid commitId, int sequenceOffset = 0)
-            {                
+            {
                 int initialVersion = sequenceOffset == 0 ? 1 : sequenceOffset;
                 int sequence = initialVersion;
 
-                var comittedEvents = new List<CommittedEvent>();
                 var result = new UncommittedEventStream(commitId);
-                foreach (var evnt in _events)
+                foreach (UncommittedEvent uncommittedEvent
+                    in _events.Select(evnt =>
+                                      new UncommittedEvent(Guid.NewGuid(),
+                                                           id, sequence, initialVersion,
+                                                           DateTime.UtcNow,
+                                                           evnt, new Version(1, 0))))
                 {
-                    var uncommittedEvent = new UncommittedEvent(Guid.NewGuid(), id, sequence, initialVersion, DateTime.UtcNow,
-                                                            evnt, new Version(1, 0));
                     result.Append(uncommittedEvent);
                     sequence++;
                 }
@@ -50,14 +64,6 @@ namespace Ncqrs.Spec
             }
         }
 
-        public static PrepareTheseEvents Events(IEnumerable<object> events)
-        {
-            return new PrepareTheseEvents(events);
-        }
-
-        public static PrepareTheseEvents Events(params object[] events)
-        {
-            return new PrepareTheseEvents(events);
-        }
+        #endregion
     }
 }

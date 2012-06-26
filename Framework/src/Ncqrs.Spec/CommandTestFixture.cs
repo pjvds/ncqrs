@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using Ncqrs.Commanding;
+﻿using Ncqrs.Commanding;
 using Ncqrs.Commanding.CommandExecution;
-using Ncqrs.Eventing;
-using NUnit.Framework;
 
 namespace Ncqrs.Spec
 {
