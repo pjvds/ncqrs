@@ -16,7 +16,7 @@ What do you need to run this sample app?
 Follow these steps to get the website running.
 
 0. Run BUILD.bat in the root folder (two up).
-1. Open MyNotes.sln with Visual Studio 2010.
+1. Open MyNotes.sln with Visual Studio 2010 (Run as Administrator   http://stackoverflow.com/questions/6898597/visual-studio-unable-to-open-port-to-host-wcf-service).
 2. Run MyNotesEventStore.sql to create the event store database.
 3. Run MyNotesReadModel.sql to create the read model database.
 4. If needed (this step is not needed when you run the default SQL express), 
@@ -24,7 +24,7 @@ Follow these steps to get the website running.
 	- CommandService\Web.config
 	- ReadModel\App.config
 	- Website\Web.config
-5. Set Website and Denormalizer as default startup project.
+5. Set Website and ApplicationService as default startup project.
 6. Hit F5 and have fun!
 
 CONTACT
