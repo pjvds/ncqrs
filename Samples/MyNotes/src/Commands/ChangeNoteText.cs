@@ -4,7 +4,7 @@ using Ncqrs.Commanding.CommandExecution.Mapping.Attributes;
 
 namespace Commands
 {
-    [MapsToAggregateRootMethod("MyProject.Domain.Note, MyProject.Domain", "ChangeText")]
+    [MapsToAggregateRootMethod("MyProject.Domain.Note, Domain", "ChangeText")]
     public class ChangeNoteText : CommandBase
     {
         [AggregateRootId]
