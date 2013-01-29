@@ -27,12 +27,14 @@ namespace Ncqrs.Config.Windsor
             var interceptors = _container.ResolveAll<ICommandServiceInterceptor>();
             try
             {
-                interceptors.ForEach(i => i.OnBeforeBeforeExecutorResolving(context));
+                Array.ForEach(interceptors, i => i.OnBeforeBeforeExecutorResolving(context));             
 
                 var executor = GetExecutorForCommand(command);
                 if (executor == null) throw new ExecutorForCommandNotFoundException(command.GetType());
                 context = new CommandContext(command, CommandExecutionState.Resolved);
-                interceptors.ForEach(i => i.OnBeforeExecution(context));
+
+                Array.ForEach(interceptors, i => i.OnBeforeExecution(context));
+                
                 executor.Execute((dynamic) command);
                 context = new CommandContext(command, CommandExecutionState.Called);
             }
@@ -43,7 +45,7 @@ namespace Ncqrs.Config.Windsor
             }
             finally
             {
-                interceptors.ForEach(i => i.OnAfterExecution(context));
+                Array.ForEach(interceptors,i => i.OnAfterExecution(context));               
             }
         }
 

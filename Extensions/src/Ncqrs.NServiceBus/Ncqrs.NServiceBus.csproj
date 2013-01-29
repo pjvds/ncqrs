@@ -30,8 +30,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="log4net">
-      <HintPath>..\..\..\lib\ThirdParty\NServiceBus\log4net.dll</HintPath>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
+      <HintPath>..\..\..\lib\ThirdParty\log4net\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Ncqrs">
       <HintPath>..\..\..\lib\$(Configuration)\Ncqrs\Ncqrs.dll</HintPath>
@@ -60,6 +60,9 @@
     <Compile Include="NsbEnvironmentConfiguration.cs" />
     <Compile Include="NsbEventBus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1,15 +1,34 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
+Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2010
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Framework", "Framework", "{086A35E7-E3B8-449E-83A3-25A540148B86}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extensions", "Extensions", "{4EAA1C9A-E268-4BA7-A73E-940E3D769C3A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{84A6E29C-BC29-4348-BA51-4218E75CED1A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MyNotes", "MyNotes", "{8478A8FA-7295-4098-866D-47F458C766C8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NSBSample", "NSBSample", "{963C0C88-DCB6-4944-94EC-728CBB3C2778}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VersioningSample", "VersioningSample", "{E7C55656-EC73-4802-9ED4-1BC321C86ABA}"
+	ProjectSection(SolutionItems) = preProject
+		Samples\VersioningSample\CreateEventStore.sql = Samples\VersioningSample\CreateEventStore.sql
+		Samples\VersioningSample\readme.txt = Samples\VersioningSample\readme.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9961F987-2519-493C-83E6-5E8AFCD32291}"
+	ProjectSection(SolutionItems) = preProject
+		Local.testsettings = Local.testsettings
+		Ncqrs.Master.vsmdi = Ncqrs.Master.vsmdi
+		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
+	EndProjectSection
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs", "Framework\src\Ncqrs\Ncqrs.csproj", "{01F84441-80D3-49B4-AB18-96894ACB2F90}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Spec", "Framework\src\Ncqrs.Spec\Ncqrs.Spec.csproj", "{AA90754B-CA47-429E-BDC8-2A83E94179B7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Tests", "Framework\src\Ncqrs.Tests\Ncqrs.Tests.csproj", "{50E98525-806C-41E3-9366-D36B1CD936D0}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Framework", "Framework", "{086A35E7-E3B8-449E-83A3-25A540148B86}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extensions", "Extensions", "{4EAA1C9A-E268-4BA7-A73E-940E3D769C3A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Config.StructureMap", "Extensions\src\Ncqrs.Config.StructureMap\Ncqrs.Config.StructureMap.csproj", "{2558F4AD-8D5D-43A2-AAEA-75B966F9B4DE}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -56,10 +75,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.NServiceBus", "Extens
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.NServiceBus.Tests", "Extensions\src\Ncqrs.NServiceBus.Tests\Ncqrs.NServiceBus.Tests.csproj", "{86D87653-EC64-4388-A5F7-2F64F690C5F5}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{84A6E29C-BC29-4348-BA51-4218E75CED1A}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MyNotes", "MyNotes", "{8478A8FA-7295-4098-866D-47F458C766C8}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Commands", "Samples\MyNotes\src\Commands\Commands.csproj", "{CF0635EB-DFA4-4E82-B245-A0F125183E08}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Samples\MyNotes\src\Domain\Domain.csproj", "{BD0344CC-E61E-4BC6-8782-0AC0390F48FD}"
@@ -75,8 +90,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReadModel", "Samples\MyNotes\src\ReadModel\ReadModel.csproj", "{D01CE8F6-800E-44CC-886B-F862B10E1396}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "Samples\NSBSample\Client\Client.csproj", "{97B83914-6A1A-4EF4-AE40-F5CE4FA48FA8}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NSBSample", "NSBSample", "{963C0C88-DCB6-4944-94EC-728CBB3C2778}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Commands", "Samples\NSBSample\Commands\Commands.csproj", "{5EF85227-BF8E-4A19-8496-2A3BB500E27C}"
 EndProject
@@ -96,12 +109,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server", "Samples\NSBSample
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppV1", "Samples\VersioningSample\src\Appv1\AppV1.csproj", "{ECE2E2E8-648C-4561-82A0-9A1D6A2D4645}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VersioningSample", "VersioningSample", "{E7C55656-EC73-4802-9ED4-1BC321C86ABA}"
-	ProjectSection(SolutionItems) = preProject
-		Samples\VersioningSample\CreateEventStore.sql = Samples\VersioningSample\CreateEventStore.sql
-		Samples\VersioningSample\readme.txt = Samples\VersioningSample\readme.txt
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppV2", "Samples\VersioningSample\src\AppV2\AppV2.csproj", "{7A3419B2-588C-416B-A9F3-BFAE77C22D77}"
 EndProject
@@ -146,13 +153,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Eventing.Storage.Wind
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Eventing.Storage.WindowsAzure.Tests", "Extensions\src\Ncqrs.Eventing.Storage.WindowsAzure.Tests\Ncqrs.Eventing.Storage.WindowsAzure.Tests.csproj", "{693DEFC5-355C-4F62-B424-3119046B5F6D}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9961F987-2519-493C-83E6-5E8AFCD32291}"
-	ProjectSection(SolutionItems) = preProject
-		Local.testsettings = Local.testsettings
-		Ncqrs.Master.vsmdi = Ncqrs.Master.vsmdi
-		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Config.Ninject", "Extensions\src\Ncqrs.Config.Ninject\Ncqrs.Config.Ninject.csproj", "{E7EF81C1-4896-446D-B761-3BDA111E09D1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Config.Ninject.Tests", "Extensions\src\Ncqrs.Config.Ninject.Tests\Ncqrs.Config.Ninject.Tests.csproj", "{7F74C778-717A-4395-BA6B-14335E6C9753}"
@@ -161,16 +161,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Eventing.Storage.Post
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Samples\MyNotes\src\Tests\Tests.csproj", "{1F4B376F-D08C-4C8B-AB6E-16F70173FBB5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Website", "Samples\MyNotes\src\Website\Website.csproj", "{6F1765AB-F3DD-40C0-8D80-C1E1A20173E3}"
-	ProjectSection(ProjectDependencies) = postProject
-		{76062319-4F5D-4055-9D1A-5680DD2DA882} = {76062319-4F5D-4055-9D1A-5680DD2DA882}
-		{01F84441-80D3-49B4-AB18-96894ACB2F90} = {01F84441-80D3-49B4-AB18-96894ACB2F90}
-		{9CBAEAFE-9265-47BA-82C5-5E0774CBF2C5} = {9CBAEAFE-9265-47BA-82C5-5E0774CBF2C5}
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot", "Extensions\src\Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot\Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot.csproj", "{618E1C0F-E6B7-4C51-961D-C4ACE60CFC85}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot.Tests", "Extensions\src\Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot.Tests\Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot.Tests.csproj", "{85073A89-CC13-44E2-B8C2-FB0B638B60F7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.RhinoServiceBus", "Extensions\src\Ncqrs.RhinoServiceBus\Ncqrs.RhinoServiceBus.csproj", "{D3C73A73-3770-495C-A6B2-621DD67EB48A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Website", "Samples\MyNotes\src\Website\Website.csproj", "{6F1765AB-F3DD-40C0-8D80-C1E1A20173E3}"
 EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
@@ -623,16 +620,6 @@ Global
 		{1F4B376F-D08C-4C8B-AB6E-16F70173FBB5}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{1F4B376F-D08C-4C8B-AB6E-16F70173FBB5}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{1F4B376F-D08C-4C8B-AB6E-16F70173FBB5}.Release|x86.ActiveCfg = Release|Any CPU
-		{6F1765AB-F3DD-40C0-8D80-C1E1A20173E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6F1765AB-F3DD-40C0-8D80-C1E1A20173E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6F1765AB-F3DD-40C0-8D80-C1E1A20173E3}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{6F1765AB-F3DD-40C0-8D80-C1E1A20173E3}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{6F1765AB-F3DD-40C0-8D80-C1E1A20173E3}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{6F1765AB-F3DD-40C0-8D80-C1E1A20173E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6F1765AB-F3DD-40C0-8D80-C1E1A20173E3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6F1765AB-F3DD-40C0-8D80-C1E1A20173E3}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{6F1765AB-F3DD-40C0-8D80-C1E1A20173E3}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{6F1765AB-F3DD-40C0-8D80-C1E1A20173E3}.Release|x86.ActiveCfg = Release|Any CPU
 		{618E1C0F-E6B7-4C51-961D-C4ACE60CFC85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{618E1C0F-E6B7-4C51-961D-C4ACE60CFC85}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{618E1C0F-E6B7-4C51-961D-C4ACE60CFC85}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -653,15 +640,36 @@ Global
 		{85073A89-CC13-44E2-B8C2-FB0B638B60F7}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{85073A89-CC13-44E2-B8C2-FB0B638B60F7}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{85073A89-CC13-44E2-B8C2-FB0B638B60F7}.Release|x86.ActiveCfg = Release|Any CPU
+		{D3C73A73-3770-495C-A6B2-621DD67EB48A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3C73A73-3770-495C-A6B2-621DD67EB48A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3C73A73-3770-495C-A6B2-621DD67EB48A}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{D3C73A73-3770-495C-A6B2-621DD67EB48A}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{D3C73A73-3770-495C-A6B2-621DD67EB48A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D3C73A73-3770-495C-A6B2-621DD67EB48A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3C73A73-3770-495C-A6B2-621DD67EB48A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3C73A73-3770-495C-A6B2-621DD67EB48A}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{D3C73A73-3770-495C-A6B2-621DD67EB48A}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{D3C73A73-3770-495C-A6B2-621DD67EB48A}.Release|x86.ActiveCfg = Release|Any CPU
+		{6F1765AB-F3DD-40C0-8D80-C1E1A20173E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F1765AB-F3DD-40C0-8D80-C1E1A20173E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F1765AB-F3DD-40C0-8D80-C1E1A20173E3}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{6F1765AB-F3DD-40C0-8D80-C1E1A20173E3}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{6F1765AB-F3DD-40C0-8D80-C1E1A20173E3}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6F1765AB-F3DD-40C0-8D80-C1E1A20173E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F1765AB-F3DD-40C0-8D80-C1E1A20173E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F1765AB-F3DD-40C0-8D80-C1E1A20173E3}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{6F1765AB-F3DD-40C0-8D80-C1E1A20173E3}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{6F1765AB-F3DD-40C0-8D80-C1E1A20173E3}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{01F84441-80D3-49B4-AB18-96894ACB2F90} = {086A35E7-E3B8-449E-83A3-25A540148B86}
 		{AA90754B-CA47-429E-BDC8-2A83E94179B7} = {086A35E7-E3B8-449E-83A3-25A540148B86}
 		{50E98525-806C-41E3-9366-D36B1CD936D0} = {086A35E7-E3B8-449E-83A3-25A540148B86}
-		{01F84441-80D3-49B4-AB18-96894ACB2F90} = {086A35E7-E3B8-449E-83A3-25A540148B86}
 		{D300CE86-E8DF-4E9A-9FEB-A2355661A9F2} = {086A35E7-E3B8-449E-83A3-25A540148B86}
+		{9961F987-2519-493C-83E6-5E8AFCD32291} = {4EAA1C9A-E268-4BA7-A73E-940E3D769C3A}
 		{2558F4AD-8D5D-43A2-AAEA-75B966F9B4DE} = {4EAA1C9A-E268-4BA7-A73E-940E3D769C3A}
 		{99BE6129-C5C4-45A5-94AB-0ADEA0A6AD53} = {4EAA1C9A-E268-4BA7-A73E-940E3D769C3A}
 		{629CA40F-74CF-4040-8CAD-5EFEDD06BCFE} = {4EAA1C9A-E268-4BA7-A73E-940E3D769C3A}
@@ -685,12 +693,12 @@ Global
 		{A2ADE0B3-D3C0-4D6B-8701-C0F5E509A69A} = {4EAA1C9A-E268-4BA7-A73E-940E3D769C3A}
 		{6535AFF3-E730-4916-9CF6-1186F3C1DAFE} = {4EAA1C9A-E268-4BA7-A73E-940E3D769C3A}
 		{693DEFC5-355C-4F62-B424-3119046B5F6D} = {4EAA1C9A-E268-4BA7-A73E-940E3D769C3A}
-		{9961F987-2519-493C-83E6-5E8AFCD32291} = {4EAA1C9A-E268-4BA7-A73E-940E3D769C3A}
 		{E7EF81C1-4896-446D-B761-3BDA111E09D1} = {4EAA1C9A-E268-4BA7-A73E-940E3D769C3A}
 		{7F74C778-717A-4395-BA6B-14335E6C9753} = {4EAA1C9A-E268-4BA7-A73E-940E3D769C3A}
 		{73EFEBCC-4B62-470B-A27B-D846359FF600} = {4EAA1C9A-E268-4BA7-A73E-940E3D769C3A}
 		{618E1C0F-E6B7-4C51-961D-C4ACE60CFC85} = {4EAA1C9A-E268-4BA7-A73E-940E3D769C3A}
 		{85073A89-CC13-44E2-B8C2-FB0B638B60F7} = {4EAA1C9A-E268-4BA7-A73E-940E3D769C3A}
+		{D3C73A73-3770-495C-A6B2-621DD67EB48A} = {4EAA1C9A-E268-4BA7-A73E-940E3D769C3A}
 		{8478A8FA-7295-4098-866D-47F458C766C8} = {84A6E29C-BC29-4348-BA51-4218E75CED1A}
 		{963C0C88-DCB6-4944-94EC-728CBB3C2778} = {84A6E29C-BC29-4348-BA51-4218E75CED1A}
 		{E7C55656-EC73-4802-9ED4-1BC321C86ABA} = {84A6E29C-BC29-4348-BA51-4218E75CED1A}

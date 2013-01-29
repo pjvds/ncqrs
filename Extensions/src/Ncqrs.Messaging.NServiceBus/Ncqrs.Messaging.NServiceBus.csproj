@@ -31,8 +31,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="log4net">
-      <HintPath>..\..\..\lib\ThirdParty\NServiceBus\log4net.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\..\lib\ThirdParty\log4net\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Ncqrs">
       <HintPath>..\..\..\lib\$(Configuration)\Ncqrs\Ncqrs.dll</HintPath>
@@ -84,6 +83,9 @@
       <Name>Ncqrs.Messaging</Name>
       <Private>False</Private>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -35,8 +35,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\..\lib\ThirdParty\RavenDB\Newtonsoft.Json.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Raven.Abstractions">
       <HintPath>..\..\..\lib\ThirdParty\RavenDB\Raven.Abstractions.dll</HintPath>
@@ -64,6 +63,9 @@
     <Compile Include="RavenDBSnapshotStore.cs" />
     <Compile Include="StoredEvent.cs" />
     <Compile Include="StoredSnaphot.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
