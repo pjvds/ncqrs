@@ -8,15 +8,15 @@
 //------------------------------------------------------------------------------
 
 using System;
-using System.ComponentModel;
-using System.Data.EntityClient;
 using System.Data.Objects;
 using System.Data.Objects.DataClasses;
-using System.Linq;
-using System.Runtime.Serialization;
+using System.Data.EntityClient;
+using System.ComponentModel;
 using System.Xml.Serialization;
+using System.Runtime.Serialization;
 
 [assembly: EdmSchemaAttribute()]
+
 namespace ReadModel
 {
     #region Contexts
@@ -98,7 +98,6 @@ namespace ReadModel
         private ObjectSet<TotalsPerDayItem> _TotalsPerDayItemSet;
 
         #endregion
-
         #region AddTo Methods
     
         /// <summary>
@@ -118,11 +117,11 @@ namespace ReadModel
         }
 
         #endregion
-
     }
+    
 
     #endregion
-
+    
     #region Entities
     
     /// <summary>
@@ -147,7 +146,6 @@ namespace ReadModel
         }
 
         #endregion
-
         #region Primitive Properties
     
         /// <summary>
@@ -226,7 +224,6 @@ namespace ReadModel
         partial void OnCreationDateChanged();
 
         #endregion
-
     
     }
     
@@ -258,7 +255,6 @@ namespace ReadModel
         }
 
         #endregion
-
         #region Primitive Properties
     
         /// <summary>
@@ -361,11 +357,9 @@ namespace ReadModel
         partial void OnEditCountChanged();
 
         #endregion
-
     
     }
 
     #endregion
-
     
 }

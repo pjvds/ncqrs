@@ -64,9 +64,7 @@
     </EntityDeploy>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.Config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <None Include="App.Config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="ReadModel.edmx.sql" />

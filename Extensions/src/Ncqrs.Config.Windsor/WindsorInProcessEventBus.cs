@@ -42,11 +42,8 @@ namespace Ncqrs.Config.Windsor
         }
 
         public void Publish(IEnumerable<IPublishableEvent> eventMessages)
-        {            
-            foreach (var msg in eventMessages)
-            {
-                Publish(msg);
-            }
+        {
+            eventMessages.ForEach(Publish);
         }
         
         static void PublishToHandlers(dynamic eventMessage, Type eventMessageType, IEnumerable<dynamic> handlers)
