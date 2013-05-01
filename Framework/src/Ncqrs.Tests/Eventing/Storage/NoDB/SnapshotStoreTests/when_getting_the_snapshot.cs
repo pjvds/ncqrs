@@ -13,7 +13,7 @@ namespace Ncqrs.Eventing.Storage.NoDB.Tests.SnapshotStoreTests
         public void SetUp()
         {
             Snapshot = new Snapshot(Guid.NewGuid(), 1, new TestSnapshot { Name = "Name" });
-            SnapshotStore.SaveShapshot(Snapshot);
+            SnapshotStore.SaveSnapshot(Snapshot);
             _retrieved = SnapshotStore.GetSnapshot(Snapshot.EventSourceId, long.MaxValue);
         }
 

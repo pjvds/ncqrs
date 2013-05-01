@@ -133,7 +133,7 @@ namespace Ncqrs.Eventing.Storage.JOliver
                 var snapshot = _domainRepository.TryTakeSnapshot(savedInstance);
                 if (snapshot != null)
                 {
-                    _snapshotStore.SaveShapshot(snapshot);
+                    _snapshotStore.SaveSnapshot(snapshot);
                 }
             }
         }

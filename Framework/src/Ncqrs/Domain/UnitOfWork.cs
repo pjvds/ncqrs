@@ -17,9 +17,7 @@ namespace Ncqrs.Domain
     {
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        /// <summary>
-        /// A queue that holds a reference to all instances that have themself registered as a dirty instance during the lifespan of this unit of work instance.
-        /// </summary>
+        /// <summary>A queue that holds a reference to all instances that have themselves registered as a dirty instance during the lifespan of this unit of work instance.</summary>
         private readonly Queue<AggregateRoot> _dirtyInstances;
         private readonly UncommittedEventStream _eventStream;
         private readonly IDomainRepository _repository;
@@ -57,32 +55,28 @@ namespace Ncqrs.Domain
             Contract.Invariant(Contract.ForAll(_dirtyInstances, (instance => instance != null)), "None of the dirty instances can be null.");
         }
 
-        /// <summary>
-        /// Gets aggregate root by its id.
-        /// </summary>
+        /// <summary>Gets aggregate root by its id.</summary>
         /// <param name="aggregateRootType">Type of the aggregate root.</param>
         /// <param name="eventSourceId">The eventSourceId of the aggregate root.</param>
         /// <param name="lastKnownRevision">If specified, the most recent version of event source observed by the client (used for optimistic concurrency).</param>
-        /// <returns>
-        /// A new instance of the aggregate root that contains the latest known state.
-        /// </returns>
+        /// <returns>A new instance of the aggregate root that contains the latest known state.</returns>
         public override AggregateRoot GetById(Type aggregateRootType, Guid eventSourceId, long? lastKnownRevision)
         {
-            long maxVersion = lastKnownRevision.HasValue ? lastKnownRevision.Value : long.MaxValue;
             Snapshot snapshot = null;
+            long maxVersion = lastKnownRevision.HasValue ? lastKnownRevision.Value : long.MaxValue;
             long minVersion = long.MinValue;
+
             snapshot = _snapshotStore.GetSnapshot(eventSourceId, maxVersion);
+
             if (snapshot != null)
-            {
                 minVersion = snapshot.Version + 1;
-            }
+
             var eventStream = _eventStore.ReadFrom(eventSourceId, minVersion, maxVersion);
+
             return _repository.Load(aggregateRootType, snapshot, eventStream);
         }
 
-        /// <summary>
-        /// Accepts the unit of work and persist the changes.
-        /// </summary>
+        /// <summary>Accepts the unit of work and persist the changes.</summary>
         public override void Accept()
         {
             Contract.Requires<ObjectDisposedException>(!IsDisposed);
@@ -97,9 +91,7 @@ namespace Ncqrs.Domain
         private void CreateSnapshots()
         {
             foreach (AggregateRoot savedInstance in _dirtyInstances)
-            {
                 TryCreateCreateSnapshot(savedInstance);
-            }
         }
 
         private void TryCreateCreateSnapshot(AggregateRoot savedInstance)
@@ -107,16 +99,13 @@ namespace Ncqrs.Domain
             if (_snapshottingPolicy.ShouldCreateSnapshot(savedInstance))
             {
                 var snapshot = _repository.TryTakeSnapshot(savedInstance);
+
                 if (snapshot != null)
-                {
-                    _snapshotStore.SaveShapshot(snapshot);
-                }
+                    _snapshotStore.SaveSnapshot(snapshot);
             }
         }
 
-        /// <summary>
-        /// Registers the dirty.
-        /// </summary>
+        /// <summary>Registers the dirty instance.</summary>
         /// <param name="dirtyInstance">The dirty instance.</param>
         private void RegisterDirtyInstance(AggregateRoot dirtyInstance)
         {
