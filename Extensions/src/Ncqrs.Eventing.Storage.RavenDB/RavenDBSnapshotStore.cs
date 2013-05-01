@@ -32,21 +32,6 @@ namespace Ncqrs.Eventing.Storage.RavenDB
                 FindTypeTagName = x => "Snapshots"
             };
         }
-        
-        public void SaveShapshot(Snapshot source)
-        {
-            using (var session = _documentStore.OpenSession())
-            {
-                session.Store(new StoredSnaphot
-                                  {
-                                      Id = source.EventSourceId.ToString(),
-                                      Data = source.Payload,
-                                      EventSourceId = source.EventSourceId,
-                                      Version = source.Version
-                                  });
-                session.SaveChanges();
-            }
-        }
 
         public Snapshot GetSnapshot(Guid eventSourceId, long maxVersion)
         {
@@ -60,6 +45,22 @@ namespace Ncqrs.Eventing.Storage.RavenDB
                 return snapshot.Version <= maxVersion
                            ? new Snapshot(eventSourceId, snapshot.Version, snapshot.Data)
                            : null;
+            }
+        }
+
+        public void SaveSnapshot(Snapshot source)
+        {
+            using (var session = _documentStore.OpenSession())
+            {
+                session.Store(new StoredSnaphot
+                {
+                    Id = source.EventSourceId.ToString(),
+                    Data = source.Payload,
+                    EventSourceId = source.EventSourceId,
+                    Version = source.Version
+                });
+
+                session.SaveChanges();
             }
         }
     }

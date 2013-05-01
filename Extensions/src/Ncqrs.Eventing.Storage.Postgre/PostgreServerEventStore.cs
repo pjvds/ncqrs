@@ -16,9 +16,7 @@ using System.Data;
 
 namespace Ncqrs.Eventing.Storage.Postgre
 {
-    /// <summary>
-    /// Stores events for a SQL database.
-    /// </summary>
+    /// <summary>Stores events for a SQL database.</summary>
     public class PostgreServerEventStore : IEventStore, ISnapshotStore
     {
         private readonly static int FirstVersion = 0;
@@ -28,9 +26,7 @@ namespace Ncqrs.Eventing.Storage.Postgre
         private readonly IEventTranslator<string> _translator;
         private readonly IEventConverter _converter;
 
-        public PostgreServerEventStore(String connectionString)
-            : this(connectionString, null, null)
-        { }
+        public PostgreServerEventStore(String connectionString) : this(connectionString, null, null) { }
 
         public PostgreServerEventStore(String connectionString, IEventTypeResolver typeResolver, IEventConverter converter)
         {
@@ -61,11 +57,8 @@ namespace Ncqrs.Eventing.Storage.Postgre
             return evnt;
         }
 
-
-        /// <summary>
-        /// Saves a snapshot of the specified event source.
-        /// </summary>
-        public void SaveShapshot(Snapshot snapshot)
+        /// <summary>Saves a snapshot of the specified event source.</summary>
+        public void SaveSnapshot(Snapshot snapshot)
         {
             using (var connection = new NpgsqlConnection(_connectionString))
             {
@@ -106,9 +99,7 @@ namespace Ncqrs.Eventing.Storage.Postgre
             }
         }
 
-        /// <summary>
-        /// Gets a snapshot of a particular event source, if one exists. Otherwise, returns <c>null</c>.
-        /// </summary>
+        /// <summary>Gets a snapshot of a particular event source, if one exists. Otherwise, returns <c>null</c>.</summary>
         public Snapshot GetSnapshot(Guid eventSourceId, long maxVersion)
         {
             using (var connection = new NpgsqlConnection(_connectionString))
@@ -129,13 +120,13 @@ namespace Ncqrs.Eventing.Storage.Postgre
                             using (var buffer = new MemoryStream(snapshotData))
                             {
                                 var formatter = new BinaryFormatter();
-                                object payload = formatter.Deserialize(buffer);
+                                var payload = formatter.Deserialize(buffer);
                                 var theSnapshot = new Snapshot(eventSourceId, (long)reader["Version"], payload);
-                                return theSnapshot.Version > maxVersion
-                                           ? null
-                                           : theSnapshot;
+
+                                return theSnapshot.Version > maxVersion ? null : theSnapshot;
                             }
                         }
+
                         return null;
                     }
                 }
@@ -147,16 +138,18 @@ namespace Ncqrs.Eventing.Storage.Postgre
             var ids = new List<Guid>();
 
             using (var connection = new NpgsqlConnection(_connectionString))
-            using (var command = new NpgsqlCommand(Queries.SelectAllIdsForTypeQuery, connection))
             {
-                command.Parameters.AddWithValue("Type", eventProviderType.FullName);
-                connection.Open();
-
-                using (NpgsqlDataReader reader = command.ExecuteReader())
+                using (var command = new NpgsqlCommand(Queries.SelectAllIdsForTypeQuery, connection))
                 {
-                    while (reader.Read())
+                    command.Parameters.AddWithValue("Type", eventProviderType.FullName);
+                    connection.Open();
+
+                    using (NpgsqlDataReader reader = command.ExecuteReader())
                     {
-                        ids.Add(reader.GetGuid(0));
+                        while (reader.Read())
+                        {
+                            ids.Add(reader.GetGuid(0));
+                        }
                     }
                 }
             }
@@ -167,17 +160,19 @@ namespace Ncqrs.Eventing.Storage.Postgre
         public void RemoveUnusedProviders()
         {
             using (var connection = new NpgsqlConnection(_connectionString))
-            using (var command = new NpgsqlCommand(Queries.DeleteUnusedProviders, connection))
             {
-                connection.Open();
+                using (var command = new NpgsqlCommand(Queries.DeleteUnusedProviders, connection))
+                {
+                    connection.Open();
 
-                try
-                {
-                    command.ExecuteNonQuery();
-                }
-                finally
-                {
-                    connection.Close();
+                    try
+                    {
+                        command.ExecuteNonQuery();
+                    }
+                    finally
+                    {
+                        connection.Close();
+                    }
                 }
             }
         }
@@ -213,9 +208,7 @@ namespace Ncqrs.Eventing.Storage.Postgre
                 data);
         }
 
-        /// <summary>
-        /// Saves the events to the event store.
-        /// </summary>
+        /// <summary>Saves the events to the event store.</summary>
         /// <param name="evnts">The events to save.</param>
         /// <param name="eventSourceId">The event source id that owns the events.</param>
         /// <param name="transaction">The transaction.</param>
@@ -228,23 +221,17 @@ namespace Ncqrs.Eventing.Storage.Postgre
                 throw new ArgumentNullException("transaction");
 
             foreach (var sourcedEvent in evnts)
-            {
                 SaveEvent(sourcedEvent, transaction);
-            }
         }
 
-        /// <summary>
-        /// Saves the event to the data store.
-        /// </summary>
+        /// <summary>Saves the event to the data store.</summary>
         /// <param name="evnt">The event to save.</param>
         /// <param name="transaction">The transaction.</param>
         private void SaveEvent(UncommittedEvent evnt, NpgsqlTransaction transaction)
         {
             string eventName;
             var document = _formatter.Serialize(evnt.Payload, out eventName);
-            var storedEvent = new StoredEvent<JObject>(evnt.EventIdentifier, evnt.EventTimeStamp,
-                                                      eventName, evnt.EventVersion, evnt.EventSourceId,
-                                                      evnt.EventSequence, document);
+            var storedEvent = new StoredEvent<JObject>(evnt.EventIdentifier, evnt.EventTimeStamp, eventName, evnt.EventVersion, evnt.EventSourceId, evnt.EventSequence, document);
             var raw = _translator.TranslateToRaw(storedEvent);
 
             using (var command = new NpgsqlCommand(Queries.InsertNewEventQuery, transaction.Connection))
@@ -273,9 +260,7 @@ namespace Ncqrs.Eventing.Storage.Postgre
             }
         }
 
-        /// <summary>
-        /// Gets the version of the provider from the event store.
-        /// </summary>
+        /// <summary>Gets the version of the provider from the event store.</summary>
         /// <param name="providerId">The provider id.</param>
         /// <param name="transaction">The transaction.</param>
         /// <returns>A <see cref="int?"/> that is <c>null</c> when no version was known ; otherwise,
@@ -290,38 +275,34 @@ namespace Ncqrs.Eventing.Storage.Postgre
             }
         }
 
-        /// <summary>
-        /// Gets the table creation queries that can be used to create the tables that are needed
-        /// for a database that is used as an event store.
-        /// </summary>
+        /// <summary>Gets the table creation queries that can be used to create the tables that are needed
+        /// for a database that is used as an event store.</summary>
         /// <remarks>This returns the content of the TableCreationScript.sql that is embedded as resource.</remarks>
         /// <returns>Queries that contain the <i>create table</i> statements.</returns>
         public static IEnumerable<String> GetTableCreationQueries()
         {
-            var currentAsm = Assembly.GetExecutingAssembly();
-
             const string resourcename = "Ncqrs.Eventing.Storage.Postgre.TableCreationScript.sql";
+
+            var currentAsm = Assembly.GetExecutingAssembly();
             var resource = currentAsm.GetManifestResourceStream(resourcename);
 
-            if (resource == null) throw new ApplicationException("Could not find the resource " + resourcename + " in assembly " + currentAsm.FullName);
+            if (resource == null) 
+                throw new ApplicationException("Could not find the resource " + resourcename + " in assembly " + currentAsm.FullName);
 
             var result = new List<string>();
 
             using (var reader = new StreamReader(resource))
             {
                 string line = null;
+
                 while ((line = reader.ReadLine()) != null)
-                {
                     result.Add(line);
-                }
             }
 
             return result;
         }
 
-        /// <summary>
-        /// Get some events after specified event.
-        /// </summary>
+        /// <summary>Get some events after specified event.</summary>
         /// <param name="eventId">The id of last event not to be included in result set.</param>
         /// <param name="maxCount">Maximum numer of returned events</param>
         /// <returns>A collection events starting right after <paramref name="eventId"/>.</returns>
@@ -359,12 +340,8 @@ namespace Ncqrs.Eventing.Storage.Postgre
             return result;
         }
 
-        /// <summary>
-        /// Reads from the stream from the <paramref name="minVersion"/> up until <paramref name="maxVersion"/>.
-        /// </summary>
-        /// <remarks>
-        /// Returned event stream does not contain snapshots. This method is used when snapshots are stored in a separate store.
-        /// </remarks>
+        /// <summary>Reads from the stream from the <paramref name="minVersion"/> up until <paramref name="maxVersion"/>.</summary>
+        /// <remarks>Returned event stream does not contain snapshots. This method is used when snapshots are stored in a separate store.</remarks>
         /// <param name="id">The id of the event source that owns the events.</param>
         /// <param name="minVersion">The minimum version number to be read.</param>
         /// <param name="maxVersion">The maximum version number to be read</param>
@@ -375,21 +352,23 @@ namespace Ncqrs.Eventing.Storage.Postgre
 
             // Create connection and command.
             using (var connection = new NpgsqlConnection(_connectionString))
-            using (var command = new NpgsqlCommand(Queries.SelectAllEventsQuery, connection))
             {
-                // Add EventSourceId parameter and open connection.
-                command.Parameters.AddWithValue("EventSourceId", id);
-                command.Parameters.AddWithValue("EventSourceMinVersion", minVersion);
-                command.Parameters.AddWithValue("EventSourceMaxVersion", maxVersion);
-                connection.Open();
-
-                // Execute query and create reader.
-                using (NpgsqlDataReader reader = command.ExecuteReader())
+                using (var command = new NpgsqlCommand(Queries.SelectAllEventsQuery, connection))
                 {
-                    while (reader.Read())
+                    // Add EventSourceId parameter and open connection.
+                    command.Parameters.AddWithValue("EventSourceId", id);
+                    command.Parameters.AddWithValue("EventSourceMinVersion", minVersion);
+                    command.Parameters.AddWithValue("EventSourceMaxVersion", maxVersion);
+                    connection.Open();
+
+                    // Execute query and create reader.
+                    using (NpgsqlDataReader reader = command.ExecuteReader())
                     {
-                        var evnt = ReadEventFromDbReader(reader);
-                        events.Add(evnt);
+                        while (reader.Read())
+                        {
+                            var evnt = ReadEventFromDbReader(reader);
+                            events.Add(evnt);
+                        }
                     }
                 }
             }
@@ -444,13 +423,9 @@ namespace Ncqrs.Eventing.Storage.Postgre
 
             // Create new event provider when it is not found.)
             if (currentVersion == null)
-            {
                 AddEventSource(eventSourceId, typeof(object), eventSourceVersion, transaction);
-            }
             else if (currentVersion.Value != initialVersion)
-            {
                 throw new ConcurrencyException(eventSourceId, eventSourceVersion);
-            }
 
             // Save all events to the store.
             SaveEvents(events, transaction);
