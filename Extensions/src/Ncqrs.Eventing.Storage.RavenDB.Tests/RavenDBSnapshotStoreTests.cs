@@ -23,7 +23,7 @@ namespace Ncqrs.Eventing.Storage.RavenDB.Tests
             var aVersion = 12;
             var snapshot = new Snapshot(anId, aVersion, new MySnapshot {Value = "Some value"});
 
-            targetStore.SaveShapshot(snapshot);
+            targetStore.SaveSnapshot(snapshot);
 
             var savedSnapshot = targetStore.GetSnapshot(anId, long.MaxValue);
             savedSnapshot.EventSourceId.Should().Be(anId);

@@ -16,15 +16,6 @@ namespace Ncqrs.Eventing.Storage.NoDB
             _path = path;
         }
 
-        public void SaveShapshot(Snapshot source)
-        {
-            FileInfo file = source.EventSourceId.GetSnapshotFileInfo(_path);
-            if (!file.Exists && !file.Directory.Exists)
-                file.Directory.Create();
-            var jo = JObject.FromObject(source);
-            WriteSnapshotTest(source, file.FullName, jo.ToString());
-        }
-
         public Snapshot GetSnapshot(Guid eventSourceId, long maxVersion)
         {
             FileInfo file = eventSourceId.GetSnapshotFileInfo(_path);
@@ -36,14 +27,21 @@ namespace Ncqrs.Eventing.Storage.NoDB
             try
             {
                 var result = (Snapshot) new JsonSerializer().Deserialize(reader, type);
-                return result.Version > maxVersion
-                           ? null
-                           : result;
+                return result.Version > maxVersion ? null : result;
             }
             catch(JsonSerializationException ex)
             {
                 return null;
             }
+        }
+
+        public void SaveSnapshot(Snapshot source)
+        {
+            FileInfo file = source.EventSourceId.GetSnapshotFileInfo(_path);
+            if (!file.Exists && !file.Directory.Exists)
+                file.Directory.Create();
+            var jo = JObject.FromObject(source);
+            WriteSnapshotTest(source, file.FullName, jo.ToString());
         }
 
         private static void WriteSnapshotTest(Snapshot source, string path, string jsonData)

@@ -19,7 +19,7 @@ namespace Ncqrs.Eventing.Storage.NoDB.Tests.SnapshotStoreTests
             Snapshot = new Snapshot(Guid.NewGuid(), 1, new TestSnapshot { Name = "TestName"});
             _foldername = Snapshot.EventSourceId.ToString().Substring(0, 2);
             _filename = Snapshot.EventSourceId.ToString().Substring(2) + ".ss";
-            SnapshotStore.SaveShapshot(Snapshot);
+            SnapshotStore.SaveSnapshot(Snapshot);
         }
 
         [Test]
