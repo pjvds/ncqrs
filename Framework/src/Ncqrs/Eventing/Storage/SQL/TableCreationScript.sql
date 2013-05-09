@@ -29,6 +29,7 @@ ELSE
 
 		PRINT 'The EventSuorces table was created.'
 	END
+GO
 
 IF EXISTS(SELECT * FROM sysobjects WHERE xtype = 'U' AND name = 'Events')
 	BEGIN
@@ -73,7 +74,8 @@ ELSE
 			CHECK CONSTRAINT [FK_Events_EventSources]
 
 		PRINT 'The Events table was created.'
-	END;
+	END
+GO
 
 IF EXISTS(SELECT * FROM sysobjects WHERE xtype = 'U' AND name = 'Snapshots')
 	BEGIN
@@ -99,6 +101,7 @@ ELSE
 
 		PRINT 'The Snapshots table was created.'
 	END
+GO
 
 IF EXISTS(SELECT * FROM sysobjects WHERE xtype = 'U' AND name = 'PipelineState')
 	BEGIN
@@ -127,10 +130,11 @@ ELSE
 
 		ALTER TABLE [PipelineState] WITH CHECK
 			ADD CONSTRAINT [FK_PipelineState_Events] FOREIGN KEY([LastProcessedEventId])
-			REFERENCES [EventStore].[Events] ([Id])
+			REFERENCES [Events] ([Id])
 
 		ALTER TABLE [PipelineState]
 			CHECK CONSTRAINT [FK_PipelineState_Events]
 
 		PRINT 'The PipelineState table was created.'
 	END
+GO
