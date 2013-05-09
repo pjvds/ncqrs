@@ -1,10 +1,10 @@
 USE [master]
 GO
 
-IF exists(SELECT * FROM sys.databases WHERE name = 'MyNotesEventStore')
-BEGIN
-	DROP DATABASE [MyNotesEventStore]
-END
+IF EXISTS(SELECT * FROM sys.databases WHERE name = 'MyNotesEventStore')
+	BEGIN
+		DROP DATABASE [MyNotesEventStore]
+	END
 GO
 
 CREATE DATABASE [MyNotesEventStore]
@@ -13,52 +13,116 @@ GO
 USE [MyNotesEventStore]
 GO
 
-CREATE TABLE [dbo].[Events]
+CREATE TABLE [EventSources]
 (
-	[SequentialId] [int] IDENTITY(1,1) NOT NULL,
-	[Id] [uniqueidentifier] NOT NULL,
-	[TimeStamp] [datetime] NOT NULL,
+	[Id]					[uniqueidentifier]		NOT NULL,
+	[Type]					[nvarchar](255)			NOT NULL,
+	[Version]				[int]					NOT NULL
+) ON [PRIMARY]
+GO
 
-	[Name] [varchar](max) NOT NULL,
-	[Version] [varchar](max) NOT NULL,
+CREATE UNIQUE NONCLUSTERED INDEX [IX_Id] ON [EventSources] 
+(
+	[Id] ASC
+)
+WITH
+(
+	PAD_INDEX					= OFF,
+	STATISTICS_NORECOMPUTE		= OFF,
+	SORT_IN_TEMPDB				= OFF,
+	IGNORE_DUP_KEY				= OFF,
+	DROP_EXISTING				= OFF,
+	ONLINE						= OFF,
+	ALLOW_ROW_LOCKS				= ON,
+	ALLOW_PAGE_LOCKS			= ON
+) ON [PRIMARY]
+GO
 
-	[EventSourceId] [uniqueidentifier] NOT NULL,
-	[Sequence] [bigint], 
-
-	[Data] [nvarchar](max) NOT NULL
-	CONSTRAINT [PK_Events] PRIMARY KEY CLUSTERED 
+CREATE TABLE [Events]
+(
+	[SequentialId]			[int] IDENTITY(1,1)		NOT NULL,
+	[Id]					[uniqueidentifier]		NOT NULL,
+	[TimeStamp]				[datetime]				NOT NULL,
+	[Name]					[varchar](max)			NOT NULL,
+	[Version]				[varchar](max)			NOT NULL,
+	[EventSourceId]			[uniqueidentifier]		NOT NULL,
+	[Sequence]				[bigint]				NULL,
+	[Data]					[nvarchar](max)			NOT NULL,
+	CONSTRAINT [PK_Events] PRIMARY KEY CLUSTERED
 	(
 		[SequentialId] ASC
+	)
+	WITH
+	(
+		PAD_INDEX				= OFF,
+		STATISTICS_NORECOMPUTE	= OFF,
+		IGNORE_DUP_KEY			= OFF,
+		ALLOW_ROW_LOCKS			= ON,
+		ALLOW_PAGE_LOCKS		= ON
 	)
 ) ON [PRIMARY]
 GO
 
-CREATE TABLE [dbo].[EventSources]
+CREATE NONCLUSTERED INDEX IX_EventSourceId ON [Events] (EventSourceId)
+GO
+
+ALTER TABLE [Events]
+	ADD CONSTRAINT UQ_Events_Id UNIQUE ([Id])
+GO
+
+ALTER TABLE [Events] WITH CHECK
+	ADD CONSTRAINT [FK_Events_EventSources] FOREIGN KEY([EventSourceId])
+	REFERENCES [EventSources] ([Id])
+GO
+
+ALTER TABLE [Events]
+	CHECK CONSTRAINT [FK_Events_EventSources]
+GO
+
+CREATE TABLE [Snapshots]
 (
-	[Id] [uniqueidentifier] NOT NULL, [Type] [nvarchar](255) NOT NULL, [Version] [int] NOT NULL
+	[EventSourceId]			[uniqueidentifier]		NOT NULL,
+	[Version]				[bigint]				NULL,
+	[TimeStamp]				[datetime]				NOT NULL, 
+	[Type]					varchar(255)			NOT NULL,
+	[Data]					[varbinary](max)		NOT NULL
 ) ON [PRIMARY]
 GO
 
-CREATE TABLE [dbo].[Snapshots]
-(
-	[EventSourceId] [uniqueidentifier] NOT NULL, [Version] [bigint], [TimeStamp] [datetime] NOT NULL, 
-	[Type] varchar(255) NOT NULL, [Data] [varbinary](max) NOT NULL
-) ON [PRIMARY]
+ALTER TABLE [Snapshots] WITH CHECK
+	ADD CONSTRAINT [FK_Snapshots_EventSources] FOREIGN KEY([EventSourceId])
+	REFERENCES [EventSources] ([Id])
 GO
 
-CREATE TABLE [dbo].[PipelineState](
-	[BatchId] [int] IDENTITY(1,1) NOT NULL,
-	[PipelineName] [varchar](255) NOT NULL,
-	[LastProcessedEventId] [uniqueidentifier] NOT NULL,
+ALTER TABLE [Snapshots]
+	CHECK CONSTRAINT [FK_Snapshots_EventSources]
+GO
+
+CREATE TABLE [PipelineState]
+(
+	[BatchId]				[int] IDENTITY(1,1)		NOT NULL,
+	[PipelineName]			[varchar](255)			NOT NULL,
+	[LastProcessedEventId]	[uniqueidentifier]		NOT NULL,
 	CONSTRAINT [PK_MainPipelineState] PRIMARY KEY CLUSTERED 
 	(
 		[BatchId] ASC
 	)
 	WITH
 	(
-		PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF,
-		IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, 
-		ALLOW_PAGE_LOCKS  = ON
+		PAD_INDEX				= OFF,
+		STATISTICS_NORECOMPUTE	= OFF,
+		IGNORE_DUP_KEY			= OFF,
+		ALLOW_ROW_LOCKS			= ON, 
+		ALLOW_PAGE_LOCKS		= ON
 	)
 ) ON [PRIMARY]
+GO
+
+ALTER TABLE [PipelineState] WITH CHECK
+	ADD CONSTRAINT [FK_PipelineState_Events] FOREIGN KEY([LastProcessedEventId])
+	REFERENCES [Events] ([Id])
+GO
+
+ALTER TABLE [PipelineState]
+	CHECK CONSTRAINT [FK_PipelineState_Events]
 GO
