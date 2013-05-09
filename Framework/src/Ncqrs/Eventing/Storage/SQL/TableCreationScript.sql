@@ -29,7 +29,6 @@ ELSE
 
 		PRINT 'The EventSuorces table was created.'
 	END
-GO
 
 IF EXISTS(SELECT * FROM sysobjects WHERE xtype = 'U' AND name = 'Events')
 	BEGIN
@@ -75,7 +74,6 @@ ELSE
 
 		PRINT 'The Events table was created.'
 	END
-GO
 
 IF EXISTS(SELECT * FROM sysobjects WHERE xtype = 'U' AND name = 'Snapshots')
 	BEGIN
@@ -101,7 +99,6 @@ ELSE
 
 		PRINT 'The Snapshots table was created.'
 	END
-GO
 
 IF EXISTS(SELECT * FROM sysobjects WHERE xtype = 'U' AND name = 'PipelineState')
 	BEGIN
@@ -137,4 +134,3 @@ ELSE
 
 		PRINT 'The PipelineState table was created.'
 	END
-GO
