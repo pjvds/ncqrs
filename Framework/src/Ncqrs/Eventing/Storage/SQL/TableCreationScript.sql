@@ -1,39 +1,4 @@
-﻿IF EXISTS(SELECT * FROM sysobjects WHERE xtype = 'U' AND name = 'Events')
-	BEGIN
-		PRINT 'The Events table already exists.'
-	END
-ELSE
-	BEGIN
-		CREATE TABLE [Events]
-		(
-			[SequentialId]			[int] IDENTITY(1,1)		NOT NULL,
-			[Id]					[uniqueidentifier]		NOT NULL,
-			[TimeStamp]				[datetime]				NOT NULL,
-			[Name]					[varchar](max)			NOT NULL,
-			[Version]				[varchar](max)			NOT NULL,
-			[EventSourceId]			[uniqueidentifier]		NOT NULL,
-			[Sequence]				[bigint]				NULL,
-			[Data]					[nvarchar](max)			NOT NULL,
-			CONSTRAINT [PK_Events] PRIMARY KEY CLUSTERED
-			(
-				[SequentialId] ASC
-			)
-			WITH
-			(
-				PAD_INDEX				= OFF,
-				STATISTICS_NORECOMPUTE	= OFF,
-				IGNORE_DUP_KEY			= OFF,
-				ALLOW_ROW_LOCKS			= ON,
-				ALLOW_PAGE_LOCKS		= ON
-			)
-		) ON [PRIMARY]
-
-		CREATE NONCLUSTERED INDEX IX_EventSourceId ON [Events] (EventSourceId)
-
-		PRINT 'The Events table was created.'
-	END;
-
-IF EXISTS(SELECT * FROM sysobjects WHERE xtype = 'U' AND name = 'EventSources')
+﻿IF EXISTS(SELECT * FROM sysobjects WHERE xtype = 'U' AND name = 'EventSources' AND uid = SCHEMA_ID(SCHEMA_NAME()))
 	BEGIN
 		PRINT 'The EventSources table already exists.'
 	END
@@ -65,7 +30,42 @@ ELSE
 		PRINT 'The EventSuorces table was created.'
 	END
 
-IF EXISTS(SELECT * FROM sysobjects WHERE xtype = 'U' AND name = 'Snapshots')
+IF EXISTS(SELECT * FROM sysobjects WHERE xtype = 'U' AND name = 'Events' AND uid = SCHEMA_ID(SCHEMA_NAME()))
+	BEGIN
+		PRINT 'The Events table already exists.'
+	END
+ELSE
+	BEGIN
+		CREATE TABLE [Events]
+		(
+			[SequentialId]			[int] IDENTITY(1,1)		NOT NULL,
+			[Id]					[uniqueidentifier]		NOT NULL,
+			[TimeStamp]				[datetime]				NOT NULL,
+			[Name]					[varchar](max)			NOT NULL,
+			[Version]				[varchar](max)			NOT NULL,
+			[EventSourceId]			[uniqueidentifier]		NOT NULL,
+			[Sequence]				[bigint]				NULL,
+			[Data]					[nvarchar](max)			NOT NULL,
+			CONSTRAINT [PK_Events] PRIMARY KEY CLUSTERED
+			(
+				[SequentialId] ASC
+			)
+			WITH
+			(
+				PAD_INDEX				= OFF,
+				STATISTICS_NORECOMPUTE	= OFF,
+				IGNORE_DUP_KEY			= OFF,
+				ALLOW_ROW_LOCKS			= ON,
+				ALLOW_PAGE_LOCKS		= ON
+			)
+		) ON [PRIMARY]
+
+		CREATE NONCLUSTERED INDEX [IX_EventSourceId] ON [Events] (EventSourceId)
+
+		PRINT 'The Events table was created.'
+	END
+
+IF EXISTS(SELECT * FROM sysobjects WHERE xtype = 'U' AND name = 'Snapshots' AND uid = SCHEMA_ID(SCHEMA_NAME()))
 	BEGIN
 		PRINT 'The Snapshots table already exists.'
 	END
@@ -83,7 +83,7 @@ ELSE
 		PRINT 'The Snapshots table was created.'
 	END
 
-IF EXISTS(SELECT * FROM sysobjects WHERE xtype = 'U' AND name = 'PipelineState')
+IF EXISTS(SELECT * FROM sysobjects WHERE xtype = 'U' AND name = 'PipelineState' AND uid = SCHEMA_ID(SCHEMA_NAME()))
 	BEGIN
 		PRINT 'The PipelineState table already exists.'
 	END
