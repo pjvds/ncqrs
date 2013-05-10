@@ -63,20 +63,7 @@ CREATE TABLE [Events]
 ) ON [PRIMARY]
 GO
 
-CREATE NONCLUSTERED INDEX IX_EventSourceId ON [Events] (EventSourceId)
-GO
-
-ALTER TABLE [Events]
-	ADD CONSTRAINT UQ_Events_Id UNIQUE ([Id])
-GO
-
-ALTER TABLE [Events] WITH CHECK
-	ADD CONSTRAINT [FK_Events_EventSources] FOREIGN KEY([EventSourceId])
-	REFERENCES [EventSources] ([Id])
-GO
-
-ALTER TABLE [Events]
-	CHECK CONSTRAINT [FK_Events_EventSources]
+CREATE NONCLUSTERED INDEX [IX_EventSourceId] ON [Events] (EventSourceId)
 GO
 
 CREATE TABLE [Snapshots]
@@ -87,15 +74,6 @@ CREATE TABLE [Snapshots]
 	[Type]					varchar(255)			NOT NULL,
 	[Data]					[varbinary](max)		NOT NULL
 ) ON [PRIMARY]
-GO
-
-ALTER TABLE [Snapshots] WITH CHECK
-	ADD CONSTRAINT [FK_Snapshots_EventSources] FOREIGN KEY([EventSourceId])
-	REFERENCES [EventSources] ([Id])
-GO
-
-ALTER TABLE [Snapshots]
-	CHECK CONSTRAINT [FK_Snapshots_EventSources]
 GO
 
 CREATE TABLE [PipelineState]
@@ -118,11 +96,26 @@ CREATE TABLE [PipelineState]
 ) ON [PRIMARY]
 GO
 
-ALTER TABLE [PipelineState] WITH CHECK
-	ADD CONSTRAINT [FK_PipelineState_Events] FOREIGN KEY([LastProcessedEventId])
+ALTER TABLE [Events] ADD CONSTRAINT [UQ_Events_Id] UNIQUE ([Id])
+GO
+
+ALTER TABLE [Events] WITH CHECK ADD CONSTRAINT [FK_Events_EventSources] FOREIGN KEY([EventSourceId])
+	REFERENCES [EventSources] ([Id])
+GO
+
+ALTER TABLE [Events] CHECK CONSTRAINT [FK_Events_EventSources]
+GO
+
+ALTER TABLE [Snapshots] WITH CHECK ADD CONSTRAINT [FK_Snapshots_EventSources] FOREIGN KEY([EventSourceId])
+	REFERENCES [EventSources] ([Id])
+GO
+
+ALTER TABLE [Snapshots] CHECK CONSTRAINT [FK_Snapshots_EventSources]
+GO
+
+ALTER TABLE [PipelineState] WITH CHECK ADD CONSTRAINT [FK_PipelineState_Events] FOREIGN KEY([LastProcessedEventId])
 	REFERENCES [Events] ([Id])
 GO
 
-ALTER TABLE [PipelineState]
-	CHECK CONSTRAINT [FK_PipelineState_Events]
+ALTER TABLE [PipelineState] CHECK CONSTRAINT [FK_PipelineState_Events]
 GO
