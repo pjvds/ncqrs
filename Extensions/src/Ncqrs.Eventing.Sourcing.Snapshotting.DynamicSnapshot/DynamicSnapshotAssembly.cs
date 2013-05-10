@@ -62,7 +62,7 @@ namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot
         {
             LoadSnapshotAssembly();
 
-            var aggregateTypeName = aggregateType.Name;
+            var aggregateTypeName = aggregateType.Name + "_Snapshot";
             var snapshotType = _snapshotAssembly.GetTypes().SingleOrDefault(type => type.Name.StartsWith(aggregateTypeName));
 
             if (snapshotType == null)
