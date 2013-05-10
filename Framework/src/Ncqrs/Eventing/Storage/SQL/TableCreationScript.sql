@@ -1,4 +1,4 @@
-﻿IF EXISTS(SELECT * FROM sysobjects WHERE xtype = 'U' AND name = 'EventSources')
+﻿IF EXISTS(SELECT * FROM sysobjects WHERE xtype = 'U' AND name = 'EventSources' AND uid = SCHEMA_ID(SCHEMA_NAME()))
 	BEGIN
 		PRINT 'The EventSources table already exists.'
 	END
@@ -30,7 +30,7 @@ ELSE
 		PRINT 'The EventSuorces table was created.'
 	END
 
-IF EXISTS(SELECT * FROM sysobjects WHERE xtype = 'U' AND name = 'Events')
+IF EXISTS(SELECT * FROM sysobjects WHERE xtype = 'U' AND name = 'Events' AND uid = SCHEMA_ID(SCHEMA_NAME()))
 	BEGIN
 		PRINT 'The Events table already exists.'
 	END
@@ -60,22 +60,12 @@ ELSE
 			)
 		) ON [PRIMARY]
 
-		CREATE NONCLUSTERED INDEX IX_EventSourceId ON [Events] (EventSourceId)
-
-		ALTER TABLE [Events]
-			ADD CONSTRAINT UQ_Events_Id UNIQUE ([Id])
-
-		ALTER TABLE [Events] WITH CHECK
-			ADD CONSTRAINT [FK_Events_EventSources] FOREIGN KEY([EventSourceId])
-			REFERENCES [EventSources] ([Id])
-
-		ALTER TABLE [Events]
-			CHECK CONSTRAINT [FK_Events_EventSources]
+		CREATE NONCLUSTERED INDEX [IX_EventSourceId] ON [Events] (EventSourceId)
 
 		PRINT 'The Events table was created.'
 	END
 
-IF EXISTS(SELECT * FROM sysobjects WHERE xtype = 'U' AND name = 'Snapshots')
+IF EXISTS(SELECT * FROM sysobjects WHERE xtype = 'U' AND name = 'Snapshots' AND uid = SCHEMA_ID(SCHEMA_NAME()))
 	BEGIN
 		PRINT 'The Snapshots table already exists.'
 	END
@@ -90,17 +80,10 @@ ELSE
 			[Data]					[varbinary](max)		NOT NULL
 		) ON [PRIMARY]
 
-		ALTER TABLE [Snapshots] WITH CHECK
-			ADD CONSTRAINT [FK_Snapshots_EventSources] FOREIGN KEY([EventSourceId])
-			REFERENCES [EventSources] ([Id])
-
-		ALTER TABLE [Snapshots]
-			CHECK CONSTRAINT [FK_Snapshots_EventSources]
-
 		PRINT 'The Snapshots table was created.'
 	END
 
-IF EXISTS(SELECT * FROM sysobjects WHERE xtype = 'U' AND name = 'PipelineState')
+IF EXISTS(SELECT * FROM sysobjects WHERE xtype = 'U' AND name = 'PipelineState' AND uid = SCHEMA_ID(SCHEMA_NAME()))
 	BEGIN
 		PRINT 'The PipelineState table already exists.'
 	END
@@ -124,13 +107,6 @@ ELSE
 				ALLOW_PAGE_LOCKS		= ON
 			)
 		) ON [PRIMARY]
-
-		ALTER TABLE [PipelineState] WITH CHECK
-			ADD CONSTRAINT [FK_PipelineState_Events] FOREIGN KEY([LastProcessedEventId])
-			REFERENCES [Events] ([Id])
-
-		ALTER TABLE [PipelineState]
-			CHECK CONSTRAINT [FK_PipelineState_Events]
 
 		PRINT 'The PipelineState table was created.'
 	END
