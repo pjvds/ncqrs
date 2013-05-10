@@ -62,20 +62,23 @@ namespace Ncqrs.Eventing.Storage.SQL
 
             using (var connection = new SqlConnection(_connectionString))
             {
-                var query = GetEventStoreInitializationQuery();
+                var tableCreationScript = GetEventStoreTableCreationScript();
+                var constraintCreationScript = GetEventStoreConstraintCreationScript();
 
-                using (var command = new SqlCommand(query, connection))
-                {
-                    connection.Open();
+                connection.Open();
+
+                using (var command = new SqlCommand(tableCreationScript, connection))
                     command.ExecuteNonQuery();
-                }
+
+                using (var command = new SqlCommand(constraintCreationScript, connection))
+                    command.ExecuteNonQuery();
             }
         }
 
-        /// <summary>Gets the table creation queries that can be used to create the tables that are needed
-        /// for a database that is used as an event store.</summary>
+        /// <summary>Gets the table creation script that can be used to create the tables and indexes 
+        /// that are needed for a database that is used as an event store.</summary>
         /// <remarks>This returns the content of the TableCreationScript.sql that is embedded as resource.</remarks>
-        /// <returns>Queries that contain the <i>create table</i> statements.</returns>
+        /// <returns>Queries that contain the <i>create table</i> and <i>create index</i> statements.</returns>
         public static IEnumerable<String> GetTableCreationQueries()
         {
             const string resourcename = "Ncqrs.Eventing.Storage.SQL.TableCreationScript.sql";
@@ -99,9 +102,25 @@ namespace Ncqrs.Eventing.Storage.SQL
             return result;
         }
 
-        private static string GetEventStoreInitializationQuery()
+        private static string GetEventStoreTableCreationScript()
         {
             const string resourcename = "Ncqrs.Eventing.Storage.SQL.TableCreationScript.sql";
+
+            var currentAsm = Assembly.GetExecutingAssembly();
+            var resource = currentAsm.GetManifestResourceStream(resourcename);
+
+            if (resource == null)
+                throw new ApplicationException("Could not find the resource " + resourcename + " in assembly " + currentAsm.FullName);
+
+            using (var reader = new StreamReader(resource))
+            {
+                return reader.ReadToEnd();
+            }
+        }
+
+        private static string GetEventStoreConstraintCreationScript()
+        {
+            const string resourcename = "Ncqrs.Eventing.Storage.SQL.ConstraintCreationScript.sql";
 
             var currentAsm = Assembly.GetExecutingAssembly();
             var resource = currentAsm.GetManifestResourceStream(resourcename);

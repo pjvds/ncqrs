@@ -259,7 +259,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TraceLogger.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Eventing\Storage\SQL\ConstraintCreationScript.sql">
+      <CustomToolNamespace>Ncqrs.Eventing.Storage.SQL.SimpleMicrosoftSqlServerEventStore</CustomToolNamespace>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
