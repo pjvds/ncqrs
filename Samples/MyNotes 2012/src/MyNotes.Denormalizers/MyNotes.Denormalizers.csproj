@@ -1,0 +1,91 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{AD4299B0-414C-41B3-B703-A231E0A1CC03}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>MyNotes.Denormalizers</RootNamespace>
+    <AssemblyName>MyNotes.Denormalizers</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\..\packages\EntityFramework.5.0.0\lib\net40\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Ncqrs">
+      <HintPath>..\..\..\..\lib\$(Configuration)\Ncqrs\Ncqrs.dll</HintPath>
+    </Reference>
+    <Reference Include="Ncqrs.CommandService">
+      <HintPath>..\..\..\..\lib\$(Configuration)\Ncqrs.CommandService\Ncqrs.CommandService.dll</HintPath>
+    </Reference>
+    <Reference Include="Ncqrs.CommandService.Contracts">
+      <HintPath>..\..\..\..\lib\$(Configuration)\Ncqrs.CommandService.Contracts\Ncqrs.CommandService.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="Ncqrs.Config.Windsor">
+      <HintPath>..\..\..\..\lib\$(Configuration)\Ncqrs.Config.Windsor\Ncqrs.Config.Windsor.dll</HintPath>
+    </Reference>
+    <Reference Include="Ncqrs.EventBus">
+      <HintPath>..\..\..\..\lib\$(Configuration)\Ncqrs.EventBus\Ncqrs.EventBus.dll</HintPath>
+    </Reference>
+    <Reference Include="Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot">
+      <HintPath>..\..\..\..\lib\$(Configuration)\Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot\Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DailyStatisticsDenormalizer.cs" />
+    <Compile Include="NoteDenormalizer.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MyNotes.Events\MyNotes.Events.csproj">
+      <Project>{77193289-0cc7-455f-97de-f624704a3a5c}</Project>
+      <Name>MyNotes.Events</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MyNotes.ReadModel\MyNotes.ReadModel.csproj">
+      <Project>{387070d4-0b68-4c1b-ba6f-f5e4d36cfe76}</Project>
+      <Name>MyNotes.ReadModel</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
