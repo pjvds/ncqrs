@@ -24,9 +24,13 @@ ELSE
 	BEGIN
 		CREATE TABLE [Note]
 		(
-			[Id]			[uniqueidentifier]		PRIMARY KEY,
+			[Id]			[uniqueidentifier]		NOT NULL,
 			[Text]			[varchar](250)			NULL,
 			[CreationDate]	[datetime]				NULL
+			CONSTRAINT [PK_Note] PRIMARY KEY CLUSTERED 
+			(
+				[Id]		ASC
+			)
 		) ON [PRIMARY]
 
 		PRINT 'The "Note" table was created.'
