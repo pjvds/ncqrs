@@ -21,6 +21,7 @@ namespace Ncqrs.Commanding
         /// Gets the unique identifier for this command.
         /// </summary>
         [ExcludeInMapping]
+        [DataMember]
         public Guid CommandIdentifier
         {
             get;
@@ -35,6 +36,7 @@ namespace Ncqrs.Commanding
         /// is the same as the known version.
         /// </summary>
         [ExcludeInMapping]
+        [DataMember]
         public long? KnownVersion
         { 
             get; 
