@@ -5,24 +5,12 @@ namespace Ncqrs.EventBus
 {
     public class DemultiplexerQueue
     {
-        private readonly object _groupingKey;
-        private readonly Action<IProcessingElement> _enqueueToProcessingCallback;
+        private readonly object _groupingKey;      
         private readonly Queue<IProcessingElement> _queue = new Queue<IProcessingElement>();
 
-        public DemultiplexerQueue(object groupingKey, Action<IProcessingElement> enqueueToProcessingCallback)
+        public DemultiplexerQueue(object groupingKey)
         {
-            _groupingKey = groupingKey;
-            _enqueueToProcessingCallback = enqueueToProcessingCallback;
-        }
-        
-        public bool Unblock()
-        {
-            if (_queue.Count > 0)
-            {
-                _enqueueToProcessingCallback(_queue.Dequeue());
-                return true;
-            }
-            return false;
+            _groupingKey = groupingKey;          
         }
 
         public bool Accepts(IProcessingElement fetchedElement)
@@ -33,6 +21,11 @@ namespace Ncqrs.EventBus
         public void Enqueue(IProcessingElement processingElement)
         {
             _queue.Enqueue(processingElement);
+        }
+
+        public bool IsEmpty()
+        {
+            return (_queue.Count == 0);
         }
     }
 }
