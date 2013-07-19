@@ -33,6 +33,7 @@ namespace Ncqrs.EventBus
             {
                 AssociateElementAndQueue(sequencedEvent, queue);
                 queue.Enqueue(sequencedEvent);
+                EnqueueToProcessing(sequencedEvent);
             }
             else
             {
@@ -56,10 +57,10 @@ namespace Ncqrs.EventBus
         {
             var queue = _queueMap[processingElement.UniqueId];            
             _queueMap.Remove(processingElement.UniqueId);
-            if (!queue.Unblock())
+            if (queue.IsEmpty())
             {
                 _queues.Remove(queue);
-            }            
+            }
         }
 
         private void EnqueueToProcessing(IProcessingElement processingElement)
@@ -69,7 +70,7 @@ namespace Ncqrs.EventBus
 
         private DemultiplexerQueue CreateAndBlockQueueFor(IProcessingElement processingElement)
         {
-            var queue = new DemultiplexerQueue(processingElement.GroupingKey, EnqueueToProcessing);
+            var queue = new DemultiplexerQueue(processingElement.GroupingKey);
             _queues.Add(queue);
             return queue;
         }
