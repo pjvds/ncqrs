@@ -40,12 +40,12 @@ namespace Ncqrs.Tests.Domain
                 OnEventForPublicMethodInvokedCount++;
             }
 
-            public virtual void OnEventForProtectedMethod(EventForProtectedMethod e)
+            protected virtual void OnEventForProtectedMethod(EventForProtectedMethod e)
             {
                 OnEventForProtectedMethodInvokeCount++;
             }
 
-            public virtual void OnEventForPrivateMethod(EventForPrivateMethod e)
+            private virtual void OnEventForPrivateMethod(EventForPrivateMethod e)
             {
                 OnEventForPrivateMethodInvokeCount++;
             }
