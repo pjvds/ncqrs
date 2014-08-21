@@ -58,7 +58,7 @@ namespace NServiceBus
         /// </summary>
         /// <param name="eventType">Type of the event.</param>
         /// <param name="handler">The handler to register.</param>
-        public ConfigNcqrs RegisterInProcessEventHandler(Type eventType, Action<IEvent> handler)
+        public ConfigNcqrs RegisterInProcessEventHandler(Type eventType, Action<Ncqrs.Eventing.IEvent> handler)
         {
             _inProcessEventBus.RegisterHandler(eventType, handler);
             return this;
