@@ -5,6 +5,8 @@ using Ncqrs.Commanding.ServiceModel;
 using Ncqrs.Eventing;
 using Ncqrs.Eventing.ServiceModel.Bus;
 using NServiceBus;
+using ICommand = Ncqrs.Commanding.ICommand;
+using IEvent = Ncqrs.Eventing.IEvent;
 
 namespace Ncqrs.NServiceBus.EventBus
 {
