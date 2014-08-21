@@ -32,10 +32,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Castle.Core, Version=2.5.1.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <HintPath>..\..\..\lib\ThirdParty\CastleWindsor\Castle.Core.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\lib\ThirdParty\CastleWindsor-3.2.1\Castle.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Castle.Windsor">
-      <HintPath>..\..\..\lib\ThirdParty\CastleWindsor\Castle.Windsor.dll</HintPath>
+    <Reference Include="Castle.Windsor, Version=2.5.1.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\lib\ThirdParty\CastleWindsor-3.2.1\Castle.Windsor.dll</HintPath>
     </Reference>
     <Reference Include="Ncqrs">
       <HintPath>..\..\..\lib\Debug\Ncqrs\Ncqrs.dll</HintPath>
