@@ -6,6 +6,8 @@ using Ncqrs.Eventing;
 using Ncqrs.Eventing.ServiceModel.Bus;
 using NServiceBus;
 using Ncqrs.Commanding.CommandExecution.Mapping.Attributes;
+using ICommand = Ncqrs.Commanding.ICommand;
+using IEvent = Ncqrs.Eventing.IEvent;
 
 namespace Ncqrs.NServiceBus
 {
@@ -38,7 +40,7 @@ namespace Ncqrs.NServiceBus
         /// <param name="executor">Custom executor instance.</param>
         /// <returns>Self.</returns>
         public ConfigNcqrs RegisterExecutor<TCommand>(ICommandExecutor<TCommand> executor) where TCommand : ICommand
-        {
+        {            
             _commandService.RegisterExecutor(executor);
             return this;
         }
@@ -73,6 +75,12 @@ namespace Ncqrs.NServiceBus
         public ConfigNcqrs RegisterInProcessEventHandler(Type eventType, Action<IEvent> handler)
         {
             _inProcessEventBus.RegisterHandler(eventType, handler);
+            return this;
+        }
+
+        public ConfigNcqrs RegisterInterceptor(ICommandServiceInterceptor interceptor)
+        {
+            _commandService.AddInterceptor(interceptor);
             return this;
         }
     }
