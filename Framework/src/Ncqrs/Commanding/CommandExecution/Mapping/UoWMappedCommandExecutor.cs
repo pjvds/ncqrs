@@ -1,5 +1,6 @@
 using System;
 using Ncqrs.Domain;
+using Ncqrs.Domain.Storage;
 
 namespace Ncqrs.Commanding.CommandExecution.Mapping
 {
@@ -33,6 +34,9 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping
                 var id = idCallback(_command);
                 var type = typeCallback(_command);
                 var aggRoot = _uow.GetById(type, id, _command.KnownVersion);
+
+                if (aggRoot == null)
+                    throw new AggregateRootNotFoundException(String.Format("AGGREGATE ROOT: {0} NOT FOUND", id));
 
                 action(aggRoot, _command);
                 _uow.Accept();
