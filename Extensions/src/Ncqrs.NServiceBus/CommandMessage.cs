@@ -1,12 +1,13 @@
 ﻿using System;
-using Ncqrs.Commanding;
-using NServiceBus;
+using System.Collections.Generic;
+using INServiceBusICommand = NServiceBus.ICommand;
+using ICommand = Ncqrs.Commanding.ICommand;
 
 namespace Ncqrs.NServiceBus
 {
    [Serializable]
-   public class CommandMessage : IMessage
+    public class CommandMessage : INServiceBusICommand
    {
-      public ICommand Payload { get; set; }
+      public IEnumerable<ICommand> Payload { get; set; }
    }
 }

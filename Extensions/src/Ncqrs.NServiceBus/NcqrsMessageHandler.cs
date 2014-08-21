@@ -1,7 +1,5 @@
-﻿using System;
-using Ncqrs.Commanding.ServiceModel;
+﻿using Ncqrs.Commanding.ServiceModel;
 using NServiceBus;
-
 namespace Ncqrs.NServiceBus
 {
     /// <summary>
@@ -16,7 +14,8 @@ namespace Ncqrs.NServiceBus
 
         public void Handle(CommandMessage message)
         {
-            CommandService.Execute(message.Payload);
+            foreach (var cmd in message.Payload)
+                CommandService.Execute(cmd);
         }
     }
 }
