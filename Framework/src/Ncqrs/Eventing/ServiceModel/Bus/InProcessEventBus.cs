@@ -4,6 +4,7 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
 using System.Transactions;
+using Ncqrs.Eventing.Storage;
 
 namespace Ncqrs.Eventing.ServiceModel.Bus
 {
@@ -12,6 +13,7 @@ namespace Ncqrs.Eventing.ServiceModel.Bus
         private readonly Dictionary<Type, List<Action<PublishedEvent>>> _handlerRegister = new Dictionary<Type, List<Action<PublishedEvent>>>();
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private readonly bool _useTransactionScope;
+        private static SimpleEventTypeResolver _resolver = new SimpleEventTypeResolver();
 
         /// <summary>
         /// Creates new <see cref="InProcessEventBus"/> instance that wraps publishing to
@@ -34,14 +36,15 @@ namespace Ncqrs.Eventing.ServiceModel.Bus
         public void Publish(IPublishableEvent eventMessage)
         {
             var eventMessageType = eventMessage.GetType();
+            var payloadTypeName = _resolver.EventNameFor(eventMessage.Payload.GetType()); 
 
-            Log.InfoFormat("Started publishing event {0}.", eventMessageType.FullName);
+            Log.InfoFormat("Started publishing event {0} with a payload of {1}.", eventMessageType.FullName, payloadTypeName);
 
             IEnumerable<Action<PublishedEvent>> handlers = GetHandlersForEvent(eventMessage);
 
             if (handlers.Count() == 0)
             {
-                Log.WarnFormat("Did not found any handlers for event {0}.", eventMessageType.FullName);
+                Log.WarnFormat("Did not found any handlers for event {0} with a payload of {1}.", eventMessageType.FullName, payloadTypeName);
             }
             else
             {

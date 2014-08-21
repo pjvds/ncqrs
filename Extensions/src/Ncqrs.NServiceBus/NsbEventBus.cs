@@ -6,7 +6,9 @@ using System.Text;
 using Ncqrs.Eventing;
 using Ncqrs.Eventing.ServiceModel.Bus;
 using NServiceBus;
+using IEvent = NServiceBus.IEvent;
 
+//using IEvent = NServiceBus.IEvent;
 namespace Ncqrs.NServiceBus
 {
     /// <summary>
@@ -24,7 +26,9 @@ namespace Ncqrs.NServiceBus
 
         public void Publish(IEnumerable<IPublishableEvent> eventMessages)
         {
-            Bus.Publish(eventMessages.Select(CreateEventMessage).ToArray());
+            foreach (var msg in eventMessages) { 
+                Bus.Publish(CreateEventMessage(msg));
+            }
         }
 
         public void RegisterHandler<TEvent>(IEventHandler<TEvent> handler)
@@ -37,29 +41,22 @@ namespace Ncqrs.NServiceBus
             get { return NcqrsEnvironment.Get<IBus>(); }
         }
 
-        private static IMessage CreateEventMessage(IPublishableEvent publishableEvent)
+        private static IMessage CreateEventMessage(IPublishableEvent evnt)
         {
-            object payload = publishableEvent.Payload;
-            Type factoryType =
-               typeof(EventMessageFactory<>).MakeGenericType(payload.GetType());
-            var factory =
-               (IEventMessageFactory)Activator.CreateInstance(factoryType);
-            return factory.CreateEventMessage(payload);
+            var factory = (IEventMessageFactory)Activator.CreateInstance(typeof(EventMessageFactory));
+            return factory.CreateEventMessage(evnt);
         }
 
         public interface IEventMessageFactory
         {
-            IMessage CreateEventMessage(object payload);
+            IEvent CreateEventMessage(IPublishableEvent payload);
         }
 
-        private class EventMessageFactory<T> : IEventMessageFactory
+        private class EventMessageFactory : IEventMessageFactory
         {
-            IMessage IEventMessageFactory.CreateEventMessage(object payload)
+            IEvent IEventMessageFactory.CreateEventMessage(IPublishableEvent evnt)
             {
-                return new EventMessage<T>
-                          {
-                              Payload = (T)payload
-                          };
+                return new EventMessage(evnt);
             }
         }
     }

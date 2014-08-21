@@ -1,19 +1,36 @@
 ﻿using System;
 using Ncqrs.Eventing;
+using Ncqrs.Eventing.ServiceModel.Bus;
 using NServiceBus;
-
+using IEvent = NServiceBus.IEvent;
 namespace Ncqrs.NServiceBus
 {
-    /// <summary>
-    /// Wraps Ncqrs event to be transportable by NServiceBus.
-    /// </summary>
-    /// <typeparam name="T">Type of transported event.</typeparam>
+    
+
     [Serializable]
-    public class EventMessage<T> : IMessage
+    public class EventMessage : IEventMessage
     {
-        /// <summary>
-        /// Gets or sets transported event.
-        /// </summary>
-        public T Payload { get; set; }
+        public EventMessage() { }
+
+        public EventMessage(IPublishableEvent evnt)
+        {
+            EventIdentifier = evnt.EventIdentifier;
+            EventTimeStamp = evnt.EventTimeStamp;
+            EventVersion = evnt.EventVersion;
+            EventSourceId = evnt.EventSourceId;
+            EventSequence = evnt.EventSequence;
+            CommitId = evnt.CommitId;
+            Payload = evnt.Payload;
+        }
+        
+        public Guid EventIdentifier { get; set; }
+        public DateTime EventTimeStamp { get; set; }
+        public Version EventVersion { get; set; }
+        public Guid EventSourceId { get; set; }
+        public long EventSequence { get; set; }
+        public Guid CommitId { get; set; }
+        public object Payload { get; set; }
     }
+
+    public interface IEventMessage : IEvent, IPublishableEvent { }
 }
