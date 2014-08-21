@@ -31,12 +31,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Castle.Core">
-      <HintPath>..\..\..\lib\ThirdParty\CastleWindsor\Castle.Core.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\..\lib\ThirdParty\CastleWindsor-3.2.1\Castle.Core.dll</HintPath>
     </Reference>
     <Reference Include="Castle.Windsor">
-      <HintPath>..\..\..\lib\ThirdParty\CastleWindsor\Castle.Windsor.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\..\lib\ThirdParty\CastleWindsor-3.2.1\Castle.Windsor.dll</HintPath>
     </Reference>
     <Reference Include="Ncqrs">
       <HintPath>..\..\..\lib\$(Configuration)\Ncqrs\Ncqrs.dll</HintPath>

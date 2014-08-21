@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Reflection.Emit;
+using Castle.Core.Internal;
 using Castle.DynamicProxy;
 using Castle.MicroKernel.Facilities;
 using Castle.Windsor;

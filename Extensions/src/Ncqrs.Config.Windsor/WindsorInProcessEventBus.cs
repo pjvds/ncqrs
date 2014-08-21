@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Castle.Core.Internal;
 using Castle.Windsor;
 using Ncqrs.Eventing;
 using Ncqrs.Eventing.ServiceModel.Bus;
