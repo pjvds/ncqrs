@@ -22,7 +22,7 @@ namespace Ncqrs.Spec
         }
 
         [Then]
-        public void it_should_do_no_more()
+        public virtual void it_should_do_no_more()
         {
             Assert.That(PublishedEvents.Count(), Is.EqualTo(1));
         }
