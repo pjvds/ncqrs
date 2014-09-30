@@ -62,6 +62,10 @@
     <Compile Include="ScenarioTest.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Framework\src\Ncqrs.Spec\Ncqrs.Spec.csproj">
+      <Project>{AA90754B-CA47-429E-BDC8-2A83E94179B7}</Project>
+      <Name>Ncqrs.Spec</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Ncqrs.Messaging\Ncqrs.Messaging.csproj">
       <Project>{3624C541-6D6E-4AAC-B70A-7A769FB5C442}</Project>
       <Name>Ncqrs.Messaging</Name>

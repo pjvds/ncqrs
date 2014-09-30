@@ -60,7 +60,7 @@ namespace Ncqrs.NServiceBus
         /// Register a handler that will receive all messages that are published.
         /// </summary>
         /// <param name="handler">The handler to register.</param>
-        public ConfigNcqrs RegisterInProcessEventHandler<TEvent>(IEventHandler<TEvent> handler) where TEvent : IEvent
+        public ConfigNcqrs RegisterInProcessEventHandler<TEvent>(IEventHandler<TEvent> handler)
         {
             _inProcessEventBus.RegisterHandler(handler);
             return this;
