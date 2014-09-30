@@ -66,7 +66,15 @@ namespace Ncqrs.Messaging
 
         private static IMessagingAggregateRoot CreateNewAggregateInstance(Type recieverType, Guid id)
         {
-            return (IMessagingAggregateRoot)Activator.CreateInstance(recieverType, new object[] {id});
+            try
+            {
+                return (IMessagingAggregateRoot)Activator.CreateInstance(recieverType, new object[] { id });
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException(String.Format("Could not create aggregate instance of type: {0}", recieverType.FullName), ex);
+            }
+            
         }
 
 
