@@ -1,2 +1,2 @@
-tools\nant\nant.exe /f:"MAIN.build"
+tools\nant\nant.exe -D:project.config=release /f:"MAIN.build" 
 pause
