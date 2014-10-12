@@ -30,19 +30,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="log4net">
-      <HintPath>..\..\..\lib\ThirdParty\NServiceBus\log4net.dll</HintPath>
-    </Reference>
     <Reference Include="Ncqrs">
       <HintPath>..\..\..\lib\$(Configuration)\Ncqrs\Ncqrs.dll</HintPath>
     </Reference>
-    <Reference Include="NServiceBus, Version=2.1.0.0, Culture=neutral, PublicKeyToken=9fc386479f8a226c, processorArchitecture=MSIL">
+    <Reference Include="NServiceBus, Version=4.7.0.0, Culture=neutral, PublicKeyToken=9fc386479f8a226c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\lib\ThirdParty\NServiceBus-4.4.2\NServiceBus.dll</HintPath>
+      <HintPath>..\..\..\packages\NServiceBus.Interfaces.4.7.1\lib\net40\NServiceBus.dll</HintPath>
     </Reference>
-    <Reference Include="NServiceBus.Core, Version=2.1.0.0, Culture=neutral, PublicKeyToken=9fc386479f8a226c, processorArchitecture=MSIL">
+    <Reference Include="NServiceBus.Core, Version=4.7.0.0, Culture=neutral, PublicKeyToken=9fc386479f8a226c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\lib\ThirdParty\NServiceBus-4.4.2\NServiceBus.Core.dll</HintPath>
+      <HintPath>..\..\..\packages\NServiceBus.4.7.1\lib\net40\NServiceBus.Core.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -62,6 +59,10 @@
     <Compile Include="NsbEnvironmentConfiguration.cs" />
     <Compile Include="NsbEventBus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ncqrs.NserviceBus.nuspec" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

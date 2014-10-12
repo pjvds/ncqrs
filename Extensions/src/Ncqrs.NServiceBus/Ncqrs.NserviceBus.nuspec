@@ -1,0 +1,23 @@
+﻿<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Ncqrs.NServiceBus</id>
+    <version>1.0.0</version>
+    <title>Ncqrs.NServiceBus</title>
+    <authors>Ncqrs.org</authors>
+    <owners>Ncqrs.org</owners>
+    <projectUrl>https://github.com/ncqrs/ncqrs/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Landlord Central fork of the Ncqrs.NServiceBus extension.</description>
+    <releaseNotes></releaseNotes>
+    <copyright></copyright>
+    <tags>ncqrs nservicebus</tags>
+    <dependencies>
+      <dependency id="Ncqrs" />
+      <dependency id="NServiceBus" version="4.7.1" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="..\..\..\release\Extensions\Ncqrs.NServiceBus\Ncqrs.NServiceBus.dll" target="lib\net45\" />
+  </files>
+</package>
