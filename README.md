@@ -20,14 +20,14 @@ sample) with the result.
 
 Discussion and feedback
 -----------------------
-The best source for discussion is the [Ncqrs-dev group][1]. You could
+The best source for discussion is the [ncqrs-dev group][1]. You could
 also drop quick messages to us using [twitter][2].
 
-To submit a bug or make a feature request use our [Redmine environment][3].
+To submit a bug or make a feature request use [github issues][3].
 
-[1]: http://groups.google.com/group/ncqrs-dev "Ncqrs-dev group"
-[2]: http://twitter.com/ncqrs/ "@Ncqrs at twitter"
-[3]: http://redmine.ncqrs.org/ "Ncqrs redmine environment"
+[1]: http://groups.google.com/group/ncqrs-dev "ncqrs-dev group"
+[2]: http://twitter.com/ncqrs/ "@ncqrs at twitter"
+[3]: https://github.com/pjvds/ncqrs/issues "github issues"
 
 Contribution
 ------------
