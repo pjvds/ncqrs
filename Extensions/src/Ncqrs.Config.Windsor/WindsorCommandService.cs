@@ -9,6 +9,7 @@ using Ncqrs.Commanding.CommandExecution;
 using Ncqrs.Commanding.ServiceModel;
 using Ncqrs.Domain;
 using Castle.Core;
+using Castle.Core.Internal;
 
 namespace Ncqrs.Config.Windsor
 {

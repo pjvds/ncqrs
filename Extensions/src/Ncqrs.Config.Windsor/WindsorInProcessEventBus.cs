@@ -6,6 +6,7 @@ using Castle.Windsor;
 using Ncqrs.Eventing;
 using Ncqrs.Eventing.ServiceModel.Bus;
 using Castle.Core;
+using Castle.Core.Internal;
 
 namespace Ncqrs.Config.Windsor
 {
