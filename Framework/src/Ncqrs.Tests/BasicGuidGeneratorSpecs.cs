@@ -26,7 +26,7 @@ namespace Ncqrs.Tests
             var firstIdentifier = generator.GenerateNewId();
             var secondIdentifier = generator.GenerateNewId();
 
-            firstIdentifier.Should().NotBeSameAs(secondIdentifier);
+            firstIdentifier.Should().NotBe(secondIdentifier);
         }
 
         [Test]

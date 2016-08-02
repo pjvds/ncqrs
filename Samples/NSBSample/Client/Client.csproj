@@ -38,12 +38,6 @@
       <HintPath>..\..\..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Ncqrs">
-      <HintPath>..\..\..\lib\$(Configuration)\Ncqrs\Ncqrs.dll</HintPath>
-    </Reference>
-    <Reference Include="Ncqrs.NServiceBus">
-      <HintPath>..\..\..\lib\$(Configuration)\Ncqrs.NServiceBus\Ncqrs.NServiceBus.dll</HintPath>
-    </Reference>
     <Reference Include="NServiceBus">
       <HintPath>..\..\..\lib\ThirdParty\NServiceBus\NServiceBus.dll</HintPath>
     </Reference>
@@ -78,6 +72,14 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Extensions\src\Ncqrs.NServiceBus\Ncqrs.NServiceBus.csproj">
+      <Project>{9b796256-e9d6-4f21-bb89-c5333a880bfe}</Project>
+      <Name>Ncqrs.NServiceBus</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Framework\src\Ncqrs\Ncqrs.csproj">
+      <Project>{01f84441-80d3-49b4-ab18-96894acb2f90}</Project>
+      <Name>Ncqrs</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Commands\Commands.csproj">
       <Project>{5EF85227-BF8E-4A19-8496-2A3BB500E27C}</Project>
       <Name>Commands %28Samples\NSBSample\Commands%29</Name>
