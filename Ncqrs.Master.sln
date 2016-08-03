@@ -178,6 +178,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Config.Autofac", "Ext
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Config.Autofac.Tests", "Extensions\src\Ncqrs.Config.Autofac.Tests\Ncqrs.Config.Autofac.Tests.csproj", "{7AF9F0CC-E3BC-4D02-9CD8-17CF8F635F05}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.RhinoServiceBus", "..\..\..\Users\SébastienBIAUDET\Source\Repos\ncqrs\Extensions\src\Ncqrs.RhinoServiceBus\Ncqrs.RhinoServiceBus.csproj", "{D3C73A73-3770-495C-A6B2-621DD67EB48A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Eventing.Storage.MongoDB", "..\..\..\Users\SébastienBIAUDET\Source\Repos\ncqrs\Extensions\src\Ncqrs.Eventing.Storage.MongoDB\Ncqrs.Eventing.Storage.MongoDB.csproj", "{E421E735-2833-4948-9BA0-94924BDC502E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ncqrs.Eventing.Storage.MongoDB.Tests", "..\..\..\Users\SébastienBIAUDET\Source\Repos\ncqrs\Extensions\src\Ncqrs.Eventing.Storage.MongoDB.Tests\Ncqrs.Eventing.Storage.MongoDB.Tests.csproj", "{DB52AAE4-6E2D-4B6F-99E2-19B83E84CF20}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -676,6 +682,40 @@ Global
 		{7AF9F0CC-E3BC-4D02-9CD8-17CF8F635F05}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{7AF9F0CC-E3BC-4D02-9CD8-17CF8F635F05}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{7AF9F0CC-E3BC-4D02-9CD8-17CF8F635F05}.Release|x86.ActiveCfg = Release|Any CPU
+		{D3C73A73-3770-495C-A6B2-621DD67EB48A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3C73A73-3770-495C-A6B2-621DD67EB48A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3C73A73-3770-495C-A6B2-621DD67EB48A}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{D3C73A73-3770-495C-A6B2-621DD67EB48A}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{D3C73A73-3770-495C-A6B2-621DD67EB48A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D3C73A73-3770-495C-A6B2-621DD67EB48A}.Debug|x86.Build.0 = Debug|Any CPU
+		{D3C73A73-3770-495C-A6B2-621DD67EB48A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3C73A73-3770-495C-A6B2-621DD67EB48A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3C73A73-3770-495C-A6B2-621DD67EB48A}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{D3C73A73-3770-495C-A6B2-621DD67EB48A}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{D3C73A73-3770-495C-A6B2-621DD67EB48A}.Release|x86.ActiveCfg = Release|Any CPU
+		{D3C73A73-3770-495C-A6B2-621DD67EB48A}.Release|x86.Build.0 = Release|Any CPU
+		{E421E735-2833-4948-9BA0-94924BDC502E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E421E735-2833-4948-9BA0-94924BDC502E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E421E735-2833-4948-9BA0-94924BDC502E}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{E421E735-2833-4948-9BA0-94924BDC502E}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{E421E735-2833-4948-9BA0-94924BDC502E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E421E735-2833-4948-9BA0-94924BDC502E}.Debug|x86.Build.0 = Debug|Any CPU
+		{E421E735-2833-4948-9BA0-94924BDC502E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E421E735-2833-4948-9BA0-94924BDC502E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E421E735-2833-4948-9BA0-94924BDC502E}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{E421E735-2833-4948-9BA0-94924BDC502E}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{E421E735-2833-4948-9BA0-94924BDC502E}.Release|x86.ActiveCfg = Release|Any CPU
+		{E421E735-2833-4948-9BA0-94924BDC502E}.Release|x86.Build.0 = Release|Any CPU
+		{DB52AAE4-6E2D-4B6F-99E2-19B83E84CF20}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{DB52AAE4-6E2D-4B6F-99E2-19B83E84CF20}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{DB52AAE4-6E2D-4B6F-99E2-19B83E84CF20}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{DB52AAE4-6E2D-4B6F-99E2-19B83E84CF20}.Debug|x86.ActiveCfg = Debug|x86
+		{DB52AAE4-6E2D-4B6F-99E2-19B83E84CF20}.Debug|x86.Build.0 = Debug|x86
+		{DB52AAE4-6E2D-4B6F-99E2-19B83E84CF20}.Release|Any CPU.ActiveCfg = Release|x86
+		{DB52AAE4-6E2D-4B6F-99E2-19B83E84CF20}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{DB52AAE4-6E2D-4B6F-99E2-19B83E84CF20}.Release|Mixed Platforms.Build.0 = Release|x86
+		{DB52AAE4-6E2D-4B6F-99E2-19B83E84CF20}.Release|x86.ActiveCfg = Release|x86
+		{DB52AAE4-6E2D-4B6F-99E2-19B83E84CF20}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -734,6 +774,9 @@ Global
 		{85073A89-CC13-44E2-B8C2-FB0B638B60F7} = {4EAA1C9A-E268-4BA7-A73E-940E3D769C3A}
 		{0EBAECFC-9A56-4ADD-AD41-7B007CFF99F1} = {4EAA1C9A-E268-4BA7-A73E-940E3D769C3A}
 		{7AF9F0CC-E3BC-4D02-9CD8-17CF8F635F05} = {4EAA1C9A-E268-4BA7-A73E-940E3D769C3A}
+		{D3C73A73-3770-495C-A6B2-621DD67EB48A} = {4EAA1C9A-E268-4BA7-A73E-940E3D769C3A}
+		{E421E735-2833-4948-9BA0-94924BDC502E} = {4EAA1C9A-E268-4BA7-A73E-940E3D769C3A}
+		{DB52AAE4-6E2D-4B6F-99E2-19B83E84CF20} = {4EAA1C9A-E268-4BA7-A73E-940E3D769C3A}
 	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = Ncqrs.Master.vsmdi
