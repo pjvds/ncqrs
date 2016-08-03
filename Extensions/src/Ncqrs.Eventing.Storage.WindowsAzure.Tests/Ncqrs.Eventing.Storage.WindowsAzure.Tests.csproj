@@ -41,8 +41,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\lib\ThirdParty\Azure\Microsoft.WindowsAzure.StorageClient.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\..\lib\ThirdParty\json.net\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -73,6 +74,10 @@
       <Project>{6535AFF3-E730-4916-9CF6-1186F3C1DAFE}</Project>
       <Name>Ncqrs.Eventing.Storage.WindowsAzure</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
