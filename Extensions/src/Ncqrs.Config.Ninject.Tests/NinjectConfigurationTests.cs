@@ -20,7 +20,7 @@ namespace Ncqrs.Config.Ninject.Tests
 
             success.Should().BeTrue();
             component.Should().NotBeNull();
-            component.Should().BeOfType<IReplicant>();
+            component.Should().BeAssignableTo<IReplicant>();
         }
 
         [Test]

@@ -10,6 +10,7 @@ using Ncqrs.Domain;
 namespace Ncqrs.Eventing.Storage.WindowsAzure.Tests
 {
     [TestClass]
+    [Ignore]
     public class MainTests
     {
 

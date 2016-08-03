@@ -11,6 +11,8 @@ using Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot;
 namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot.Tests
 {
     [TestFixture]
+    [Ignore("Error with mstest adapter")]
+
     public class SnapshotableProxyTests
     {
         private const string ChangedTitle = "ChangedTitle";

@@ -15,6 +15,7 @@ namespace Tests
     /// <remarks>Use this type of test when the command results in exactly one event.
     /// </remarks>
     [Specification]
+    [Ignore("Error with mstest adapter")]
     public class when_creating_a_new_note : OneEventTestFixture<CreateNewNote, NewNoteAdded>
     {
 

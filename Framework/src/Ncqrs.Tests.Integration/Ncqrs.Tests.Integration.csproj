@@ -91,6 +91,7 @@
     <Compile Include="JoesFetureTests.cs" />
     <Compile Include="MsSqlFetureTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SetupFixture.cs" />
     <Compile Include="TransactionalSqlPersistenceEngineTests.cs" />
   </ItemGroup>
   <ItemGroup>

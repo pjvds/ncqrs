@@ -10,6 +10,8 @@ using Rhino.Mocks;
 
 namespace Ncqrs.Config.Windsor.Tests
 {
+    [Ignore("Error with mstest adapter")]
+
     public class WindsorConfigurationEventBusTests
     {
         WindsorContainer _container;
