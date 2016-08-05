@@ -43,12 +43,6 @@
     <Reference Include="EventStore.Persistence.SqlPersistence">
       <HintPath>..\..\..\lib\ThirdParty\EventStore\EventStore.Persistence.SqlPersistence.dll</HintPath>
     </Reference>
-    <Reference Include="Ncqrs">
-      <HintPath>..\..\..\lib\Debug\Ncqrs\Ncqrs.dll</HintPath>
-    </Reference>
-    <Reference Include="Ncqrs.EventBus">
-      <HintPath>..\..\..\lib\Debug\Ncqrs.EventBus\Ncqrs.EventBus.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
@@ -107,6 +101,16 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>SqlCeStatements.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Framework\src\Ncqrs\Ncqrs.csproj">
+      <Project>{01f84441-80d3-49b4-ab18-96894acb2f90}</Project>
+      <Name>Ncqrs</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ncqrs.EventBus\Ncqrs.EventBus.csproj">
+      <Project>{caf2e548-87c8-422b-a62c-8c3ed83ff3c3}</Project>
+      <Name>Ncqrs.EventBus</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
