@@ -5,6 +5,7 @@ using Ncqrs.Eventing.Storage.NoDB.Tests.Fakes;
 using Ncqrs.Spec;
 using NUnit.Framework;
 using Rhino.Mocks;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Ncqrs.Eventing.Storage.NoDB.Tests.EventStoreTests
 {
@@ -15,7 +16,7 @@ namespace Ncqrs.Eventing.Storage.NoDB.Tests.EventStoreTests
         protected object[] Events;
         protected Guid EventSourceId;
 
-        [TestFixtureSetUp]
+        [TestInitialize]
         public void BaseSetup()
         {
             EventStore = new NoDBEventStore("./NoDBTests/"+GetType().Name);
@@ -27,7 +28,7 @@ namespace Ncqrs.Eventing.Storage.NoDB.Tests.EventStoreTests
             EventStore.Store(eventStream);
         }
 
-        [TestFixtureTearDown]
+        [TestCleanup]
         public void TearDown()
         {
             Directory.Delete(GetPath(), true);

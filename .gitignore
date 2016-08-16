@@ -40,4 +40,4 @@ release
 *.dotCover
 
 #packages
-/packages/*
+**/packages/*

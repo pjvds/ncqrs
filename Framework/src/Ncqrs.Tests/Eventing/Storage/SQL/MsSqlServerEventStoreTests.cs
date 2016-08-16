@@ -111,17 +111,19 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
             {
                 connection.Open();
                 var cmd = connection.CreateCommand();
-                cmd.CommandText = "IF EXISTS(SELECT * FROM sysobjects WHERE name='Events' AND xtype = 'U') TRUNCATE TABLE [Events]";
+
+                cmd.CommandText = "IF EXISTS(SELECT * FROM sysobjects WHERE name='PipelineState' AND xtype = 'U') DELETE FROM [PipelineState]";
                 cmd.ExecuteNonQuery();
 
-                cmd.CommandText = "IF EXISTS(SELECT * FROM sysobjects WHERE name='EventSources' AND xtype = 'U') TRUNCATE TABLE [EventSources]";
+                cmd.CommandText = "IF EXISTS(SELECT * FROM sysobjects WHERE name='Events' AND xtype = 'U') DELETE FROM [Events]";
                 cmd.ExecuteNonQuery();
 
-                cmd.CommandText = "IF EXISTS(SELECT * FROM sysobjects WHERE name='Snapshots' AND xtype = 'U') TRUNCATE TABLE [Snapshots]";
+                cmd.CommandText = "IF EXISTS(SELECT * FROM sysobjects WHERE name='EventSources' AND xtype = 'U') DELETE FROM [EventSources]";
                 cmd.ExecuteNonQuery();
 
-                cmd.CommandText = "IF EXISTS(SELECT * FROM sysobjects WHERE name='PipelineState' AND xtype = 'U') TRUNCATE TABLE [PipelineState]";
+                cmd.CommandText = "IF EXISTS(SELECT * FROM sysobjects WHERE name='Snapshots' AND xtype = 'U') DELETE FROM [Snapshots]";
                 cmd.ExecuteNonQuery();
+                
             }
             catch (SqlException caught)
             {
@@ -348,9 +350,15 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
             var targetStore = new MsSqlServerEventStore(connectionString);
 
             var anId = Guid.NewGuid();
+            var aCommitId = Guid.NewGuid();
             var aVersion = 12;
+
+            var eventStream = Prepare.Events(new object())
+               .ForSourceUncomitted(anId, aCommitId);
             var snapshot = new Snapshot(anId, aVersion, new MySnapshot());
 
+
+            targetStore.Store(eventStream);
             targetStore.SaveSnapshot(snapshot);
 
             var savedSnapshot = targetStore.GetSnapshot(anId, long.MaxValue);
