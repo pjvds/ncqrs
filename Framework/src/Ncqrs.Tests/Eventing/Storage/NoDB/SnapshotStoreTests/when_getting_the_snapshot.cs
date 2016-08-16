@@ -5,10 +5,11 @@ using FluentAssertions;
 
 namespace Ncqrs.Eventing.Storage.NoDB.Tests.SnapshotStoreTests
 {
+
+    [Ignore("")]
     public class when_getting_the_snapshot : NoDBSnapshotStoreTestFixture
     {
         private Snapshot _retrieved;
-
         [TestFixtureSetUp]
         public void SetUp()
         {
