@@ -1,6 +1,6 @@
 ﻿using System;
 using FluentAssertions;
-using NUnit.Framework;
+using Xunit;
 using Ncqrs.Commanding;
 using Ncqrs.Commanding.CommandExecution;
 using Ncqrs.Commanding.CommandExecution.Mapping.Fluent;
@@ -9,7 +9,7 @@ using Ncqrs.Domain;
 
 namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Fluent
 {
-    [TestFixture]
+
     public class FluentCommandMappingTests
     {
         private ICommandService TheService
@@ -151,8 +151,7 @@ namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Fluent
             }
         }
 
-        [SetUp]
-        public void Setup()
+        public FluentCommandMappingTests()
         {
             var service = new CommandService();
 
@@ -166,7 +165,7 @@ namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Fluent
             TheService = service;
         }
 
-        [Test]
+        [Fact]
         public void Command_should_update_the_title_of_the_aggregate_root()
         {
             var command = new AggregateRootTargetUpdateTitleCommand { Title = "AggregateRootTargetUpdateTitleCommand" };
@@ -175,7 +174,7 @@ namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Fluent
             AggRoot.Title.Should().Be("AggregateRootTargetUpdateTitleCommand");
         }
 
-        [Test]
+        [Fact]
         public void Command_should_throw_an_exception_when_the_command_is_not_mapped()
         {
             var command = new AggregateRootTargetNotAMappedCommand { Title = "AggregateRootTargetNotAMappedCommand" };
@@ -184,7 +183,7 @@ namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Fluent
             act.ShouldThrow<ExecutorForCommandNotFoundException>();
         }
 
-        [Test]
+        [Fact]
         public void Command_should_create_new_aggregate_root()
         {
             var command = new AggregateRootTargetCreateNewCommand { Title = "AggregateRootTargetCreateNewCommand" };
@@ -193,7 +192,7 @@ namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Fluent
             AggRoot.Title.Should().Be("AggregateRootTargetCreateNewCommand");
         }
 
-        [Test]
+        [Fact]
         public void Command_should_create_new_aggregate_root_with_static_method()
         {
             var command = new AggregateRootTargetStaticCreateCommand { Title = "AggregateRootTargetStaticCreateCommand" };
@@ -202,7 +201,7 @@ namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Fluent
             AggRoot.Title.Should().Be("AggregateRootTargetStaticCreateCommand");
         }
 
-        [Test]
+        [Fact]
         public void Command_should_create_and_then_use_existing()
         {
             var command = new AggregateRootTargetCreateOrUpdateTitleCommand { Title = "AggregateRootCreateNewCommand", Id = Guid.NewGuid() };
@@ -215,7 +214,7 @@ namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Fluent
             TheService.Execute(command);
 
             AggRoot.Title.Should().Be("AggregateRootCreateNewCommand2");
-            Assert.AreNotEqual(arId, AggRoot.ArId, "Id's should be different.");
+            Assert.NotEqual(arId, AggRoot.ArId);
 
             var createTicks = AggRoot.created;
             arId = AggRoot.ArId;

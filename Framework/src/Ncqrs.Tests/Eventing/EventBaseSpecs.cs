@@ -1,15 +1,15 @@
 ﻿using System;
 using FluentAssertions;
 using Ncqrs.Eventing;
-using NUnit.Framework;
+using Xunit;
 using Rhino.Mocks;
 
 namespace Ncqrs.Tests.Eventing
 {
-    [TestFixture]
+    
     public class EventBaseSpecs
     {
-        [Test]
+        [Fact]
         public void Constructing_a_new_event_base_it_should_call_the_GenerateNewId_method_from_the_generator_that_has_been_set_in_the_environment()
         {
             var generator = MockRepository.GenerateMock<IUniqueIdentifierGenerator>();
@@ -20,7 +20,7 @@ namespace Ncqrs.Tests.Eventing
             generator.AssertWasCalled(g=>g.GenerateNewId());
         }
 
-        [Test]
+        [Fact]
         public void Constructing_a_new_event_base_it_should_set_the_event_identifier_to_identifier_that_has_been_given_from_the_IUniqueIdentifierGenerator_from_the_NcqrsEnvironment()
         {
             var identiefier = Guid.NewGuid();
@@ -34,7 +34,7 @@ namespace Ncqrs.Tests.Eventing
             mock.EventIdentifier.Should().Be(identiefier);
         }
 
-        [Test]
+        [Fact]
         public void Constructing_a_new_event_base_it_should_set_the_event_time_stap_to_the_time_given_by_the_IClock_from_the_NcqrsEnvironment()
         {
             var theTimeStamp = new DateTime(2000, 1, 1, 1, 1, 1, 1, DateTimeKind.Utc);

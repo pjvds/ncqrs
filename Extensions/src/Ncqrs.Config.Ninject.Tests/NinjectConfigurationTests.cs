@@ -1,13 +1,12 @@
 ﻿using Ninject;
 using FluentAssertions;
-using NUnit.Framework;
+using Xunit;
 
 namespace Ncqrs.Config.Ninject.Tests
 {
-    [TestFixture]
     public class NinjectConfigurationTests
     {
-        [Test]
+        [Fact]
         public void When_component_is_registered_it_should_be_retrievable()
         {
             var kernel = new StandardKernel();
@@ -23,7 +22,7 @@ namespace Ncqrs.Config.Ninject.Tests
             component.Should().BeAssignableTo<IReplicant>();
         }
 
-        [Test]
+        [Fact]
         public void When_component_is_not_registered_it_should_not_be_retrievable()
         {
             var kernel = new StandardKernel();

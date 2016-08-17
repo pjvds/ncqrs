@@ -1,14 +1,13 @@
 ﻿using System;
 using FluentAssertions;
 using Ncqrs.Eventing.Storage;
-using NUnit.Framework;
+using Xunit;
 
 namespace Ncqrs.Tests.Eventing.Storage
 {
-    [TestFixture]
     public class ConcurrencyExceptionSpecs : BaseExceptionTests<ConcurrencyException>
     {
-        [Test]
+        [Fact]
         public void Constructing_it_should_initialize_the_right_members()
         {
             Guid eventSourceId = Guid.NewGuid();

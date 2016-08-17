@@ -1,12 +1,12 @@
 ﻿using System;
 using Ncqrs.Domain;
 using Ncqrs.Eventing.Sourcing;
-using NUnit.Framework;
+using Xunit;
 using FluentAssertions;
 
 namespace Ncqrs.Tests.Domain
 {
-    [TestFixture]
+    
     public class TypeThresholdedActionBasedInternalEventHandlerSpecs
     {
         public class FooEvent
@@ -17,13 +17,12 @@ namespace Ncqrs.Tests.Domain
         {
         }
 
-        [SetUp]
-        public void SetUp()
+        public  TypeThresholdedActionBasedInternalEventHandlerSpecs()
         {
             NcqrsEnvironment.Deconfigure();
         }
         
-        [Test]
+        [Fact]
         public void Threshold_should_hold_event_when_it_is_of_a_higher_type_when_exact_is_true()
         {
             Boolean handlerActionWasCalled = false;
@@ -36,7 +35,7 @@ namespace Ncqrs.Tests.Domain
             handlerActionWasCalled.Should().Be(false);
         }
 
-        [Test]
+        [Fact]
         public void Threshold_should_not_hold_event_when_it_is_of_a_higher_type_when_exact_is_false()
         {
             Boolean handlerActionWasCalled = false;
@@ -49,7 +48,7 @@ namespace Ncqrs.Tests.Domain
             handlerActionWasCalled.Should().Be(true);
         }
 
-        [Test]
+        [Fact]
         public void Threshold_should_hold_event_when_it_is_of_the_same_type_when_exact_is_true()
         {
             Boolean handlerActionWasCalled = false;
@@ -62,7 +61,7 @@ namespace Ncqrs.Tests.Domain
             handlerActionWasCalled.Should().Be(true);
         }
         
-        [Test]
+        [Fact]
         public void Threshold_should_hold_event_when_it_is_of_a_lower_type_when_exact_is_true()
         {
             Boolean handlerActionWasCalled = false;
@@ -75,7 +74,7 @@ namespace Ncqrs.Tests.Domain
             handlerActionWasCalled.Should().Be(false);
         }
 
-        [Test]
+        [Fact]
         public void Threshold_should_hold_event_when_it_is_of_a_lower_type_when_exact_is_false()
         {
             Boolean handlerActionWasCalled = false;

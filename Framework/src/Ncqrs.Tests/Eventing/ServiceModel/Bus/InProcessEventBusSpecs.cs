@@ -1,14 +1,14 @@
 ﻿using System;
 using Ncqrs.Eventing;
 using Ncqrs.Eventing.Sourcing;
-using NUnit.Framework;
+using Xunit;
 using Ncqrs.Eventing.ServiceModel.Bus;
 using Rhino.Mocks;
 using Ncqrs.Domain;
 
 namespace Ncqrs.Tests.Eventing.ServiceModel.Bus
 {
-    [TestFixture]
+    
     public class InProcessEventBusSpecs
     {
         public class ADomainEvent
@@ -20,7 +20,7 @@ namespace Ncqrs.Tests.Eventing.ServiceModel.Bus
         {
         }
 
-        [Test]
+        [Fact]
         public void When_a_catch_all_handler_is_register_it_should_be_called_for_all_events()
         {
             var catchAllEventHandler = MockRepository.GenerateMock<IEventHandler<object>>();
@@ -44,7 +44,7 @@ namespace Ncqrs.Tests.Eventing.ServiceModel.Bus
             return new CommittedEvent(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), 0, DateTime.UtcNow, new ADomainEvent(), new Version(1, 0));
         }
 
-        [Test]
+        [Fact]
         public void When_multiple_messages_are_published_at_once_they_all_should_be_published()
         {
 
@@ -63,7 +63,7 @@ namespace Ncqrs.Tests.Eventing.ServiceModel.Bus
             catchAllEventHandler.AssertWasCalled(h => h.Handle(null), options => options.IgnoreArguments().Repeat.Times(events.Length));
         }
 
-        [Test]
+        [Fact]
         public void Registering_handler_via_generic_overload_should_also_add_the_handler()
         {
             var aDomainEventHandler = MockRepository.GenerateMock<IEventHandler<ADomainEvent>>();
@@ -83,7 +83,7 @@ namespace Ncqrs.Tests.Eventing.ServiceModel.Bus
         }
 
 
-        [Test]
+        [Fact]
         public void When_multiple_messages_are_published_and_a_specific_handler_is_register_oply_the_matching_events_should_be_received_at_the_handler()
         {
             var aDomainEventHandler = MockRepository.GenerateMock<IEventHandler<ADomainEvent>>();
@@ -101,7 +101,7 @@ namespace Ncqrs.Tests.Eventing.ServiceModel.Bus
             aDomainEventHandler.AssertWasCalled(h => h.Handle(null), options => options.IgnoreArguments().Repeat.Times(6));
         }
 
-        [Test]
+        [Fact]
         public void When_a_handler_is_registered_for_a_specific_type_it_should_not_receive_other_events()
         {
             var aDomainEventEventHandler = MockRepository.GenerateMock<IEventHandler<ADomainEvent>>();
@@ -120,7 +120,7 @@ namespace Ncqrs.Tests.Eventing.ServiceModel.Bus
             aDomainEventEventHandler.AssertWasCalled(h => h.Handle(null), options => options.IgnoreArguments().Repeat.Twice());
         }
 
-        [Test]
+        [Fact]
         public void When_a_multiple_catch_all_handler_are_registered_for_they_should_all_been_called()
         {
             var catchAllEventHandler1 = MockRepository.GenerateMock<IEventHandler<object>>();
@@ -145,7 +145,7 @@ namespace Ncqrs.Tests.Eventing.ServiceModel.Bus
             catchAllEventHandler3.AssertWasCalled(h => h.Handle(null), options => options.IgnoreArguments().Repeat.Times(7));
         }
 
-        [Test]
+        [Fact]
         public void When_a_multiple_specific_handlers_are_register_they_all_should_be_called_when_the_specific_event_is_published()
         {
             var specificEventHandler1 = MockRepository.GenerateMock<IEventHandler<ADomainEvent>>();

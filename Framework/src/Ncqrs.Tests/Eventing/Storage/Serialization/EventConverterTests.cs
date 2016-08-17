@@ -3,20 +3,18 @@ using FluentAssertions;
 using Ncqrs.Eventing.Storage;
 using Ncqrs.Eventing.Storage.Serialization;
 using Newtonsoft.Json.Linq;
-using NUnit.Framework;
 using Rhino.Mocks;
+using Xunit;
 
 namespace Ncqrs.Tests.Eventing.Storage.Serialization
 {
-    [TestFixture]
     public class EventConverterTests
     {
         private IEventTypeResolver _typeResolver;
         private IEventConverter _childConverter = new NullEventConverter();
         private const string EventName = "bob";
 
-        [SetUp]
-        public void SetUp()
+        public EventConverterTests()
         {
             _typeResolver = MockRepository.GenerateStub<IEventTypeResolver>();
             _typeResolver
@@ -27,20 +25,20 @@ namespace Ncqrs.Tests.Eventing.Storage.Serialization
             _childConverter = MockRepository.GenerateStub<IEventConverter>();
         }
 
-        [Test]
+        [Fact]
         public void Ctor()
         {
-            Assert.DoesNotThrow(() => new EventConverter(_typeResolver));
+           var converter = new EventConverter(_typeResolver);
         }
 
-        [Test]
+        [Fact]
         public void Ctor_typeResolver_null()
         {
             var ex = Assert.Throws<ArgumentNullException>(() => new EventConverter(null));
             ex.ParamName.Should().Be("typeResolver");
         }
 
-        [Test]
+        [Fact]
         public void Upgrade()
         {
             var event1 = CreateEvent("foo");
@@ -59,14 +57,14 @@ namespace Ncqrs.Tests.Eventing.Storage.Serialization
             barConverter.AssertWasCalled(x => x.Upgrade(event2));
         }
 
-        [Test]
+        [Fact]
         public void Upgrade_unknown_event()
         {
             var converter = new EventConverter(_typeResolver);
-            Assert.DoesNotThrow(() => converter.Upgrade(CreateEvent()));
+            converter.Upgrade(CreateEvent());
         }
 
-        [Test]
+        [Fact]
         public void Upgrade_theEvent_null()
         {
             var converter = new EventConverter(_typeResolver);
@@ -74,7 +72,7 @@ namespace Ncqrs.Tests.Eventing.Storage.Serialization
             ex.ParamName.Should().Be("theEvent");
         }
 
-        [Test]
+        [Fact]
         public void AddConverter_ByType()
         {
             var anEvent = CreateEvent();
@@ -86,7 +84,7 @@ namespace Ncqrs.Tests.Eventing.Storage.Serialization
             _childConverter.AssertWasCalled(x => x.Upgrade(anEvent));
         }
 
-        [Test]
+        [Fact]
         public void AddConverter_ByType_eventType_null()
         {
             var converter = new EventConverter(_typeResolver);
@@ -94,7 +92,7 @@ namespace Ncqrs.Tests.Eventing.Storage.Serialization
             ex.ParamName.Should().Be("eventType");
         }
 
-        [Test]
+        [Fact]
         public void AddConverter_ByType_converter_null()
         {
             var converter = new EventConverter(_typeResolver);
@@ -102,7 +100,7 @@ namespace Ncqrs.Tests.Eventing.Storage.Serialization
             ex.ParamName.Should().Be("converter");
         }
 
-        [Test]
+        [Fact]
         public void AddConverter_ByName()
         {
             var anEvent = CreateEvent();
@@ -114,7 +112,7 @@ namespace Ncqrs.Tests.Eventing.Storage.Serialization
             _childConverter.AssertWasCalled(x => x.Upgrade(anEvent));
         }
 
-        [Test]
+        [Fact]
         public void AddConverter_ByName_eventName_null()
         {
             var converter = new EventConverter(_typeResolver);
@@ -122,7 +120,7 @@ namespace Ncqrs.Tests.Eventing.Storage.Serialization
             ex.ParamName.Should().Be("eventName");
         }
 
-        [Test]
+        [Fact]
         public void AddConverter_ByName_converter_null()
         {
             var converter = new EventConverter(_typeResolver);
@@ -130,7 +128,7 @@ namespace Ncqrs.Tests.Eventing.Storage.Serialization
             ex.ParamName.Should().Be("converter");
         }
 
-        [Test]
+        [Fact]
         public void AddConverter_duplicate_name()
         {
             var converter = new EventConverter(_typeResolver);

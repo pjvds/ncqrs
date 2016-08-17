@@ -34,7 +34,7 @@ namespace Ncqrs.Config.Windsor
                 if (executor == null) throw new ExecutorForCommandNotFoundException(command.GetType());
                 context = new CommandContext(command, CommandExecutionState.Resolved);
                 interceptors.ForEach(i => i.OnBeforeExecution(context));
-                executor.Execute((dynamic) command);
+                executor.Execute((dynamic)command);
                 context = new CommandContext(command, CommandExecutionState.Called);
             }
             catch (Exception ex)

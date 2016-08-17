@@ -4,15 +4,14 @@ using System.Runtime.Serialization.Formatters.Binary;
 using FluentAssertions;
 using Ncqrs.Commanding;
 using Ncqrs.Commanding.CommandExecution.Mapping;
-using NUnit.Framework;
+using Xunit;
 using Rhino.Mocks;
 
 namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping
 {
-    [TestFixture]
     public class MappingForCommandNotFoundExceptionTests
     {
-        [Test]
+        [Fact]
         public void Constructing_an_instance_should_initialize_the_message()
         {
             String message = "Hello world";
@@ -23,7 +22,7 @@ namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping
             target.Message.Should().Be(message);
         }
 
-        [Test]
+        [Fact]
         public void Constructing_an_instance_should_initialize_the_command()
         {
             String aMessage = "Hello world";
@@ -34,7 +33,7 @@ namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping
             target.Command.Should().Be(theCommand);
         }
 
-        [Test]
+        [Fact]
         public void Constructing_an_instance_should_initialize_the_inner_exception()
         {
             String aMessage = "Hello world";
@@ -46,7 +45,7 @@ namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping
             target.InnerException.Should().Be(theInnerException);
         }
 
-        [Test]
+        [Fact]
         public void It_should_be_serializable()
         {
             var aMessage = "Hello world";

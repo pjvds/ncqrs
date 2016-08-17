@@ -51,21 +51,13 @@
       <HintPath>..\..\..\packages\FluentAssertions.4.12.0\lib\net45\FluentAssertions.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Ncqrs">
-      <HintPath>..\..\..\lib\Debug\Ncqrs\Ncqrs.dll</HintPath>
-    </Reference>
-    <Reference Include="Ncqrs.EventBus">
-      <HintPath>..\..\..\lib\Debug\Ncqrs.EventBus\Ncqrs.EventBus.dll</HintPath>
-    </Reference>
-    <Reference Include="Ncqrs.Eventing.Storage.JOliver">
-      <HintPath>..\..\..\lib\Debug\Ncqrs.Eventing.Storage.JOliver\Ncqrs.Eventing.Storage.JOliver.dll</HintPath>
-    </Reference>
     <Reference Include="nunit.framework, Version=3.4.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\NUnit.3.4.1\lib\net45\nunit.framework.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Rhino.Mocks">
-      <HintPath>..\..\..\lib\ThirdParty\RhinoMocks\Rhino.Mocks.dll</HintPath>
+    <Reference Include="Rhino.Mocks, Version=3.6.0.0, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\RhinoMocks.3.6.1\lib\net\Rhino.Mocks.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -88,6 +80,20 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Framework\src\Ncqrs\Ncqrs.csproj">
+      <Project>{01f84441-80d3-49b4-ab18-96894acb2f90}</Project>
+      <Name>Ncqrs</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ncqrs.EventBus\Ncqrs.EventBus.csproj">
+      <Project>{caf2e548-87c8-422b-a62c-8c3ed83ff3c3}</Project>
+      <Name>Ncqrs.EventBus</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ncqrs.Eventing.Storage.JOliver\Ncqrs.Eventing.Storage.JOliver.csproj">
+      <Project>{dca6e39a-8d6b-4531-aca7-33d790d27878}</Project>
+      <Name>Ncqrs.Eventing.Storage.JOliver</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

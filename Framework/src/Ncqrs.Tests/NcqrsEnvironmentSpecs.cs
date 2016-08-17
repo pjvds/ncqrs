@@ -1,13 +1,14 @@
 ﻿using System;
 using FluentAssertions;
 using Ncqrs.Config;
-using NUnit.Framework;
+using Xunit;
 using Rhino.Mocks;
+using Xunit;
 
 namespace Ncqrs.Tests
 {
-    [TestFixture]
-    public class NcqrsEnvironmentSpecs
+    
+    public class NcqrsEnvironmentSpecs: IDisposable
     {
         public interface IFoo
         {}
@@ -18,13 +19,12 @@ namespace Ncqrs.Tests
         public interface IBar
         {}
 
-        [TearDown]
-        public void TearDown()
+        public void Dispose()
         {
             NcqrsEnvironment.Deconfigure();            
         }
 
-        [Test]
+        [Fact]
         public void When_get_is_called_when_the_environmemt_is_not_configured_defaults_should_still_be_returned()
         {
             NcqrsEnvironment.Deconfigure();
@@ -35,7 +35,7 @@ namespace Ncqrs.Tests
             NcqrsEnvironment.Get<IClock>().Should().Be(defaultClock);
         }
 
-        [Test] 
+        [Fact] 
         public void Configured_instance_should_over_rule_default()
         {
             var defaultClock = new DateTimeBasedClock();
@@ -50,20 +50,20 @@ namespace Ncqrs.Tests
 
             var result = NcqrsEnvironment.Get<IClock>();
 
-            Assert.AreSame(configuredClock, result);
-            Assert.AreNotSame(defaultClock, result);
+            Assert.Same(configuredClock, result);
+            Assert.NotSame(defaultClock, result);
 
             NcqrsEnvironment.Deconfigure();
         }
 
-        [Test] 
+        [Fact] 
         public void Removing_a_default_while_there_is_no_default_registered_should_not_throw_an_exception()
         {
             NcqrsEnvironment.RemoveDefault<IFoo>();
             NcqrsEnvironment.RemoveDefault<IFoo>();
         }
 
-        [Test] 
+        [Fact] 
         public void Setting_a_default_should_multiple_times_should_not_throw_an_exception()
         {
             var defaultFoo = MockRepository.GenerateMock<IFoo>();
@@ -75,7 +75,7 @@ namespace Ncqrs.Tests
             NcqrsEnvironment.SetDefault<IFoo>(newDefaultFoo);
         }
 
-        [Test]
+        [Fact]
         public void Setting_a_default_should_override_the_exiting_default()
         {
             var defaultFoo = MockRepository.GenerateMock<IFoo>();
@@ -89,7 +89,7 @@ namespace Ncqrs.Tests
             result.Should().BeSameAs(newDefaultFoo);
         }
 
-        [Test]
+        [Fact]
         public void When_get_is_called_the_call_should_be_redirected_to_the_configuration()
         {
             NcqrsEnvironment.Deconfigure();
@@ -107,7 +107,7 @@ namespace Ncqrs.Tests
             configuration.AssertWasCalled(x=>x.TryGet(out outParameter));
         }
 
-        [Test]
+        [Fact]
         public void When_get_is_called_the_call_should_return_what_the_environment_configuration_returned()
         {
             NcqrsEnvironment.Deconfigure();
@@ -127,7 +127,7 @@ namespace Ncqrs.Tests
             result.Should().Be(returnValue);
         }
 
-        [Test]
+        [Fact]
         public void When_get_is_called_but_the_source_did_not_return_an_intance_an_exception_should_be_thrown()
         {
             NcqrsEnvironment.Deconfigure();

@@ -25,7 +25,7 @@ namespace Ncqrs.Eventing.Storage.JOliver.RavenPersistence
         {
             _store = store;
             _serializer = serializer;
-            _hiLoGen = new HiLoKeyGenerator(store, "", 1000);            
+            _hiLoGen = new HiLoKeyGenerator("", 1000);            
         }
 
         public override void Commit(Commit attempt)
@@ -50,7 +50,7 @@ namespace Ncqrs.Eventing.Storage.JOliver.RavenPersistence
 
         private long GetNextSequenceNumber()
         {
-            return long.Parse(_hiLoGen.GenerateDocumentKey(HiLoConvention, null));
+            return long.Parse(_hiLoGen.GenerateDocumentKey(_store.DatabaseCommands, HiLoConvention, null));
         }
 
         public IEnumerable<Commit> Fetch(long mostRecentSequentialId, int maxCount)

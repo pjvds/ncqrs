@@ -5,15 +5,15 @@ using Ncqrs.Domain.Storage;
 using Ncqrs.Eventing.ServiceModel.Bus;
 using Ncqrs.Eventing.Sourcing.Snapshotting;
 using Ncqrs.Eventing.Storage;
-using NUnit.Framework;
+using Xunit;
 using Rhino.Mocks;
 
 namespace Ncqrs.Tests.Domain
 {
-    [TestFixture]
+    
     public class UnitOfWorkTests
     {
-        [Test]
+        [Fact]
         public void Accepting_unit_of_work_stores_and_publishes_the_events()
         {
             var commandId = Guid.NewGuid();

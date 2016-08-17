@@ -2,12 +2,12 @@
 using FluentAssertions;
 using Ncqrs.Domain;
 using Ncqrs.Domain.Storage;
-using NUnit.Framework;
+using Xunit;
 using System.IO;
 
 namespace Ncqrs.Tests.Domain.Storage
 {
-    [TestFixture]
+    
     public class SimpleAggregateRootCreationStrategyTests
     {
         public class AggRootWithDefaultCtor : AggregateRoot
@@ -19,7 +19,7 @@ namespace Ncqrs.Tests.Domain.Storage
             {}
         }
 
-        [Test]
+        [Fact]
         public void Creating_without_default_ctor_should_throw()
         {
             var wrongType = typeof (AggRootWithoutDefaultCtor);
@@ -30,7 +30,7 @@ namespace Ncqrs.Tests.Domain.Storage
             act.ShouldThrow<AggregateRootCreationException>().And.Message.Should().Contain(wrongType.FullName);
         }
 
-        [Test]
+        [Fact]
         public void Creating_non_aggregate_root_type_should_throw()
         {
             var wrongType = typeof(Stream);
@@ -41,7 +41,7 @@ namespace Ncqrs.Tests.Domain.Storage
             act.ShouldThrow<ArgumentException>().And.ParamName.Should().Be("aggregateRootType");
         }
 
-        [Test]
+        [Fact]
         public void Creating_instance_should_succeed_when_type_is_subclass_of_AggregateRoot_and_has_default_ctor()
         {
             var correctType = typeof (AggRootWithDefaultCtor);
@@ -50,7 +50,7 @@ namespace Ncqrs.Tests.Domain.Storage
             creator.CreateAggregateRoot(correctType);
         }
 
-        [Test]
+        [Fact]
         public void Creation_result_by_correct_type_should_not_be_null()
         {
             var correctType = typeof(AggRootWithDefaultCtor);
@@ -60,7 +60,7 @@ namespace Ncqrs.Tests.Domain.Storage
             result.Should().NotBeNull();
         }
 
-        [Test]
+        [Fact]
         public void Creation_result_by_correct_type_should_be_of_specified_type()
         {
             var correctType = typeof(AggRootWithDefaultCtor);

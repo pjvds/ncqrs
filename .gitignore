@@ -38,4 +38,9 @@ release
 
 #dotCover
 *.dotCover
-/packages/*
+
+#packages
+**/packages/*
+
+#Test Results
+**/TestResults/*

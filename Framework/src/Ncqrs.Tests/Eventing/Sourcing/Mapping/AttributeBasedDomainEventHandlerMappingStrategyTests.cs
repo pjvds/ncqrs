@@ -3,12 +3,12 @@ using System.Linq;
 using FluentAssertions;
 using Ncqrs.Eventing.Sourcing;
 using Ncqrs.Eventing.Sourcing.Mapping;
-using NUnit.Framework;
+using Xunit;
 using Ncqrs.Domain;
 
 namespace Ncqrs.Tests.Eventing.Sourcing.Mapping
 {
-    [TestFixture]
+    
     public class AttributeBasedDomainEventHandlerMappingStrategyTests
     {
         public class IlligalStaticMethodTarget
@@ -87,7 +87,7 @@ namespace Ncqrs.Tests.Eventing.Sourcing.Mapping
             }
         }
 
-        [Test]
+        [Fact]
         public void It_should_throw_an_exception_when_mapped_method_is_static()
         {
             var aggregate = new IlligalStaticMethodTarget();
@@ -98,7 +98,7 @@ namespace Ncqrs.Tests.Eventing.Sourcing.Mapping
             act.ShouldThrow<InvalidEventHandlerMappingException>();
         }
 
-        [Test]
+        [Fact]
         public void It_should_throw_an_exception_when_mapped_method_does_not_have_a_parameter()
         {
             var aggregate = new NoParameterMethodTarget();
@@ -109,7 +109,7 @@ namespace Ncqrs.Tests.Eventing.Sourcing.Mapping
             act.ShouldThrow<InvalidEventHandlerMappingException>();
         }
 
-        [Test]
+        [Fact]
         public void It_should_throw_an_exception_when_mapped_method_does_have_more_then_one_parameter()
         {
             var aggregate = new MoreThenOneParameterMethodTarget();
@@ -120,7 +120,7 @@ namespace Ncqrs.Tests.Eventing.Sourcing.Mapping
             act.ShouldThrow<InvalidEventHandlerMappingException>();
         }
 
-        [Test]
+        [Fact]
         public void It_should_map_the_mapped_events()
         {
             var aggregate = new GoodTarget();
@@ -131,7 +131,7 @@ namespace Ncqrs.Tests.Eventing.Sourcing.Mapping
             handlers.Count().Should().Be(5);
         }
 
-        [Test]
+        [Fact]
         public void It_should_create_the_correct_event_handlers()
         {
             var aggregate = new GoodTarget();

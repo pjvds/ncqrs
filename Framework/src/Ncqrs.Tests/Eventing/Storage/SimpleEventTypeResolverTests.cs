@@ -1,15 +1,15 @@
 using FluentAssertions;
 using Ncqrs.Eventing.Storage;
-using NUnit.Framework;
+using Xunit;
 
 namespace Ncqrs.Tests.Eventing.Storage
 {
-    [TestFixture]
+    
     public class SimpleEventTypeResolverTests
     {
         private SimpleEventTypeResolver resolver = new SimpleEventTypeResolver();
 
-        [Test]
+        [Fact]
         public void Resolves_types_to_event_names()
         {
             var type = typeof(ILog);
@@ -17,7 +17,7 @@ namespace Ncqrs.Tests.Eventing.Storage
             result.Should().Be(type.AssemblyQualifiedName);
         }
 
-        [Test]
+        [Fact]
         public void Resolves_event_names_to_types()
         {
             var type = typeof(ILog);

@@ -11,7 +11,6 @@ using Ninject;
 namespace Ncqrs.Config.Ninject.Tests
 {
 
-    [Specification]
     public class NinjectAggregateRootCreationStrategyTests
         : BaseTestFixture
     {

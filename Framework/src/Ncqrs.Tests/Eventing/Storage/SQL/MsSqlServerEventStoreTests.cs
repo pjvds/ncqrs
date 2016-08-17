@@ -9,16 +9,14 @@ using Ncqrs.Eventing.Sourcing;
 using Ncqrs.Eventing.Sourcing.Snapshotting;
 using Ncqrs.Eventing.Storage.SQL;
 using Ncqrs.Spec;
-using NUnit.Framework;
 using Rhino.Mocks;
 using System.Data.SqlClient;
 using Ncqrs.Eventing.Storage;
 using System.Configuration;
+using Xunit;
 
 namespace Ncqrs.Tests.Eventing.Storage.SQL
 {
-    [TestFixture]
-    [Category("Integration")]
     public class MsSqlServerEventStoreTests
     {
         [Serializable]
@@ -100,32 +98,29 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
         public MsSqlServerEventStoreTests()
         {
             connectionString = ConfigurationManager.ConnectionStrings[DEFAULT_CONNECTIONSTRING_KEY].ConnectionString;
-        }
-
-        [SetUp]
-        public void TestConnection()
-        {
+        
             var connection = new SqlConnection(connectionString);
 
             try
             {
                 connection.Open();
                 var cmd = connection.CreateCommand();
-                cmd.CommandText = "IF EXISTS(SELECT * FROM sysobjects WHERE name='Events' AND xtype = 'U') TRUNCATE TABLE [Events]";
+
+                cmd.CommandText = "IF EXISTS(SELECT * FROM sysobjects WHERE name='PipelineState' AND xtype = 'U') DELETE FROM [PipelineState]";
                 cmd.ExecuteNonQuery();
 
-                cmd.CommandText = "IF EXISTS(SELECT * FROM sysobjects WHERE name='EventSources' AND xtype = 'U') TRUNCATE TABLE [EventSources]";
+                cmd.CommandText = "IF EXISTS(SELECT * FROM sysobjects WHERE name='Snapshots' AND xtype = 'U') DELETE FROM [Snapshots]";
                 cmd.ExecuteNonQuery();
 
-                cmd.CommandText = "IF EXISTS(SELECT * FROM sysobjects WHERE name='Snapshots' AND xtype = 'U') TRUNCATE TABLE [Snapshots]";
+                cmd.CommandText = "IF EXISTS(SELECT * FROM sysobjects WHERE name='Events' AND xtype = 'U') DELETE FROM [Events]";
                 cmd.ExecuteNonQuery();
 
-                cmd.CommandText = "IF EXISTS(SELECT * FROM sysobjects WHERE name='PipelineState' AND xtype = 'U') TRUNCATE TABLE [PipelineState]";
+                cmd.CommandText = "IF EXISTS(SELECT * FROM sysobjects WHERE name='EventSources' AND xtype = 'U') DELETE FROM [EventSources]";
                 cmd.ExecuteNonQuery();
             }
             catch (SqlException caught)
             {
-                Assert.Ignore("No connection could be made with SQL server: " + caught.Message);
+                Skip.If(true, "No connection could be made with SQL server: " + caught.Message);
             }
             finally
             {
@@ -133,7 +128,7 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
             }
         }
 
-        [Test]
+        [Fact]
         public void Retrieving_table_creation_queries_should_return_dll()
         {
             var dllQueries = MsSqlServerEventStore.GetTableCreationQueries();
@@ -141,7 +136,7 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
             dllQueries.Should().NotBeNull().And.NotBeEmpty();
         }
 
-        [Test]
+        [Fact]
         public void Storing_event_source_should_succeed()
         {
             var targetStore = new MsSqlServerEventStore(connectionString);
@@ -172,7 +167,7 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
             }
         }
 
-        [Test]
+        [Fact]
         public void Storing_entity_sourced_event_should_preserve_entity_id()
         {
             var targetStore = new MsSqlServerEventStore(connectionString);
@@ -191,7 +186,7 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
             payload.EntityId.Should().Be(theEntityId);
         }
 
-        [Test]
+        [Fact]
         public void Saving_with_concurrent_event_edits_should_be_subject_to_concurrency_checks()
         {
             // test created in response to an issue with concurrent edits happening within the window between
@@ -241,11 +236,11 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
 
             if (concurrencyExceptionThrown == false)
             {
-               Assert.Fail("We're expecting concurrency exceptions!");
+               Assert.True(false, "We're expecting concurrency exceptions!");
             }
         }
 
-        [Test]
+        [Fact]
         public void Saving_with_concurrent_event_adds_should_not_be_causing_deadlocks()
         {
             // test created in response to an issue with high frequency adds causing deadlocks on the EventSource table.
@@ -277,7 +272,7 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
             Task.WaitAll(tasks);
         }
 
-        //[Test]
+        //[Fact]
         //public void Saving_event_source_while_there_is_a_newer_event_source_should_throw_concurency_exception()
         //{
         //    var targetStore = new MsSqlServerEventStore(connectionString);
@@ -305,7 +300,7 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
         //    act.ShouldThrow<ConcurrencyException>();
         //}
 
-        //[Test]
+        //[Fact]
         //public void Retrieving_all_events_should_return_the_same_as_added()
         //{
         //    var targetStore = new MsSqlServerEventStore(connectionString);
@@ -342,15 +337,21 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
         //    foundEntityId.Should().Be(entityId);
         //}
 
-        [Test]
+        [Fact]
         public void Saving_snapshot_should_not_throw_an_exception_when_snapshot_is_valid()
         {
             var targetStore = new MsSqlServerEventStore(connectionString);
 
             var anId = Guid.NewGuid();
+            var aCommitId = Guid.NewGuid();
             var aVersion = 12;
+
+            var eventStream = Prepare.Events(new object())
+               .ForSourceUncomitted(anId, aCommitId);
             var snapshot = new Snapshot(anId, aVersion, new MySnapshot());
 
+
+            targetStore.Store(eventStream);
             targetStore.SaveSnapshot(snapshot);
 
             var savedSnapshot = targetStore.GetSnapshot(anId, long.MaxValue);
@@ -358,7 +359,7 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
             savedSnapshot.Version.Should().Be(aVersion);
         }
 
-        [Test]
+        [Fact]
         public void Storing_empty_event_stream_should_not_throw()
         {
             var targetStore = new MsSqlServerEventStore(connectionString);
@@ -370,7 +371,7 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
 
             targetStore.Store(eventStream);
 
-            Assert.Pass();
+            Assert.True(true);
         }
 
 

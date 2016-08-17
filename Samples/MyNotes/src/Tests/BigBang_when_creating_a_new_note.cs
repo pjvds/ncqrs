@@ -6,7 +6,7 @@ using Events;
 using Ncqrs;
 using Ncqrs.Spec;
 using Ncqrs.Spec.Fakes;
-using NUnit.Framework;
+using Xunit;
 
 namespace Tests
 {
@@ -16,14 +16,11 @@ namespace Tests
     /// <remarks>
     /// Use this fixture when the command results in multiple events
     /// </remarks>
-    [Specification]
-    [Ignore("Error with mstest adapter")]
-    public class BigBang_when_creating_a_new_note : BigBangTestFixture<CreateNewNote>
+    public class BigBang_when_creating_a_new_note : BigBangTestFixture<CreateNewNote>, IClassFixture<ConfigurationFixture>
     {
 
-        public BigBang_when_creating_a_new_note()
+        public BigBang_when_creating_a_new_note(ConfigurationFixture configuration) : base()
         {
-            Configuration.Configure();
         }
 
         private DateTime now = DateTime.UtcNow;
@@ -53,31 +50,31 @@ namespace Tests
         [Then]
         public void the_new_note_should_have_the_correct_note_id()
         {
-            Assert.That(NewNoteAddedEvent.NoteId, Is.EqualTo(EventSourceId));
+            Assert.Equal(NewNoteAddedEvent.NoteId, EventSourceId);
         }
 
         [Then]
         public void the_new_note_should_have_the_correct_text()
         {
-            Assert.That(NewNoteAddedEvent.Text, Is.EqualTo(NoteText));
+            Assert.Equal(NewNoteAddedEvent.Text, NoteText);
         }
 
         [Then]
         public void the_new_note_should_have_the_correct_creation_date()
         {
-            Assert.That(NewNoteAddedEvent.CreationDate, Is.EqualTo(now));
+            Assert.Equal(NewNoteAddedEvent.CreationDate, now);
         }
 
         [Then]
         public void it_should_not_throw()
         {
-            Assert.That(CaughtException, Is.EqualTo(null));
+            Assert.Null(CaughtException);
         }
 
         [Then]
         public void it_should_do_no_more()
         {
-            Assert.That(PublishedEvents.Count(), Is.EqualTo(1));
+            Assert.Equal(PublishedEvents.Count(), 1);
         }
 
     }

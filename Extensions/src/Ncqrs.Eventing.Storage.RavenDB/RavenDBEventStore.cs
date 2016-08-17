@@ -4,6 +4,7 @@ using System.Linq;
 using Raven.Client;
 using Raven.Client.Document;
 using Ncqrs.Eventing.Sourcing;
+using Raven.Imports.Newtonsoft.Json.Converters;
 
 namespace Ncqrs.Eventing.Storage.RavenDB
 {
@@ -15,25 +16,26 @@ namespace Ncqrs.Eventing.Storage.RavenDB
         {
             _documentStore = new DocumentStore
             {
-                Url = ravenUrl,                
-                Conventions = CreateConventions()
-            }.Initialize(); 
+                Url = ravenUrl,
+                Conventions = CreateConventions(new DocumentConvention())
+            }.Initialize();
         }
 
-        public RavenDBEventStore(DocumentStore externalDocumentStore)
+        public RavenDBEventStore(IDocumentStore externalDocumentStore)
         {
-            externalDocumentStore.Conventions = CreateConventions();
-            _documentStore = externalDocumentStore;            
+            CreateConventions(externalDocumentStore.Conventions);
+           
+            _documentStore = externalDocumentStore;
         }
 
-        private static DocumentConvention CreateConventions()
+        private static DocumentConvention CreateConventions(DocumentConvention convention)
         {
-            return new DocumentConvention
-            {
-                JsonContractResolver = new PropertiesOnlyContractResolver(),
-                FindTypeTagName = x => "Events"
-                //NewDocumentETagGenerator = GenerateETag
+            convention.JsonContractResolver = new PropertiesOnlyContractResolver();
+            convention.FindTypeTagName = x => "Events";
+            convention.CustomizeJsonSerializer = serializer => {
+                serializer.Converters.Add(new VersionConverter());
             };
+            return convention;
         }
 
         private static Guid? GenerateETag(object entity)
@@ -62,7 +64,7 @@ namespace Ncqrs.Eventing.Storage.RavenDB
 
         private static CommittedEvent ToComittedEvent(StoredEvent x)
         {
-            return new CommittedEvent(x.CommitId, x.EventIdentifier, x.EventSourceId,x.EventSequence, x.EventTimeStamp, x.Data, x.Version);
+            return new CommittedEvent(x.CommitId, x.EventIdentifier, x.EventSourceId, x.EventSequence, x.EventTimeStamp, x.Data, x.Version);
         }
 
         public void Store(UncommittedEventStream eventStream)
@@ -95,16 +97,16 @@ namespace Ncqrs.Eventing.Storage.RavenDB
         private static StoredEvent ToStoredEvent(Guid commitId, UncommittedEvent uncommittedEvent)
         {
             return new StoredEvent
-                       {
-                           Id = uncommittedEvent.EventSourceId + "/" + uncommittedEvent.EventSequence,
-                           EventIdentifier = uncommittedEvent.EventIdentifier,
-                           EventTimeStamp = uncommittedEvent.EventTimeStamp,
-                           Version = uncommittedEvent.EventVersion,
-                           CommitId = commitId,
-                           Data = uncommittedEvent.Payload,
-                           EventSequence = uncommittedEvent.EventSequence,
-                           EventSourceId = uncommittedEvent.EventSourceId,
-                       };
+            {
+                Id = uncommittedEvent.EventSourceId + "/" + uncommittedEvent.EventSequence,
+                EventIdentifier = uncommittedEvent.EventIdentifier,
+                EventTimeStamp = uncommittedEvent.EventTimeStamp,
+                Version = uncommittedEvent.EventVersion,
+                CommitId = commitId,
+                Data = uncommittedEvent.Payload,
+                EventSequence = uncommittedEvent.EventSequence,
+                EventSourceId = uncommittedEvent.EventSourceId,
+            };
         }
     }
 }

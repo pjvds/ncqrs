@@ -2,13 +2,12 @@
 using FluentAssertions;
 using Rhino.Mocks;
 using Ncqrs.Commanding.ServiceModel;
-using NUnit.Framework;
 using Ncqrs.Commanding.CommandExecution;
 using Ncqrs.Commanding;
+using Xunit;
 
 namespace Ncqrs.Tests.Commanding.ServiceModel
 {
-    [TestFixture]
     public class CommandServiceBaseTests
     {
         public class CommandWithExecutor : CommandBase
@@ -40,8 +39,7 @@ namespace Ncqrs.Tests.Commanding.ServiceModel
         { get; set;
         }
 
-        [SetUp]
-        public void Setup()
+        public  CommandServiceBaseTests()
         {
             var service = new CommandService();
             ExecutorForCommandWithExecutor = MockRepository.GenerateMock<ICommandExecutor<CommandWithExecutor>>();
@@ -61,7 +59,7 @@ namespace Ncqrs.Tests.Commanding.ServiceModel
             TheService = service;
         }
 
-        [Test]
+        [Fact]
         public void All_interceptors_should_be_called_before_execution()
         {
             Interceptor1.Replay();
@@ -72,7 +70,7 @@ namespace Ncqrs.Tests.Commanding.ServiceModel
             Interceptor2.AssertWasCalled(i => i.OnBeforeExecution(null), options => options.IgnoreArguments());
         }
 
-        [Test]
+        [Fact]
         public void All_interceptors_should_be_called_after_execution()
         {
             Interceptor1.Replay();
@@ -83,14 +81,14 @@ namespace Ncqrs.Tests.Commanding.ServiceModel
             Interceptor2.AssertWasCalled(i => i.OnAfterExecution(null), options => options.IgnoreArguments());
         }
 
-        [Test]
+        [Fact]
         public void Executing_command_with_no_handler_should_cause_exception()
         {
             Action act = () => TheService.Execute(new CommandWithoutExecutor());
             act.ShouldThrow<ExecutorForCommandNotFoundException>();
         }
 
-        [Test]
+        [Fact]
         public void Executing_command_should_executure_correct_handler_with_it()
         {
             var theCommand = new CommandWithExecutor();

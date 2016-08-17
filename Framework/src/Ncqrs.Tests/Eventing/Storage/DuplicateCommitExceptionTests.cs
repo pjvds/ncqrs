@@ -1,11 +1,9 @@
 ﻿using System;
 using FluentAssertions;
 using Ncqrs.Eventing.Storage;
-using NUnit.Framework;
 
 namespace Ncqrs.Tests.Eventing.Storage
 {
-    [TestFixture]
     public class DuplicateCommitExceptionTests : BaseExceptionTests<DuplicateCommitException>
     {
         protected override DuplicateCommitException Create()

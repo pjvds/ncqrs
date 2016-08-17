@@ -2,13 +2,12 @@
 using FluentAssertions;
 using Ncqrs.Commanding.CommandExecution.Mapping;
 using Ncqrs.Domain;
-using NUnit.Framework;
 using Ncqrs.Commanding.CommandExecution.Mapping.Attributes;
 using Ncqrs.Commanding;
+using Xunit;
 
 namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Attributes
 {
-    [TestFixture]
     public class AttributeBasedCommandMapperTests
     {
         [MapsToAggregateRootConstructor("foo")]
@@ -82,7 +81,7 @@ namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Attributes
             }
         }
 
-        [Test]
+        [Fact]
         public void Creating_executor_with_runtime_determed_type_should_create_working_executor()
         {
             var mapper = new AttributeBasedCommandMapper();
@@ -95,28 +94,28 @@ namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Attributes
             TargetAggRoot.BarValue.Should().Be(command.Bar);
         }
 
-        [Test]
+        [Fact]
         public void IsCommandMapped_should_return_false_for_non_command_types()
         {
             var factory = new AttributeBasedCommandMapper();
             factory.CanMapCommand(typeof(string)).Should().BeFalse();
         }
 
-        [Test]
+        [Fact]
         public void IsCommandMapped_should_return_false_for_non_command_types_that_do_have_the_required_attribute()
         {
             var factory = new AttributeBasedCommandMapper();
             factory.CanMapCommand(typeof(NonCommandTypeButWithCorrectAttribute)).Should().BeFalse();
         }
 
-        [Test]
+        [Fact]
         public void IsCommandMapped_should_return_false_for_correct_command_types_but_that_does__not_have_the_required_attribute()
         {
             var factory = new AttributeBasedCommandMapper();
             factory.CanMapCommand(typeof(CommandTypeButWithoutAttribute)).Should().BeFalse();
         }
 
-        [Test]
+        [Fact]
         public void IsCommandMapped_should_return_true_for_correct_command_types_with_correct_attribute()
         {
             var factory = new AttributeBasedCommandMapper();

@@ -5,11 +5,10 @@ using System.Text;
 using FluentAssertions;
 using Ncqrs.Commanding;
 using Ncqrs.Commanding.CommandExecution;
-using NUnit.Framework;
+using Xunit;
 
 namespace Ncqrs.Tests.Commanding.CommandExecution
 {
-    [TestFixture]
     public class CommandExecutorWrapperTests
     {
         public class TheCommand : ICommand
@@ -25,7 +24,7 @@ namespace Ncqrs.Tests.Commanding.CommandExecution
             }
         }
 
-        [Test]
+        [Fact]
         public void Constructing_it_with_a_null_action_should_throw()
         {
             Action<ICommand> nullAction = null; 
@@ -35,7 +34,7 @@ namespace Ncqrs.Tests.Commanding.CommandExecution
             act.ShouldThrow<ArgumentNullException>().And.ParamName.Should().Be("action");
         }
 
-        [Test]
+        [Fact]
         public void Executig_it_should_redirect_call_to_initialized_action()
         {
             bool redirected = false;
@@ -48,7 +47,7 @@ namespace Ncqrs.Tests.Commanding.CommandExecution
             redirected.Should().BeTrue();
         }
 
-        [Test]
+        [Fact]
         public void Executig_it_should_redirect_the_given_command_to_initialized_action()
         {
             var theCommand = new TheCommand();

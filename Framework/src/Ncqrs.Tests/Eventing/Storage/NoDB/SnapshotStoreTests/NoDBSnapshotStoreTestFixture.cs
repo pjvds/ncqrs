@@ -2,23 +2,21 @@ using System;
 using System.IO;
 using Ncqrs.Eventing.Sourcing.Snapshotting;
 using Newtonsoft.Json.Linq;
-using NUnit.Framework;
+using Xunit;
 
 namespace Ncqrs.Eventing.Storage.NoDB.Tests.SnapshotStoreTests
 {
-    public class NoDBSnapshotStoreTestFixture
+    public class NoDBSnapshotStoreTestFixture: IDisposable
     {
-        protected NoDBSnapshotStore SnapshotStore;
-        protected Snapshot Snapshot;
+        public NoDBSnapshotStore SnapshotStore;
+        public Snapshot Snapshot;
 
-        [TestFixtureSetUp]
-        public void BaseSetup()
+        public  NoDBSnapshotStoreTestFixture()
         {
             SnapshotStore = new NoDBSnapshotStore("");
         }
 
-        [TestFixtureTearDown]
-        public void BaseTearDown()
+        public void Dispose()
         {
             if (Snapshot != null)
             {
@@ -26,7 +24,6 @@ namespace Ncqrs.Eventing.Storage.NoDB.Tests.SnapshotStoreTests
                 if (Directory.Exists(foldername))
                     Directory.Delete(foldername, true);
             }
-
         }
     }
 
