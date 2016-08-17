@@ -4,11 +4,11 @@ using FluentAssertions;
 using Ncqrs.Domain;
 using Ncqrs.Eventing.Sourcing;
 using Ncqrs.Eventing.Sourcing.Mapping;
-using NUnit.Framework;
+using Xunit;
 
 namespace Ncqrs.Tests.Eventing.Sourcing.Mapping
 {
-    [TestFixture]
+    
     public class ConventionBasedDomainEventHandlerMappingStrategyTests
     {
         public class IlligalStaticMethodTarget : AggregateRootMappedByConvention
@@ -71,7 +71,7 @@ namespace Ncqrs.Tests.Eventing.Sourcing.Mapping
             }
         }
 
-        [Test]
+        [Fact]
         public void It_should_skip_when_mapped_method_is_static()
         {
             var aggregate = new IlligalStaticMethodTarget();
@@ -82,7 +82,7 @@ namespace Ncqrs.Tests.Eventing.Sourcing.Mapping
             handlers.Should().BeEmpty();
         }
 
-        [Test]
+        [Fact]
         public void It_should_skip_when_mapped_method_does_not_have_a_parameter()
         {
             var aggregate = new NoParameterMethodTarget();
@@ -93,7 +93,7 @@ namespace Ncqrs.Tests.Eventing.Sourcing.Mapping
             handlers.Should().BeEmpty();
         }
 
-        [Test]
+        [Fact]
         public void It_should_skip_when_mapped_method_does_have_more_then_one_parameter()
         {
             var aggregate = new MoreThenOneParameterMethodTarget();
@@ -104,7 +104,7 @@ namespace Ncqrs.Tests.Eventing.Sourcing.Mapping
             handlers.Should().BeEmpty();
         }
 
-        [Test]
+        [Fact]
         public void It_should_skip_when_mapped_method_does_not_have_a_EventBaseType_as_parameter()
         {
             var aggregate = new NotAIEventSourceTarget();
@@ -115,7 +115,7 @@ namespace Ncqrs.Tests.Eventing.Sourcing.Mapping
             handlers.Should().BeEmpty();
         }
 
-        [Test]
+        [Fact]
         public void It_should_map_the_mapped_events()
         {
             var aggregate = new GoodTarget();
@@ -127,7 +127,7 @@ namespace Ncqrs.Tests.Eventing.Sourcing.Mapping
             handlers.Should().OnlyHaveUniqueItems();
         }
 
-        [Test]
+        [Fact]
         public void It_should_create_the_correct_event_handlers()
         {
             var aggregate = new GoodTarget();

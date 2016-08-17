@@ -1,12 +1,12 @@
 using System;
 using Ncqrs.Eventing.Sourcing;
 using Ncqrs.Eventing.Storage;
-using NUnit.Framework;
+using Xunit;
 using FluentAssertions;
 
 namespace Ncqrs.Tests.Eventing.Storage
 {
-    [TestFixture]
+    
     public class PropertyBagConverterTests
     {
         public class TestEvent
@@ -14,7 +14,7 @@ namespace Ncqrs.Tests.Eventing.Storage
             public string SomeString { get; set; }
         }
 
-        [Test]
+        [Fact]
         public void Restoration_of_an_event_from_a_property_bag_containing_nulls_should_not_fail()
         {
             try
@@ -33,7 +33,7 @@ namespace Ncqrs.Tests.Eventing.Storage
             } 
             catch(Exception e)
             {
-                Assert.Fail(e.ToString());
+                Assert.True(false, e.ToString());
             }
         }
     }

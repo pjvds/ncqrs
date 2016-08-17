@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using Ncqrs.Domain;
 using Ncqrs.Eventing.Sourcing;
-using NUnit.Framework;
+using Xunit;
 
 namespace Ncqrs.Tests.Domain
 {
-    [TestFixture]
+    
     public class EntityTests
     {
         public class Customer : AggregateRootMappedByConvention
@@ -107,7 +107,7 @@ namespace Ncqrs.Tests.Domain
             }
         }
 
-        [Test]
+        [Fact]
         public void Creating_an_entity_should_generate_event()
         {
             var orderId1 = Guid.NewGuid();
@@ -121,7 +121,7 @@ namespace Ncqrs.Tests.Domain
             theAggregate.CreateOrderLine(orderId2, 30);
         }
 
-        [Test]
+        [Fact]
         public void Entity_event_handlers_should_be_called_only_if_event_is_sourced_from_this_entty()
         {
             var orderId1 = Guid.NewGuid();
@@ -132,8 +132,8 @@ namespace Ncqrs.Tests.Domain
             theAggregate.CreateOrder(orderId2);
             theAggregate.CreateOrderLine(orderId1, 30);
 
-            Assert.AreEqual(1, theAggregate.Orders[0].Lines.Count);
-            Assert.AreEqual(0, theAggregate.Orders[1].Lines.Count);
+            Assert.Equal(1, theAggregate.Orders[0].Lines.Count);
+            Assert.Equal(0, theAggregate.Orders[1].Lines.Count);
         }
     }
 }

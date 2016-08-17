@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Runtime.Serialization.Formatters.Binary;
 using FluentAssertions;
-using NUnit.Framework;
+using Xunit;
 using System.IO;
 
 namespace Ncqrs.Tests
 {
-    [TestFixture]
+    
     public class NcqrsEnvironmentConfigurationExceptionSpecs
     {
-        [Test]
+        [Fact]
         public void Constructing_an_instance_should_initialize_the_message()
         {
             String message = "Hello world";
@@ -19,7 +19,7 @@ namespace Ncqrs.Tests
             target.Message.Should().Be(message);
         }
 
-        [Test]
+        [Fact]
         public void Constructing_an_instance_should_initialize_the_inner_exception()
         {
             String aMessage = "Hello world";
@@ -30,7 +30,7 @@ namespace Ncqrs.Tests
             target.InnerException.Should().Be(theInnerException);
         }
 
-        [Test]
+        [Fact]
         public void It_should_be_serializable()
         {
             var aMessage = "Hello world";

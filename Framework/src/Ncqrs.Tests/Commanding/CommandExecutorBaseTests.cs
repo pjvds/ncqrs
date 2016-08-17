@@ -2,13 +2,13 @@
 using FluentAssertions;
 using Ncqrs.Commanding.CommandExecution;
 using Ncqrs.Domain;
-using NUnit.Framework;
+using Xunit;
 using Ncqrs.Commanding;
 using Rhino.Mocks;
 
 namespace Ncqrs.Tests.Commanding
 {
-    [TestFixture]
+    
     public class CommandExecutorBaseTests
     {
         public class FooCommand : ICommand
@@ -44,7 +44,7 @@ namespace Ncqrs.Tests.Commanding
             }
         }
 
-        [Test]
+        [Fact]
         public void Executing_one_with_a_custom_factory_should_give_context_created_with_that_factory()
         {
             var factory = MockRepository.GenerateMock<IUnitOfWorkFactory>();
@@ -59,7 +59,7 @@ namespace Ncqrs.Tests.Commanding
             factory.AssertWasCalled(f => f.CreateUnitOfWork(aCommand.CommandIdentifier));
         }
 
-        [Test]
+        [Fact]
         public void Executing_should_call_ExecuteInContext_with_context_from_factory()
         {            
             var context = MockRepository.GenerateMock<IUnitOfWorkContext>();
@@ -73,7 +73,7 @@ namespace Ncqrs.Tests.Commanding
             executor.LastGivenContext.Should().Be(context);
         }
 
-        [Test]
+        [Fact]
         public void Executing_should_call_ExecuteInContext_with_given_command()
         {
             var theCommand = new FooCommand();

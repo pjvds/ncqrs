@@ -2,7 +2,6 @@
 
 namespace Ncqrs.Spec
 {
-    [Specification]
     public abstract class BaseTestFixture
     {
         protected Exception CaughtException;
@@ -10,8 +9,7 @@ namespace Ncqrs.Spec
         protected abstract void When();
         protected virtual void Finally() { }
 
-        [Given]
-        public void Setup()
+        public BaseTestFixture() 
         {
             Given();
 
@@ -30,7 +28,6 @@ namespace Ncqrs.Spec
         }
     }
 
-    [Specification]
     public abstract class BaseTestFixture<TSubjectUnderTest>
     {
         protected TSubjectUnderTest SubjectUnderTest;
@@ -40,8 +37,7 @@ namespace Ncqrs.Spec
         protected abstract void When();
         protected virtual void Finally() { }
 
-        [Given]
-        public void Setup()
+        public BaseTestFixture()
         {
             SetupDependencies();
             

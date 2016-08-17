@@ -7,11 +7,11 @@ using Ncqrs.Eventing;
 using Ncqrs.Eventing.Sourcing;
 using Ncqrs.Spec;
 using Rhino.Mocks;
-using NUnit.Framework;
+using Xunit;
 
 namespace Ncqrs.Tests.Domain
 {
-    [TestFixture]
+    
     public class AggregateRootTests
     {
         public class HandledEvent
@@ -65,7 +65,7 @@ namespace Ncqrs.Tests.Domain
             }
         }
 
-        [Test]
+        [Fact]
         public void It_should_initialize_with_a_new_id_given_by_the_generator_from_the_environment()
         {
             var generator = MockRepository.GenerateMock<IUniqueIdentifierGenerator>();
@@ -76,7 +76,7 @@ namespace Ncqrs.Tests.Domain
             generator.AssertWasCalled(g => g.GenerateNewId());
         }
 
-        [Test]
+        [Fact]
         public void It_should_initialize_with_no_uncommited_events()
         {
             var theAggregate = new MyAggregateRoot();
@@ -84,7 +84,7 @@ namespace Ncqrs.Tests.Domain
             theAggregate.GetUncommittedEvents().Count().Should().Be(0);
         }
 
-        [Test]
+        [Fact]
         public void It_should_initialize_with_version_0()
         {
             var theAggregate = new MyAggregateRoot();
@@ -92,7 +92,7 @@ namespace Ncqrs.Tests.Domain
             theAggregate.Version.Should().Be(0);
         }
 
-        [Test]
+        [Fact]
         public void Applying_an_event_should_at_it_to_the_uncommited_events()
         {
             var theAggregate = new MyAggregateRoot();
@@ -106,7 +106,7 @@ namespace Ncqrs.Tests.Domain
             theAggregate.GetUncommittedEvents().Count().Should().Be(2);
         }
 
-        [Test]
+        [Fact]
         public void Applying_an_event_when_there_is_no_unit_of_work_should_not_cause_an_exception()
         {
             var theAggregate = new MyAggregateRoot();
@@ -114,7 +114,7 @@ namespace Ncqrs.Tests.Domain
             act.ShouldNotThrow();
         }
 
-        [Test]
+        [Fact]
         public void Applying_an_event_with_no_handler_should_cause_an_exception()
         {
             var theAggregate = new MyAggregateRoot();
@@ -123,7 +123,7 @@ namespace Ncqrs.Tests.Domain
             act.ShouldThrow<EventNotHandledException>();
         }
 
-        [Test]
+        [Fact]
         public void Loading_it_from_history_should_apply_all_events()
         {
             var aggId = Guid.NewGuid();
@@ -135,7 +135,7 @@ namespace Ncqrs.Tests.Domain
             theAggregate.FooEventHandlerInvokeCount.Should().Be(3);
         }                
 
-        [Test]
+        [Fact]
         public void Accepting_the_changes_should_set_the_initial_version_to_the_new_version()
         {
             var theAggregate = new MyAggregateRoot();
@@ -153,7 +153,7 @@ namespace Ncqrs.Tests.Domain
             theAggregate.InitialVersion.Should().Be(5);
         }
 
-        [Test]
+        [Fact]
         public void Applying_an_event_should_not_effect_the_initial_version()
         {
                 var theAggregate = new MyAggregateRoot();
@@ -166,7 +166,7 @@ namespace Ncqrs.Tests.Domain
                 theAggregate.MethodThatCausesAnEventThatHasAHandler();
         }
 
-        [Test]
+        [Fact]
         public void Applying_an_event_should_affect_the_version()
         {
             var theAggregate = new MyAggregateRoot();
@@ -186,7 +186,7 @@ namespace Ncqrs.Tests.Domain
             theAggregate.MethodThatCausesAnEventThatHasAHandler();
         }
 
-        [Test]
+        [Fact]
         public void Initializing_from_history_should_throw_an_exception_when_the_history_was_null()
         {
             var theAggregate = new MyAggregateRoot();
@@ -196,7 +196,7 @@ namespace Ncqrs.Tests.Domain
             act.ShouldThrow<ArgumentNullException>();
         }
 
-        [Test]
+        [Fact]
         public void Initializing_from_history_should_not_throw_an_exception_when_the_history_was_empty()
         {
             var theAggregate = new MyAggregateRoot();
@@ -206,7 +206,7 @@ namespace Ncqrs.Tests.Domain
             theAggregate.InitializeFromHistory(history);
         }
 
-        [Test]
+        [Fact]
         public void Initiazling_from_wrong_history_with_wrong_sequence_should_throw_exception()
         {
             var theAggregate = new MyAggregateRoot();
@@ -218,7 +218,7 @@ namespace Ncqrs.Tests.Domain
             act.ShouldThrow<InvalidOperationException>().And.Message.Should().Contain("sequence");
         }
 
-        [Test]
+        [Fact]
         public void Initiazling_from_history_with_correct_sequence_should_not_throw_exception()
         {
             var theAggregate = new MyAggregateRoot();
@@ -233,7 +233,7 @@ namespace Ncqrs.Tests.Domain
             theAggregate.InitializeFromHistory(stream);
         }
 
-        [Test]
+        [Fact]
         public void It_could_not_be_loaded_from_history_when_it_already_contains_uncommitted_events()
         {
             var theAggregate = new MyAggregateRoot();
@@ -248,7 +248,7 @@ namespace Ncqrs.Tests.Domain
             act.ShouldThrow<InvalidOperationException>();
         }
         
-        [Test]
+        [Fact]
         public void Constructing_it_with_an_id_should_set_that_to_EventSourceId_property()
         {
             var theId = Guid.NewGuid();
@@ -257,7 +257,7 @@ namespace Ncqrs.Tests.Domain
             theAggregate.EventSourceId.Should().Be(theId);
         }
 
-        [Test]
+        [Fact]
         public void Applying_an_event_should_call_the_event_handler_only_once()
         {
             var theAggregate = new MyAggregateRoot();
@@ -267,7 +267,7 @@ namespace Ncqrs.Tests.Domain
             theAggregate.FooEventHandlerInvokeCount.Should().Be(1);
         }
 
-        [Test]
+        [Fact]
         public void Applying_an_event_to_an_agg_root_with_history_should_call_the_event_handler_only_once()
         {
             var theAggregate = new MyAggregateRoot();
@@ -291,7 +291,7 @@ namespace Ncqrs.Tests.Domain
             theAggregate.FooEventHandlerInvokeCount.Should().Be(eventHandlerCountAfterInitialization + 1);
         }
 
-        [Test]
+        [Fact]
         public void Should_be_able_to_register_RegisterThreadStaticEventAppliedCallbacks_from_parallel_threads()
         {
             Action<AggregateRoot, UncommittedEvent> callback = (x, y) => { };

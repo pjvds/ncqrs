@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using FluentAssertions;
-using NUnit.Framework;
+using Xunit;
 
 namespace Ncqrs.Tests
 {
-    [TestFixture]
+    
     class GuidCombGeneratorTests
     {
-        [Test]
+        [Fact]
         public void Calling_generate_multiple_times_should_return_unique_results()
         {
             int count = 1000000;

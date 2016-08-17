@@ -4,22 +4,17 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using Newtonsoft.Json.Linq;
-using NUnit.Framework;
+using Xunit;
 
 namespace Ncqrs.Eventing.Storage.NoDB.Tests.EventStoreTests
 {
-    [TestFixture]
-    [Ignore("File system race. Also, NoDBEventStore serialization is incompatible with StoredEventExtensions. See issue #54 for full explanation.")]
     public class when_saving_a_new_event_source : NoDBEventStoreTestFixture
     {
         private string _filename;
         private string _foldername;
 
-        [TestFixtureSetUp]
-        public void SetUp()
+        public when_saving_a_new_event_source() : base()
         {
-            BaseSetup();
-
             //Bandaid for file system race. See issue #54 for full explanation
             Thread.Sleep(TimeSpan.FromSeconds(1));
 
@@ -27,23 +22,23 @@ namespace Ncqrs.Eventing.Storage.NoDB.Tests.EventStoreTests
             _filename = EventSourceId.ToString().Substring(2);
         }
 
-        [Test]
+        [Fact(Skip= "File system race. Also, NoDBEventStore serialization is incompatible with StoredEventExtensions. See issue #54 for full explanation.")]
         public void it_should_create_a_new_event_history_file()
         {
-            Assert.That(File.Exists(Path.Combine(_foldername, _filename)));
+            Assert.True(File.Exists(Path.Combine(_foldername, _filename)));
         }
 
-        [Test]
+        [Fact(Skip = "File system race. Also, NoDBEventStore serialization is incompatible with StoredEventExtensions. See issue #54 for full explanation.")]
         public void it_should_have_at_least_one_event()
         {
             using (var reader = new StreamReader(File.Open(Path.Combine(_foldername, _filename), FileMode.Open)))
             {
                 reader.ReadLine(); //Throw out version line
-                Assert.That(GetEventStrings(reader).Any(), Is.True, "We read the file before the event store wrote the event.");
+                Assert.True(GetEventStrings(reader).Any(), "We read the file before the event store wrote the event.");
             }
         }
 
-        [Test]
+        [Fact(Skip = "File system race. Also, NoDBEventStore serialization is incompatible with StoredEventExtensions. See issue #54 for full explanation.")]
         public void it_should_serialize_the_uncommitted_events_to_the_file()
         {
             using (var reader = new StreamReader(File.Open(Path.Combine(_foldername, _filename), FileMode.Open)))
@@ -55,7 +50,7 @@ namespace Ncqrs.Eventing.Storage.NoDB.Tests.EventStoreTests
                     Console.WriteLine(line);
                     StoredEvent<JObject> storedevent = line.ReadStoredEvent(EventSourceId, i);
                     i++;
-                    Assert.That(storedevent, Is.Not.Null);
+                    Assert.NotNull(storedevent);
                 }
             }
         }

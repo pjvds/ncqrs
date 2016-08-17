@@ -3,21 +3,18 @@ using System.IO;
 using Ncqrs.Eventing.Sourcing;
 using Ncqrs.Eventing.Storage.NoDB.Tests.Fakes;
 using Ncqrs.Spec;
-using NUnit.Framework;
 using Rhino.Mocks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Ncqrs.Eventing.Storage.NoDB.Tests.EventStoreTests
 {
-    [Category("Integration")]
-    public abstract class NoDBEventStoreTestFixture
+    public abstract class NoDBEventStoreTestFixture: IDisposable
     {
         protected NoDBEventStore EventStore;
         protected object[] Events;
         protected Guid EventSourceId;
 
-        [TestInitialize]
-        public void BaseSetup()
+        public NoDBEventStoreTestFixture()
         {
             EventStore = new NoDBEventStore("./NoDBTests/"+GetType().Name);
             EventSourceId = Guid.NewGuid();
@@ -28,15 +25,14 @@ namespace Ncqrs.Eventing.Storage.NoDB.Tests.EventStoreTests
             EventStore.Store(eventStream);
         }
 
-        [TestCleanup]
-        public void TearDown()
-        {
-            Directory.Delete(GetPath(), true);
-        }
-
         protected string GetPath()
         {
             return "./NoDBTests/" + GetType().Name+"/"+EventSourceId.ToString().Substring(0, 2);
+        }
+
+        public void Dispose()
+        {
+            Directory.Delete(GetPath(), true);
         }
     }
 }

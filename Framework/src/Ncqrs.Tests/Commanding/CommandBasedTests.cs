@@ -2,11 +2,10 @@
 using FluentAssertions;
 using Rhino.Mocks;
 using Ncqrs.Commanding;
-using NUnit.Framework;
+using Xunit;
 
 namespace Ncqrs.Tests.Commanding
 {
-    [TestFixture]
     public class CommandBasedTests
     {
         public class FooCommand : CommandBase
@@ -25,7 +24,7 @@ namespace Ncqrs.Tests.Commanding
             }
         }
 
-        [Test]
+        [Fact]
         public void Constructing_without_any_parameters_should_use_IUniqueIdentifierGenerator_to_generate_id()
         {
             var generatedId = Guid.NewGuid();
@@ -42,7 +41,7 @@ namespace Ncqrs.Tests.Commanding
             NcqrsEnvironment.Deconfigure();
         }
 
-        [Test]
+        [Fact]
         public void Constructing_with_custom_generator_should_it_to_generate_id()
         {
             var identifier = Guid.NewGuid();
@@ -55,7 +54,7 @@ namespace Ncqrs.Tests.Commanding
             command.CommandIdentifier.Should().Be(identifier);
         }
 
-        [Test]
+        [Fact]
         public void Constructing_with_a_direct_id_should_set_the_given_value()
         {
             var identifier = Guid.NewGuid();

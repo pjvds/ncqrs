@@ -4,18 +4,18 @@ using System.Runtime.Serialization.Formatters.Binary;
 using FluentAssertions;
 using Ncqrs.Config;
 using Ncqrs.Domain;
-using NUnit.Framework;
+using Xunit;
 using Ncqrs.Eventing;
 
 namespace Ncqrs.Tests.Domain
 {
-    [TestFixture]
+    
     public class EventNotHandledExceptionTests
     {
         public class FooEvent : Event
         {}
 
-        [Test]
+        [Fact]
         public void Constructing_an_instance_should_initialize_the_message()
         {
             String message = "Hello world";
@@ -26,7 +26,7 @@ namespace Ncqrs.Tests.Domain
             target.Message.Should().Be(message);
         }
 
-        [Test]
+        [Fact]
         public void Constructing_an_instance_should_initialize_the_event()
         {
             String aMessage = "Hello world";
@@ -37,7 +37,7 @@ namespace Ncqrs.Tests.Domain
             target.Event.Should().Be(theEvent);
         }
 
-        [Test]
+        [Fact]
         public void Constructing_an_instance_should_initialize_the_inner_exception()
         {
             String aMessage = "Hello world";
@@ -49,7 +49,7 @@ namespace Ncqrs.Tests.Domain
             target.InnerException.Should().Be(theInnerException);
         }
 
-        [Test]
+        [Fact]
         public void It_should_be_serializable()
         {
             var aMessage = "Hello world";

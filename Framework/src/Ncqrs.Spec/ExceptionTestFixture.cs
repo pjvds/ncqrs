@@ -1,9 +1,8 @@
 ﻿using Ncqrs.Commanding;
-using NUnit.Framework;
+using Xunit;
 
 namespace Ncqrs.Spec
 {
-    [Specification]
     public abstract class ExceptionTestFixture<TCommand, TException>
         : BigBangTestFixture<TCommand>
         where TCommand : ICommand
@@ -12,19 +11,19 @@ namespace Ncqrs.Spec
         [Then]
         public void it_should_do_nothing()
         {
-            Assert.That(PublishedEvents, Is.Empty);
+            Assert.Empty(PublishedEvents);
         }
 
         [Then]
         public void it_should_throw()
         {
-            Assert.That(CaughtException, Is.Not.Null);
+            Assert.NotNull(CaughtException);
         }
 
         [Then]
         public void it_should_throw_the_expected_exception()
         {
-            Assert.That(CaughtException, Is.InstanceOf<TException>());
+            Assert.IsType<TException>(CaughtException);
         }
 
     }

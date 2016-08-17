@@ -3,14 +3,14 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using FluentAssertions;
 using Ncqrs.Eventing.Sourcing.Mapping;
-using NUnit.Framework;
+using Xunit;
 
 namespace Ncqrs.Tests.Eventing.Sourcing.Mapping
 {
-    [TestFixture]
+    
     public class InvalidEventHandlerMappingExceptionTests
     {
-        [Test]
+        [Fact]
         public void Constructing_an_instance_should_initialize_the_message()
         {
             String message = "Hello world";
@@ -20,7 +20,7 @@ namespace Ncqrs.Tests.Eventing.Sourcing.Mapping
             target.Message.Should().Be(message);
         }
 
-        [Test]
+        [Fact]
         public void Constructing_an_instance_should_initialize_the_inner_exception()
         {
             String aMessage = "Hello world";
@@ -31,7 +31,7 @@ namespace Ncqrs.Tests.Eventing.Sourcing.Mapping
             target.InnerException.Should().Be(theInnerException);
         }
 
-        [Test]
+        [Fact]
         public void It_should_be_serializable()
         {
             var aMessage = "Hello world";
