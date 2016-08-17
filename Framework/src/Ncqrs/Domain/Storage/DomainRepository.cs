@@ -3,12 +3,13 @@ using System.Linq;
 using System.Reflection;
 using Ncqrs.Eventing;
 using Ncqrs.Eventing.Sourcing.Snapshotting;
+using Microsoft.Extensions.Logging;
 
 namespace Ncqrs.Domain.Storage
 {
     public class DomainRepository : IDomainRepository
     {
-        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILogger Log = LogManager.GetLogger<DomainRepository>();
 
         private readonly IAggregateRootCreationStrategy _aggregateRootCreator;
 
@@ -40,7 +41,7 @@ namespace Ncqrs.Domain.Storage
         protected AggregateRoot GetByIdFromScratch(Type aggregateRootType, CommittedEventStream committedEventStream)
         {
             AggregateRoot aggregateRoot = null;
-            Log.DebugFormat("Reconstructing aggregate root {0}[{1}] directly from event stream", aggregateRootType.FullName,
+            Log.LogDebug("Reconstructing aggregate root {0}[{1}] directly from event stream", aggregateRootType.FullName,
                                committedEventStream.SourceId.ToString("D"));
 
             if (committedEventStream.Count() > 0)

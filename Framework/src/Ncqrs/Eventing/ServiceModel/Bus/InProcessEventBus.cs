@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace Ncqrs.Eventing.ServiceModel.Bus
     public class InProcessEventBus : IEventBus
     {
         private readonly Dictionary<Type, List<Action<PublishedEvent>>> _handlerRegister = new Dictionary<Type, List<Action<PublishedEvent>>>();
-        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILogger Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private readonly bool _useTransactionScope;
 
         /// <summary>
@@ -35,13 +36,13 @@ namespace Ncqrs.Eventing.ServiceModel.Bus
         {
             var eventMessageType = eventMessage.GetType();
 
-            Log.InfoFormat("Started publishing event {0}.", eventMessageType.FullName);
+            Log.LogInformation("Started publishing event {0}.", eventMessageType.FullName);
 
             IEnumerable<Action<PublishedEvent>> handlers = GetHandlersForEvent(eventMessage);
 
             if (handlers.Count() == 0)
             {
-                Log.WarnFormat("Did not found any handlers for event {0}.", eventMessageType.FullName);
+                Log.LogWarning("Did not found any handlers for event {0}.", eventMessageType.FullName);
             }
             else
             {
@@ -71,19 +72,19 @@ namespace Ncqrs.Eventing.ServiceModel.Bus
         {
             Contract.Requires<ArgumentNullException>(handlers != null);
 
-            Log.DebugFormat("Found {0} handlers for event {1}.", handlers.Count(), eventMessageType.FullName);
+            Log.LogDebug("Found {0} handlers for event {1}.", handlers.Count(), eventMessageType.FullName);
 
             var publishedEventClosedType = typeof (PublishedEvent<>).MakeGenericType(eventMessage.Payload.GetType());
             var publishedEvent = (PublishedEvent)Activator.CreateInstance(publishedEventClosedType, eventMessage);
 
             foreach (var handler in handlers)
             {
-                Log.DebugFormat("Calling handler {0} for event {1}.", handler.GetType().FullName,
+                Log.LogDebug("Calling handler {0} for event {1}.", handler.GetType().FullName,
                                 eventMessageType.FullName);
 
                 handler(publishedEvent);
 
-                Log.DebugFormat("Call finished.");
+                Log.LogDebug("Call finished.");
             }
         }
 

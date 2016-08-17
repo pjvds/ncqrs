@@ -153,7 +153,7 @@ namespace Ncqrs.Eventing.Storage
 
         private static bool RequiresConversion(PropertyInfo targetProperty, object value)
         {
-            return value == null ? !targetProperty.PropertyType.IsNullable() : targetProperty.PropertyType != value.GetType();
+            return value == null ? !targetProperty.PropertyType.GetTypeInfo().IsNullable() : targetProperty.PropertyType != value.GetType();
         }
 
         private bool InvokePostConverter(object instance, PropertyBag bag)

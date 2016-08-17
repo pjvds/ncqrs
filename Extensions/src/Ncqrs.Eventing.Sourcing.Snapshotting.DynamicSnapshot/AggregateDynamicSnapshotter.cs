@@ -4,12 +4,13 @@ using System.Linq;
 using System.Text;
 using Ncqrs.Domain.Storage;
 using System.Reflection;
+using Microsoft.Extensions.Logging;
 
 namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot
 {
     public class AggregateDynamicSnapshotter : IAggregateSnapshotter
     {
-        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILogger Log = LogManager.GetLogger< AggregateDynamicSnapshotter>();
 
         private readonly IAggregateRootCreationStrategy _aggregateRootCreator;
 
@@ -38,19 +39,19 @@ namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot
             {
                 try
                 {
-                    Log.DebugFormat("Reconstructing aggregate root {0}[{1}] from snapshot", aggregateRootType.FullName,
+                    Log.LogDebug("Reconstructing aggregate root {0}[{1}] from snapshot", aggregateRootType.FullName,
                                     snapshot.EventSourceId.ToString("D"));
                     aggregateRoot = _aggregateRootCreator.CreateAggregateRoot(aggregateRootType);
                     aggregateRoot.InitializeFromSnapshot(snapshot);
                     aggregateRoot.RestoreFromSnapshot(snapshot.Payload);
 
-                    Log.DebugFormat("Applying remaining historic event to reconstructed aggregate root {0}[{1}]",
+                    Log.LogDebug("Applying remaining historic event to reconstructed aggregate root {0}[{1}]",
                         aggregateRootType.FullName, snapshot.EventSourceId.ToString("D"));
                     aggregateRoot.InitializeFromHistory(committedEventStream);
                 }
                 catch (Exception ex)
                 {
-                    Log.ErrorFormat("Cannot load snapshot for '{0}' aggregate. {1}",
+                    Log.LogError("Cannot load snapshot for '{0}' aggregate. {1}",
                         aggregateRoot.GetType().FullName, ex.Message);
                     aggregateRoot = null;
                     return false;
@@ -73,7 +74,7 @@ namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot
             }
             catch (Exception ex)
             {
-                Log.ErrorFormat("Cannot take snapshot for '{0}' aggregate. {1}",
+                Log.LogError("Cannot take snapshot for '{0}' aggregate. {1}",
                         aggregateRoot.GetType().FullName, ex.Message);
                 snapshot = null;
                 return false;

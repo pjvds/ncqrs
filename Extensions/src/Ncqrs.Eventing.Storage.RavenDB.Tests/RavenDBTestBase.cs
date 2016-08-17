@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using System.Reflection;
-using log4net.Config;
 using NUnit.Framework;
 using Raven.Client.Document;
 using Raven.Client.Embedded;
@@ -16,7 +15,6 @@ namespace Ncqrs.Eventing.Storage.RavenDB.Tests
         [SetUp]
         public void SetUpDocumentStore()
         {
-            XmlConfigurator.Configure();
             //_documentStore = ConnectToDocumentStore();
             _documentStore = NewDocumentStore();
         }

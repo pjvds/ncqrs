@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace Ncqrs
 {
@@ -73,7 +74,7 @@ namespace Ncqrs
         /// <returns>
         /// 	<c>true</c> if the specified type is nullable; otherwise, <c>false</c>.
         /// </returns>
-        public static bool IsNullable(this Type type)
+        public static bool IsNullable(this TypeInfo type)
         {
             return !type.IsValueType || (type.IsGenericType && (type.GetGenericTypeDefinition() == typeof(Nullable<>)));
         }

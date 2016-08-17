@@ -45,10 +45,6 @@
       <HintPath>..\..\..\lib\ThirdParty\RavenDB\ICSharpCode.NRefactory.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Lucene.Net, Version=2.9.1.2, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\lib\ThirdParty\RavenDB\Lucene.Net.dll</HintPath>

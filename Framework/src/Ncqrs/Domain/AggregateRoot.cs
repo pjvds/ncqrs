@@ -4,6 +4,7 @@ using System.Reflection;
 using Ncqrs.Eventing;
 using Ncqrs.Eventing.Sourcing;
 using Ncqrs.Eventing.Sourcing.Mapping;
+using Microsoft.Extensions.Logging;
 
 namespace Ncqrs.Domain
 {
@@ -12,7 +13,7 @@ namespace Ncqrs.Domain
     /// </summary>
     public abstract class AggregateRoot : EventSource
     {
-         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+         private static readonly ILogger Log = LogManager.GetLogger<AggregateRoot>();
     
         // 628426 13 Feb 2011
         // Previous ThreadStatic was null referencing at random times under load 
@@ -21,13 +22,13 @@ namespace Ncqrs.Domain
 
         public static void RegisterThreadStaticEventAppliedCallback(Action<AggregateRoot, UncommittedEvent> callback)
         {
-            Log.DebugFormat("Registering event applied callback {0}", callback.GetHashCode());
+            Log.LogDebug("Registering event applied callback {0}", callback.GetHashCode());
             _eventAppliedCallbacks.Value.Add(callback);
         }
 
         public static void UnregisterThreadStaticEventAppliedCallback(Action<AggregateRoot, UncommittedEvent> callback)
         {
-            Log.DebugFormat("Deregistering event applied callback {0}", callback.GetHashCode());
+            Log.LogDebug("Deregistering event applied callback {0}", callback.GetHashCode());
             _eventAppliedCallbacks.Value.Remove(callback);
         }
 
@@ -45,7 +46,7 @@ namespace Ncqrs.Domain
 
             foreach(var callback in callbacks)
             {
-                Log.DebugFormat("Calling event applied callback {0} for event {1} in aggregate root {2}", callback.GetHashCode(), appliedEvent, this);
+                Log.LogDebug("Calling event applied callback {0} for event {1} in aggregate root {2}", callback.GetHashCode(), appliedEvent, this);
                 callback(this, appliedEvent);
             }
         }

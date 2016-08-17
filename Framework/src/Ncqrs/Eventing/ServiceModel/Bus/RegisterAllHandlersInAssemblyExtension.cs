@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
@@ -7,7 +8,7 @@ namespace Ncqrs.Eventing.ServiceModel.Bus
 {
     public static class RegisterAllHandlersInAssemblyExtension
     {
-        private static ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static ILogger _log = LogManager.GetLogger(typeof(RegisterAllHandlersInAssemblyExtension));
 
         public static void RegisterAllHandlersInAssembly(this InProcessEventBus target, Assembly asm)
         {
@@ -44,7 +45,7 @@ namespace Ncqrs.Eventing.ServiceModel.Bus
             var targetMethod = registerHandlerMethod.MakeGenericMethod(new[] { eventDataType });
             targetMethod.Invoke(target, new object[] { handler });
 
-            _log.InfoFormat("Registered {0} as event handler for event {1}.", handler.GetType().FullName, eventDataType.FullName);
+            _log.LogInformation("Registered {0} as event handler for event {1}.", handler.GetType().FullName, eventDataType.FullName);
         }
 
         private static bool ImplementsAtLeastOneIEventHandlerInterface(Type type)
