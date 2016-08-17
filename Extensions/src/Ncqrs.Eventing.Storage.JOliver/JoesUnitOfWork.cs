@@ -8,12 +8,13 @@ using Ncqrs.Domain;
 using Ncqrs.Domain.Storage;
 using Ncqrs.Eventing.ServiceModel.Bus;
 using Ncqrs.Eventing.Sourcing.Snapshotting;
+using Microsoft.Extensions.Logging;
 
 namespace Ncqrs.Eventing.Storage.JOliver
 {
     public class JoesUnitOfWork : UnitOfWorkBase
     {
-        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILogger Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         private readonly Guid _commitId;
         private readonly List<AggregateRoot> _dirtyInstances = new List<AggregateRoot>();
@@ -105,15 +106,15 @@ namespace Ncqrs.Eventing.Storage.JOliver
 
         public override void Accept()
         {
-            Log.DebugFormat("Accepting unit of work {0}", this);
+            Log.LogDebug("Accepting unit of work {0}", this);
             foreach (IEventStream trackedStream in _trackedStreams.Values)
             {
                 trackedStream.CommitChanges(_commitId);
                 trackedStream.Dispose();
             }
             _trackedStreams.Clear();
-            Log.DebugFormat("Storing the event stream for command {0} to event store", _commitId);
-            Log.DebugFormat("Publishing events for command {0} to event bus", _commitId);
+            Log.LogDebug("Storing the event stream for command {0} to event store", _commitId);
+            Log.LogDebug("Publishing events for command {0} to event bus", _commitId);
             _eventBus.Publish(_eventStream);
             CreateSnapshots();
         }

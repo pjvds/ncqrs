@@ -33,10 +33,6 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="NServiceBus">
       <HintPath>..\..\..\lib\ThirdParty\NServiceBus\NServiceBus.dll</HintPath>
     </Reference>
@@ -61,9 +57,6 @@
     <Compile Include="NsbEnvironmentConfiguration.cs" />
     <Compile Include="NsbEventBus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Framework\src\Ncqrs\Ncqrs.csproj">
