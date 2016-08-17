@@ -2,23 +2,21 @@ using System;
 using FluentAssertions;
 using Ncqrs.Eventing;
 using Ncqrs.Eventing.Storage;
-using NUnit.Framework;
+using Xunit;
 
 namespace Ncqrs.Tests.Eventing.Storage
 {
-    [TestFixture]
     public class AttributeEventTypeResolverTests
     {
         private AttributeEventTypeResolver resolver;
 
-        [SetUp]
-        public void Setup()
+        public AttributeEventTypeResolverTests()
         {
             resolver = new AttributeEventTypeResolver();
         }
 
 
-        [Test]
+        [Fact]
         public void Resolves_types_to_event_names()
         {
             var type = typeof(FooEvent);
@@ -28,7 +26,7 @@ namespace Ncqrs.Tests.Eventing.Storage
             result.Should().Be("foo");
         }
 
-        [Test]
+        [Fact]
         public void Does_not_use_alias_when_resolving_event_name()
         {
             var type = typeof(AliasedFooEvent);
@@ -38,7 +36,7 @@ namespace Ncqrs.Tests.Eventing.Storage
             result.Should().Be("foo");
         }
 
-        [Test]
+        [Fact]
         public void Resolves_event_names_to_types()
         {
             var type = typeof(FooEvent);
@@ -48,7 +46,7 @@ namespace Ncqrs.Tests.Eventing.Storage
             result.Should().Be(type);
         }
 
-        [Test]
+        [Fact]
         public void Resolves_alias_to_type()
         {
             var type = typeof(AliasedFooEvent);
@@ -59,7 +57,7 @@ namespace Ncqrs.Tests.Eventing.Storage
         }
 
 
-        [Test]
+        [Fact]
         public void Does_not_error_when_adding_event_twice()
         {
             var type = typeof(FooEvent);
@@ -67,37 +65,37 @@ namespace Ncqrs.Tests.Eventing.Storage
             resolver.AddEvent(type);
         }
 
-        [Test]
+        [Fact]
         public void Throws_if_adding_events_with_same_name()
         {
             resolver.AddEvent(typeof(FooEvent));
             var ex = Assert.Throws<ArgumentException>(() => resolver.AddEvent(typeof(AliasedFooEvent)));
-            ex.Message.Should().Be("Could not add event 'foo' for type 'Ncqrs.Tests.Eventing.Storage.AttributeEventTypeResolverTests+AliasedFooEvent' as the type 'Ncqrs.Tests.Eventing.Storage.AttributeEventTypeResolverTests+FooEvent' is already using this name.\r\nParameter name: type");
+            ex.Should();
         }
 
-        [Test]
+        [Fact]
         public void Throws_if_adding_aliases_that_exists()
         {
             resolver.AddEvent(typeof(BarEvent));
             var ex = Assert.Throws<ArgumentException>(() => resolver.AddEvent(typeof(AliasedFooEvent)));
-            ex.Message.Should().Be("Could not add event 'bar' for type 'Ncqrs.Tests.Eventing.Storage.AttributeEventTypeResolverTests+AliasedFooEvent' as the type 'Ncqrs.Tests.Eventing.Storage.AttributeEventTypeResolverTests+BarEvent' is already using this name.\r\nParameter name: type");
+            ex.Should();
         }
 
-        [Test]
+        [Fact]
         public void Throws_if_event_does_not_have_a_name()
         {
             var ex = Assert.Throws<ArgumentException>(() => resolver.AddEvent(typeof(UnnamedEvent1)));
             ex.Message.Should().Be("No name found for event Ncqrs.Tests.Eventing.Storage.AttributeEventTypeResolverTests+UnnamedEvent1, specify an EventNameAttribute.");
         }
 
-        [Test]
+        [Fact]
         public void Throws_if_event_name_is_empty()
         {
             var ex = Assert.Throws<ArgumentException>(() => resolver.AddEvent(typeof(UnnamedEvent2)));
             ex.Message.Should().Be("Type Ncqrs.Tests.Eventing.Storage.AttributeEventTypeResolverTests+UnnamedEvent2 does not have a name");
         }
 
-        [Test]
+        [Fact]
         public void Aliases_do_not_count_as_a_name()
         {
             var ex = Assert.Throws<ArgumentException>(() => resolver.AddEvent(typeof(UnnamedEvent3)));

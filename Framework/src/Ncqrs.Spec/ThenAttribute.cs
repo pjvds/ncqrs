@@ -1,6 +1,6 @@
-﻿using NUnit.Framework;
+﻿using Xunit;
 
 namespace Ncqrs.Spec
 {
-    public class ThenAttribute : TestAttribute { }
+    public class ThenAttribute : FactAttribute { }
 }

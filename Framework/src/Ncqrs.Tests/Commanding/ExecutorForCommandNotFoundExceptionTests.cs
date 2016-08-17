@@ -3,15 +3,15 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using FluentAssertions;
 using Ncqrs.Commanding.CommandExecution;
-using NUnit.Framework;
+using Xunit;
 using Ncqrs.Commanding;
 
 namespace Ncqrs.Tests.Commanding
 {
-    [TestFixture]
+    
     public class ExecutorForCommandNotFoundExceptionTests
     {
-        [Test]
+        [Fact]
         public void Constructing_an_instance_should_initialize_the_message()
         {
             String message = "Hello world";
@@ -22,7 +22,7 @@ namespace Ncqrs.Tests.Commanding
             target.Message.Should().Be(message);
         }
 
-        [Test]
+        [Fact]
         public void Constructing_an_instance_should_initialize_the_instance_type()
         {
             String message = "Hello world";
@@ -33,7 +33,7 @@ namespace Ncqrs.Tests.Commanding
             target.CommandType.Should().Be(theCommandType);
         }
 
-        [Test]
+        [Fact]
         public void Constructing_an_instance_should_initialize_the_inner_exception()
         {
             String aMessage = "Hello world";
@@ -45,7 +45,7 @@ namespace Ncqrs.Tests.Commanding
             target.InnerException.Should().Be(theInnerException);
         }
 
-        [Test]
+        [Fact]
         public void It_should_be_serializable()
         {
             String aMessage = "Hello world";

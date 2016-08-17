@@ -4,37 +4,35 @@ using Ncqrs.Eventing.Sourcing;
 using Ncqrs.Eventing.Storage;
 using Ncqrs.Eventing.Storage.Serialization;
 using Newtonsoft.Json.Linq;
-using NUnit.Framework;
+using Xunit;
 
 namespace Ncqrs.Tests.Eventing.Storage.Serialization
 {
-    [TestFixture]
     public class JsonEventFormatterTests
     {
         private IEventTypeResolver _typeResolver;
 
-        [SetUp]
-        public void SetUp()
+        public JsonEventFormatterTests()
         {
             var typeResolver = new AttributeEventTypeResolver();
             typeResolver.AddEvent(typeof(AnEvent));
             _typeResolver = typeResolver;
         }
 
-        [Test]
+        [Fact]
         public void Ctor()
         {
-            Assert.DoesNotThrow(() => new JsonEventFormatter(_typeResolver));
+            var formatter = new JsonEventFormatter(_typeResolver);
         }
 
-        [Test]
+        [Fact]
         public void Ctor_typeResolver_null()
         {
             var ex = Assert.Throws<ArgumentNullException>(() => new JsonEventFormatter(null));
             ex.ParamName.Should().Be("typeResolver");
         }
 
-        [Test]
+        [Fact]
         public void Serialize()
         {
             var formatter = new JsonEventFormatter(_typeResolver);
@@ -56,7 +54,7 @@ namespace Ncqrs.Tests.Eventing.Storage.Serialization
             result.Value<DateTime>("Day").Should().Be(theEvent.Day);
         }
 
-        [Test]
+        [Fact]
         public void Deserialize()
         {
             var formatter = new JsonEventFormatter(_typeResolver);

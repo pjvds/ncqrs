@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using NUnit.Framework;
+using Xunit;
 
 namespace Ncqrs.Spec
 {
-    [Specification]
     public abstract class EventSerializationFixture<T>
         : BaseTestFixture
     {
@@ -34,25 +33,25 @@ namespace Ncqrs.Spec
         [Then]
         public void it_should_not_throw()
         {
-            Assert.That(CaughtException, Is.Null);
+            Assert.Null(CaughtException);
         }
 
         [Then]
         public void the_serialized_event_should_not_be_null()
         {
-            Assert.That(SerializedEvent, Is.Not.Null);
+            Assert.NotNull(SerializedEvent);
         }
 
         [Then]
         public void the_serialized_event_should_not_be_empty()
         {
-            Assert.That(SerializedEvent, Is.Not.Empty);
+            Assert.NotEmpty(SerializedEvent);
         }
 
         [Then]
         public void the_deserialized_event_should_not_be_null()
         {
-            Assert.That(DeserializedEvent, Is.Not.Null);
+            Assert.NotNull(DeserializedEvent);
         }
 
         [Then]
@@ -78,7 +77,7 @@ namespace Ncqrs.Spec
                 inconclusiveItems);
 
             if (inconclusiveItems.Any())
-                Assert.Inconclusive(string.Join(Environment.NewLine,
+                throw new SkipException(string.Join(Environment.NewLine,
                                                 inconclusiveItems));
 
         }
@@ -95,7 +94,7 @@ namespace Ncqrs.Spec
                 inconclusiveItems);
 
             if (inconclusiveItems.Any())
-                Assert.Inconclusive(string.Join(Environment.NewLine,
+                throw new SkipException(string.Join(Environment.NewLine,
                                                 inconclusiveItems));
 
         }
@@ -132,7 +131,7 @@ namespace Ncqrs.Spec
                 if (AreEqual(item.Expected, item.DefaultValue))
                     inconclusiveItems.Add(string.Format("OriginalEvent.{0} == default({1}). This is a poor test value.",
                                                         item.Name, item.Type));
-                Assert.That(item.Actual, Is.EqualTo(item.Expected), item.Name);
+                Assert.Equal(item.Actual, item.Expected);
             }
 
         }

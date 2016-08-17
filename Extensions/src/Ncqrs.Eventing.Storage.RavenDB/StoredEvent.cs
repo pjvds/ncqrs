@@ -1,6 +1,6 @@
 ﻿using System;
-using Newtonsoft.Json;
 using Ncqrs.Eventing.Sourcing;
+using Raven.Imports.Newtonsoft.Json;
 
 namespace Ncqrs.Eventing.Storage.RavenDB
 {

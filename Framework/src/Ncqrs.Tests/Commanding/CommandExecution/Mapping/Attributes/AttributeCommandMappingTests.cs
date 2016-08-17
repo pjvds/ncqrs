@@ -5,11 +5,11 @@ using Ncqrs.Commanding;
 using Ncqrs.Commanding.CommandExecution.Mapping;
 using Ncqrs.Commanding.CommandExecution.Mapping.Attributes;
 using Ncqrs.Domain;
-using NUnit.Framework;
+using Xunit;
 
 namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Attributes
 {
-    [TestFixture]
+    
     public class AttributeCommandMappingTests
     {
         [MapsToAggregateRootMethod("Ncqrs.Tests.Commanding.CommandExecution.Mapping.Attributes.AttributeCommandMappingTests+AggregateRootTarget, Ncqrs.Tests", "UpdateTitle")]
@@ -226,7 +226,7 @@ namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Attributes
             }
         }
 
-        [Test]
+        [Fact]
         public void Command_should_update_the_title_of_the_aggregate_root()
         {
             var instance = new AggregateRootTarget("TitleSetInConstructor");
@@ -238,7 +238,7 @@ namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Attributes
             executor.Instance.Title.Should().Be("AggregateRootTargetUpdateTitleCommand");
         }
 
-        [Test]
+        [Fact]
         public void Command_should_create_and_update_the_title_of_the_aggregate_root()
         {
             AggregateRootTarget instance = null;
@@ -250,7 +250,7 @@ namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Attributes
             executor.Instance.Title.Should().Be("AggregateRootTargetUpdateTitleCommand");
         }
 
-        [Test]
+        [Fact]
         public void Command_should_update_the_title_of_the_existing_aggregate_root()
         {
             var instance = new AggregateRootTarget("TitleSetInConstructor");
@@ -262,7 +262,7 @@ namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Attributes
             executor.Instance.Title.Should().Be("AggregateRootTargetUpdateTitleCommand");
         }
 
-        [Test]
+        [Fact]
         public void Command_decorated_with_Transactional_attribute_mapped_to_methodOrCreator_should_be_create_and_be_executed_in_context_of_transaction()
         {
             bool executedInTransaction = false;
@@ -273,10 +273,10 @@ namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Attributes
 
             executor.Execute();
 
-            Assert.IsTrue(executedInTransaction);
+            Assert.True(executedInTransaction);
         }
 
-        [Test]
+        [Fact]
         public void Command_decorated_with_Transactional_attribute_mapped_to_methodOrCreator_should_be_executed_in_context_of_transaction()
         {
             bool executedInTransaction = false;
@@ -287,10 +287,10 @@ namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Attributes
 
             executor.Execute();
 
-            Assert.IsTrue(executedInTransaction);
+            Assert.True(executedInTransaction);
         }
 
-        [Test]
+        [Fact]
         public void Command_decorated_with_Transactional_attribute_mapped_to_method_should_be_executed_in_context_of_transaction()
         {
             bool executedInTransaction = false;
@@ -301,10 +301,10 @@ namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Attributes
 
             executor.Execute();
 
-            Assert.IsTrue(executedInTransaction);
+            Assert.True(executedInTransaction);
         }
 
-        [Test]
+        [Fact]
         public void Command_decorated_with_Transactional_attribute_mapped_to_constructor_should_be_executed_in_context_of_transaction()
         {
             bool executedInTransaction = false;
@@ -314,10 +314,10 @@ namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Attributes
 
             executor.Execute();
 
-            Assert.IsTrue(executedInTransaction);
+            Assert.True(executedInTransaction);
         }
 
-        [Test]
+        [Fact]
         public void Command_should_throw_an_exception_when_the_command_is_not_mapped()
         {
             var command = new AggregateRootTargetNotAMappedCommand { Title = "AggregateRootTargetNotAMappedCommand" };
@@ -327,7 +327,7 @@ namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Attributes
             act.ShouldThrow<CommandMappingException>();
         }
 
-        [Test]
+        [Fact]
         public void Command_should_create_new_aggregate_root()
         {
             var command = new AggregateRootTargetCreateNewCommand { Title = "AggregateRootTargetCreateNewCommand" };
@@ -338,7 +338,7 @@ namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Attributes
             executor.Instance.Title.Should().Be("AggregateRootTargetCreateNewCommand");
         }
 
-        [Test]
+        [Fact]
         public void Command_should_create_new_complex_aggregate_root_using_ordinal_parameter_mappings()
         {
             var command = new ComplexAggregateRootTargetCreateNewCommand1 { Title = "ComplexAggregateRootTargetCreateNewCommand1", Quantity = 10 };
@@ -350,7 +350,7 @@ namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Attributes
             executor.Instance.Quantity.Should().Be(10);
         }
 
-        [Test]
+        [Fact]
         public void Command_should_create_new_complex_aggregate_root_using_name_parameter_mappings()
         {
             var command = new ComplexAggregateRootTargetCreateNewCommand2 { Title = "ComplexAggregateRootTargetCreateNewCommand2", Quantity = 20 };
@@ -362,7 +362,7 @@ namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Attributes
             executor.Instance.Quantity.Should().Be(20);
         }
 
-        [Test]
+        [Fact]
         public void Command_should_create_new_complex_aggregate_root_using_mixed_parameter_mappings()
         {
             var command = new ComplexAggregateRootTargetCreateNewCommand3 { Title = "ComplexAggregateRootTargetCreateNewCommand3", Quantity = 30 };
@@ -374,7 +374,7 @@ namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Attributes
             executor.Instance.Quantity.Should().Be(30);
         }
 
-        [Test]
+        [Fact]
         public void Command_should_create_new_complex_aggregate_root_using_implicit_parameter_mappings()
         {
             var command = new ComplexAggregateRootTargetCreateNewCommand4 { Title = "ComplexAggregateRootTargetCreateNewCommand4", Quantity = 40 };

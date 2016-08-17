@@ -18,6 +18,11 @@ namespace Ncqrs.Commanding.CommandExecution
         void Execute(TCommand command);
     }
 
+    public interface ICommandExecutor: ICommandExecutor<ICommand>
+    {
+
+    }
+
     [ContractClassFor(typeof(ICommandExecutor<>))]
     internal abstract class ICommandExecutorContracts<TCommand> : ICommandExecutor<TCommand> where TCommand : ICommand
     {

@@ -5,7 +5,6 @@ using Ncqrs.Commanding.CommandExecution.Mapping.Attributes;
 
 namespace Ncqrs.Spec
 {
-    [Specification]
     public abstract class AutoMappedCommandTestFixture<TCommand> : CommandTestFixture<TCommand> 
         where TCommand : ICommand 
     {

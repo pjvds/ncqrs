@@ -4,19 +4,19 @@ using System.Linq;
 using FluentAssertions;
 using Ncqrs.Eventing;
 using Ncqrs.Eventing.Sourcing;
-using NUnit.Framework;
+using Xunit;
 using Ncqrs.Eventing.Storage;
 
 namespace Ncqrs.Tests.Eventing.Storage
 {
-    [TestFixture]
+    
     public class InMemoryEventStoreSpecs
     {        
         public class SomethingDoneEvent
         {
         }
 
-        [Test]
+        [Fact]
         public void When_getting_all_event_from_a_non_existing_event_source_the_result_should_be_empty()
         {
             var eventSourceId = Guid.NewGuid();
@@ -28,7 +28,7 @@ namespace Ncqrs.Tests.Eventing.Storage
             events.Should().BeEmpty();
         }
 
-        [Test]
+        [Fact]
         public void When_getting_all_event_from_an_existing_event_source_the_result_should_be_all_events_stored_for_that_event_source()
         {
             var eventSourceId = Guid.NewGuid();

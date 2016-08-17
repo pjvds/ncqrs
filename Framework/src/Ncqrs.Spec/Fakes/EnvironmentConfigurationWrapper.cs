@@ -5,10 +5,11 @@ using Ncqrs.Config;
 namespace Ncqrs.Spec.Fakes
 {
 
-    public class EnvironmentConfigurationWrapper : IEnvironmentConfiguration 
+    public class EnvironmentConfigurationWrapper : IEnvironmentConfiguration
     {
         private readonly IEnvironmentConfiguration _configuration;
         private readonly Dictionary<Type, Func<object>> _factories;
+        private object lockObject = new Object();
 
         public EnvironmentConfigurationWrapper()
             : this(NcqrsEnvironment.CurrentConfiguration)
@@ -28,7 +29,7 @@ namespace Ncqrs.Spec.Fakes
             Func<object> factory;
             if (_factories.TryGetValue(type, out factory))
             {
-                result = (T) factory();
+                result = (T)factory();
                 return true;
             }
             return _configuration != null && _configuration.TryGet(out result);
@@ -41,14 +42,14 @@ namespace Ncqrs.Spec.Fakes
 
         public void Register<T>(Func<T> factory)
         {
-            _factories[typeof (T)] = () => factory();
+            _factories[typeof(T)] = () => factory();
         }
 
         public bool Unregister<T>()
         {
             if (_factories.ContainsKey(typeof(T)))
             {
-                _factories.Remove(typeof (T));
+                _factories.Remove(typeof(T));
                 return true;
             }
             return false;
@@ -56,20 +57,26 @@ namespace Ncqrs.Spec.Fakes
 
         public void Push()
         {
-            if (NcqrsEnvironment.CurrentConfiguration != _configuration)
-                throw new Exception("This EnvironmentConfigurationWrapper doesn't wrap the current configuration.");
-            if (NcqrsEnvironment.IsConfigured)
-                NcqrsEnvironment.Deconfigure();
-            NcqrsEnvironment.Configure(this);
+            lock (lockObject)
+            {
+                if (NcqrsEnvironment.CurrentConfiguration != _configuration)
+                    throw new Exception("This EnvironmentConfigurationWrapper doesn't wrap the current configuration.");
+                if (NcqrsEnvironment.IsConfigured)
+                    NcqrsEnvironment.Deconfigure();
+                NcqrsEnvironment.Configure(this);
+            }
         }
 
         public void Pop()
         {
-            if (NcqrsEnvironment.CurrentConfiguration != this)
-                throw new Exception("The current configuration isn't this instance of EnvironmentConfigurationWrapper");
-            NcqrsEnvironment.Deconfigure();
-            if (_configuration != null)
-                NcqrsEnvironment.Configure(_configuration);
+            lock (lockObject)
+            {
+                if (NcqrsEnvironment.CurrentConfiguration != this)
+                    throw new Exception("The current configuration isn't this instance of EnvironmentConfigurationWrapper");
+                NcqrsEnvironment.Deconfigure();
+                if (_configuration != null)
+                    NcqrsEnvironment.Configure(_configuration);
+            }
         }
 
     }

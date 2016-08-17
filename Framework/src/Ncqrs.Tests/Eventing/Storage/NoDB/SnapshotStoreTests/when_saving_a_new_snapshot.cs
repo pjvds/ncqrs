@@ -4,42 +4,52 @@ using FluentAssertions;
 using Ncqrs.Eventing.Sourcing.Snapshotting;
 using Ncqrs.Eventing.Storage.NoDB.Tests.Fakes;
 using Newtonsoft.Json;
-using NUnit.Framework;
+using Xunit;
 
 namespace Ncqrs.Eventing.Storage.NoDB.Tests.SnapshotStoreTests
 {
-    public class when_saving_a_new_snapshot : NoDBSnapshotStoreTestFixture
+    //[Ignore("")]
+    public class when_saving_a_new_snapshot : IClassFixture<when_saving_a_new_snapshotFixture>
     {
-        private string _foldername;
-        private string _filename;
+        private when_saving_a_new_snapshotFixture _fixture;
 
-        [TestFixtureSetUp]
-        public void SetUp()
+        public when_saving_a_new_snapshot(when_saving_a_new_snapshotFixture fixture)
         {
-            Snapshot = new Snapshot(Guid.NewGuid(), 1, new TestSnapshot { Name = "TestName"});
-            _foldername = Snapshot.EventSourceId.ToString().Substring(0, 2);
-            _filename = Snapshot.EventSourceId.ToString().Substring(2) + ".ss";
-            SnapshotStore.SaveSnapshot(Snapshot);
+            _fixture = fixture;
         }
 
-        [Test]
+        [Fact]
         public void it_should_create_the_snapshot_file()
         {
-            Assert.That(File.Exists(Path.Combine(_foldername, _filename)));
+            Assert.True(File.Exists(Path.Combine(_fixture.FolderName, _fixture.FileName)));
         }
 
-        [Test]
+        [Fact]
         public void it_should_write_the_snapshot_to_the_snapshot_file()
         {
-            using (var reader = new StreamReader(File.Open(Path.Combine(_foldername, _filename), FileMode.Open)))
+            using (var reader = new StreamReader(File.Open(Path.Combine(_fixture.FolderName, _fixture.FileName), FileMode.Open)))
             {
                 reader.ReadLine(); //Throw out type line
                 var jsonSerializer = JsonSerializer.Create(null);
                 var snapshot = jsonSerializer.Deserialize<Snapshot>(new JsonTextReader(reader));
-                snapshot.EventSourceId.Should().Be(Snapshot.EventSourceId);
-                snapshot.Version.Should().Be(Snapshot.Version);
+                snapshot.EventSourceId.Should().Be(_fixture.Snapshot.EventSourceId);
+                snapshot.Version.Should().Be(_fixture.Snapshot.Version);
             }
 
+        }
+    }
+
+    public class when_saving_a_new_snapshotFixture : NoDBSnapshotStoreTestFixture
+    {
+        public string FolderName;
+        public string FileName;
+
+        public when_saving_a_new_snapshotFixture(): base()
+        {
+            Snapshot = new Snapshot(Guid.NewGuid(), 1, new TestSnapshot { Name = "TestName" });
+            FolderName = Snapshot.EventSourceId.ToString().Substring(0, 2);
+            FileName = Snapshot.EventSourceId.ToString().Substring(2) + ".ss";
+            SnapshotStore.SaveSnapshot(Snapshot);
         }
     }
 }

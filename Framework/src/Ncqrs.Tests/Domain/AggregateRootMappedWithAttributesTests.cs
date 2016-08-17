@@ -6,15 +6,15 @@ using System.Text;
 using FluentAssertions;
 using Ncqrs.Domain;
 using Ncqrs.Eventing.Sourcing.Mapping;
-using NUnit.Framework;
+using Xunit;
 using Rhino.Mocks;
 
 namespace Ncqrs.Tests.Domain
 {
-    [TestFixture]
+    
     public class AggregateRootMappedWithAttributesTests
     {
-        [Test]
+        [Fact]
         public void Initializing_one_should_set_the_mapping_strategy_to_attributed_based()
         {
             var aggregateRoot = MockRepository.GenerateMock<AggregateRootMappedWithAttributes>();

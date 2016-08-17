@@ -1,13 +1,13 @@
 ﻿using System;
 using FluentAssertions;
-using NUnit.Framework;
+using Xunit;
 
 namespace Ncqrs.Tests
 {
-    [TestFixture]
+    
     public class DateTimeBasedClockSpecs
     {
-        [Test]
+        [Fact]
         public void When_getting_the_current_time_it_should_be_a_utc_kind()
         {
             var clock = new DateTimeBasedClock();
@@ -16,7 +16,7 @@ namespace Ncqrs.Tests
             currentTime.Kind.Should().Be(DateTimeKind.Utc);
         }
 
-        [Test]
+        [Fact]
         public void When_getting_the_current_time_it_should_be_the_same_as_the_result_from_the_DateTime_class()
         {
             var clock = new DateTimeBasedClock();

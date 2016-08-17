@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using Ncqrs.Eventing;
-using NUnit.Framework;
+using Xunit;
 using Ncqrs.Spec;
 
 namespace Ncqrs.Tests.Eventing
 {
-    [TestFixture]
+    
     public class CommittedEventStreamTests
     {
-        [Test]
+        [Fact]
         public void Init_with_source_id_only_should_set_source_id_and_have_no_events()
         {
             var sourceId = Guid.NewGuid();
@@ -21,7 +21,7 @@ namespace Ncqrs.Tests.Eventing
             sut.Count().Should().Be(0);
         }
 
-        [Test]
+        [Fact]
         public void Init_with_source_id_an_null_stream_should_set_source_id_and_have_no_events()
         {
             var sourceId = Guid.NewGuid();
@@ -32,7 +32,7 @@ namespace Ncqrs.Tests.Eventing
             sut.Count().Should().Be(0);
         }
 
-        [Test]
+        [Fact]
         public void Init_with_source_id_and_stream_should_set_source_id_and_contain_all_events_as_given()
         {
             var sourceId = Guid.NewGuid();
@@ -48,7 +48,7 @@ namespace Ncqrs.Tests.Eventing
             sut.Should().BeEquivalentTo(stream);
         }
 
-        [Test]
+        [Fact]
         public void Init_should_set_From_and_To_version_information()
         {
             var sourceId = Guid.NewGuid();
@@ -61,7 +61,7 @@ namespace Ncqrs.Tests.Eventing
             sut.ToVersion.Should().Be(committedEvents.Last().EventSequence);
         }
 
-        [Test]
+        [Fact]
         public void When_constructing_it_with_events_but_an_element_is_null_it_should_throw_ArgumentNullException()
         {
             var sourceId = Guid.NewGuid();
@@ -72,7 +72,7 @@ namespace Ncqrs.Tests.Eventing
             act.ShouldThrow<ArgumentNullException>();
         }
 
-        [Test]
+        [Fact]
         public void When_constructing_it_with_events_where_one_has_an_incorrect_sequence_it_should_throw_argument_exception()
         {
             var sourceId = Guid.NewGuid();
@@ -89,7 +89,7 @@ namespace Ncqrs.Tests.Eventing
             act.ShouldThrow<ArgumentException>();
         }
 
-        [Test]
+        [Fact]
         public void When_constructing_it_with_events_where_one_has_an_incorrect_event_source_id_it_should_throw_argument_exception()
         {
             var sourceId = Guid.NewGuid();

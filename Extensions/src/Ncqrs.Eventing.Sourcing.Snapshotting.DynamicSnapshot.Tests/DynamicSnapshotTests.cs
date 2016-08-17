@@ -3,15 +3,15 @@ using System.Reflection;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Ncqrs.Domain;
-using NUnit.Framework;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot;
+using Xunit;
 
 namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot.Tests
 {
-    [TestFixture]
-    public class SnapshotableProxyTests
+
+    public class SnapshotableProxyTests : IDisposable
     {
         private const string ChangedTitle = "ChangedTitle";
 
@@ -23,57 +23,57 @@ namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot.Tests
 
         private readonly Guid AssemblyVersionGuid = Guid.Parse("938bab08-4f95-430f-b1b7-2200ae4085d5");
 
-        [Test]
+        [Fact]
         public void CanBuildDynamicSnapshotAssembly()
         {
             var assembly = _container.Resolve<IDynamicSnapshotAssembly>();
             var snapshotTypesCount = assembly.ActualAssembly.GetTypes().Length;
-            Assert.AreEqual(3, snapshotTypesCount);
+            Assert.Equal(3, snapshotTypesCount);
         }
 
-        [Test]
+        [Fact]
         public void CanChangeAssemblyVersionGuidTest()
         {
             var asm = _container.Resolve<IDynamicSnapshotAssembly>();
             var MVID = asm.ActualAssembly.GetModule("DynamicSnapshot.dll").ModuleVersionId;
-            Assert.AreEqual(AssemblyVersionGuid, MVID);
+            Assert.Equal(AssemblyVersionGuid, MVID);
         }
 
-        [Test]
+        [Fact]
         public void CanCreateSnapshotableAggregate()
         {
             var proxy = _container.Resolve<Foo>();
-            Assert.IsNotNull(proxy);
+            Assert.NotNull(proxy);
         }
 
-        [Test]
+        [Fact]
         public void CanCreateSnapshot()
         {
             dynamic proxy = _container.Resolve<Foo>();
             var snapshot = proxy.CreateSnapshot();
-            Assert.IsNotNull(snapshot);
+            Assert.NotNull(snapshot);
         }
 
-        [Test]
+        [Fact]
         public void CanProperlyRestoreFormDynamicSnapshot()
         {
             //  We assert in each step!!!
 
             dynamic proxy = _container.Resolve<Foo>();
             proxy.ChangeTitle(OriginalTitle);
-            Assert.AreEqual(OriginalTitle, proxy.Tittle);
+            Assert.Equal(OriginalTitle, proxy.Tittle);
 
             var snapshot = proxy.CreateSnapshot();
-            Assert.AreEqual(OriginalTitle, proxy.Tittle);
+            Assert.Equal(OriginalTitle, proxy.Tittle);
 
             proxy.ChangeTitle(ChangedTitle);
-            Assert.AreEqual(ChangedTitle, proxy.Tittle);
+            Assert.Equal(ChangedTitle, proxy.Tittle);
 
             proxy.RestoreFromSnapshot(snapshot);
-            Assert.AreEqual(OriginalTitle, proxy.Tittle);
+            Assert.Equal(OriginalTitle, proxy.Tittle);
         }
 
-        [Test]
+        [Fact]
         public void CanRestoreFromSerializedSnapshot()
         {
             if (!File.Exists(SerializedSnapshotFileName))
@@ -83,11 +83,10 @@ namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot.Tests
             object snapshot = DeserializeSnapshot();
             proxy.RestoreFromSnapshot(snapshot);
 
-            Assert.AreEqual(OriginalTitle, proxy.Tittle);
+            Assert.Equal(OriginalTitle, proxy.Tittle);
         }
 
-        [TestFixtureSetUp]
-        public void SetUp()
+        public SnapshotableProxyTests()
         {
             System.Diagnostics.Debug.Write("Initializing Windsor container...");
             var target = Assembly.LoadFrom("Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot.Tests.dll");
@@ -97,15 +96,15 @@ namespace Ncqrs.Eventing.Sourcing.Snapshotting.DynamicSnapshot.Tests
             System.Diagnostics.Debug.WriteLine("Done!");
         }
 
-        [TestFixtureTearDown]
-        public void TestFixtureTearDown()
+        
+        public void Dispose()
         {
             if (File.Exists(SerializedSnapshotFileName))
                 File.Delete(SerializedSnapshotFileName);
 
             dynamic proxy = _container.Resolve<Foo>();
             proxy.ChangeTitle(OriginalTitle);
-            Assert.AreEqual(OriginalTitle, proxy.Tittle);
+            Assert.Equal(OriginalTitle, proxy.Tittle);
 
             object snapshot = proxy.CreateSnapshot();
             SerializeSnapshot(snapshot);

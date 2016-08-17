@@ -17,7 +17,9 @@ namespace Ncqrs.Eventing.Storage.SQLite
         public void WithConnection(Action<SQLiteConnection> action)
         {
             using (var connection = Connection)
+            {
                 action(connection);
+            }
         }
 
         public void WithTransaction(SQLiteConnection connection, Action<SQLiteTransaction> action)
@@ -41,12 +43,12 @@ namespace Ncqrs.Eventing.Storage.SQLite
         {
             get
             {
-                _connection = _connection ?? new SQLiteConnection(_connectionString);
+                _connection = new SQLiteConnection(_connectionString);
                 
                 if (_connection.State != ConnectionState.Open)
                     _connection.Open();
 
-                return _connection;
+                return  _connection;
             }
         }
     }

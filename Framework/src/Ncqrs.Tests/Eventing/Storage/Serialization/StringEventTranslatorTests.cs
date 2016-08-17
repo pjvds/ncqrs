@@ -3,22 +3,20 @@ using FluentAssertions;
 using Ncqrs.Eventing.Storage;
 using Ncqrs.Eventing.Storage.Serialization;
 using Newtonsoft.Json.Linq;
-using NUnit.Framework;
+using Xunit;
 
 namespace Ncqrs.Tests.Eventing.Storage.Serialization
 {
-    [TestFixture]
     public class StringEventTranslatorTests
     {
         private StringEventTranslator _translator;
 
-        [SetUp]
-        public void Setup()
+        public StringEventTranslatorTests()
         {
             _translator = new StringEventTranslator();
         }
 
-        [Test]
+        [Fact]
         public void TranslateToCommon()
         {
             var obj = CreateEvent(new JObject(
@@ -35,14 +33,14 @@ namespace Ncqrs.Tests.Eventing.Storage.Serialization
 
         }
 
-        [Test]
+        [Fact]
         public void TranslateToCommon_obj_null()
         {
             var ex = Assert.Throws<ArgumentNullException>(() => _translator.TranslateToCommon(null));
             ex.ParamName.Should().Be("obj");
         }
 
-        [Test]
+        [Fact]
         public void TranslateToRaw()
         {
             var obj = CreateEvent("{\"Name\":\"Alice\",\"Value\":10}");
@@ -57,7 +55,7 @@ namespace Ncqrs.Tests.Eventing.Storage.Serialization
             result.Data.Should().NotBeNull();
         }
 
-        [Test]
+        [Fact]
         public void TranslateToRaw_obj_null()
         {
             var ex = Assert.Throws<ArgumentNullException>(() => _translator.TranslateToRaw(null));
@@ -65,7 +63,7 @@ namespace Ncqrs.Tests.Eventing.Storage.Serialization
         }
 
 
-        [Test]
+        [Fact]
         public void Dates_use_iso_format()
         {
             var obj = CreateEvent(new JObject(new JProperty("Value", new DateTime(2000, 01, 02, 03, 04, 05, 006))));
@@ -75,7 +73,7 @@ namespace Ncqrs.Tests.Eventing.Storage.Serialization
             result.Data.Should().Be("{\"Value\":\"2000-01-02T03:04:05.006\"}");
         }
 
-        [Test]
+        [Fact]
         public void Dates_respect_timezone()
         {
             var zone = new TimeSpan(0, 4, 0, 0);

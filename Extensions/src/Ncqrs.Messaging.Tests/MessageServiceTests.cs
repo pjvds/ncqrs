@@ -124,6 +124,15 @@ namespace Ncqrs.Messaging.Tests
 
         public class Receiver : MessagingAggregateRoot, IMessageHandler<TestMessage>
         {
+            public Receiver():base()
+            {
+
+            }
+            public Receiver(Guid Id):base(Id)
+            {
+
+            }
+
             void IMessageHandler<TestMessage>.Handle(TestMessage testMessage)
             {
                 Reply(new TestMessage());

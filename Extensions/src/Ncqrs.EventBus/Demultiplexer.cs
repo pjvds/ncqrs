@@ -33,7 +33,7 @@ namespace Ncqrs.EventBus
             {
                 AssociateElementAndQueue(sequencedEvent, queue);
                 queue.Enqueue(sequencedEvent);
-                EnqueueToProcessing(sequencedEvent);
+                //EnqueueToProcessing(sequencedEvent);
             }
             else
             {

@@ -4,12 +4,12 @@ using FluentAssertions;
 using Ncqrs.Domain;
 using Ncqrs.Eventing.Sourcing;
 using Ncqrs.Eventing.Sourcing.Mapping;
-using NUnit.Framework;
+using Xunit;
 using Rhino.Mocks;
 
 namespace Ncqrs.Tests.Domain
 {
-    [TestFixture]
+    
     public class AggregateRootMappedByExpressionTests
     {
         public class EventForPublicMethod
@@ -59,7 +59,7 @@ namespace Ncqrs.Tests.Domain
 
         }
 
-        [Test]
+        [Fact]
         public void Initializing_one_should_set_the_mapping_strategy_to_convention_based()
         {
             var aggregateRoot = MockRepository.GenerateMock<AggregateRootMappedWithExpressions>();
@@ -69,7 +69,7 @@ namespace Ncqrs.Tests.Domain
             theStrategy.Should().BeOfType<ExpressionBasedEventHandlerMappingStrategy>();
         }
 
-        [Test]
+        [Fact]
         public void Public_event_handlers_should_be_mapped()
         {
             using (var work = NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork(Guid.NewGuid()))
@@ -80,7 +80,7 @@ namespace Ncqrs.Tests.Domain
             }
         }
 
-        [Test]
+        [Fact]
         public void Protected_event_handlers_should_be_mapped()
         {
             using (var work = NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork(Guid.NewGuid()))
@@ -93,7 +93,7 @@ namespace Ncqrs.Tests.Domain
             }
         }
 
-        [Test]
+        [Fact]
         public void Private_event_handlers_should_be_mapped()
         {
             using (var work = NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork(Guid.NewGuid()))
@@ -107,7 +107,7 @@ namespace Ncqrs.Tests.Domain
         }
 
 
-        [Test]
+        [Fact]
         public void Methods_marked_as_no_event_handler_should_not_be_mapped()
         {
             using (var work = NcqrsEnvironment.Get<IUnitOfWorkFactory>().CreateUnitOfWork(Guid.NewGuid()))

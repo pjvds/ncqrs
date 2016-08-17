@@ -6,7 +6,7 @@ using Events;
 using Ncqrs;
 using Ncqrs.Spec;
 using Ncqrs.Spec.Fakes;
-using NUnit.Framework;
+using Xunit;
 
 namespace Tests
 {
@@ -15,18 +15,17 @@ namespace Tests
     /// </summary>
     /// <remarks>Use this type of test when the command results in exactly one event.
     /// </remarks>
-    [Specification]
-    public class when_changing_note_text : OneEventTestFixture<ChangeNoteText, NoteTextChanged>
+    public class when_changing_note_text : OneEventTestFixture<ChangeNoteText, NoteTextChanged>, IClassFixture<ConfigurationFixture>
     {
-
-        public when_changing_note_text()
-        {
-            Configuration.Configure();
-        }
 
         private DateTime now = DateTime.UtcNow;
         private const string OldNoteText = "Note text goes here";
         private const string NewNoteText = "New note text goes here";
+
+        public when_changing_note_text(ConfigurationFixture configuration):base()
+        {
+
+        }
 
         protected override void RegisterFakesInConfiguration(EnvironmentConfigurationWrapper configuration)
         {
@@ -56,13 +55,13 @@ namespace Tests
         [Then]
         public void it_should_change_the_note_text()
         {
-            Assert.That(TheEvent.NewText, Is.EqualTo(NewNoteText));
+            Assert.Equal(TheEvent.NewText, NewNoteText);
         }
 
         [Then]
         public void it_should_change_the_right_note()
         {
-            Assert.That(PublishedEvents.Single().EventSourceId, Is.EqualTo(EventSourceId));
+            Assert.Equal(PublishedEvents.Single().EventSourceId, EventSourceId);
         }
 
     }

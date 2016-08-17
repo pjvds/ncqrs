@@ -6,7 +6,6 @@ using Ncqrs.Spec.Fakes;
 namespace Ncqrs.Spec
 {
 
-    [Specification]
     public abstract class DomainTestFixture<TCommand>
         : BaseTestFixture
         where TCommand : ICommand

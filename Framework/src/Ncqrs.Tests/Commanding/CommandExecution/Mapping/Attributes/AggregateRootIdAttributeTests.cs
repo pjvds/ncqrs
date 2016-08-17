@@ -1,14 +1,13 @@
 ﻿using System;
 using FluentAssertions;
 using Ncqrs.Commanding.CommandExecution.Mapping.Attributes;
-using NUnit.Framework;
+using Xunit;
 
 namespace Ncqrs.Tests.Commanding.CommandExecution.Mapping.Attributes
 {
-    [TestFixture]
     public class AggregateRootIdAttributeTests
     {
-        [Test]
+        [Fact]
         public void It_should_be_a_subclass_of_ExcludeInMappingAttribute()
         {
             var type = typeof (AggregateRootIdAttribute);

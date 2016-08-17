@@ -8,14 +8,16 @@ using Ncqrs.Domain;
 using Ncqrs.Eventing.Storage.JOliver;
 using Ncqrs.Eventing.Storage.JOliver.SqlPersistence;
 using Ncqrs.Tests.Integration.Domain;
-using NUnit.Framework;
+using System.IO;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Ncqrs.Tests.Integration
 {
-    [TestFixture]
+    [TestClass]
     public class TransactionalSqlPersistenceEngineTests
     {
-        [Test]
+        
+        [TestMethod]
         public void Aggregates_should_be_persisted_in_one_transaction()
         {
             var factory = new AbsoluteOrderingSqlPersistenceFactory("SqlJoesEventStore", new BinarySerializer(), true);

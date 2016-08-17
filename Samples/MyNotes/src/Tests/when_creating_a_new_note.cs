@@ -5,7 +5,7 @@ using Events;
 using Ncqrs;
 using Ncqrs.Spec;
 using Ncqrs.Spec.Fakes;
-using NUnit.Framework;
+using Xunit;
 
 namespace Tests
 {
@@ -14,13 +14,12 @@ namespace Tests
     /// </summary>
     /// <remarks>Use this type of test when the command results in exactly one event.
     /// </remarks>
-    [Specification]
-    public class when_creating_a_new_note : OneEventTestFixture<CreateNewNote, NewNoteAdded>
+    public class when_creating_a_new_note : OneEventTestFixture<CreateNewNote, NewNoteAdded>, IClassFixture<ConfigurationFixture>
     {
 
-        public when_creating_a_new_note()
+        public when_creating_a_new_note(ConfigurationFixture configuration):base()
         {
-            Configuration.Configure();
+
         }
 
         private DateTime now = DateTime.UtcNow;
@@ -45,19 +44,19 @@ namespace Tests
         [Then]
         public void the_new_note_should_have_the_correct_note_id()
         {
-            Assert.That(TheEvent.NoteId, Is.EqualTo(EventSourceId));
+            Assert.Equal(TheEvent.NoteId, EventSourceId);
         }
 
         [Then]
         public void the_new_note_should_have_the_correct_text()
         {
-            Assert.That(TheEvent.Text, Is.EqualTo(NoteText));
+            Assert.Equal(TheEvent.Text, NoteText);
         }
 
         [Then]
         public void the_new_note_should_have_the_correct_creation_date()
         {
-            Assert.That(TheEvent.CreationDate, Is.EqualTo(now));
+            Assert.Equal(TheEvent.CreationDate, now);
         }
 
 

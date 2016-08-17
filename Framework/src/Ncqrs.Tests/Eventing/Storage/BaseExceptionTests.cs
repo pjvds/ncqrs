@@ -2,7 +2,7 @@
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using FluentAssertions;
-using NUnit.Framework;
+using Xunit;
 
 namespace Ncqrs.Tests.Eventing.Storage
 {
@@ -11,7 +11,7 @@ namespace Ncqrs.Tests.Eventing.Storage
         protected abstract T Create();
         protected abstract void VerifyDeserialized(T created, T deserialized);
 
-        [Test]
+        [Fact]
         public void It_should_be_serializable()
         {
             var theException = Create();
