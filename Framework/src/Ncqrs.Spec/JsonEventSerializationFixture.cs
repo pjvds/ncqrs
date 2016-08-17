@@ -10,15 +10,15 @@ namespace Ncqrs.Spec
         : EventSerializationFixture<T>
     {
 
-        public JsonEventSerializationFixture()
-        {
-            _formatter = BuildFormatter();
-        }
-
         protected string EventName { get; private set; }
 
         private IEventFormatter<JObject> _formatter;
 
+        protected override void SetupDependencies()
+        {
+            base.SetupDependencies();
+            _formatter = BuildFormatter();
+        }
         protected override string Serialize(T @event)
         {
             string eventName;

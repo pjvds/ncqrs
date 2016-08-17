@@ -14,12 +14,16 @@ namespace Tests
     /// </summary>
     public class Configuration : IEnvironmentConfiguration
     {
+        private static object lockObject = new object();
 
         public static void Configure()
         {
-            if (NcqrsEnvironment.IsConfigured) return;
-            var cfg = new Configuration();
-            NcqrsEnvironment.Configure(cfg);
+            lock (lockObject)
+            {
+                if (NcqrsEnvironment.IsConfigured) return;
+                var cfg = new Configuration();
+                NcqrsEnvironment.Configure(cfg);
+            }
         }
 
         private static ICommandService InitializeCommandService()

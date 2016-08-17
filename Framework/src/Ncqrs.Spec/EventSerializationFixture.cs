@@ -45,7 +45,7 @@ namespace Ncqrs.Spec
         [Then]
         public void the_serialized_event_should_not_be_empty()
         {
-            Assert.Empty(SerializedEvent);
+            Assert.NotEmpty(SerializedEvent);
         }
 
         [Then]

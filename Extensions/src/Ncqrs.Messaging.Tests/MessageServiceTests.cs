@@ -9,7 +9,6 @@ using Ncqrs.Eventing.Sourcing;
 namespace Ncqrs.Messaging.Tests
 {
     [TestFixture]
-    [Ignore("Error with mstest adapter")]
     public class MessageServiceTests
     {
         private MessageService _sut;
@@ -125,6 +124,15 @@ namespace Ncqrs.Messaging.Tests
 
         public class Receiver : MessagingAggregateRoot, IMessageHandler<TestMessage>
         {
+            public Receiver():base()
+            {
+
+            }
+            public Receiver(Guid Id):base(Id)
+            {
+
+            }
+
             void IMessageHandler<TestMessage>.Handle(TestMessage testMessage)
             {
                 Reply(new TestMessage());

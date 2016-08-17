@@ -8,9 +8,12 @@ namespace Ncqrs.Spec
         protected virtual void Given() { }
         protected abstract void When();
         protected virtual void Finally() { }
+        protected virtual void SetupDependencies() { }
 
         public BaseTestFixture() 
         {
+            SetupDependencies();
+
             Given();
 
             try

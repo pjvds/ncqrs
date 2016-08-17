@@ -10,7 +10,6 @@ using FluentAssertions;
 namespace Ncqrs.Eventing.Storage.JOliver.Tests
 {
     [TestFixture]
-    [Ignore("Error with mstest adapter")]
     public class AbsoluteOrderingSqlPersistenceEngineTests
     {
         private IPersistStreamsWithAbsoluteOrdering _sut;
