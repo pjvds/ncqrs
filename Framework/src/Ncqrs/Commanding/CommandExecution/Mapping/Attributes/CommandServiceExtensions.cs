@@ -2,12 +2,13 @@
 using System.Linq;
 using System.Reflection;
 using Ncqrs.Commanding.ServiceModel;
+using Microsoft.Extensions.Logging;
 
 namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
 {
     public static class RegisterExecutorForAllMappedCommandsInAssemblyExtension
     {
-        private static ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static ILogger _log = LogManager.GetLogger(typeof(RegisterExecutorForAllMappedCommandsInAssemblyExtension));
 
         public static void RegisterExecutorsInAssembly(this CommandService target, Assembly asm)
         {
@@ -28,6 +29,7 @@ namespace Ncqrs.Commanding.CommandExecution.Mapping.Attributes
             var targetType = typeof(ICommandExecutor<>);
             var types = asm.GetExportedTypes();
             var commandExecutorTypes = types
+                .Select(x => x.GetTypeInfo())
                 .Where(x =>
                     x.IsInterface == false &&
                     x.IsAbstract == false &&

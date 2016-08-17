@@ -3,13 +3,14 @@ using System.Diagnostics.Contracts;
 using System.Reflection;
 using System.Threading;
 using Ncqrs.Eventing;
+using Microsoft.Extensions.Logging;
 
 namespace Ncqrs.Domain
 {
     public abstract class UnitOfWorkBase : IUnitOfWorkContext
     {
         private readonly Guid _commandId;
-        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILogger Log = LogManager.GetLogger<UnitOfWorkBase>();
 
         private readonly Action<AggregateRoot, UncommittedEvent> _eventAppliedCallback;
 
@@ -42,7 +43,7 @@ namespace Ncqrs.Domain
             _commandId = commandId;
             Contract.Ensures(IsDisposed == false);
 
-            Log.DebugFormat("Creating new unit of work for command {0} on thread {1}", commandId,
+            Log.LogDebug("Creating new unit of work for command {0} on thread {1}", commandId,
                             Thread.CurrentThread.ManagedThreadId);
 
             _eventAppliedCallback = new Action<AggregateRoot, UncommittedEvent>(AggregateRootEventAppliedHandler);
@@ -53,13 +54,13 @@ namespace Ncqrs.Domain
 
         private void InitializeAppliedEventHandler()
         {
-            Log.DebugFormat("Registering event applied callback into AggregateRoot from unit of work {0}", this);
+            Log.LogDebug("Registering event applied callback into AggregateRoot from unit of work {0}", this);
             AggregateRoot.RegisterThreadStaticEventAppliedCallback(_eventAppliedCallback);
         }
 
         private void DestroyAppliedEventHandler()
         {
-            Log.DebugFormat("Deregistering event applied callback from AggregateRoot from unit of work {0}", this);
+            Log.LogDebug("Deregistering event applied callback from AggregateRoot from unit of work {0}", this);
             AggregateRoot.UnregisterThreadStaticEventAppliedCallback(_eventAppliedCallback);
         }
 
@@ -97,7 +98,7 @@ namespace Ncqrs.Domain
             {
                 if (disposing)
                 {
-                    Log.DebugFormat("Disposing unit of work {0}", this);
+                    Log.LogDebug("Disposing unit of work {0}", this);
                     DestroyAppliedEventHandler();
                     UnitOfWorkContext.Unbind();
                 }

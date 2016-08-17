@@ -8,7 +8,7 @@ namespace Ncqrs.Domain.Storage
     {
         public AggregateRoot CreateAggregateRoot(Type aggregateRootType)
         {
-            if (!aggregateRootType.IsSubclassOf(typeof(AggregateRoot)))
+            if (!aggregateRootType.GetTypeInfo().IsSubclassOf(typeof(AggregateRoot)))
             {
                 var msg = string.Format("Specified type {0} is not a subclass of AggregateRoot class.", aggregateRootType.FullName);
                 throw new ArgumentOutOfRangeException("aggregateRootType", msg);

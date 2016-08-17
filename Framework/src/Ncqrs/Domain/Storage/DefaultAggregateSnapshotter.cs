@@ -4,12 +4,13 @@ using System.Reflection.Emit;
 using System.Linq;
 using Ncqrs.Eventing;
 using Ncqrs.Eventing.Sourcing.Snapshotting;
+using Microsoft.Extensions.Logging;
 
 namespace Ncqrs.Domain.Storage
 {
     public class DefaultAggregateSnapshotter : IAggregateSnapshotter
     {
-        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILogger Log = LogManager.GetLogger<DefaultAggregateSnapshotter>();
 
         private readonly IAggregateRootCreationStrategy _aggregateRootCreator;
 
@@ -29,7 +30,7 @@ namespace Ncqrs.Domain.Storage
 
             if (AggregateSupportsSnapshot(aggregateRootType, snapshot.Payload.GetType()))
             {
-                Log.DebugFormat("Reconstructing aggregate root {0}[{1}] from snapshot", aggregateRootType.FullName,
+                Log.LogDebug("Reconstructing aggregate root {0}[{1}] from snapshot", aggregateRootType.FullName,
                                 snapshot.EventSourceId.ToString("D"));
                 aggregateRoot = _aggregateRootCreator.CreateAggregateRoot(aggregateRootType);
                 aggregateRoot.InitializeFromSnapshot(snapshot);
@@ -39,7 +40,7 @@ namespace Ncqrs.Domain.Storage
 
                 restoreMethod.Invoke(aggregateRoot, new[] { snapshot.Payload });
 
-                Log.DebugFormat("Applying remaining historic event to reconstructed aggregate root {0}[{1}]",
+                Log.LogDebug("Applying remaining historic event to reconstructed aggregate root {0}[{1}]",
                     aggregateRootType.FullName, snapshot.EventSourceId.ToString("D"));
                 aggregateRoot.InitializeFromHistory(committedEventStream);
 
@@ -69,5 +70,5 @@ namespace Ncqrs.Domain.Storage
         }
 
     }
-    
+
 }

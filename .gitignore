@@ -3,6 +3,7 @@ obj
 bin
 *.csproj.user
 *.suo
+.vs
 TestResult.xml
 
 # Resharper

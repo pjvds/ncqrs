@@ -10,6 +10,7 @@ using Ncqrs.Eventing.ServiceModel.Bus;
 using Ncqrs.Eventing.Sourcing.Snapshotting;
 using Ncqrs.Eventing.Storage;
 using Ncqrs.Domain.Storage;
+using Microsoft.Extensions.Logging;
 
 namespace Ncqrs
 {
@@ -19,7 +20,7 @@ namespace Ncqrs
     /// </remarks></summary>
     public static class NcqrsEnvironment
     {
-        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILogger Log = LogManager.GetLogger(typeof(NcqrsEnvironment));
 
         static NcqrsEnvironment()
         {
@@ -75,7 +76,7 @@ namespace Ncqrs
         {
             Contract.Ensures(Contract.Result<T>() != null, "The result cannot be null.");
 
-            Log.DebugFormat("Requesting instance {0} from the environment.", typeof(T).FullName);
+            Log.LogDebug("Requesting instance {0} from the environment.", typeof(T).FullName);
 
             T result = null;
 
@@ -136,7 +137,7 @@ namespace Ncqrs
 
             _instance = source;
 
-            Log.InfoFormat("Ncqrs environment configured with {0} configuration source.", source.GetType().FullName);
+            Log.LogInformation("Ncqrs environment configured with {0} configuration source.", source.GetType().FullName);
         }
 
         /// <summary>

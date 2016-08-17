@@ -10,12 +10,13 @@ using Ncqrs.Eventing.ServiceModel.Bus;
 using Ncqrs.Eventing.Sourcing;
 using Ncqrs.Eventing.Sourcing.Snapshotting;
 using Ncqrs.Eventing.Storage;
+using Microsoft.Extensions.Logging;
 
 namespace Ncqrs.Domain
 {
     public class UnitOfWork : UnitOfWorkBase
     {
-        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILogger Log = LogManager.GetLogger<UnitOfWork>();
 
         /// <summary>A queue that holds a reference to all instances that have themselves registered as a dirty instance during the lifespan of this unit of work instance.</summary>
         private readonly Queue<AggregateRoot> _dirtyInstances;
@@ -45,7 +46,7 @@ namespace Ncqrs.Domain
 
         protected override void AggregateRootEventAppliedHandler(AggregateRoot aggregateRoot, UncommittedEvent evnt)
         {
-            RegisterDirtyInstance(aggregateRoot);            
+            RegisterDirtyInstance(aggregateRoot);
             _eventStream.Append(evnt);
         }
 
@@ -80,10 +81,10 @@ namespace Ncqrs.Domain
         public override void Accept()
         {
             Contract.Requires<ObjectDisposedException>(!IsDisposed);
-            Log.DebugFormat("Accepting unit of work {0}", this);
-            Log.DebugFormat("Storing the event stream for command {0} to event store", _eventStream.CommitId);
+            Log.LogDebug("Accepting unit of work {0}", this);
+            Log.LogDebug("Storing the event stream for command {0} to event store", _eventStream.CommitId);
             _eventStore.Store(_eventStream);
-            Log.DebugFormat("Publishing events for command {0} to event bus", _eventStream.CommitId);
+            Log.LogDebug("Publishing events for command {0} to event bus", _eventStream.CommitId);
             _eventBus.Publish(_eventStream);
             CreateSnapshots();
         }
@@ -113,7 +114,7 @@ namespace Ncqrs.Domain
 
             if (!_dirtyInstances.Contains(dirtyInstance))
             {
-                Log.DebugFormat("Registering aggregate root {0} as dirty in unit of work {1}",
+                Log.LogDebug("Registering aggregate root {0} as dirty in unit of work {1}",
                            dirtyInstance, this);
                 _dirtyInstances.Enqueue(dirtyInstance);
             }
